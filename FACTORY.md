@@ -38,22 +38,40 @@ Model ids in the table match the `Model:` first line of each mandate. Change bot
 
 ## 3. Standing it up
 
-TODO(measure): confirm each step on a clean machine and record the time it took.
+Prerequisites: macOS or Linux, Git, a running Docker daemon, Python 3.12+ (only for the event
+harness), BAND Desktop 0.4.12+ with an account, and the Claude Code CLI signed in to a plan that
+covers the models in section 2.
 
-Prerequisites: Git, a running Docker daemon, Python 3.12+ (only for the event harness),
-BAND Desktop with an account, Claude Code access for each seat.
+1. **Sign the CLI in and update it.** Seats run the terminal `claude` CLI, not the Claude desktop
+   app, and it has its own login. Check with `claude auth status` (must show `loggedIn: true`);
+   if not, run `claude auth login`. Run `claude update`: `claude-opus-5-5` needs Claude Code
+   2.1.280 or newer, and an older CLI fails every Opus turn with an API 400.
+2. **Create the four seats** from the directory the band works in. Each seat's instructions are
+   live-linked to its mandate file, so editing a mandate updates the seat and the file in this
+   repository is exactly what the seat ran:
 
-1. Create four seats in BAND Desktop named exactly `coordinator`, `implementer`, `reviewer`
-   and `spec-auditor`. Each mandate file is named after its seat.
-2. For each seat set the harness to Claude Code and the model from the table in section 2.
-   Set each seat's working directory to the absolute path of the result repository, so all
-   commits land in the same place.
-3. Paste each mandate into its seat's instructions.
-4. Configure a Git name and email per seat, so history shows who committed.
-5. Grant the permissions an unattended run needs: file edits in the result repository, Git,
-   Docker, and browser checks. Keep credentials outside the repository.
-6. Confirm a direct `@handle` message reaches each seat and gets a reply.
-7. Create a room, add all four seats, and send the dispatch message (section 4).
+   ```sh
+   for seat in coordinator:claude-sonnet-5-5 implementer:claude-sonnet-5-5 \
+               reviewer:claude-opus-5-5 spec-auditor:claude-opus-5-5; do
+     name=${seat%%:*}; model=${seat#*:}
+     band agent create --session "df-$name" --name "$name" \
+       --description "Dark Factory seat: $name" --cwd "$WORKSPACE" \
+       --transport claude-code-cli --runtime-model "$model" \
+       --instructions-file "$RESULT_REPO/mandates/$name.md"
+   done
+   band list    # all four: Connected running=true
+   ```
+
+   Defaults kept: permission mode `auto` (unattended, with Claude Code's own safety checks) and
+   context mode `local_config` (the only mode that can use a subscription login; `bare` needs an
+   API key).
+3. **Restart after any CLI change:** `band restart --as <owner>/<seat>`. A pending message is
+   redelivered to the restarted seat, so work resumes where it stopped.
+4. **Dispatch** from BAND Desktop: Home, Assign work, pick `coordinator`, paste the dispatch
+   message (section 4). The coordinator adds the other seats to the room itself.
+5. **Record the room**: room menu, Open in Band, Download full session, save as `room.json`.
+
+TODO(measure): time the full setup on a clean machine.
 
 ## 4. The dispatch message
 
@@ -123,8 +141,17 @@ TODO: highest stage claimed on the shipped checks, and the isolated-mode result.
 
 ## 8. What we tried that failed
 
-TODO: filled from the practice runs. One line each: what was tried, what happened, what
-changed in the mandates as a result.
+Practice run 1 (unscored `toy` track, stage 1, 30 Sep 2026): dispatch to accepted revision in
+about 10 minutes with no human input after dispatch; the implementer waited for the auditor's
+gap list before building; 12 of 12 audited requirements met; reviewer passed host and isolated
+checks. What we changed as a result:
+
+- Setup failed twice before any work: the seats' CLI was signed out, then too old for
+  `claude-opus-5-5`. Both are now explicit setup steps (section 3).
+- Every commit carried the repository's default Git identity, so history could not show which
+  seat wrote the code. The implementer mandate now commits under the seat's own identity.
+
+TODO: add later practice runs.
 
 ## 9. Limits and known weaknesses
 
