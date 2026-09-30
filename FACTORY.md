@@ -47,7 +47,7 @@ covers the models in section 2.
    app, and it has its own login. Check with `claude auth status` (must show `loggedIn: true`);
    if not, run `claude auth login`. Run `claude update`: `claude-opus-5-5` needs Claude Code
    2.1.280 or newer, and an older CLI fails every Opus turn with an API 400.
-2. **Create the four seats** from the directory the band works in. Each seat's instructions are
+2. **Create the five seats** from the directory the band works in. Each seat's instructions are
    live-linked to its mandate file, so editing a mandate updates the seat and the file in this
    repository is exactly what the seat ran:
 
