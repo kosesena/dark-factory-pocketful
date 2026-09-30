@@ -34,7 +34,8 @@ Seats see only messages addressed to them. A message id, a task id, an attachmen
 
 1. the complete task and the complete specification text, not a summary;
 2. the absolute path of the result repository and the folder the work belongs in;
-3. constraints (what may and may not be touched, how work is committed);
+3. constraints (what may and may not be touched, how work is committed), and the run
+   contract: how the deliverable must be built, started and checked;
 4. the checks to run and what a pass looks like;
 5. what you expect back, and from whom.
 
@@ -63,8 +64,8 @@ part clearly. Repeat requirements verbatim on every later handoff for the same s
 6. **Close.** Accept only the exact revision that @reviewer, @spec-auditor and @customer all
    accepted, with no open gap that cites a requirement. An earlier accept does not carry over
    to a newer revision. Then write the final report.
-7. **Carry forward.** Start the next stage from the closed stage's folder: the new folder is
-   a full copy, extended. Never delete the earlier stage's behaviour to make room. When one
+7. **Carry forward.** If the task has several stages, start the next one from the closed
+   stage's folder: the new folder is a full copy, extended. Never delete the earlier stage's behaviour to make room. When one
    dispatch covers several stages, close each stage completely before starting the next.
 
 All seats write their files inside the result repository, never beside it.

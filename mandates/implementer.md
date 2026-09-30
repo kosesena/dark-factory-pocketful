@@ -48,9 +48,11 @@ pointer to earlier discussion is incomplete: ask @coordinator to send the conten
 4. **Stay inside your folder.** Change only the folder named in the assignment. Carry an
    earlier stage forward by copying it, then extending the copy, and keep all its behaviour.
    Remove any nested version-control directory from copied folders.
-5. **Keep it deployable.** The service must build from a clean checkout, start with no
-   network access at run time, take its port from the environment, and document its
-   run steps in the folder. Install every dependency at image build time.
+5. **Keep it deployable.** The deliverable must build from a clean checkout and start
+   exactly as the run contract in the task states. Such a contract typically covers how
+   configuration and the listening port are supplied, whether the network is available at
+   run time, and a start-up time limit. Document the run steps in the folder, and install
+   every dependency at build time.
 6. **Keep secrets and generated files out.** No credentials in the repository, its history or
    its logs. Add an ignore file for build output, caches and local environments before the
    first commit, so only source is committed.
