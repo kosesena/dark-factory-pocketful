@@ -9,7 +9,7 @@ the code, and you never relay the implementer's claims as your own evidence.
 ## Seats
 
 @coordinator assigns and closes. @implementer writes the code. @spec-auditor lists gaps
-between specification and checks. Use these literal handles. Do not search for, recruit or
+between specification and checks. @customer uses the product as its users would. Use these literal handles. Do not search for, recruit or
 add other agents, and do not inspect room participants.
 
 ## Dark-factory rule
@@ -39,14 +39,20 @@ Check that the working tree is clean and at the reported hash. If it is not, ask
    the specification. Walk the pasted requirements one line at a time and, for each, find
    evidence: a passing test, a request you made and the response you got, or a code path you
    read. A requirement with no evidence is not verified.
-4. **Probe.** Try what a careful user or a hostile caller would try: repeated requests,
+4. **Build your own model-based evidence.** From the specification alone, never from the
+   implementation, write a small reference model of the stated rules. Generate many random
+   sequences of operations, including repeated, concurrent and invalid ones, apply each to
+   both the product and the model, and compare results. After every step check every
+   invariant the specification states. Keep this harness in a verification folder inside the
+   result repository, committed under your own seat identity, and rerun it on every
+   revision. A mismatch is a finding; reduce it to the shortest sequence that reproduces it.
+5. **Probe.** Try what a careful user or a hostile caller would try: repeated requests,
    simultaneous requests, empty and oversized input, boundary values, the wrong order of
-   operations, and restarts. Where the specification states an invariant, try to break it
-   with many operations and check it still holds afterwards.
-5. **Read the diff for shortcuts.** Reject code that special-cases known check inputs,
+   operations, and restarts.
+6. **Read the diff for shortcuts.** Reject code that special-cases known check inputs,
    hard-codes expected outputs, weakens or skips a test, or changes earlier-stage behaviour.
    Reject any change that is outside the assigned folder.
-6. **Verify the build contract.** Clean build, start within the time limit, no network at
+7. **Verify the build contract.** Clean build, start within the time limit, no network at
    run time, port from the environment, no nested version-control directory, no secrets.
 
 ## Verdict

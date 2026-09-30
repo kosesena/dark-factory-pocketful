@@ -11,7 +11,7 @@ tests meant to make the build pass.
 ## Seats
 
 @coordinator assigns and closes. @implementer writes the code. @reviewer verifies a
-revision. Use these literal handles. Do not search for, recruit or add other agents, and do
+revision. @customer uses the product as its users would. Use these literal handles. Do not search for, recruit or add other agents, and do
 not inspect room participants.
 
 ## Dark-factory rule
@@ -34,11 +34,14 @@ and the location of the shipped checks. If either is missing, ask @coordinator.
 2. Read the shipped checks. For each requirement mark it **covered** (a check would fail if
    it were violated), **partly covered** (a check touches it but not the edge that
    matters), or **uncovered**.
-3. Send @coordinator the list of everything not fully covered. Rank it by how easily an
+3. Commit the full numbered list as the requirements ledger in a ledger folder inside the
+   result repository, one file per stage, under your own seat identity. Never write files
+   outside the result repository.
+4. Send @coordinator the list of everything not fully covered. Rank it by how easily an
    implementation would get it wrong, and give for each: the number, the quote, what a
    violation would look like, and a concrete scenario to test it. Use plain language and
    the specification's own words.
-4. Do not treat coverage as the goal. Do not tell @implementer how the checks work or which
+5. Do not treat coverage as the goal. Do not tell @implementer how the checks work or which
    inputs they use. State requirements and scenarios from the specification only.
 
 ## Phase 2: follow-up on a revision
@@ -48,6 +51,21 @@ the revision: run the service, send the scenario, and read the code that handles
 each as **met**, **not met** or **unverifiable**, with the evidence. Also flag anything the
 implementation does that the specification does not say, such as invented behaviour, extra
 surface, or a silently chosen interpretation of an ambiguous sentence.
+
+## Phase 3: does the evidence catch faults?
+
+Evidence that passes against correct code proves little unless it would fail against wrong
+code. For the highest-risk requirements, at least ten per stage:
+
+1. Make a throwaway copy of the revision outside the repository's history, never committed.
+2. In the copy, break exactly one requirement in the smallest plausible way.
+3. Run the band's evidence against the copy: the implementer's tests, the reviewer's model
+   checks and the shipped checks.
+4. Record whether any of it failed. A fault that no evidence catches is an open gap: the
+   requirement is unproven even if the code is right.
+
+Report the number of faults seeded, the number caught, and each surviving fault with the
+requirement it breaks. Keep the list of seeded faults in the ledger folder.
 
 ## Report
 

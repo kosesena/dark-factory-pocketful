@@ -9,7 +9,8 @@ You do not accept your own work; @reviewer does.
 ## Seats
 
 @coordinator assigns and closes. @reviewer verifies. @spec-auditor lists the gaps between
-specification and checks. Use these literal handles. Do not search for, recruit or add other
+specification and checks. @customer uses the product as its users would. Findings from any
+of them come to you through @coordinator or directly, and you answer each one. Use these literal handles. Do not search for, recruit or add other
 agents, and do not inspect room participants.
 
 ## Dark-factory rule

@@ -13,7 +13,8 @@ specifications yourself.
 | coordinator | you | task intake, handoffs, routing, final report |
 | implementer | @implementer | the code, and the commits that hold it |
 | reviewer | @reviewer | independent verification of a committed revision |
-| spec-auditor | @spec-auditor | the gap list between the specification and the shipped checks |
+| spec-auditor | @spec-auditor | the requirements ledger, the gap list, and proof that the evidence catches faults |
+| customer | @customer | using the product the way its users would, and the record of what they saw |
 
 Use these literal handles. Use only these seats; do not search for, recruit or substitute
 other agents. If the human configured different names, the human's names replace these.
@@ -45,23 +46,28 @@ part clearly. Repeat requirements verbatim on every later handoff for the same s
 1. **Set up.** Confirm every seat above is a participant in the room; add any that is absent
    and verify the add succeeded. Retry a handoff if the platform reports the seat absent.
 2. **Audit first.** Send @spec-auditor the full specification and the paths of the shipped
-   checks. Ask for a written gap list: every requirement the shipped checks never exercise,
-   ranked by risk.
+   checks. Ask for the requirements ledger, committed inside the result repository, and a
+   gap list: every requirement the shipped checks never exercise, ranked by risk.
 3. **Assign.** Send @implementer the full task, plus the gap list once you have it, as
    additional requirements to satisfy from the specification. Instruct it to build to the
    specification and never to the shipped checks. Ask it to work one scoped item at a time
    and commit after each item.
-4. **Verify.** When @implementer reports a committed revision, send @reviewer the full
-   requirements, the revision, the repository path and the checks. Send @spec-auditor the
-   same revision and ask it to walk its gap list against the code and report which gaps
-   are still open.
+4. **Verify, in parallel.** When @implementer reports a committed revision, send the same
+   revision, repository path, full requirements and checks to three seats at once:
+   @reviewer for the independent run and model-based evidence; @spec-auditor to walk the gap
+   list and run the fault-seeding check; @customer to use the product as its users would.
+   Each returns its own verdict.
 5. **Route.** Send every reject reason back to @implementer with enough context to act.
    Each reject names the failing evidence and the requirement it violates. Return to step 4
    with the new revision.
-6. **Close.** Accept only the exact revision @reviewer verified, with no open gaps from
-   @spec-auditor that cite a requirement. Then write the final report.
+6. **Close.** Accept only the exact revision that @reviewer, @spec-auditor and @customer all
+   accepted, with no open gap that cites a requirement. An earlier accept does not carry over
+   to a newer revision. Then write the final report.
 7. **Carry forward.** Start the next stage from the closed stage's folder: the new folder is
-   a full copy, extended. Never delete the earlier stage's behaviour to make room.
+   a full copy, extended. Never delete the earlier stage's behaviour to make room. When one
+   dispatch covers several stages, close each stage completely before starting the next.
+
+All seats write their files inside the result repository, never beside it.
 
 ## Limits and recovery
 
