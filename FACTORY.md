@@ -93,6 +93,9 @@ replaced by a placeholder.
 | Implementer builds from a checklist taken from the specification, not from the checks | Code written to the checks is disqualifying and does not generalise |
 | Reject rounds counted per item, with a change of approach after three | Prevents loops in which the same instruction is repeated |
 | Fix forward, no history rewriting | The commit trail is the evidence of who did what |
+| Each seat commits under its own Git identity | History and room log can be matched seat by seat |
+| Reviewer also reads the commit history, not only the code | Catches mixed commits, committed caches and signs of building to the checks |
+| An accept stays provisional until the auditor's walk is closed | In practice run 2 the reviewer accepted a revision the auditor then showed to break a stated rule |
 | Opus for reviewer and auditor, Sonnet for coordinator and implementer | TODO(measure): confirm this split against results and cost |
 
 ## 6. Catching and recovering from bad work
@@ -107,8 +110,23 @@ replaced by a placeholder.
 | Earlier stage broken by extension | reviewer runs all earlier stages' checks | reject; carried-forward behaviour must be intact |
 | Build works locally but not clean | reviewer isolated-mode run | reject with the failing command |
 
-TODO(measure): a real example from the submitted run — what was rejected, why, and the
-commit that resolved it.
+Example from practice run 2 (`pocketful` stage 1, 30 Sep 2026; the submitted run will add its
+own). The first revision passed all 147 shipped checks. The auditor had split the specification
+into 37 numbered requirements and walked the code against them; three reject rounds followed:
+
+| Time | What happened |
+|---|---|
+| 08:48 | First revision handed to reviewer and auditor; shipped checks 147/147 |
+| 08:53 | Reject 1: oversized integers, invalid imported state and oversized `limit`/`offset` values returned the wrong error class or a server error, although the specification says requests must never produce 5xx |
+| 08:58 | Reject 2: auditor gap O4, a remaining input-validation case |
+| 09:02 | Reviewer accepts revision `50703dd` |
+| 09:03 | Reject 3: auditor gap O5, an oversized request header returned the web server's HTML error page instead of the specification's JSON error body. The coordinator withdrew the accept and sent the fixed revision to both checkers again |
+| 09:07 | Accept of `86121fc`; isolated check claims stage 1 |
+
+None of these three rejects was visible to the shipped checks. That is the reason the auditor
+exists.
+
+TODO(measure): replace or extend with the submitted run's example.
 
 ## 7. Measured results
 
@@ -151,11 +169,31 @@ checks. What we changed as a result:
 - Every commit carried the repository's default Git identity, so history could not show which
   seat wrote the code. The implementer mandate now commits under the seat's own identity.
 
-TODO: add later practice runs.
+Practice run 2 (`pocketful` stage 1, 30 Sep 2026): 29 minutes, 10 commits, three reject rounds
+(section 6), accepted with the isolated check claiming stage 1. About 13% of a five-hour Max
+plan window. The coordinator's report listed three process faults, and each changed a mandate:
+
+- The implementer put several work items into two commits. It now commits one item per commit,
+  and the reviewer rejects mixed commits.
+- The implementer opened a shipped check file to see the project layout, and said it used
+  nothing from it. Opening the check files is now forbidden outright; the check command's output
+  is the only interface, and the reviewer looks for signs of it in the history.
+- A cache directory was committed and later removed. The implementer now adds an ignore file
+  before the first commit.
+- One handoff to the reviewer went missing; the coordinator's resend-once rule recovered it
+  without human input.
 
 ## 9. Limits and known weaknesses
 
-TODO: honest list. Include anything the factory does not catch.
+- The auditor and reviewer read the same specification as the implementer. A requirement all
+  three misread is not caught; only the hidden checks would show it.
+- Rules about process (one item per commit, not opening check files) are enforced by review
+  after the fact, not prevented. A seat can break one and be rejected, which costs a round.
+- Seats run on the host with Claude Code's `auto` permission mode, not in a sandbox; the
+  factory trusts the model's own safety checks for commands.
+- A lost message is recovered by one resend; a seat that stays silent after that is reported,
+  not replaced.
+- TODO(measure): add anything the submitted run shows.
 
 ## 10. Reusing this factory on a different problem
 

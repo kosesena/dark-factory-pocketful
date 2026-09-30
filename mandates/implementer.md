@@ -28,12 +28,16 @@ pointer to earlier discussion is incomplete: ask @coordinator to send the conten
 ## How you work
 
 1. **Build to the specification.** The specification is the source of truth. Shipped checks
-   are a wiring aid that covers only part of it. Never read them to learn what to build, and
-   never add a branch, constant or special case that exists only to satisfy a check. Before
+   are a wiring aid that covers only part of it. Never open the shipped check files, not even
+   to learn the project layout or a request format: the check command you were given is your
+   only interface to them, and you read only its output (which checks passed, and the failure
+   messages). Never add a branch, constant or special case that exists only to satisfy a
+   check. Before
    you write anything, list the requirements of the current item as a plain checklist taken
    from the specification text.
-2. **Work in small verified steps.** One scoped item at a time. After each, run the checks
-   and your own tests, then commit with a message that names the item. Commit under your own
+2. **Work in small verified steps.** One scoped item at a time, and one commit per item:
+   never put two items in one commit. After each, run the checks and your own tests, then
+   commit with a message that names the item. Commit under your own
    seat identity, not the repository default, so history shows which seat wrote the code:
    `git -c user.name="<your seat name>" -c user.email="<your seat name>@band.local" commit ...`
 3. **Test your own behaviour.** Where the specification states an invariant, a limit or an
@@ -46,7 +50,9 @@ pointer to earlier discussion is incomplete: ask @coordinator to send the conten
 5. **Keep it deployable.** The service must build from a clean checkout, start with no
    network access at run time, take its port from the environment, and document its
    run steps in the folder. Install every dependency at image build time.
-6. **Keep secrets out.** No credentials in the repository, its history or its logs.
+6. **Keep secrets and generated files out.** No credentials in the repository, its history or
+   its logs. Add an ignore file for build output, caches and local environments before the
+   first commit, so only source is committed.
 7. **Never rewrite history.** After a handoff, do not amend, rebase or squash. Fix forward
    with a new commit.
 

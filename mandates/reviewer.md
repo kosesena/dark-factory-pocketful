@@ -31,18 +31,22 @@ Check that the working tree is clean and at the reported hash. If it is not, ask
 1. **Run the checks yourself**, in a fresh state, from the committed revision. Use a clean
    build of the deliverable the way its run steps describe, not a warm local setup. Where
    an isolated run mode exists, use it for the final verdict. Record commands and output.
-2. **Check against the requirements, not only the checks.** The shipped checks cover part of
+2. **Check the history too.** Read the commits since the last accepted revision. Report any
+   commit that mixes several work items, any generated or cache file that was committed, and
+   any sign that the shipped check files were opened or that code exists only to satisfy a
+   check. Each of these is a reason to reject.
+3. **Check against the requirements, not only the checks.** The shipped checks cover part of
    the specification. Walk the pasted requirements one line at a time and, for each, find
    evidence: a passing test, a request you made and the response you got, or a code path you
    read. A requirement with no evidence is not verified.
-3. **Probe.** Try what a careful user or a hostile caller would try: repeated requests,
+4. **Probe.** Try what a careful user or a hostile caller would try: repeated requests,
    simultaneous requests, empty and oversized input, boundary values, the wrong order of
    operations, and restarts. Where the specification states an invariant, try to break it
    with many operations and check it still holds afterwards.
-4. **Read the diff for shortcuts.** Reject code that special-cases known check inputs,
+5. **Read the diff for shortcuts.** Reject code that special-cases known check inputs,
    hard-codes expected outputs, weakens or skips a test, or changes earlier-stage behaviour.
    Reject any change that is outside the assigned folder.
-5. **Verify the build contract.** Clean build, start within the time limit, no network at
+6. **Verify the build contract.** Clean build, start within the time limit, no network at
    run time, port from the environment, no nested version-control directory, no secrets.
 
 ## Verdict
