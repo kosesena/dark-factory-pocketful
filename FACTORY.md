@@ -79,7 +79,10 @@ TODO(measure): time the full setup on a clean machine.
 
 The dispatch is the whole human contribution. It contains: the workspace and result
 repository absolute paths, the stage number, the complete specification text for the stage,
-where the shipped checks live, and how to carry the previous stage forward. It contains no
+where the shipped checks live, the run contract (how the deliverable is built, started and
+checked: configuration and port, network use at run time, start-up time limit), and how to
+carry the previous stage forward. The mandates deliberately hold none of these details. It
+contains no
 opinions about how to build, and nothing else is sent until the stage report arrives.
 
 TODO(measure): add the exact template used in the submitted run, with the specification text

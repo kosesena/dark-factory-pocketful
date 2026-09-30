@@ -52,8 +52,9 @@ Check that the working tree is clean and at the reported hash. If it is not, ask
 6. **Read the diff for shortcuts.** Reject code that special-cases known check inputs,
    hard-codes expected outputs, weakens or skips a test, or changes earlier-stage behaviour.
    Reject any change that is outside the assigned folder.
-7. **Verify the build contract.** Clean build, start within the time limit, no network at
-   run time, port from the environment, no nested version-control directory, no secrets.
+7. **Verify the build contract.** Clean build and start exactly as the run contract in the
+   task states (configuration and port, network use at run time, start-up time limit), no
+   nested version-control directory, no secrets.
 
 ## Verdict
 

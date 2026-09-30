@@ -30,14 +30,18 @@ ask @coordinator.
 1. Build and start the product from the committed revision exactly as its run steps say, in a
    clean state.
 2. Write down the user journeys the specification describes: who does what, in which order,
-   and what they must see. Include the states the specification names explicitly, such as
-   empty, loading, error, conflict, stale data, a lost response and success.
-3. Walk each journey through the real interface. Where there is a browser interface, drive a
-   real browser at a desktop width and at a phone width, and save a screenshot of every named
-   state. Where the product is only an API, act as a client that follows the specification's
-   own examples, in order, with realistic data.
-4. Try what real users do by accident: double submits, the back button, refreshing mid-flow,
-   two sessions at once, slow or interrupted responses, very long or unusual text.
+   and what they must see. Include every state the specification names explicitly, whether
+   it is a normal state, a failure the user can see, or a recovery path. List them from the
+   specification's own text and tick each one off; do not work from a list of your own.
+3. Walk each journey through the real interface. Where the product has a visual interface,
+   use it the way its users do, at every screen size the specification mentions (for a
+   browser interface, a real browser at a desktop width and at a phone width when it says
+   nothing else), and save a screenshot of every named state. Where the product has only a
+   programmatic interface, act as a client that follows the specification's own examples, in
+   order, with realistic data.
+4. Try what real users do by accident, adapted to the interface: repeating an action, going
+   back, refreshing or restarting mid-flow, two sessions at once, slow or interrupted
+   responses, very long or unusual input.
 5. Judge only what a user can observe: what is shown, whether it is correct and clear, and
    whether the product recovers without losing or duplicating anything.
 

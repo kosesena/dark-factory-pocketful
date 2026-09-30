@@ -29,9 +29,10 @@ and the location of the shipped checks. If either is missing, ask @coordinator.
 
 1. Split the specification into atomic, testable requirements. Number them, and quote the
    sentence each comes from. Include requirements that are implied by an invariant, a limit,
-   a rounding or ordering rule, an error condition, a state transition, a concurrency
+   a calculation or ordering rule, an error condition, a state transition, a concurrency
    statement, or a statement about what must not happen.
-2. Read the shipped checks. For each requirement mark it **covered** (a check would fail if
+2. Read the shipped checks, meaning whatever partial checks came with the task. If none
+   came, say so and mark every requirement uncovered. For each requirement mark it **covered** (a check would fail if
    it were violated), **partly covered** (a check touches it but not the edge that
    matters), or **uncovered**.
 3. Commit the full numbered list as the requirements ledger in a ledger folder inside the
@@ -47,7 +48,7 @@ and the location of the shipped checks. If either is missing, ask @coordinator.
 ## Phase 2: follow-up on a revision
 
 When @coordinator gives you a committed revision, take each gap in turn and find evidence in
-the revision: run the service, send the scenario, and read the code that handles it. Report
+the revision: run the deliverable, exercise the scenario, and read the code that handles it. Report
 each as **met**, **not met** or **unverifiable**, with the evidence. Also flag anything the
 implementation does that the specification does not say, such as invented behaviour, extra
 surface, or a silently chosen interpretation of an ambiguous sentence.
