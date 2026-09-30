@@ -31,8 +31,9 @@ dispatch message and in every handoff.
 |---|---|---|---|---|---|
 | coordinator | `mandates/coordinator.md` | Claude Code | claude-sonnet-5-5 | intake, handoffs, routing, final report | writes code or tests |
 | implementer | `mandates/implementer.md` | Claude Code | claude-sonnet-5-5 | code and commits | accepts its own work |
-| reviewer | `mandates/reviewer.md` | Claude Code | claude-opus-5-5 | independent verification | edits code |
-| spec-auditor | `mandates/spec-auditor.md` | Claude Code | claude-opus-5-5 | gap list and its follow-up | edits code, writes tests to pass |
+| reviewer | `mandates/reviewer.md` | Claude Code | claude-opus-5-5 | independent verification, including a reference model written from the specification and random operation sequences compared against it | edits code |
+| spec-auditor | `mandates/spec-auditor.md` | Claude Code | claude-opus-5-5 | requirements ledger, gap list, and fault seeding: breaking one requirement at a time in a throwaway copy to prove the evidence catches it | edits code, writes tests to pass |
+| customer | `mandates/customer.md` | Claude Code | claude-sonnet-5-5 | using the product through its real interface at desktop and phone widths, screenshots of every named state | edits code, reads the implementation to judge it |
 
 Model ids in the table match the `Model:` first line of each mandate. Change both together.
 
@@ -52,14 +53,15 @@ covers the models in section 2.
 
    ```sh
    for seat in coordinator:claude-sonnet-5-5 implementer:claude-sonnet-5-5 \
-               reviewer:claude-opus-5-5 spec-auditor:claude-opus-5-5; do
+               reviewer:claude-opus-5-5 spec-auditor:claude-opus-5-5 \
+               customer:claude-sonnet-5-5; do
      name=${seat%%:*}; model=${seat#*:}
      band agent create --session "df-$name" --name "$name" \
        --description "Dark Factory seat: $name" --cwd "$WORKSPACE" \
        --transport claude-code-cli --runtime-model "$model" \
        --instructions-file "$RESULT_REPO/mandates/$name.md"
    done
-   band list    # all four: Connected running=true
+   band list    # all five: Connected running=true
    ```
 
    Defaults kept: permission mode `auto` (unattended, with Claude Code's own safety checks) and
@@ -95,6 +97,9 @@ replaced by a placeholder.
 | Fix forward, no history rewriting | The commit trail is the evidence of who did what |
 | Each seat commits under its own Git identity | History and room log can be matched seat by seat |
 | Reviewer also reads the commit history, not only the code | Catches mixed commits, committed caches and signs of building to the checks |
+| Fault seeding by the auditor | Passing evidence proves little unless it fails against wrong code; the auditor breaks one requirement at a time and counts how many breaks the evidence catches |
+| A reference model written from the specification only | The reviewer's model cannot inherit the implementation's mistakes; random operation sequences find orderings no hand-written test tries |
+| A customer seat that never reads the code | Judges only what a user can observe, which is what the interface part of the specification describes |
 | An accept stays provisional until the auditor's walk is closed | In practice run 2 the reviewer accepted a revision the auditor then showed to break a stated rule |
 | Opus for reviewer and auditor, Sonnet for coordinator and implementer | TODO(measure): confirm this split against results and cost |
 
