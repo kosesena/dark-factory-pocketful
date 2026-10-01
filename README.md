@@ -6,6 +6,22 @@ Team: Sena Köse (solo). Submission deadline: **6 Oct 2026, 09:59 Türkiye time*
 > This README is a working brief until submission. At submission it is rewritten to say:
 > team, track, and how to read this repository.
 
+## Meet the crew
+
+![The five seats as felt mascots in their workshop](docs/crew/crew.jpg)
+
+Each seat in the band has a felt mascot. The mascots are only a storytelling layer for the
+video and this page: the mandates contain no personality, and the seats behave exactly as
+`mandates/` and `FACTORY.md` describe.
+
+| | Seat | Mascot | What the seat does |
+|---|---|---|---|
+| <img src="docs/crew/coordinator.jpg" width="160" alt="Blue felt cone with a baton"> | **coordinator** | Blue cone with a conductor's baton | Reads the dispatch, splits the work, routes every handoff and closes the stage with a report. Never writes code. |
+| <img src="docs/crew/implementer.jpg" width="160" alt="Orange felt craftsperson with a tool apron"> | **implementer** | Orange craftsperson with a beret and tool apron | Writes the code one small, separately committed change at a time, then hands it over to be checked. Never accepts its own work. |
+| <img src="docs/crew/reviewer.jpg" width="160" alt="Purple felt detective with a magnifying glass"> | **reviewer** | Purple long-nosed detective with a magnifying glass | Verifies independently: builds its own reference model from the specification and compares it with the service over random sequences of operations. Never edits code. |
+| <img src="docs/crew/spec-auditor.jpg" width="160" alt="Green felt book with round glasses and a checklist"> | **spec-auditor** | Green book with round glasses and a checklist | Turns the specification into a requirements ledger, then breaks one requirement at a time in a throwaway copy and runs all the evidence against it to prove the checks would notice. |
+| <img src="docs/crew/customer.jpg" width="160" alt="Pink felt character with floppy ears holding a phone"> | **customer** | Pink floppy-eared character holding a phone | Uses the product through its real interface at desktop and phone widths, without reading the implementation, and reports what a user would see. |
+
 ## What is being built
 
 A software factory in BAND Desktop: at least three coding-agent seats (each a separate
