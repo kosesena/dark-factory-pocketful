@@ -14,13 +14,65 @@ Each seat in the band has a felt mascot. The mascots are only a storytelling lay
 video and this page: the mandates contain no personality, and the seats behave exactly as
 `mandates/` and `FACTORY.md` describe.
 
-| | Seat | Mascot | What the seat does |
-|---|---|---|---|
-| <img src="docs/crew/coordinator.jpg" width="160" alt="Blue felt cone with a baton"> | **coordinator** | Blue cone with a conductor's baton | Reads the dispatch, splits the work, routes every handoff and closes the stage with a report. Never writes code. |
-| <img src="docs/crew/implementer.jpg" width="160" alt="Orange felt craftsperson with a tool apron"> | **implementer** | Orange craftsperson with a beret and tool apron | Writes the code one small, separately committed change at a time, then hands it over to be checked. Never accepts its own work. |
-| <img src="docs/crew/reviewer.jpg" width="160" alt="Purple felt detective with a magnifying glass"> | **reviewer** | Purple long-nosed detective with a magnifying glass | Verifies independently: builds its own reference model from the specification and compares it with the service over random sequences of operations. Never edits code. |
-| <img src="docs/crew/spec-auditor.jpg" width="160" alt="Green felt book with round glasses and a checklist"> | **spec-auditor** | Green book with round glasses and a checklist | Turns the specification into a requirements ledger, then breaks one requirement at a time in a throwaway copy and runs all the evidence against it to prove the checks would notice. |
-| <img src="docs/crew/customer.jpg" width="160" alt="Pink felt character with floppy ears holding a phone"> | **customer** | Pink floppy-eared character holding a phone | Uses the product through its real interface at desktop and phone widths, without reading the implementation, and reports what a user would see. |
+<img src="docs/crew/coordinator.png" align="left" height="220" alt="Blue cone with a conductor's baton">
+
+### coordinator
+
+*Blue cone with a conductor's baton*
+
+Reads the dispatch, splits the work, routes every handoff and closes the stage with a report.
+
+**Never writes code.**
+
+<br clear="all">
+
+<img src="docs/crew/implementer.png" align="right" height="220" alt="Orange craftsperson with a beret and tool apron">
+
+### implementer
+
+*Orange craftsperson with a beret and tool apron*
+
+Writes the code one small, separately committed change at a time, then hands it over to be checked.
+
+**Never accepts its own work.**
+
+<br clear="all">
+
+<img src="docs/crew/reviewer.png" align="left" height="220" alt="Purple long-nosed detective with a magnifying glass">
+
+### reviewer
+
+*Purple long-nosed detective with a magnifying glass*
+
+Verifies independently: builds its own reference model from the specification and compares it with the service over random sequences of operations.
+
+**Never edits code.**
+
+<br clear="all">
+
+<img src="docs/crew/spec-auditor.png" align="right" height="220" alt="Green book with round glasses and a checklist">
+
+### spec-auditor
+
+*Green book with round glasses and a checklist*
+
+Turns the specification into a requirements ledger, then breaks one requirement at a time in a throwaway copy and runs all the evidence against it, to prove the checks would notice.
+
+**Never edits code or writes tests to pass.**
+
+<br clear="all">
+
+<img src="docs/crew/customer.png" align="left" height="220" alt="Pink floppy-eared character holding a phone">
+
+### customer
+
+*Pink floppy-eared character holding a phone*
+
+Uses the product through its real interface at desktop and phone widths, without reading the implementation, and reports what a user would see.
+
+**Never reads the code to judge it.**
+
+<br clear="all">
 
 ## What is being built
 
