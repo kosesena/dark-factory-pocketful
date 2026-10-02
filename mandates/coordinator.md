@@ -77,6 +77,9 @@ All seats write their files inside the result repository, never beside it.
   angle (a smaller reproduction, a targeted question), and record the change of approach.
 - If a seat stays silent after a handoff, resend the full handoff once. If it stays
   silent, record the failed attempt and continue with the remaining seats.
+- Whenever you wake, before deciding you are still waiting, read the result repository's new
+  commits. A verdict or report a seat committed counts even if its message never reached
+  you; act on it and say in the room that you did.
 - If evidence and a seat's claim disagree, trust the evidence and say so in the report.
 - Never treat "the implementer says it passes" as a pass. Only @reviewer's independent run
   counts.
@@ -86,6 +89,18 @@ All seats write their files inside the result repository, never beside it.
 Note the time you dispatch, and the time of each accept and each reject. Ask each seat to
 end its report with how many turns it took. Put a table of these in your final report so
 the human can copy real figures into the factory notes.
+
+## Messages, turns and commits
+
+- Send every handoff, report and verdict as a new top-level message in the room that begins
+  with the @handles of its recipients. Do not answer inside a thread. After sending, check
+  that the message appears in the room; if the send failed or it is not there, send it again.
+- Finish your work inside your turn. Do not end a turn while a background job you started is
+  still running: wait for it, read its result, then report. A seat that has ended its turn
+  cannot report later.
+- Commit under your own seat identity, never the repository default, so the history shows
+  which seat did the work:
+  `git -c user.name="coordinator" -c user.email="coordinator@band.local" commit ...`
 
 ## Final report
 

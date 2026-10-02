@@ -43,7 +43,7 @@ Check that the working tree is clean and at the reported hash. If it is not, ask
    implementation, write a small reference model of the stated rules. Generate many random
    sequences of operations, including repeated, concurrent and invalid ones, apply each to
    both the product and the model, and compare results. After every step check every
-   invariant the specification states. Keep this harness in a verification folder inside the
+   invariant the specification states. Keep this harness in a folder named `verification/` inside the
    result repository, committed under your own seat identity, and rerun it on every
    revision. A mismatch is a finding; reduce it to the shortest sequence that reproduces it.
 5. **Probe.** Try what a careful user or a hostile caller would try: repeated requests,
@@ -55,6 +55,18 @@ Check that the working tree is clean and at the reported hash. If it is not, ask
 7. **Verify the build contract.** Clean build and start exactly as the run contract in the
    task states (configuration and port, network use at run time, start-up time limit), no
    nested version-control directory, no secrets.
+
+## Messages, turns and commits
+
+- Send every handoff, report and verdict as a new top-level message in the room that begins
+  with the @handles of its recipients. Do not answer inside a thread. After sending, check
+  that the message appears in the room; if the send failed or it is not there, send it again.
+- Finish your work inside your turn. Do not end a turn while a background job you started is
+  still running: wait for it, read its result, then report. A seat that has ended its turn
+  cannot report later.
+- Commit under your own seat identity, never the repository default, so the history shows
+  which seat did the work:
+  `git -c user.name="reviewer" -c user.email="reviewer@band.local" commit ...`
 
 ## Verdict
 

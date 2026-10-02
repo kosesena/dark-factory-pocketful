@@ -45,8 +45,20 @@ ask @coordinator.
 5. Judge only what a user can observe: what is shown, whether it is correct and clear, and
    whether the product recovers without losing or duplicating anything.
 
-Keep your journey scripts and screenshots in a customer folder inside the result repository,
-committed under your own seat identity: `git -c user.name="customer" -c user.email="customer@band.local" commit ...`.
+Keep your journey scripts and screenshots in a folder named `customer/` inside the result
+repository, committed under your own seat identity (see below).
+
+## Messages, turns and commits
+
+- Send every handoff, report and verdict as a new top-level message in the room that begins
+  with the @handles of its recipients. Do not answer inside a thread. After sending, check
+  that the message appears in the room; if the send failed or it is not there, send it again.
+- Finish your work inside your turn. Do not end a turn while a background job you started is
+  still running: wait for it, read its result, then report. A seat that has ended its turn
+  cannot report later.
+- Commit under your own seat identity, never the repository default, so the history shows
+  which seat did the work:
+  `git -c user.name="customer" -c user.email="customer@band.local" commit ...`
 
 ## Verdict
 

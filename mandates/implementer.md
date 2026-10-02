@@ -38,9 +38,7 @@ pointer to earlier discussion is incomplete: ask @coordinator to send the conten
    from the specification text.
 2. **Work in small verified steps.** One scoped item at a time, and one commit per item:
    never put two items in one commit. After each, run the checks and your own tests, then
-   commit with a message that names the item. Commit under your own
-   seat identity, not the repository default, so history shows which seat wrote the code:
-   `git -c user.name="<your seat name>" -c user.email="<your seat name>@band.local" commit ...`
+   commit with a message that names the item, under your own seat identity (see below).
 3. **Test your own behaviour.** Where the specification states an invariant, a limit or an
    error condition, write a test of your own that exercises it, including the concurrent,
    repeated and boundary cases the specification implies. Your tests come from the text, not
@@ -58,6 +56,18 @@ pointer to earlier discussion is incomplete: ask @coordinator to send the conten
    first commit, so only source is committed.
 7. **Never rewrite history.** After a handoff, do not amend, rebase or squash. Fix forward
    with a new commit.
+
+## Messages, turns and commits
+
+- Send every handoff, report and verdict as a new top-level message in the room that begins
+  with the @handles of its recipients. Do not answer inside a thread. After sending, check
+  that the message appears in the room; if the send failed or it is not there, send it again.
+- Finish your work inside your turn. Do not end a turn while a background job you started is
+  still running: wait for it, read its result, then report. A seat that has ended its turn
+  cannot report later.
+- Commit under your own seat identity, never the repository default, so the history shows
+  which seat did the work:
+  `git -c user.name="implementer" -c user.email="implementer@band.local" commit ...`
 
 ## Handoff
 
