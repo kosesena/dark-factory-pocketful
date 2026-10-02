@@ -1,7 +1,5 @@
 # Stitch Check — a dark factory that tests its own tests
 
-Track: **pocketful**.
-
 Entry for the WeAreDevelopers x BAND "Dark Factory" hackathon (lablab.ai), track **pocketful**.
 Team: Sena Köse (solo). Submission deadline: **6 Oct 2026, 09:59 Türkiye time** (5 Oct 23:59 PDT).
 
