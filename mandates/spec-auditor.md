@@ -73,6 +73,10 @@ code. For the highest-risk requirements, at least ten per stage:
 Report the number of faults seeded, the number caught, and each surviving fault with the
 requirement it breaks. Keep the list of seeded faults in `ledger/`.
 
+Run the full seeding once per stage, on the first revision you walk. On a fix revision, seed
+only faults in the code the fix changed and in the requirement it closes, and rerun any fault
+that survived before; the earlier results stand for the unchanged code, and you say so.
+
 ## Messages, turns and commits
 
 - Send every handoff, report and verdict as a new top-level message in the room that begins

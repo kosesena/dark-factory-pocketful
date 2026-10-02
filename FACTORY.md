@@ -78,7 +78,14 @@ covers the models in section 2.
    for each seat and restarts any room session whose runtime has disconnected; BAND then
    redelivers the pending message. It never writes to the room or the repository, so it adds
    no human input. Its log is kept with the run.
-6. **Record the room**: room menu, Open in Band, Download full session, save as `room.json`.
+6. **Fingerprint the shipped checks** before dispatch, so anyone can confirm they were not
+   edited during the run: `find <kickoff>/<track>/test -type f -name '*.py' | sort | xargs shasum -a 256 > checks.sha256`,
+   then `shasum -a 256 -c checks.sha256` after the final report. Both results go in section 7.
+7. **Record the room**: room menu, Open in Band, Download full session, save as `room.json`.
+8. **Measure**: `tools/factory_numbers.py --transcripts <claude-projects-dir-for-the-workspace>
+   --repo <result-repo> --since <dispatch-time> --room room.json` prints the spend, time and
+   verdict tables used in section 7 from the seats' transcripts, the git history and the room
+   export, so every figure can be regenerated.
 
 TODO(measure): time the full setup on a clean machine.
 
@@ -252,7 +259,16 @@ on the second. What we changed as a result:
   not close it.
 - TODO(measure): add anything the submitted run shows.
 
-## 10. Reusing this factory on a different problem
+## 10. What we did not test
+
+- Hidden checks: only the shipped part of each stage's suite was run; the rest is the judges'.
+- A container restart in the middle of a write: the specification allows state to be lost on
+  restart, and no seat tried to kill the service during a request.
+- Load beyond the specification's stated concurrency (50 requests in flight).
+- Browsers other than the headless Chromium the customer seat drives.
+- Long runs: each practice and the submitted run covered hours, not days.
+
+## 11. Reusing this factory on a different problem
 
 1. Copy `mandates/` and this file.
 2. Rename seats and edit the `Harness:` and `Model:` lines if yours differ.
