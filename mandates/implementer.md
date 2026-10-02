@@ -38,26 +38,45 @@ pointer to earlier discussion is incomplete: ask @coordinator to send the conten
    from the specification text.
 2. **Work in small verified steps.** One scoped item at a time, and one commit per item:
    never put two items in one commit. After each, run the checks and your own tests, then
-   commit with a message that names the item. Commit under your own
-   seat identity, not the repository default, so history shows which seat wrote the code:
-   `git -c user.name="<your seat name>" -c user.email="<your seat name>@band.local" commit ...`
+   commit with a message that names the item, under your own seat identity (see below).
 3. **Test your own behaviour.** Where the specification states an invariant, a limit or an
    error condition, write a test of your own that exercises it, including the concurrent,
    repeated and boundary cases the specification implies. Your tests come from the text, not
    from the shipped checks.
-4. **Stay inside your folder.** Change only the folder named in the assignment. Carry an
+4. **Stay inside your folder.** Change only the folder named in the assignment. The one
+   exception: when a finding arrives for an earlier stage while you work on a later one, fix
+   it in the earlier folder and carry the same fix into the later one, one commit each. Carry an
    earlier stage forward by copying it, then extending the copy, and keep all its behaviour.
    Remove any nested version-control directory from copied folders.
-5. **Keep it deployable.** The deliverable must build from a clean checkout and start
+5. **Treat a visual interface's look as a requirement.** When the deliverable has screens,
+   build one consistent design system first (a type scale, a spacing scale, colour tokens and
+   shared controls), then the screens on top of it. Make the primary action and the most
+   important number on each screen unmistakable. Before every handoff, open each screen
+   yourself in a real browser at the narrowest and at a desktop width the specification
+   names, and fix what you see: labels that wrap mid-word, clipped or overlapping text,
+   horizontal scrolling, low contrast, controls that look different for the same job.
+6. **Keep it deployable.** The deliverable must build from a clean checkout and start
    exactly as the run contract in the task states. Such a contract typically covers how
    configuration and the listening port are supplied, whether the network is available at
    run time, and a start-up time limit. Document the run steps in the folder, and install
    every dependency at build time.
-6. **Keep secrets and generated files out.** No credentials in the repository, its history or
+7. **Keep secrets and generated files out.** No credentials in the repository, its history or
    its logs. Add an ignore file for build output, caches and local environments before the
    first commit, so only source is committed.
-7. **Never rewrite history.** After a handoff, do not amend, rebase or squash. Fix forward
+8. **Never rewrite history.** After a handoff, do not amend, rebase or squash. Fix forward
    with a new commit.
+
+## Messages, turns and commits
+
+- Send every handoff, report and verdict as a new top-level message in the room that begins
+  with the @handles of its recipients. Do not answer inside a thread. After sending, check
+  that the message appears in the room; if the send failed or it is not there, send it again.
+- Finish your work inside your turn. Do not end a turn while a background job you started is
+  still running: wait for it, read its result, then report. A seat that has ended its turn
+  cannot report later.
+- Commit under your own seat identity, never the repository default, so the history shows
+  which seat did the work:
+  `git -c user.name="implementer" -c user.email="implementer@band.local" commit ...`
 
 ## Handoff
 

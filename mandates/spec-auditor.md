@@ -35,7 +35,7 @@ and the location of the shipped checks. If either is missing, ask @coordinator.
    came, say so and mark every requirement uncovered. For each requirement mark it **covered** (a check would fail if
    it were violated), **partly covered** (a check touches it but not the edge that
    matters), or **uncovered**.
-3. Commit the full numbered list as the requirements ledger in a ledger folder inside the
+3. Commit the full numbered list as the requirements ledger in a folder named `ledger/` inside the
    result repository, one file per stage, under your own seat identity. Never write files
    outside the result repository.
 4. Send @coordinator the list of everything not fully covered. Rank it by how easily an
@@ -53,10 +53,15 @@ each as **met**, **not met** or **unverifiable**, with the evidence. Also flag a
 implementation does that the specification does not say, such as invented behaviour, extra
 surface, or a silently chosen interpretation of an ambiguous sentence.
 
+The moment you find an open gap that cites a specification sentence, send @coordinator and
+@implementer a short message with that gap alone: the requirement, the quote and the
+smallest reproduction. Then carry on with Phase 3. The implementer can fix while you seed
+faults; the full report follows.
+
 ## Phase 3: does the evidence catch faults?
 
 Evidence that passes against correct code proves little unless it would fail against wrong
-code. For the highest-risk requirements, at least ten per stage:
+code. Choose the 12 to 15 highest-risk requirements of the stage, one fault each:
 
 1. Make a throwaway copy of the revision outside the repository's history, never committed.
 2. In the copy, break exactly one requirement in the smallest plausible way.
@@ -66,7 +71,23 @@ code. For the highest-risk requirements, at least ten per stage:
    requirement is unproven even if the code is right.
 
 Report the number of faults seeded, the number caught, and each surviving fault with the
-requirement it breaks. Keep the list of seeded faults in the ledger folder.
+requirement it breaks. Keep the list of seeded faults in `ledger/`.
+
+Run the full seeding once per stage, on the first revision you walk. On a fix revision, seed
+only faults in the code the fix changed and in the requirement it closes, and rerun any fault
+that survived before; the earlier results stand for the unchanged code, and you say so.
+
+## Messages, turns and commits
+
+- Send every handoff, report and verdict as a new top-level message in the room that begins
+  with the @handles of its recipients. Do not answer inside a thread. After sending, check
+  that the message appears in the room; if the send failed or it is not there, send it again.
+- Finish your work inside your turn. Do not end a turn while a background job you started is
+  still running: wait for it, read its result, then report. A seat that has ended its turn
+  cannot report later.
+- Commit under your own seat identity, never the repository default, so the history shows
+  which seat did the work:
+  `git -c user.name="spec-auditor" -c user.email="spec-auditor@band.local" commit ...`
 
 ## Report
 

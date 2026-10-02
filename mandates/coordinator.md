@@ -64,9 +64,14 @@ part clearly. Repeat requirements verbatim on every later handoff for the same s
 6. **Close.** Accept only the exact revision that @reviewer, @spec-auditor and @customer all
    accepted, with no open gap that cites a requirement. An earlier accept does not carry over
    to a newer revision. Then write the final report.
-7. **Carry forward.** If the task has several stages, start the next one from the closed
-   stage's folder: the new folder is a full copy, extended. Never delete the earlier stage's behaviour to make room. When one
-   dispatch covers several stages, close each stage completely before starting the next.
+7. **Carry forward, pipelined.** If the task has several stages, the next stage starts from a
+   full copy of the current stage's folder, extended. Never delete the earlier stage's
+   behaviour to make room. As soon as @reviewer and @customer have accepted a revision, send
+   @implementer the next stage, built on that revision, while @spec-auditor finishes its walk
+   and fault seeding. If @spec-auditor then finds a blocking gap, @implementer fixes it in the
+   earlier stage's folder and carries the same fix into the newer one, and both go back
+   through step 4. A stage counts as closed only when all three verifiers accepted it; the
+   final report closes every stage, not only the last.
 
 All seats write their files inside the result repository, never beside it.
 
@@ -77,6 +82,9 @@ All seats write their files inside the result repository, never beside it.
   angle (a smaller reproduction, a targeted question), and record the change of approach.
 - If a seat stays silent after a handoff, resend the full handoff once. If it stays
   silent, record the failed attempt and continue with the remaining seats.
+- Whenever you wake, before deciding you are still waiting, read the result repository's new
+  commits. A verdict or report a seat committed counts even if its message never reached
+  you; act on it and say in the room that you did.
 - If evidence and a seat's claim disagree, trust the evidence and say so in the report.
 - Never treat "the implementer says it passes" as a pass. Only @reviewer's independent run
   counts.
@@ -86,6 +94,18 @@ All seats write their files inside the result repository, never beside it.
 Note the time you dispatch, and the time of each accept and each reject. Ask each seat to
 end its report with how many turns it took. Put a table of these in your final report so
 the human can copy real figures into the factory notes.
+
+## Messages, turns and commits
+
+- Send every handoff, report and verdict as a new top-level message in the room that begins
+  with the @handles of its recipients. Do not answer inside a thread. After sending, check
+  that the message appears in the room; if the send failed or it is not there, send it again.
+- Finish your work inside your turn. Do not end a turn while a background job you started is
+  still running: wait for it, read its result, then report. A seat that has ended its turn
+  cannot report later.
+- Commit under your own seat identity, never the repository default, so the history shows
+  which seat did the work:
+  `git -c user.name="coordinator" -c user.email="coordinator@band.local" commit ...`
 
 ## Final report
 

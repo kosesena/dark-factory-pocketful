@@ -6,22 +6,24 @@ here is estimated.
 
 ## 1. Overview
 
-A band of four Claude Code seats in BAND Desktop, sharing one result repository. One seat
+A band of five Claude Code seats in BAND Desktop, sharing one result repository. One seat
 plans and routes, one writes code, one verifies independently, one audits the specification
-against the shipped checks. The human's dispatch message is the only human input per stage.
+against the shipped checks and seeds faults, and one uses the product as its users would. The
+human's dispatch message is the only human input per stage.
 
 ```
             dispatch (human)
                   |
-            @coordinator
-        /         |          \
- @spec-auditor  @implementer  @reviewer
-   gap list       commits     runs checks itself
-        \         |          /
-            @coordinator  -> accept / route back -> final report
+                 @coordinator
+        /        /        |        \
+ @spec-auditor @implementer @reviewer @customer
+  ledger, gaps,   commits   reference  real interface,
+  fault seeding             model      screenshots
+        \        \        |        /
+                 @coordinator  -> accept / route back -> final report
 ```
 
-The mandates in `mandates/` contain no problem-specific detail. Point the same four files at
+The mandates in `mandates/` contain no problem-specific detail. Point the same five files at
 a different specification and the factory runs unchanged; the specification travels in the
 dispatch message and in every handoff.
 
@@ -71,7 +73,20 @@ covers the models in section 2.
    redelivered to the restarted seat, so work resumes where it stopped.
 4. **Dispatch** from BAND Desktop: Home, Assign work, pick `coordinator`, paste the dispatch
    message (section 4). The coordinator adds the other seats to the room itself.
-5. **Record the room**: room menu, Open in Band, Download full session, save as `room.json`.
+5. **Start the seat watchdog** just before dispatching, in a terminal that stays open:
+   `tools/seat-watchdog.sh <owner> 60 seat-watchdog.log`. Every minute it reads `band status`
+   for each seat and restarts any room session whose runtime has disconnected; BAND then
+   redelivers the pending message. It never writes to the room or the repository, so it adds
+   no human input. Its log is kept with the run.
+6. **Fingerprint the shipped checks** before dispatch, so anyone can confirm they were not
+   edited during the run: `find <kickoff>/<track>/test -type f -name '*.py' | sort | xargs shasum -a 256 > checks.sha256`,
+   then `shasum -a 256 -c checks.sha256` after the final report. Both results go in section 7.
+7. **Record the room**: room menu, Open in Band, Download full session, save as `room.json`.
+8. **Measure**: `tools/factory_numbers.py --transcripts <claude-projects-dir-for-the-workspace>
+   --repo <result-repo> --since <dispatch-time> --room room.json` prints the spend, time and
+   verdict tables used in section 7 from the seats' transcripts, the git history and the room
+   export, so every figure can be regenerated. It also lists every ACCEPT and REJECT with its
+   time, revision and `room.json` message id; claims in sections 6 and 7 cite those ids.
 
 TODO(measure): time the full setup on a clean machine.
 
@@ -84,6 +99,11 @@ checked: configuration and port, network use at run time, start-up time limit), 
 carry the previous stage forward. The mandates deliberately hold none of these details. It
 contains no
 opinions about how to build, and nothing else is sent until the stage report arrives.
+
+For a stage with a visual interface the dispatch may also carry a short written visual direction
+(character, palette, type and layout principles, no code) and one mood image of materials and
+colours (no screens or layouts). In the submitted run it did; every screen, component and line of
+code was still designed and written by the band, and the room log shows it.
 
 TODO(measure): add the exact template used in the submitted run, with the specification text
 replaced by a placeholder.
@@ -102,9 +122,17 @@ replaced by a placeholder.
 | Reviewer also reads the commit history, not only the code | Catches mixed commits, committed caches and signs of building to the checks |
 | Fault seeding by the auditor | Passing evidence proves little unless it fails against wrong code; the auditor breaks one requirement at a time and counts how many breaks the evidence catches |
 | A reference model written from the specification only | The reviewer's model cannot inherit the implementation's mistakes; random operation sequences find orderings no hand-written test tries |
+| The look of a visual interface is a requirement: the implementer builds a design system first and checks every screen at the narrowest and a desktop width; the customer rejects layout breaks and low contrast with screenshots and measured ratios | The specification asks for a presentation-ready product; in practice run 3 a navigation label wrapped mid-word at phone width and nothing in the process was set up to stop it |
 | A customer seat that never reads the code | Judges only what a user can observe, which is what the interface part of the specification describes |
 | An accept stays provisional until the auditor's walk is closed | In practice run 2 the reviewer accepted a revision the auditor then showed to break a stated rule |
-| Opus for reviewer and auditor, Sonnet for coordinator and implementer | TODO(measure): confirm this split against results and cost |
+| Every report is a new top-level message tagged with its recipients, checked after sending | A seat wakes only when a message addressed to it arrives; a lost or threaded report stops the run silently |
+| No seat ends a turn with a background job still running | A job left running when the turn ends can be stopped with its results unreported |
+| Stages are pipelined: the next one starts once reviewer and customer accept, while the auditor finishes | The auditor's fault seeding was the slowest step of practice run 3; the implementer no longer waits for it, and a late finding is fixed in both stage folders |
+| Fault seeding is capped at 12–15 faults per stage, full set once, fix-scoped afterwards | Enough faults to compare the band's evidence with the shipped checks, without a 25-minute walk on every revision |
+| The auditor reports a blocking gap the moment it finds one | The implementer can fix while fault seeding continues, instead of waiting for the full report |
+| The coordinator treats committed report files as verdicts | A report that reached the repository but not the room still moves the stage forward |
+| A watchdog restarts disconnected seats | A crashed runtime cannot report or wake; restarting it redelivers its pending message |
+| Opus for reviewer and auditor, Sonnet for coordinator, implementer and customer | TODO(measure): confirm this split against results and cost |
 
 ## 6. Catching and recovering from bad work
 
@@ -115,6 +143,8 @@ replaced by a placeholder.
 | Implementer's claim does not match the tree | reviewer clean build at the reported hash | reject; coordinator trusts evidence over claims |
 | Loop of repeated rejects | coordinator's per-item count | split the item or change the approach |
 | Silent or absent seat | coordinator resend once, then continue | failure and attempt recorded in the final report |
+| Seat runtime crashes mid-stage | seat watchdog (`band status` shows the session disconnected) | `band restart` of that session; the pending message is redelivered |
+| Shipped checks blind to a broken requirement | spec-auditor fault seeding | the surviving fault is an open gap until the band's evidence catches it |
 | Earlier stage broken by extension | reviewer runs all earlier stages' checks | reject; carried-forward behaviour must be intact |
 | Build works locally but not clean | reviewer isolated-mode run | reject with the failing command |
 
@@ -157,6 +187,7 @@ All figures come from the submitted run. Leave blank until measured.
 | implementer | claude-sonnet-5-5 | TODO | TODO | TODO |
 | reviewer | claude-opus-5-5 | TODO | TODO | TODO |
 | spec-auditor | claude-opus-5-5 | TODO | TODO | TODO |
+| customer | claude-sonnet-5-5 | TODO | TODO | TODO |
 | **Total** | | TODO | TODO | TODO |
 
 Source of the numbers: TODO (state where each was read from).
@@ -191,6 +222,38 @@ plan window. The coordinator's report listed three process faults, and each chan
 - One handoff to the reviewer went missing; the coordinator's resend-once rule recovered it
   without human input.
 
+Practice run 3 (`pocketful` stages 1 and 2, five seats, 2 Oct 2026). Stage 1 was written in
+ten single-item commits and passed all 147 shipped checks in host and isolated mode. The
+reviewer accepted it after a reference model ran 14,400 random steps and 750 concurrent
+operations without a mismatch. The auditor then found a blocking defect none of that had
+caught: a lone UTF-16 surrogate in a note moved the money, closed the connection without a
+response, and broke every later activity read that included the record. The implementer fixed
+it with a regression test, and the reviewer and customer re-verified the fix.
+
+Fault seeding on stage 1 showed why the auditor exists:
+
+| Evidence | Faults caught, of 25 seeded |
+|---|---|
+| Shipped checks | 3 |
+| The band's evidence (auditor probes, reviewer model, implementer tests) | 23 |
+| Only a static check added during the walk (a removed global lock) | 1 |
+| Not caught: equivalent at the specification's one-second timestamp resolution | 1 |
+
+One fault slipped through on the first walk; the auditor strengthened that probe and caught it
+on the second. What we changed as a result:
+
+- The auditor's commits carried the repository's default identity. Every mandate now carries
+  the seat-identity commit rule, not only the implementer's and the customer's.
+- The auditor's runtime crashed while it was sending its report: the report never reached the
+  room, no seat woke, and the run stood still until the seat was restarted. The mandates now
+  require top-level, tagged messages checked after sending and forbid ending a turn with a
+  background job running; the coordinator reads committed reports when it wakes; and a seat
+  watchdog restarts disconnected runtimes (section 3).
+- The auditor held a blocking finding until fault seeding finished. It now reports blocking
+  gaps at once.
+- The auditor's ledger folder was named differently from this file. Folder names are now fixed
+  in the mandates: `ledger/`, `verification/`, `customer/`.
+
 ## 9. Limits and known weaknesses
 
 - The auditor and reviewer read the same specification as the implementer. A requirement all
@@ -200,10 +263,21 @@ plan window. The coordinator's report listed three process faults, and each chan
 - Seats run on the host with Claude Code's `auto` permission mode, not in a sandbox; the
   factory trusts the model's own safety checks for commands.
 - A lost message is recovered by one resend; a seat that stays silent after that is reported,
-  not replaced.
+  not replaced. A seat only acts when a message wakes it, so a report that never reaches the
+  room can stall a stage; the committed-report rule and the watchdog narrow this gap but do
+  not close it.
 - TODO(measure): add anything the submitted run shows.
 
-## 10. Reusing this factory on a different problem
+## 10. What we did not test
+
+- Hidden checks: only the shipped part of each stage's suite was run; the rest is the judges'.
+- A container restart in the middle of a write: the specification allows state to be lost on
+  restart, and no seat tried to kill the service during a request.
+- Load beyond the specification's stated concurrency (50 requests in flight).
+- Browsers other than the headless Chromium the customer seat drives.
+- Long runs: each practice and the submitted run covered hours, not days.
+
+## 11. Reusing this factory on a different problem
 
 1. Copy `mandates/` and this file.
 2. Rename seats and edit the `Harness:` and `Model:` lines if yours differ.
