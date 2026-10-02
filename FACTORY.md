@@ -85,7 +85,8 @@ covers the models in section 2.
 8. **Measure**: `tools/factory_numbers.py --transcripts <claude-projects-dir-for-the-workspace>
    --repo <result-repo> --since <dispatch-time> --room room.json` prints the spend, time and
    verdict tables used in section 7 from the seats' transcripts, the git history and the room
-   export, so every figure can be regenerated.
+   export, so every figure can be regenerated. It also lists every ACCEPT and REJECT with its
+   time, revision and `room.json` message id; claims in sections 6 and 7 cite those ids.
 
 TODO(measure): time the full setup on a clean machine.
 
@@ -120,6 +121,8 @@ replaced by a placeholder.
 | An accept stays provisional until the auditor's walk is closed | In practice run 2 the reviewer accepted a revision the auditor then showed to break a stated rule |
 | Every report is a new top-level message tagged with its recipients, checked after sending | A seat wakes only when a message addressed to it arrives; a lost or threaded report stops the run silently |
 | No seat ends a turn with a background job still running | A job left running when the turn ends can be stopped with its results unreported |
+| Stages are pipelined: the next one starts once reviewer and customer accept, while the auditor finishes | The auditor's fault seeding was the slowest step of practice run 3; the implementer no longer waits for it, and a late finding is fixed in both stage folders |
+| Fault seeding is capped at 12–15 faults per stage, full set once, fix-scoped afterwards | Enough faults to compare the band's evidence with the shipped checks, without a 25-minute walk on every revision |
 | The auditor reports a blocking gap the moment it finds one | The implementer can fix while fault seeding continues, instead of waiting for the full report |
 | The coordinator treats committed report files as verdicts | A report that reached the repository but not the room still moves the stage forward |
 | A watchdog restarts disconnected seats | A crashed runtime cannot report or wake; restarting it redelivers its pending message |

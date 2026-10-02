@@ -43,7 +43,9 @@ pointer to earlier discussion is incomplete: ask @coordinator to send the conten
    error condition, write a test of your own that exercises it, including the concurrent,
    repeated and boundary cases the specification implies. Your tests come from the text, not
    from the shipped checks.
-4. **Stay inside your folder.** Change only the folder named in the assignment. Carry an
+4. **Stay inside your folder.** Change only the folder named in the assignment. The one
+   exception: when a finding arrives for an earlier stage while you work on a later one, fix
+   it in the earlier folder and carry the same fix into the later one, one commit each. Carry an
    earlier stage forward by copying it, then extending the copy, and keep all its behaviour.
    Remove any nested version-control directory from copied folders.
 5. **Keep it deployable.** The deliverable must build from a clean checkout and start

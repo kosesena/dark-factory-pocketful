@@ -64,9 +64,14 @@ part clearly. Repeat requirements verbatim on every later handoff for the same s
 6. **Close.** Accept only the exact revision that @reviewer, @spec-auditor and @customer all
    accepted, with no open gap that cites a requirement. An earlier accept does not carry over
    to a newer revision. Then write the final report.
-7. **Carry forward.** If the task has several stages, start the next one from the closed
-   stage's folder: the new folder is a full copy, extended. Never delete the earlier stage's behaviour to make room. When one
-   dispatch covers several stages, close each stage completely before starting the next.
+7. **Carry forward, pipelined.** If the task has several stages, the next stage starts from a
+   full copy of the current stage's folder, extended. Never delete the earlier stage's
+   behaviour to make room. As soon as @reviewer and @customer have accepted a revision, send
+   @implementer the next stage, built on that revision, while @spec-auditor finishes its walk
+   and fault seeding. If @spec-auditor then finds a blocking gap, @implementer fixes it in the
+   earlier stage's folder and carries the same fix into the newer one, and both go back
+   through step 4. A stage counts as closed only when all three verifiers accepted it; the
+   final report closes every stage, not only the last.
 
 All seats write their files inside the result repository, never beside it.
 

@@ -96,14 +96,18 @@ def verdicts(room_path):
     msgs = sorted(room.get("messages", []), key=lambda m: m.get("insertedAt", ""))
     dispatch = next((m for m in msgs if m.get("senderType") == "User" and len(m.get("content", "")) > 100), None)
     counts = collections.Counter()
+    log = []
     for m in msgs:
         # A verdict is a message whose first word, after any @mentions, is ACCEPT or REJECT.
         body = re.sub(r"^(\s*(@\[\[[^\]]*\]\]|@[\w-]+)[\s,:]*)+", "", m.get("content") or "")
         word = re.match(r"\W*(ACCEPT|REJECT)\b", body.strip().upper())
         if word:
             counts[(m.get("senderName"), word.group(1))] += 1
+            rev = re.search(r"\b[0-9a-f]{7,40}\b", body)
+            log.append((m.get("insertedAt", ""), m.get("senderName"), word.group(1),
+                        rev.group(0)[:10] if rev else "", m.get("id", "")))
     humans = sum(1 for m in msgs if m.get("senderType") == "User" and m.get("messageType") != "event")
-    return dispatch, counts, humans
+    return dispatch, counts, humans, log
 
 
 def cost(counter, prices):
@@ -163,13 +167,18 @@ def main():
     print(f"\nCommits by author since dispatch: " + ", ".join(f"{k} {v}" for k, v in authors.most_common()) + "\n")
 
     if a.room:
-        dispatch, counts, humans = verdicts(a.room)
+        dispatch, counts, humans, log = verdicts(a.room)
         if dispatch:
             print(f"Dispatch: {dispatch['insertedAt']} (human messages in the room: {humans})\n")
         print("| Seat | ACCEPT | REJECT |")
         print("|---|---|---|")
         for seat in SEATS:
             print(f"| {seat} | {counts[(seat, 'ACCEPT')]} | {counts[(seat, 'REJECT')]} |")
+        print("\n### Verdict log (cite these room.json message ids in FACTORY.md)\n")
+        print("| Time (UTC) | Seat | Verdict | Revision | room.json message id |")
+        print("|---|---|---|---|---|")
+        for when, seat, verdict, rev, mid in log:
+            print(f"| {when[:19].replace('T', ' ')} | {seat} | {verdict} | `{rev}` | `{mid}` |")
 
 
 if __name__ == "__main__":

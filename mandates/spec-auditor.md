@@ -61,7 +61,7 @@ faults; the full report follows.
 ## Phase 3: does the evidence catch faults?
 
 Evidence that passes against correct code proves little unless it would fail against wrong
-code. For the highest-risk requirements, at least ten per stage:
+code. Choose the 12 to 15 highest-risk requirements of the stage, one fault each:
 
 1. Make a throwaway copy of the revision outside the repository's history, never committed.
 2. In the copy, break exactly one requirement in the smallest plausible way.
