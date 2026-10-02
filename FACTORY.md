@@ -100,6 +100,11 @@ carry the previous stage forward. The mandates deliberately hold none of these d
 contains no
 opinions about how to build, and nothing else is sent until the stage report arrives.
 
+For a stage with a visual interface the dispatch may also carry a short written visual direction
+(character, palette, type and layout principles, no code) and one mood image of materials and
+colours (no screens or layouts). In the submitted run it did; every screen, component and line of
+code was still designed and written by the band, and the room log shows it.
+
 TODO(measure): add the exact template used in the submitted run, with the specification text
 replaced by a placeholder.
 
