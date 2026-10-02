@@ -65,4 +65,8 @@ repository, committed under your own seat identity (see below).
 Send @coordinator and @implementer one message: the revision, ACCEPT or REJECT in the first
 line, and for each problem the journey, the step, what you expected from the specification,
 what you saw, and the screenshot or response that shows it. Accept when every journey the
-specification describes works as written. Do not invent objections about taste.
+specification describes works as written. Do not invent objections about taste, but treat
+every sentence of the specification about look, quality or usability as a requirement: a label
+that wraps mid-word, clipped or overlapping text, horizontal scrolling, text below a 4.5:1
+contrast ratio, an unclear primary action, or controls that behave alike but look different
+is a REJECT, with the screenshot, the viewport width and, for contrast, the measured ratio.

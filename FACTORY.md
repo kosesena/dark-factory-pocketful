@@ -117,6 +117,7 @@ replaced by a placeholder.
 | Reviewer also reads the commit history, not only the code | Catches mixed commits, committed caches and signs of building to the checks |
 | Fault seeding by the auditor | Passing evidence proves little unless it fails against wrong code; the auditor breaks one requirement at a time and counts how many breaks the evidence catches |
 | A reference model written from the specification only | The reviewer's model cannot inherit the implementation's mistakes; random operation sequences find orderings no hand-written test tries |
+| The look of a visual interface is a requirement: the implementer builds a design system first and checks every screen at the narrowest and a desktop width; the customer rejects layout breaks and low contrast with screenshots and measured ratios | The specification asks for a presentation-ready product; in practice run 3 a navigation label wrapped mid-word at phone width and nothing in the process was set up to stop it |
 | A customer seat that never reads the code | Judges only what a user can observe, which is what the interface part of the specification describes |
 | An accept stays provisional until the auditor's walk is closed | In practice run 2 the reviewer accepted a revision the auditor then showed to break a stated rule |
 | Every report is a new top-level message tagged with its recipients, checked after sending | A seat wakes only when a message addressed to it arrives; a lost or threaded report stops the run silently |

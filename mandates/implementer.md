@@ -48,15 +48,22 @@ pointer to earlier discussion is incomplete: ask @coordinator to send the conten
    it in the earlier folder and carry the same fix into the later one, one commit each. Carry an
    earlier stage forward by copying it, then extending the copy, and keep all its behaviour.
    Remove any nested version-control directory from copied folders.
-5. **Keep it deployable.** The deliverable must build from a clean checkout and start
+5. **Treat a visual interface's look as a requirement.** When the deliverable has screens,
+   build one consistent design system first (a type scale, a spacing scale, colour tokens and
+   shared controls), then the screens on top of it. Make the primary action and the most
+   important number on each screen unmistakable. Before every handoff, open each screen
+   yourself in a real browser at the narrowest and at a desktop width the specification
+   names, and fix what you see: labels that wrap mid-word, clipped or overlapping text,
+   horizontal scrolling, low contrast, controls that look different for the same job.
+6. **Keep it deployable.** The deliverable must build from a clean checkout and start
    exactly as the run contract in the task states. Such a contract typically covers how
    configuration and the listening port are supplied, whether the network is available at
    run time, and a start-up time limit. Document the run steps in the folder, and install
    every dependency at build time.
-6. **Keep secrets and generated files out.** No credentials in the repository, its history or
+7. **Keep secrets and generated files out.** No credentials in the repository, its history or
    its logs. Add an ignore file for build output, caches and local environments before the
    first commit, so only source is committed.
-7. **Never rewrite history.** After a handoff, do not amend, rebase or squash. Fix forward
+8. **Never rewrite history.** After a handoff, do not amend, rebase or squash. Fix forward
    with a new commit.
 
 ## Messages, turns and commits
