@@ -80,6 +80,21 @@ verifier_arms.sh`). Costs at list price from each run's own usage.
 
 One run per arm, so these are signs, not rates.
 
+The evidence itself was then measured: each model, given the same mandate, wrote one probe suite
+from the specification for the accepted revision `ba26a06`, and each suite was run against the
+same 37 seeded faults (`band-work/experiments/seeding_arms.sh`, `score_probes.py`):
+
+| Probe suite written by | Faults caught (of 37) | Time | Cost |
+|---|---|---|---|
+| Opus, practice run 3, strengthened over several rounds | 33 | — | — |
+| Opus, one pass | 30 | 12 min | $3.07 |
+| Sonnet, one pass | 30 | 6.5 min | $1.10 |
+
+29 faults are caught by both one-pass suites. Opus alone catches F26, the lone-surrogate fix
+reverted, which is the defect that started this record; Sonnet alone catches F24. The 37 faults
+were designed by the Opus auditor, which may favour Opus slightly. The Codex arm was stopped
+from outside twice before it finished and is not counted.
+
 ## Options
 
 **A. Drop the auditor.** Reviewer and customer verify, and the shipped checks act as the
@@ -98,11 +113,11 @@ goes away. The context would also grow: the auditor alone read 42 M cached token
 that to the reviewer's 14 M pushes one seat toward its context limit in the middle of a stage.
 
 **C. Keep the auditor but run it on Sonnet.** At list prices this roughly halves its cost
-(about 8.60 USD instead of 17.22). *Not chosen for the submitted run, but now the strongest alternative:* the
-Sonnet arm found G-35 in half the time at a third of the cost. What is still unmeasured is the
-part that makes this seat expensive, fault seeding: whether Sonnet's probes catch as many of
-the 37 faults. Switching on the day of the final run would trade a measured result for a
-partly measured one.
+(about 8.60 USD instead of 17.22). *Not chosen for the submitted run, and a sound choice where cost matters:*
+the Sonnet arm found G-35 in half the time at a third of the cost, and its probe suite caught as
+many seeded faults as Opus's (30 of 37) for $1.10 against $3.07. Opus stays for the submitted
+run because its suite caught the one regression that matters most here (F26) and because a
+model change the day before the final run would be unrehearsed.
 
 **D. Keep the auditor on Opus, but bound its work. Chosen.**
 - Fault seeding is capped at 12–15 of the riskiest requirements per stage. The full set runs
@@ -140,8 +155,8 @@ partly measured one.
   The submitted run, with four stages, will replace them (`FACTORY.md` section 7).
 - **Whether G-35 is in the hidden suite.** Catching it matters for the product. Whether it
   changes the score is not known.
-- **Whether Sonnet would do the whole job.** It finds G-35 cheaply; its fault seeding is
-  unmeasured. That is the first experiment after the hackathon.
+- **Whether the tie holds.** Opus and Sonnet tie at 30 of 37 on one suite each. More runs,
+  and faults designed by a different model, would show whether the tie is real.
 - **One run per arm.** Each arm above ran once; a second run could differ.
 - **List price, not invoice.** The numbers are the equivalent API cost of subscription usage.
 
