@@ -134,7 +134,7 @@ replaced by a placeholder.
 | The auditor reports a blocking gap the moment it finds one | The implementer can fix while fault seeding continues, instead of waiting for the full report |
 | The coordinator treats committed report files as verdicts | A report that reached the repository but not the room still moves the stage forward |
 | A watchdog restarts disconnected seats | A crashed runtime cannot report or wake; restarting it redelivers its pending message |
-| Opus for reviewer and auditor, Sonnet for coordinator, implementer and customer | TODO(measure): confirm this split against results and cost |
+| Opus for reviewer and auditor, Sonnet for coordinator, implementer and customer | The auditor is the most expensive seat (48 % of practice run 3's spend) and the only one that caught what the reviewer accepted; the trade-off, the rejected options and what we do not know are in [ADR-001](docs/decisions/ADR-001-keep-the-spec-auditor.md). TODO(measure): re-check against the submitted run |
 
 ## 6. Catching and recovering from bad work
 
