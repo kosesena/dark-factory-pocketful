@@ -44,6 +44,10 @@ spec-auditor and customer all finally accepted:
 Two more claims (a transient negative balance inside a lock, a balance above 2^53) depend on a
 reading of the specification and are not counted.
 
+A second measurement points the same way: asked to write a probe suite from the specification,
+Opus, Sonnet and Codex each caught 30 of the same 37 seeded faults, but not the same 30; Codex
+alone caught one, Opus alone the lone-surrogate regression (ADR-001).
+
 Neither family covered the other: Opus found what Codex missed, Codex found seven things three
 Claude verifiers accepted.
 

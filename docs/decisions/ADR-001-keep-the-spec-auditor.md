@@ -89,11 +89,13 @@ same 37 seeded faults (`band-work/experiments/seeding_arms.sh`, `score_probes.py
 | Opus, practice run 3, strengthened over several rounds | 33 | — | — |
 | Opus, one pass | 30 | 12 min | $3.07 |
 | Sonnet, one pass | 30 | 6.5 min | $1.10 |
+| Codex (gpt-6-astra), one pass | 30 | 34 min | ChatGPT plan (1.66 M input, 1.49 M cached, 48 k output) |
 
-29 faults are caught by both one-pass suites. Opus alone catches F26, the lone-surrogate fix
-reverted, which is the defect that started this record; Sonnet alone catches F24. The 37 faults
-were designed by the Opus auditor, which may favour Opus slightly. The Codex arm was stopped
-from outside twice before it finished and is not counted.
+All three one-pass suites catch 30 of 37; together they catch 32. Opus alone catches F26, the
+lone-surrogate fix reverted, which is the defect that started this record; Sonnet alone catches
+F24; Codex alone catches F06 (an import that merges the destination's sessions instead of
+replacing them). The 37 faults were designed by the Opus auditor, which may favour Opus slightly.
+The Codex arm was stopped from outside twice before a third attempt finished.
 
 ## Options
 
