@@ -93,9 +93,9 @@ ChatGPT desktop app; BAND needs Codex 0.146.0 or newer).
    then `shasum -a 256 -c checks.sha256` after the final report. Both results go in section 7.
 7. **Record the room**: room menu, Open in Band, Download full session, save as `room.json`.
 8. **Measure**: `tools/factory_numbers.py --transcripts <claude-projects-dir-for-the-workspace>
-   --repo <result-repo> --since <dispatch-time> --room room.json --prices tools/prices.json`
+   --repo <result-repo> --since <dispatch-time> --room room.json --prices tools/prices.json --workspace <band working directory>`
    prints the spend, time and verdict tables used in section 7 from the seats' transcripts, the
-   git history and the room export, so every figure can be regenerated. Cost is at Anthropic's
+   git history, the Codex seat's session logs and the room export, so every figure can be regenerated. Cost is at Anthropic's
    public API list prices (`tools/prices.json`; the seats run on a subscription, so this is the
    equivalent API cost, not an invoice). It also lists every ACCEPT and REJECT with its
    time, revision and `room.json` message id; claims in sections 6 and 7 cite those ids.
