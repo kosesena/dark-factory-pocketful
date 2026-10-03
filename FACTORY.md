@@ -6,24 +6,25 @@ here is estimated.
 
 ## 1. Overview
 
-A band of five Claude Code seats in BAND Desktop, sharing one result repository. One seat
-plans and routes, one writes code, one verifies independently, one audits the specification
-against the shipped checks and seeds faults, and one uses the product as its users would. The
-human's dispatch message is the only human input per stage.
+A band of six seats in BAND Desktop, sharing one result repository: five Claude Code seats and
+one Codex seat. One seat plans and routes, one writes code, one verifies independently, one
+audits the specification against the shipped checks and seeds faults, one uses the product as
+its users would, and one audits every revision again on a different model family, without
+seeing the others' work. The human's dispatch message is the only human input per stage.
 
 ```
             dispatch (human)
                   |
                  @coordinator
-        /        /        |        \
- @spec-auditor @implementer @reviewer @customer
-  ledger, gaps,   commits   reference  real interface,
-  fault seeding             model      screenshots
-        \        \        |        /
-                 @coordinator  -> accept / route back -> final report
+        /        /        |        \          \
+ @spec-auditor @implementer @reviewer @customer @cross-auditor
+  ledger, gaps,   commits   reference  real      own walk on a
+  fault seeding             model      interface second model family
+        \        \        |        /          /
+                 @coordinator  -> accept (all four verifiers) / route back -> final report
 ```
 
-The mandates in `mandates/` contain no problem-specific detail. Point the same five files at
+The mandates in `mandates/` contain no problem-specific detail. Point the same six files at
 a different specification and the factory runs unchanged; the specification travels in the
 dispatch message and in every handoff.
 
@@ -35,21 +36,23 @@ dispatch message and in every handoff.
 | implementer | `mandates/implementer.md` | Claude Code | claude-sonnet-5-5 | code and commits | accepts its own work |
 | reviewer | `mandates/reviewer.md` | Claude Code | claude-opus-5-5 | independent verification, including a reference model written from the specification and random operation sequences compared against it | edits code |
 | spec-auditor | `mandates/spec-auditor.md` | Claude Code | claude-opus-5-5 | requirements ledger, gap list, and fault seeding: breaking one requirement at a time in a throwaway copy to prove the evidence catches it | edits code, writes tests to pass |
-| customer | `mandates/customer.md` | Claude Code | claude-sonnet-5-5 | using the product through its real interface at desktop and phone widths, screenshots of every named state | edits code, reads the implementation to judge it |
+| customer | `mandates/customer.md` | Claude Code | claude-sonnet-5-5 | using the product through its real interface at desktop and phone widths, screenshots of every named state, and whether each screen looks finished as a whole | edits code, reads the implementation to judge it |
+| cross-auditor | `mandates/cross-auditor.md` | Codex | gpt-6-astra | a second, independent walk of every revision against the specification on a different model family ([ADR-002](docs/decisions/ADR-002-a-second-model-family.md)) | edits code, reads other verifiers' files before its own verdict, reads shipped check sources |
 
 Model ids in the table match the `Model:` first line of each mandate. Change both together.
 
 ## 3. Standing it up
 
 Prerequisites: macOS or Linux, Git, a running Docker daemon, Python 3.12+ (only for the event
-harness), BAND Desktop 0.4.12+ with an account, and the Claude Code CLI signed in to a plan that
-covers the models in section 2.
+harness), BAND Desktop 0.4.12+ with an account, the Claude Code CLI signed in to a plan that covers the
+Claude models in section 2, and the Codex CLI signed in to a ChatGPT plan (it ships inside the
+ChatGPT desktop app; BAND needs Codex 0.146.0 or newer).
 
 1. **Sign the CLI in and update it.** Seats run the terminal `claude` CLI, not the Claude desktop
    app, and it has its own login. Check with `claude auth status` (must show `loggedIn: true`);
    if not, run `claude auth login`. Run `claude update`: `claude-opus-5-5` needs Claude Code
    2.1.280 or newer, and an older CLI fails every Opus turn with an API 400.
-2. **Create the five seats** from the directory the band works in. Each seat's instructions are
+2. **Create the six seats** from the directory the band works in. Each seat's instructions are
    live-linked to its mandate file, so editing a mandate updates the seat and the file in this
    repository is exactly what the seat ran:
 
@@ -63,7 +66,14 @@ covers the models in section 2.
        --transport claude-code-cli --runtime-model "$model" \
        --instructions-file "$RESULT_REPO/mandates/$name.md"
    done
-   band list    # all five: Connected running=true
+   # the sixth seat runs on Codex; probe first with --dry-run (without --instructions-file)
+   band agent create --session df-cross-auditor --name cross-auditor \
+     --description "Dark Factory seat: cross-auditor" --cwd "$WORKSPACE" \
+     --transport codex-app-server --spawn-command "$CODEX_BIN" \
+     --runtime-auth subscription --runtime-model gpt-6-astra --runtime-effort high \
+     --runtime-approval never --runtime-sandbox danger-full-access \
+     --instructions-file "$RESULT_REPO/mandates/cross-auditor.md"
+   band list    # all six: Connected running=true
    ```
 
    Defaults kept: permission mode `auto` (unattended, with Claude Code's own safety checks) and
@@ -134,6 +144,12 @@ replaced by a placeholder.
 | The auditor reports a blocking gap the moment it finds one | The implementer can fix while fault seeding continues, instead of waiting for the full report |
 | The coordinator treats committed report files as verdicts | A report that reached the repository but not the room still moves the stage forward |
 | A watchdog restarts disconnected seats | A crashed runtime cannot report or wake; restarting it redelivers its pending message |
+| A sixth verifier, the cross-auditor, on a different model family, blind to the other verifiers until its own verdict | On one revision Codex found seven specification breaks the all-Claude band had accepted, and Opus found the one Codex missed: the blind spots do not overlap ([ADR-002](docs/decisions/ADR-002-a-second-model-family.md)) |
+| Every verifier commits its verdict as a file named after the revision, for every revision | In practice run 5 the reviewer's verdict went into a thread, the coordinator never saw it, and the run stopped one message short of closing |
+| The implementer does not commit while a revision is under review; findings are fixed together in one revision | In practice run 6 test-only commits made five revisions in 25 minutes, and every one voided the accepts already given |
+| "The evidence" in fault seeding means all of the band's committed checks; a fault only the auditor's own probe catches is a suggested test, not a blocking gap | In practice run 6 the auditor seeded against the implementer's tests alone and rejected correct code |
+| The customer judges each screen as a whole, not only rule by rule | In practice run 4 every measured rule passed while the desktop layout left a large empty column |
+| The dispatch stays under about 3,500 characters; a visual direction travels as a file path | BAND turns a longer paste into an attachment instead of a message |
 | Opus for reviewer and auditor, Sonnet for coordinator, implementer and customer | The auditor is the most expensive seat (48 % of practice run 3's spend) and the only one that caught what the reviewer accepted; the trade-off, the rejected options and what we do not know are in [ADR-001](docs/decisions/ADR-001-keep-the-spec-auditor.md). TODO(measure): re-check against the submitted run |
 
 ## 6. Catching and recovering from bad work
@@ -256,10 +272,40 @@ on the second. What we changed as a result:
 - The auditor's ledger folder was named differently from this file. Folder names are now fixed
   in the mandates: `ledger/`, `verification/`, `customer/`.
 
+Practice run 4 (`pocketful` stage 2 only, built on run 3's accepted stage 1, 3 Oct 2026): a
+rehearsal of the visual direction. Dispatch to three accepts in about 40 minutes, one reviewer
+reject fixed in a minute. The palette check found all 13 brief colours in the source (run 3,
+without a brief: 0 of 13). The customer measured every rule and accepted, but did not object to a
+desktop layout that left one column mostly empty. The customer mandate now asks for a judgement
+of each screen as a whole.
+
+The cross-family experiment (3 Oct 2026, no room): the spec-auditor mandate run headless on
+Codex against run 3's revision `1a0af59`, the one reviewer and customer had accepted. Codex did
+not find the lone-surrogate defect. It did report nine others; seven reproduce on that revision
+and on `ba26a06`, the revision all three Claude verifiers finally accepted (equal JSON numbers
+treated as different bodies and different values as equal, an import accepting a negative
+amount, 500 on very long `limit`/`offset` digits, a malformed body changing state, 500 on a
+wrongly typed reset reference, an HTML 501 for OPTIONS). That result added the sixth seat.
+
+Practice run 5 (`toy` stage 1, six seats): the Codex seat took handoffs, committed under its own
+identity and posted verdicts. The run then stopped: the reviewer's last verdict went into a
+thread and was never committed, the coordinator woke on another message, saw three accepts out
+of four and ended its turn. Every verifier now commits a verdict file per revision.
+
+Practice run 6 (`toy` stage 1, six seats, rerun): closed in about 28 minutes with all four
+verdicts committed. The cross-auditor rejected the first build for connections reset under
+200 concurrent requests; the fix came from its report. Two process faults remained and changed
+mandates: test-only commits during review produced five revisions, and the auditor rejected
+correct code because it counted only the implementer's tests as evidence.
+
 ## 9. Limits and known weaknesses
 
 - The auditor and reviewer read the same specification as the implementer. A requirement all
-  three misread is not caught; only the hidden checks would show it.
+  of them misread is not caught; only the hidden checks would show it. The cross-auditor on a
+  second model family narrows this, and the experiment above shows it does, but two families
+  can still share a misreading.
+- The Codex seat runs with approvals off and full disk access, like the Claude seats in `auto`
+  mode; the factory trusts each harness's own safety checks.
 - Rules about process (one item per commit, not opening check files) are enforced by review
   after the fact, not prevented. A seat can break one and be rejected, which costs a round.
 - Seats run on the host with Claude Code's `auto` permission mode, not in a sandbox; the

@@ -8,10 +8,12 @@ Team: Sena Köse (solo). Submission deadline: **6 Oct 2026, 09:59 Türkiye time*
 
 ## Meet the crew
 
-![The five seats as felt mascots in their workshop](docs/crew/crew.jpg)
+![The Felt Five and a golden wool-plush outsider in their workshop](docs/crew/crew-with-outsider.png)
 
-Each seat in the band has a felt mascot. The mascots are only a storytelling layer for the
-video and this page: the mandates contain no personality, and the seats behave exactly as
+The Felt Five now welcome **one outsider**: a cross-auditor from a different model family.
+The original crew keeps its stitched felt; the visitor is a soft golden wool-plush pebble
+with a monocle. The mascots are only a storytelling layer for the video and this page:
+the mandates contain no personality, and the seats behave exactly as
 `mandates/` and `FACTORY.md` describe.
 
 <img src="docs/crew/coordinator.png" align="left" height="220" alt="Blue cone with a conductor's baton">
@@ -74,10 +76,26 @@ Uses the product through its real interface at desktop and phone widths, without
 
 <br clear="all">
 
+## And one outsider
+
+<img src="docs/crew/cross-auditor.png" align="right" height="220" alt="Golden fuzzy pebble with tiny black eyes and a teal-tinted monocle">
+
+### cross-auditor
+
+*Golden wool-plush pebble with a different lens*
+
+Runs on Codex with `gpt-6-astra`. Independently walks each revision against the specification,
+exercises requirements with concrete inputs and reports gaps before reading the other
+verifiers' findings. Fault seeding remains the spec-auditor's responsibility.
+
+**Never edits code or writes tests meant to make the build pass.**
+
+<br clear="all">
+
 ## What is being built
 
 A software factory in BAND Desktop: at least three coding-agent seats (each a separate
-Claude Code window on the participant's machine) that plan work, implement it, hand off
+Claude Code or Codex session on the participant's machine) that plan work, implement it, hand off
 evidence and independently check results. The factory builds a wallet/payments service
 (the `pocketful` track) one stage at a time.
 
