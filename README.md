@@ -1,5 +1,9 @@
 # The Felt Five — a very dark factory that tests its own tests
 
+> **Shipped checks: 9 of 37 seeded faults caught. Our band's evidence: 36.** Six seats, two model
+> families, one dispatch, no human in the loop. (Practice-run figure; the submitted run's numbers
+> replace it.)
+
 Entry for the WeAreDevelopers x BAND "Dark Factory" hackathon (lablab.ai), track **pocketful**.
 Team: Sena Köse (solo). Submission deadline: **6 Oct 2026, 09:59 Türkiye time** (5 Oct 23:59 PDT).
 

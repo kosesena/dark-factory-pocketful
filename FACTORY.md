@@ -1,5 +1,9 @@
 # FACTORY.md
 
+> **The shipped checks caught 9 of 37 faults we seeded one at a time; the band's own evidence
+> caught 36.** (Practice run 3, stage 1. TODO(measure): replace with the submitted run, per stage.)
+> The factory is built to measure whether its evidence works, not only whether the checks are green.
+
 How to stand up this factory, why it is built this way, what it cost, and how it catches bad
 work. Sections marked `TODO(measure)` are filled in from real runs before submission; nothing
 here is estimated.
