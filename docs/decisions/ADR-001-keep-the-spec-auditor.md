@@ -1,6 +1,6 @@
 # ADR-001: Keep the spec-auditor, our most expensive seat
 
-**Status:** Accepted for the submitted run; to be re-checked against its numbers
+**Status:** Accepted for the submitted run; options measured on 3 October 2026 (below); to be re-checked against the submitted run
 **Date:** 3 October 2026
 **Author:** Sena Köse
 **Decides:** which seats verify the work, and on which model
@@ -45,8 +45,40 @@ Practice run 3, stage 1:
 Practice run 2 showed the same pattern: three reject rounds after 147/147, none of them visible to
 the shipped checks, two of them found by the auditor after the reviewer had accepted.
 
+What the rest of the band catches without the auditor was measured afterwards, by running the
+reviewer's own scripts (model check, edge probes) against the same 37 broken copies
+(`band-work/experiments/reviewer_vs_faults.py`, no model calls):
+
+| Evidence against the 37 seeded faults | Caught |
+|---|---|
+| Shipped checks alone | 9 |
+| Reviewer's own scripts, as they stood before any auditor finding | 29 |
+| Everything except the auditor (implementer tests, customer journey, shipped checks, reviewer) | 30 |
+| Plus the auditor's probes | 33 |
+| Plus the auditor's static lock check | 36 |
+
+The reviewer is stronger than the first table suggested. The auditor's own share is 7 of 37
+faults (4 by probes, 3 by the lock check), plus G-35 in the live run and the gap list before
+the build. That is narrower than "it catches everything", and it is still the part nobody
+else looks at.
+
 The shipped checks are a partial sample of the judges' full suite. A service that passes them
 can still fail the hidden part. The auditor is the seat that looks at that hidden part.
+
+## The options, measured
+
+Same task for each arm: verify revision `1a0af59` against the stage-1 specification, fault
+seeding off, run headless with the factory's own mandate text (`band-work/experiments/
+verifier_arms.sh`). Costs at list price from each run's own usage.
+
+| Arm | Finds G-35 | Other findings | Time | Cost |
+|---|---|---|---|---|
+| spec-auditor on Opus (today's seat) | yes | malformed chunked body gives 500; 5,000-digit amount gives 400, not 422 | 4 min | $1.39 |
+| spec-auditor on Sonnet (option C) | yes | the over-long integer case | 2 min | $0.46 |
+| reviewer and auditor as one Opus seat (option B) | **no** | malformed chunked body gives 500 | 9 min | $2.32 |
+| spec-auditor on Codex (see ADR-002) | no | seven other breaks of stated requirements | 24.5 min | ChatGPT plan |
+
+One run per arm, so these are signs, not rates.
 
 ## Options
 
@@ -59,15 +91,18 @@ check.
 **B. Fold the audit into the reviewer (one Opus seat does both).** This is the strongest
 alternative. There would be one fewer handoff and the specification would be read once instead
 of twice, so much of the duplicated cache reading would go away. *Rejected:* the reviewer
-accepted the revision the auditor rejected. A reviewer that also writes the ledger checks the
+accepted the revision the auditor rejected, and the measured combined seat (above) missed G-35
+while costing more than the separate auditor. A reviewer that also writes the ledger checks the
 code against its own reading of the specification, so the independence the factory is built on
 goes away. The context would also grow: the auditor alone read 42 M cached tokens, and adding
 that to the reviewer's 14 M pushes one seat toward its context limit in the middle of a stage.
 
 **C. Keep the auditor but run it on Sonnet.** At list prices this roughly halves its cost
-(about 8.60 USD instead of 17.22). *Not chosen for the submitted run:* this is not measured. We
-do not know whether a Sonnet auditor finds G-35 or reaches 36/37. Switching the model in the
-final run without data would replace a measured result with a guess.
+(about 8.60 USD instead of 17.22). *Not chosen for the submitted run, but now the strongest alternative:* the
+Sonnet arm found G-35 in half the time at a third of the cost. What is still unmeasured is the
+part that makes this seat expensive, fault seeding: whether Sonnet's probes catch as many of
+the 37 faults. Switching on the day of the final run would trade a measured result for a
+partly measured one.
 
 **D. Keep the auditor on Opus, but bound its work. Chosen.**
 - Fault seeding is capped at 12–15 of the riskiest requirements per stage. The full set runs
@@ -105,8 +140,9 @@ final run without data would replace a measured result with a guess.
   The submitted run, with four stages, will replace them (`FACTORY.md` section 7).
 - **Whether G-35 is in the hidden suite.** Catching it matters for the product. Whether it
   changes the score is not known.
-- **Whether Sonnet would do.** Option C is untested. It is the first experiment after the
-  hackathon.
+- **Whether Sonnet would do the whole job.** It finds G-35 cheaply; its fault seeding is
+  unmeasured. That is the first experiment after the hackathon.
+- **One run per arm.** Each arm above ran once; a second run could differ.
 - **List price, not invoice.** The numbers are the equivalent API cost of subscription usage.
 
 ## Revisit when
