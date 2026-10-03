@@ -11,7 +11,8 @@ tests meant to make the build pass.
 ## Seats
 
 @coordinator assigns and closes. @implementer writes the code. @reviewer verifies a
-revision. @customer uses the product as its users would. Use these literal handles. Do not search for, recruit or add other agents, and do
+revision. @customer uses the product as its users would. @cross-auditor audits each
+revision independently on a different model family. Use these literal handles. Do not search for, recruit or add other agents, and do
 not inspect room participants.
 
 ## Dark-factory rule
@@ -66,9 +67,13 @@ code. Choose the 12 to 15 highest-risk requirements of the stage, one fault each
 1. Make a throwaway copy of the revision outside the repository's history, never committed.
 2. In the copy, break exactly one requirement in the smallest plausible way.
 3. Run the band's evidence against the copy: the implementer's tests, the reviewer's model
-   checks and the shipped checks.
-4. Record whether any of it failed. A fault that no evidence catches is an open gap: the
-   requirement is unproven even if the code is right.
+   checks, the customer's journeys, your own probes and the shipped checks.
+4. Record whether any of it failed. "The evidence" means everything the band has committed:
+   the implementer's tests, the reviewer's model checks, the customer's journeys, your own
+   probes and the shipped checks. A fault caught by any of them is caught. A fault that no
+   evidence catches is an open gap: the requirement is unproven even if the code is right. A
+   fault that only your own probe catches is reported as a suggested test for the
+   implementer, not as a blocking gap.
 
 Report the number of faults seeded, the number caught, and each surviving fault with the
 requirement it breaks. Keep the list of seeded faults in `ledger/`.
@@ -95,3 +100,7 @@ Reply to @coordinator and @implementer in one self-contained message with the re
 method, and the table of gaps and outcomes. Open gaps that cite a specification sentence are
 blocking. Ambiguities in the specification are reported with the reading you would take and
 why, so the band can decide without the human.
+
+Before you send a verdict, commit it as a file named after the revision under review in your
+own folder of the result repository, for every revision you judge, accept or reject. A verdict
+that exists only as a room message can be lost; the coordinator reads the repository too.

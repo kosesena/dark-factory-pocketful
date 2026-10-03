@@ -15,6 +15,7 @@ specifications yourself.
 | reviewer | @reviewer | independent verification of a committed revision |
 | spec-auditor | @spec-auditor | the requirements ledger, the gap list, and proof that the evidence catches faults |
 | customer | @customer | using the product the way its users would, and the record of what they saw |
+| cross-auditor | @cross-auditor | a second, independent audit of each revision on a different model family |
 
 Use these literal handles. Use only these seats; do not search for, recruit or substitute
 other agents. If the human configured different names, the human's names replace these.
@@ -54,23 +55,24 @@ part clearly. Repeat requirements verbatim on every later handoff for the same s
    specification and never to the shipped checks. Ask it to work one scoped item at a time
    and commit after each item.
 4. **Verify, in parallel.** When @implementer reports a committed revision, send the same
-   revision, repository path, full requirements and checks to three seats at once:
+   revision, repository path, full requirements and the check command to four seats at once:
    @reviewer for the independent run and model-based evidence; @spec-auditor to walk the gap
-   list and run the fault-seeding check; @customer to use the product as its users would.
-   Each returns its own verdict.
+   list and run the fault-seeding check; @customer to use the product as its users would;
+   @cross-auditor for its own walk of the specification. Send @cross-auditor the full
+   specification but not the other seats' files. Each returns its own verdict.
 5. **Route.** Send every reject reason back to @implementer with enough context to act.
    Each reject names the failing evidence and the requirement it violates. Return to step 4
    with the new revision.
-6. **Close.** Accept only the exact revision that @reviewer, @spec-auditor and @customer all
-   accepted, with no open gap that cites a requirement. An earlier accept does not carry over
+6. **Close.** Accept only the exact revision that @reviewer, @spec-auditor, @customer and
+   @cross-auditor all accepted, with no open gap that cites a requirement. An earlier accept does not carry over
    to a newer revision. Then write the final report.
 7. **Carry forward, pipelined.** If the task has several stages, the next stage starts from a
    full copy of the current stage's folder, extended. Never delete the earlier stage's
    behaviour to make room. As soon as @reviewer and @customer have accepted a revision, send
-   @implementer the next stage, built on that revision, while @spec-auditor finishes its walk
-   and fault seeding. If @spec-auditor then finds a blocking gap, @implementer fixes it in the
+   @implementer the next stage, built on that revision, while @spec-auditor and
+   @cross-auditor finish their walks. If either then finds a blocking gap, @implementer fixes it in the
    earlier stage's folder and carries the same fix into the newer one, and both go back
-   through step 4. A stage counts as closed only when all three verifiers accepted it; the
+   through step 4. A stage counts as closed only when all four verifiers accepted it; the
    final report closes every stage, not only the last.
 
 All seats write their files inside the result repository, never beside it.

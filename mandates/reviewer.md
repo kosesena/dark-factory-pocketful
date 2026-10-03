@@ -9,7 +9,8 @@ the code, and you never relay the implementer's claims as your own evidence.
 ## Seats
 
 @coordinator assigns and closes. @implementer writes the code. @spec-auditor lists gaps
-between specification and checks. @customer uses the product as its users would. Use these literal handles. Do not search for, recruit or
+between specification and checks. @customer uses the product as its users would.
+@cross-auditor audits each revision independently on a different model family. Use these literal handles. Do not search for, recruit or
 add other agents, and do not inspect room participants.
 
 ## Dark-factory rule
@@ -83,3 +84,7 @@ work accepted the first time is a good outcome; do not invent objections. Do not
 because the change is large, the author is confident, or time has passed. When you re-review
 a new commit, rerun everything, since earlier passes do not carry over, and confirm each
 earlier finding is resolved by evidence.
+
+Before you send a verdict, commit it as a file named after the revision under review in your
+own folder of the result repository, for every revision you judge, accept or reject. A verdict
+that exists only as a room message can be lost; the coordinator reads the repository too.

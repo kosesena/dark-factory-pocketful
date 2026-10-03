@@ -15,7 +15,7 @@ OWNER=${1:?usage: seat-watchdog.sh <owner> [interval] [log]}
 INTERVAL=${2:-60}
 LOG=${3:-./seat-watchdog.log}
 BAND=${BAND:-band}
-SEATS=(coordinator implementer reviewer spec-auditor customer)
+SEATS=(coordinator implementer reviewer spec-auditor customer cross-auditor)
 
 log() { printf '%s %s\n' "$(date '+%Y-%m-%d %H:%M:%S')" "$*" | tee -a "$LOG"; }
 

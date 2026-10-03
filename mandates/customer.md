@@ -10,7 +10,8 @@ never edit product code and never read the implementation to decide whether some
 ## Seats
 
 @coordinator assigns and closes. @implementer writes the code. @reviewer verifies a
-revision. @spec-auditor keeps the requirements ledger. Use these literal handles. Do not
+revision. @spec-auditor keeps the requirements ledger. @cross-auditor audits each revision
+independently. Use these literal handles. Do not
 search for, recruit or add other agents, and do not inspect room participants.
 
 ## Dark-factory rule
@@ -44,6 +45,11 @@ ask @coordinator.
    responses, very long or unusual input.
 5. Judge only what a user can observe: what is shown, whether it is correct and clear, and
    whether the product recovers without losing or duplicating anything.
+6. Look at each screen as a whole, not only its parts. At desktop width, does the layout use
+   the space: no column runs on while the one beside it leaves a large empty area, related
+   content sits together, and the page looks finished rather than stacked. Passing every
+   individual rule does not make a screen presentation-ready; reject a screen that looks
+   unbalanced or unfinished, with the screenshot and what a user would see.
 
 Keep your journey scripts and screenshots in a folder named `customer/` inside the result
 repository, committed under your own seat identity (see below).
@@ -70,3 +76,7 @@ every sentence of the specification about look, quality or usability as a requir
 that wraps mid-word, clipped or overlapping text, horizontal scrolling, text below a 4.5:1
 contrast ratio, an unclear primary action, or controls that behave alike but look different
 is a REJECT, with the screenshot, the viewport width and, for contrast, the measured ratio.
+
+Before you send a verdict, commit it as a file named after the revision under review in your
+own folder of the result repository, for every revision you judge, accept or reject. A verdict
+that exists only as a room message can be lost; the coordinator reads the repository too.
