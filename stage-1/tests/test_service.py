@@ -254,6 +254,32 @@ class Strictness(Base):
         self.assertEqual(call("POST", "/payments", {"to_handle": "bob", "amount": 100.0}, token=self.ada, key="LG")[0], 200)
         self.assertEqual(call("POST", "/payments", {"to_handle": "bob", "amount": 101}, token=self.ada, key="LG")[0], 409)
 
+    def test_string_literals_never_equal_json_literals(self):
+        b = '{"to_handle":"bob","amount":1,"x":%s}'
+        self.assertEqual(call("POST", "/payments", raw=b % '"true"', token=self.ada, key="LT")[0], 201)
+        self.assertEqual(call("POST", "/payments", raw=b % "true", token=self.ada, key="LT")[0], 409)
+        self.assertEqual(call("POST", "/payments", raw=b % "null", token=self.ada, key="LN")[0], 201)
+        self.assertEqual(call("POST", "/payments", raw=b % '"null"', token=self.ada, key="LN")[0], 409)
+
+    def test_bad_timestamps_and_dangling_refs_rejected_on_reset_and_import(self):
+        for ts in ("yesterday", "2026-02-30T00:00:00+00:00", 5):
+            fx = fixture()
+            fx["payments"][0]["created_at"] = ts
+            self.assertEqual(call("POST", "/_test/reset", fx)[0], 422, ts)
+        self.assertEqual(self.bal(login("ada")), 10000)
+        call("POST", "/_test/reset", fixture())
+        s, snap, _ = call("GET", "/_test/export")
+        snap["state"]["idempotency"] = []
+        for f in (lambda st: st["payments"][0].__setitem__("created_at", "yesterday"),
+                  lambda st: st["payments"][0].__setitem__("created_at", "2026-02-30T00:00:00+00:00"),
+                  lambda st: st["payments"][0].__setitem__("request_id", "ghost"),
+                  lambda st: st["payments"][0].__setitem__("settlement_id", "ghost"),
+                  lambda st: st["requests"][0].__setitem__("created_at", "2026-02-30T00:00:00+00:00")):
+            m = json.loads(json.dumps(snap))
+            f(m["state"])
+            self.assertEqual(call("POST", "/_test/import", m)[0], 422)
+        self.assertEqual(self.bal(login("ada")), 10000)
+
     def test_huge_integers(self):
         big = "9" * 5000
         for path, body in (("/payments", '{"to_handle":"bob","amount":%s}'), ("/requests", '{"payer_handle":"bob","amount":%s}'),
