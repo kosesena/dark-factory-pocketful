@@ -5,6 +5,7 @@ import time
 import re
 
 from invariants import check_state_invariants
+from ledger import compute_opening, ensure_revisions, first_revision
 from common import (sweep, MAX_AMOUNT, parse_ts, HANDLE_RE, held_of, STATUSES, State, parse_json, store, validation)
 
 
@@ -67,6 +68,34 @@ def _seq(v):
     return _int(v) and v >= 0
 
 
+def _check_revisions(p):
+    revs = p["revisions"]
+    _need(isinstance(revs, list) and revs and revs[0] == first_revision(p))
+    last = None
+    for i, r in enumerate(revs, 1):
+        _need(isinstance(r, dict) and set(r) == set(first_revision(p)) and r["revision"] == i)
+        _need(_amount(r["amount"]) and _str(r["reason"]) and len(r["reason"]) <= 200 and (i == 1 or r["reason"]))
+        _ts_str(r["effective_at"])
+        _ts_str(r["recorded_at"])
+        _need(_num(r["effective_ts"]) and _num(r["recorded_ts"]))
+        _ts_match(r["effective_at"], r["effective_ts"])
+        _ts_match(r["recorded_at"], r["recorded_ts"])
+        _need(last is None or r["recorded_ts"] > last)
+        last = r["recorded_ts"]
+
+
+def _derive_closed(s, rec):
+    """A stage-2 export has no closing time: expiry at its deadline, otherwise the last capture (or
+    creation: a closed hold need not reconstruct its lifecycle)."""
+    if rec["status"] == "open":
+        return None, None
+    if rec["status"] == "expired":
+        return rec["expires_at"], float(math.floor(rec["expires_ts"]))
+    last = s.payments_by_id.get(rec["payment_ids"][-1]) if rec["payment_ids"] else None
+    src = last or rec
+    return src["created_at"], float(math.floor(src["ts"]))
+
+
 def load_state(st):
     _need(isinstance(st, dict))
     s = State()
@@ -79,6 +108,9 @@ def load_state(st):
         _need(_id(rec["id"]) and 0 <= rec["balance"] <= 2 ** 53 and _int(rec["balance"]))
         _need(HANDLE_RE.fullmatch(rec["handle"]))
         bytes.fromhex(rec["salt"]), bytes.fromhex(rec["hash"])
+        if "opening" in u:  # older exports carry none: derived below from the payments
+            rec["opening"] = u["opening"]
+            _need(_int(rec["opening"]) and abs(rec["opening"]) <= 2 ** 53)
         rec["n"] = u.get("n", 2 ** 12)  # stage-1 exports carry no cost parameter
         _need(rec["n"] in (2 ** 10, 2 ** 11, 2 ** 12, 2 ** 14))
         _need(rec["id"] not in s.users and rec["handle"] not in s.by_handle
@@ -94,6 +126,8 @@ def load_state(st):
         rec = {k: p[k] for k in ("id", "from_user_id", "to_user_id", "amount", "note", "visibility",
                                  "request_id", "settlement_id", "created_at", "ts", "seq")}
         rec["authorization_id"] = p.get("authorization_id")  # absent in stage-1 exports
+        if "revisions" in p:  # absent before stage 3: revision 1 is derived from the payment itself
+            rec["revisions"] = p["revisions"]
         _need(_id(rec["id"]) and rec["id"] not in s.payments_by_id)
         _need(rec["from_user_id"] in s.users and rec["to_user_id"] in s.users)
         _need(_amount(rec["amount"]) and _str(rec["note"]) and len(rec["note"]) <= 200)
@@ -102,6 +136,8 @@ def load_state(st):
         _ts_str(rec["created_at"])
         _need(_num(rec["ts"]) and _seq(rec["seq"]))
         _ts_match(rec["created_at"], rec["ts"])
+        ensure_revisions(rec)
+        _check_revisions(rec)
         s.payments.append(rec)
         s.payments_by_id[rec["id"]] = rec
     for r in st["requests"]:
@@ -144,6 +180,14 @@ def load_state(st):
         rec = {k: a[k] for k in ("id", "from_user_id", "to_user_id", "amount", "captured_amount",
                                  "note", "visibility", "status", "expires_at", "expires_ts",
                                  "payment_ids", "created_at", "ts", "seq")}
+        rec["closed_at"], rec["closed_ts"] = a.get("closed_at"), a.get("closed_ts")  # absent before stage 3
+        if "closed_at" not in a:
+            rec["closed_at"], rec["closed_ts"] = _derive_closed(s, rec)
+        _need((rec["closed_at"] is None) == (rec["closed_ts"] is None))
+        if rec["closed_at"] is not None:
+            _ts_str(rec["closed_at"])
+            _need(_num(rec["closed_ts"]))
+            _ts_match(rec["closed_at"], rec["closed_ts"])
         _need(_id(rec["id"]) and rec["id"] not in s.auths_by_id)
         _need(rec["from_user_id"] in s.users and rec["to_user_id"] in s.users)
         _need(_amount(rec["amount"], 1) and _int(rec["captured_amount"])
@@ -176,6 +220,9 @@ def load_state(st):
     _need(len(set(seqs)) == len(seqs))
     for r in s.requests:
         _need(r["payment_id"] is None or r["payment_id"] in s.payments_by_id)
+    for uid, u in s.users.items():
+        if "opening" not in u:
+            u["opening"] = compute_opening(s, uid)
     _need(_int(st["seq"]))
     s.seq = max(st["seq"], max([p["seq"] for p in s.payments] + [r["seq"] for r in s.requests]
                          + [a["seq"] for a in s.auths] + [0]))
@@ -261,7 +308,7 @@ def _auth_receipt(s, resp):
     # captured_amount / remaining_amount / status / payment ids move with later captures: shape only
     _need(set(resp) == {"authorization_id", "from_user_id", "from_handle", "to_user_id", "to_handle", "amount",
                         "captured_amount", "remaining_amount", "currency", "note", "visibility", "status",
-                        "expires_at", "payment_id", "payment_ids", "created_at"})
+                        "expires_at", "payment_id", "payment_ids", "created_at"} | ({"closed_at"} & set(resp)))
     _need(resp["from_user_id"] == fu["id"] and resp["from_handle"] == fu["handle"]
           and resp["to_user_id"] == tu["id"] and resp["to_handle"] == tu["handle"]
           and resp["amount"] == a["amount"] and resp["currency"] == s.currency and resp["note"] == a["note"]

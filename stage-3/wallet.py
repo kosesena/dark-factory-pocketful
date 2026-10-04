@@ -1,4 +1,5 @@
 """Payments, requests, splits and the activity feed."""
+from ledger import ensure_revisions
 from common import (ApiError, available_of, STATUSES, authenticate, get_str, idempotent, new_id, next_seq,
                     now_ts, paginate, parse_amount, parse_json, parse_note, parse_visibility,
                     store, validation)
@@ -35,6 +36,7 @@ def move_money(s, frm, to, amount, note, visibility, request_id=None, settlement
          "request_id": request_id, "settlement_id": settlement_id,
          "authorization_id": authorization_id,
          "created_at": created, "ts": ts, "seq": next_seq(s)}
+    ensure_revisions(p)
     s.payments.append(p)
     s.payments_by_id[p["id"]] = p
     return p

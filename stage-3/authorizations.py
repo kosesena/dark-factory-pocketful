@@ -17,7 +17,7 @@ def auth_view(s, a):
             "currency": s.currency, "note": a["note"], "visibility": a["visibility"],
             "status": a["status"], "expires_at": a["expires_at"],
             "payment_id": pids[-1] if pids else None, "payment_ids": list(pids),
-            "created_at": a["created_at"]}
+            "created_at": a["created_at"], "closed_at": a.get("closed_at")}
 
 
 def create_authorization(req):
@@ -38,6 +38,7 @@ def create_authorization(req):
         a = {"id": new_id("a_"), "from_user_id": user["id"], "to_user_id": to["id"],
              "amount": amount, "captured_amount": 0, "note": note, "visibility": vis,
              "status": "open", "expires_at": fmt_ts(int(ts) + s.auth_ttl), "expires_ts": ets, "payment_ids": [],
+             "closed_at": None, "closed_ts": None,
              "created_at": created, "ts": ts, "seq": next_seq(s)}
         s.auths.append(a)
         s.auths_by_id[a["id"]] = a
@@ -80,7 +81,7 @@ def capture(req):
         a["captured_amount"] += amount
         a["payment_ids"].append(p["id"])
         if final or a["captured_amount"] == a["amount"]:
-            close_auth(s, a, "captured")
+            close_auth(s, a, "captured", p["created_at"], float(int(p["ts"])))
         return pay_view(s, p)
     return idempotent_capture(req, user, run)
 
@@ -98,7 +99,8 @@ def void(req):
     if a["from_user_id"] != user["id"]:
         raise ApiError(403, "forbidden", "only the payer may void")
     if a["status"] == "open":
-        close_auth(s, a, "voided")
+        vts, vat = now_ts()
+        close_auth(s, a, "voided", vat, float(int(vts)))
     elif a["status"] != "voided":
         raise ApiError(409, "authorization_not_open", "authorization is not open")
     return 200, auth_view(s, a)

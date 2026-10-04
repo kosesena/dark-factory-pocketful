@@ -41,6 +41,13 @@ def check_state_invariants(s):
         _need(isinstance(u["email"], str) and isinstance(u["display_name"], str))
         _need(_int(u["balance"]) and 0 <= u["balance"] <= 2 ** 53)
         _need(s.by_handle.get(u["handle"]) is u)
+    for uid, u in s.users.items():  # the ledger: balance = opening + the net effect of every latest revision
+        net = 0
+        for p in s.payments:
+            if uid in (p["from_user_id"], p["to_user_id"]):
+                amt = p["revisions"][-1]["amount"]
+                net += -amt if p["from_user_id"] == uid else amt
+        _need(_int(u["opening"]) and u["balance"] == u["opening"] + net)
     for tok, uid in s.tokens.items():
         _need(isinstance(tok, str) and tok and uid in s.users)
 
@@ -52,6 +59,15 @@ def check_state_invariants(s):
         _need(_amount(p["amount"]) and isinstance(p["note"], str) and len(p["note"]) <= 200)
         _need(p["visibility"] in ("public", "private"))
         _ts_ok(p["created_at"], p["ts"])
+        revs = p["revisions"]
+        _need(isinstance(revs, list) and revs and revs[0]["revision"] == 1 and revs[0]["amount"] == p["amount"]
+              and revs[0]["effective_at"] == p["created_at"] == revs[0]["recorded_at"])
+        for i, r in enumerate(revs, 1):
+            _need(r["revision"] == i and _amount(r["amount"]) and isinstance(r["reason"], str) and len(r["reason"]) <= 200)
+            _need(i == 1 or (r["reason"] and r["recorded_ts"] > revs[i - 2]["recorded_ts"]
+                             and p["settlement_id"] is None and p.get("authorization_id") is None))
+            _ts_ok(r["effective_at"], r["effective_ts"])
+            _ts_ok(r["recorded_at"], r["recorded_ts"])
         seqs.append(p["seq"])
         rid = p["request_id"]
         if rid is not None:  # a payment for a request: that request is paid by exactly this payment
@@ -92,6 +108,9 @@ def check_state_invariants(s):
         _need(_amount(a["amount"], 1) and _int(a["captured_amount"]) and 0 <= a["captured_amount"] <= a["amount"])
         _need(isinstance(a["note"], str) and len(a["note"]) <= 200 and a["visibility"] in ("public", "private"))
         _need(a["status"] in ("open", "captured", "voided", "expired"))
+        _need((a["status"] == "open") == (a["closed_at"] is None) == (a["closed_ts"] is None))
+        if a["closed_at"] is not None:
+            _ts_ok(a["closed_at"], a["closed_ts"])
         _ts_ok(a["created_at"], a["ts"])
         _ts_ok(a["expires_at"], a["expires_ts"])
         seqs.append(a["seq"])

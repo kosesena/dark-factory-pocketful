@@ -4,6 +4,7 @@ from concurrent.futures import ThreadPoolExecutor
 import time
 
 from invariants import check_state_invariants
+from ledger import compute_opening, ensure_revisions
 from common import (MAX_AMOUNT, ApiError, State, available_of, held_of, store, sweep, STATUSES, HANDLE_RE, EMAIL_RE, authenticate,
                     check_password, get_str, hash_password, new_id, next_seq, now_ts,
                     parse_json, parse_ts, validation)
@@ -99,6 +100,9 @@ def build_state(fx):
                "request_id": p.get("request_id"), "settlement_id": None,
                "authorization_id": None}
         stamp(p, rec)
+        if rec["ts"] > time.time():
+            raise validation("a seeded payment cannot be created in the future")
+        ensure_revisions(rec)
         s.payments.append(rec)
         s.payments_by_id[pid] = rec
 
@@ -124,6 +128,12 @@ def build_state(fx):
         p = s.payments_by_id.get(r["payment_id"]) if r["payment_id"] is not None else None
         if p is not None and p["request_id"] is None:
             p["request_id"] = r["id"]
+    for p in s.payments:  # and the other way round: a paid request learns its payment
+        r = s.requests_by_id.get(p["request_id"]) if p["request_id"] is not None else None
+        if r is not None and r["payment_id"] is None and r["status"] == "paid":
+            r["payment_id"] = p["id"]
+    for uid, u in s.users.items():  # the opening balance: what the wallet held before anything moved
+        u["opening"] = compute_opening(s, uid)
     for p in s.payments:
         if p["request_id"] is not None and p["request_id"] not in s.requests_by_id:
             raise validation("payment refers to an unknown request")
@@ -159,8 +169,15 @@ def build_state(fx):
             raise validation("bad expires_at")
         rec = {"id": aid, "from_user_id": a["from_user_id"], "to_user_id": a["to_user_id"],
                "amount": amt, "captured_amount": cap, "note": note, "visibility": vis,
-               "status": status, "expires_at": eat, "expires_ts": ets, "payment_ids": list(pids)}
+               "status": status, "expires_at": eat, "expires_ts": ets, "payment_ids": list(pids),
+               "closed_at": None, "closed_ts": None}
         stamp(a, rec)
+        if status == "expired":
+            rec["closed_at"], rec["closed_ts"] = eat, float(int(ets))
+        elif status in ("captured", "voided"):  # a seeded closed hold need not reconstruct its lifecycle
+            last = s.payments_by_id.get(pids[-1]) if pids else None
+            rec["closed_at"] = last["created_at"] if last else rec["created_at"]
+            rec["closed_ts"] = float(int(last["ts"] if last else rec["ts"]))
         s.auths.append(rec)
         s.auths_by_id[aid] = rec
         if status == "open":
@@ -223,7 +240,7 @@ def signup(req):
         raise ApiError(409, "handle_taken", "derived handle already taken")
     salt, h = hash_password(password)
     user = {"id": new_id("u_"), "email": email, "display_name": name, "handle": handle,
-            "balance": 0, "salt": salt, "hash": h, "n": 2 ** 12}
+            "balance": 0, "opening": 0, "salt": salt, "hash": h, "n": 2 ** 12}
     s.users[user["id"]] = user
     s.by_handle[handle] = user
     s.by_email[email.lower()] = user

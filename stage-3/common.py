@@ -62,8 +62,11 @@ def available_of(s, user):
     return user["balance"] - held_of(s, user["id"])
 
 
-def close_auth(s, a, status):
+def close_auth(s, a, status, closed_at=None, closed_ts=None):
+    """Close a hold; closed_at is the event time (a whole-second RFC 3339 string)."""
     a["status"] = status
+    a["closed_at"] = closed_at
+    a["closed_ts"] = closed_ts
     s.open_auths.pop(a["id"], None)
 
 
@@ -71,7 +74,7 @@ def sweep(s, now):
     """Expire open authorizations whose deadline has passed (releases their remainder)."""
     for a in list(s.open_auths.values()):
         if a["expires_ts"] <= now:
-            close_auth(s, a, "expired")
+            close_auth(s, a, "expired", a["expires_at"], float(int(a["expires_ts"])))
 
 
 def next_seq(s):
