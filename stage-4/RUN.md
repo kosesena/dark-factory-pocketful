@@ -30,9 +30,18 @@ Browser check (Playwright, kickoff venv): `python tests/ui_check.py [screenshot-
 
 ## Stage 4 additions
 
-- `POST /payments/{id}/refunds` (receiver only): a new payment in the opposite direction with `refund_of`; cumulative
-  refunds cannot exceed the payment's current corrected amount; refund payments and captures cannot be corrected or refunded.
-- `POST /correction-batches` (settlement operator): up to 32 corrections applied atomically, settlement members only
-  together with the whole settlement and one effective instant; all revisions share `recorded_at` and a `correction_batch_id`.
-- Exports now carry statement snapshots; imports of stage-1..3 exports derive missing ledger fields.
-- Reset and import share one invariant checker (instants at full precision, historical non-negativity, receipts).
+- `POST /payments/{id}/refunds` (original receiver only, idempotent): a new payment in the opposite direction with
+  `refund_of`, funded from the receiver's available money. Direct payments, request payments, captures and
+  settlement members can be refunded; a refund itself cannot (`invalid_refund_target`). Cumulative refunds cannot
+  exceed the payment's current corrected amount (`refund_exceeds_payment`). Refunds never reopen a request or an
+  authorization.
+- Refund payments and captures cannot be corrected (`linked_payment_immutable`); a correction cannot go below the
+  refunded amount. Settlement members are corrected only through a batch.
+- `POST /correction-batches` (settlement operator, idempotent): 1..32 corrections applied atomically. Captures and
+  refunds are immutable; a settlement member can be corrected only together with every member of its settlement and
+  with one effective instant (`incomplete_settlement`). All revisions of a batch share `recorded_at` and a
+  `correction_batch_id`. Error precedence: items in input order, settlement completeness, current available funds,
+  then historical total/available at every boundary.
+- Exports carry statement snapshots (frozen original form); imports of stage 1-3 exports derive missing ledger fields.
+- Reset and import share one invariant checker: instants at full precision, historical non-negativity, snapshot
+  rebuild from the ledger and idempotency receipts (including batch receipts) checked against the records.
