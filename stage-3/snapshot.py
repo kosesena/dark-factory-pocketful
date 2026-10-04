@@ -5,7 +5,7 @@ import time
 import re
 
 from invariants import check_state_invariants
-from ledger import compute_opening, ensure_revisions, first_revision
+from ledger import compute_opening, ensure_revisions, first_revision, instants_agree
 from common import (sweep, MAX_AMOUNT, parse_ts, HANDLE_RE, held_of, STATUSES, State, parse_json, store, validation)
 
 
@@ -79,8 +79,8 @@ def _check_revisions(p):
         _ts_str(r["effective_at"])
         _ts_str(r["recorded_at"])
         _need(_num(r["effective_ts"]) and _num(r["recorded_ts"]))
-        _ts_match(r["effective_at"], r["effective_ts"])
-        _ts_match(r["recorded_at"], r["recorded_ts"])
+        _need(instants_agree(r["effective_at"], r["effective_ts"]))
+        _need(instants_agree(r["recorded_at"], r["recorded_ts"]))
         _need(last is None or r["recorded_ts"] > last)
         last = r["recorded_ts"]
 
@@ -187,8 +187,7 @@ def load_state(st):
         _need((rec["closed_at"] is None) == (rec["closed_ts"] is None))
         if rec["closed_at"] is not None:
             _ts_str(rec["closed_at"])
-            _need(_num(rec["closed_ts"]))
-            _ts_match(rec["closed_at"], rec["closed_ts"])
+            _need(_num(rec["closed_ts"]) and instants_agree(rec["closed_at"], rec["closed_ts"]))
         _need(_id(rec["id"]) and rec["id"] not in s.auths_by_id)
         _need(rec["from_user_id"] in s.users and rec["to_user_id"] in s.users)
         _need(_amount(rec["amount"], 1) and _int(rec["captured_amount"])
@@ -198,7 +197,7 @@ def load_state(st):
               and rec["status"] in ("open", "captured", "voided", "expired"))
         _ts_str(rec["expires_at"])
         _need(_num(rec["expires_ts"]))
-        _ts_match(rec["expires_at"], rec["expires_ts"])
+        _need(instants_agree(rec["expires_at"], rec["expires_ts"]))
         _need(isinstance(rec["payment_ids"], list) and all(_str(x) for x in rec["payment_ids"]))
         _ts_str(rec["created_at"])
         _need(_num(rec["ts"]) and _seq(rec["seq"]))

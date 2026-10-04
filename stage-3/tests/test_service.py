@@ -1126,6 +1126,12 @@ class Authorizations(Base):
         self.assertEqual(self.me(self.ada)["held"], 0)
 
 
+def login_user(email):
+    s, b, _ = call("POST", "/auth/login", {"email": email, "password": "correct horse"})
+    assert s == 200, b
+    return b["token"]
+
+
 def hist_fixture():
     """ada/bob/cy with dated seeded payments; openings: ada 9300, bob 2000, cy 0 (balances 10000/2500/..)."""
     users = [{"id": "u_ada", "email": "ada@example.com", "password": "correct horse", "display_name": "Ada", "handle": "ada", "balance": 10000},
@@ -1447,6 +1453,54 @@ class Ledger(unittest.TestCase):
         self.assertEqual(call("POST", "/_test/import", bad)[0], 422)
         call("POST", "/_test/reset", hist_fixture())
         self.assertEqual(call("GET", "/statement?snapshot=" + tok, token=login("bob"))[0], 404)
+
+    def test_import_rejects_inconsistent_instants_and_histories(self):
+        body = {"expected_revision": 1, "amount": 400, "effective_at": "2026-09-20T12:00:00+00:00", "reason": "fix"}
+        self.assertEqual(self.corr(self.ada, "p_a", body)[0], 201)
+        a = call("POST", "/authorizations", {"to_handle": "bob", "amount": 10}, token=self.ada, key="ti1")[1]["authorization_id"]
+        call("POST", "/authorizations/%s/void" % a, token=self.ada)
+        s, snap, _ = call("GET", "/_test/export")
+        snap["state"]["idempotency"] = []
+        self.assertEqual(call("POST", "/_test/import", snap)[0], 204)
+        def pay(st):
+            return [x for x in st["payments"] if x["id"] == "p_a"][0]
+        def voided(st):
+            return [x for x in st["authorizations"] if x["status"] == "voided"][0]
+        muts = [lambda st: pay(st)["revisions"][1].__setitem__("recorded_at", pay(st)["revisions"][0]["recorded_at"]),
+                lambda st: pay(st)["revisions"][1].__setitem__("effective_at", "2026-09-20T12:00:00.5+00:00"),
+                lambda st: pay(st)["revisions"][1].__setitem__("recorded_at", pay(st)["revisions"][1]["recorded_at"][:19] + ".999999+00:00"),
+                lambda st: pay(st)["revisions"][1].__setitem__("effective_ts", pay(st)["revisions"][1]["effective_ts"] + 0.5),
+                lambda st: voided(st).__setitem__("closed_at", voided(st)["closed_at"][:-6] + ".5+00:00"),
+                lambda st: voided(st).__setitem__("closed_ts", voided(st)["closed_ts"] + 0.5)]
+        for i, f in enumerate(muts):
+            m = json.loads(json.dumps(snap))
+            f(m["state"])
+            self.assertEqual(call("POST", "/_test/import", m)[0], 422, i)
+        self.assertEqual(call("POST", "/_test/import", snap)[0], 204)
+
+    def test_import_rejects_a_historical_overdraft(self):
+        fx = {"currency": "EUR", "minor_units": 2, "users": [
+            {"id": "u_a", "email": "a@x.io", "password": "correct horse", "display_name": "A", "handle": "ha", "balance": 0},
+            {"id": "u_b", "email": "b@x.io", "password": "correct horse", "display_name": "B", "handle": "hb", "balance": 100},
+            {"id": "u_c", "email": "c@x.io", "password": "correct horse", "display_name": "C", "handle": "hc", "balance": 0}],
+              "payments": [{"id": "ab", "from_user_id": "u_a", "to_user_id": "u_b", "amount": 100, "created_at": "2020-01-02T00:00:00+00:00"},
+                           {"id": "bc", "from_user_id": "u_b", "to_user_id": "u_c", "amount": 100, "created_at": "2020-01-03T00:00:00+00:00"},
+                           {"id": "cb", "from_user_id": "u_c", "to_user_id": "u_b", "amount": 100, "created_at": "2020-01-04T00:00:00+00:00"}]}
+        self.assertEqual(call("POST", "/_test/reset", fx)[0], 204)
+        s, snap, _ = call("GET", "/_test/export")
+        snap["state"]["idempotency"] = []
+        st = snap["state"]
+        ab = [x for x in st["payments"] if x["id"] == "ab"][0]
+        rev = dict(ab["revisions"][0])
+        rev.update({"revision": 2, "amount": 0, "effective_at": "2020-01-02T00:00:00+00:00", "effective_ts": 1577923200.0,
+                    "recorded_at": "2020-01-05T00:00:00+00:00", "recorded_ts": 1578182400.0, "reason": "reversal"})
+        ab["revisions"].append(rev)
+        for u in st["users"]:
+            u["balance"] = {"u_a": 100, "u_b": 0, "u_c": 0}[u["id"]]
+        self.assertEqual(call("POST", "/_test/import", snap)[0], 422)
+        # the same correction made through the API is refused too
+        self.assertEqual(call("POST", "/payments/ab/corrections", {"expected_revision": 1, "amount": 0, "effective_at": "2020-01-02T00:00:00+00:00", "reason": "r"},
+                              token=login_user("a@x.io"), key="k")[1]["error"]["code"], "insufficient_funds" if False else "historical_overdraft")
 
     def test_import_from_earlier_stage_exports(self):
         s, snap, _ = call("GET", "/_test/export")
