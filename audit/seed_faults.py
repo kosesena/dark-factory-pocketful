@@ -63,6 +63,30 @@ FAULTS = [
      'if len(parts) != 2 or parts[0].lower() != "bearer":', "if len(parts) != 2:"),
 ]
 
+# faults in code changed by the fix revision 145b98e (exact numbers, huge digits, strict import, seeded hashing)
+FAULTS += [
+    ("F16", "R16/R73 fractional amounts are 422, never rounded", "common.py",
+     "        if v != v.to_integral_value():\n            raise validation", "        if False:\n            raise validation"),
+    ("F17", "R16 exact parse: 1.0000000000000001 is not an integer", "common.py",
+     "parse_float=Decimal if decimal else float,", "parse_float=(lambda s: Decimal(float(s))) if decimal else float,"),
+    ("F18", "R44/R73 huge integer amounts are 422, not 400/5xx", "common.py",
+     "return int(text) if len(text) <= 18 else Decimal(text)", "return int(text)"),
+    ("F19", "R42 huge offset is valid (empty page), huge limit 422", "common.py",
+     "n = int(v) if len(v) <= 18 else 10 ** 18", "n = int(v) if len(v) <= 18 else 0"),
+    ("F20", "R105 import rejects an invalid timestamp", "snapshot.py",
+     "    _need(_str(v) and RFC3339.fullmatch(v))\n    parse_ts(v)", "    return"),
+    ("F21", "R105 import rejects dangling payment->request references", "snapshot.py",
+     '_need(p["request_id"] is None or p["request_id"] in s.requests_by_id)', 'pass'),
+    ("F22", "R105 import rejects a negative/fractional balance", "snapshot.py",
+     '_need(_id(rec["id"]) and 0 <= rec["balance"] <= 2 ** 53 and _int(rec["balance"]))', '_need(_id(rec["id"]))'),
+    ("F23", "R31 seeded users log in (per-record KDF cost honoured)", "common.py",
+     'user.get("n", 2 ** 12))', '2 ** 12)'),
+    ("F24", "R59/A2 1000 and 1000.0 are the same body", "common.py",
+     "return int(v) if v == v.to_integral_value() and abs(v) < 10 ** 30 else str(v)", "return str(v)"),
+]
+
+ALT = {"F13": ("if isinstance(v, bool) or not isinstance(v, (int, Decimal)):", "if not isinstance(v, (int, Decimal)):")}
+
 
 def make(fid, fname, old, new):
     d = os.path.join(MUT, fid)
@@ -70,6 +94,8 @@ def make(fid, fname, old, new):
     shutil.copytree(SRC, d, ignore=shutil.ignore_patterns("__pycache__"))
     path = os.path.join(d, fname)
     text = open(path).read()
+    if text.count(old) != 1 and fid in ALT:  # anchor rewritten by a later revision
+        old, new = ALT[fid]
     assert text.count(old) == 1, (fid, "anchor not unique/absent")
     open(path, "w").write(text.replace(old, new))
     return d
@@ -130,6 +156,8 @@ def main():
         if only and fid not in only:
             continue
         port += 1
+        if fid in ALT and open(os.path.join(SRC, fname)).read().count(old) != 1:
+            old, new = ALT[fid]
         d = make(fid, fname, old, new)
         proc = subprocess.Popen([sys.executable, "server.py"], cwd=d, env=dict(os.environ, PORT=str(port)),
                                 stdout=subprocess.DEVNULL, stderr=subprocess.DEVNULL)

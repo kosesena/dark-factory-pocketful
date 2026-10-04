@@ -666,6 +666,71 @@ def _():
     assert p[0]["settlement_id"] is None and p[0]["from_handle"] == "ada" and RFC3339.match(p[0]["created_at"])
 
 
+# ---- fix-revision probes (145b98e): exact numbers, huge digits, body identity, import -----
+
+@probe("R16/R44 exact and huge numbers never 5xx, never rounded")
+def _():
+    ada, _, _ = world(ops=["u_ada"])
+    for raw in ("1.0000000000000001", "1e-400", "1e400", "1E+999999999", "1e-999999999",
+                "1" + "0" * 5000, "-0", "99999999999999999999e-11", "1000000000.5"):
+        body = '{"to_handle":"bob","amount":%s}' % raw
+        err(call("POST", "/payments", raw=body, token=ada, key=k()), 422, "validation_failed", raw[:20])
+        err(call("POST", "/requests", raw='{"payer_handle":"bob","amount":%s}' % raw, token=ada, key=k()),
+            422, "validation_failed", raw[:20])
+    for raw in ("1000.000", "0.1e4", "1e3", "1000000000.0"):
+        ok(call("POST", "/requests", raw='{"payer_handle":"bob","amount":%s}' % raw, token=ada, key=k()), 201, raw)
+    s = call("POST", "/payments", raw='{"to_handle":"bob","amount":1,"x":1e1000000}', token=ada, key=k())[0]
+    assert s == 201, ("unknown huge-exponent field", s)
+
+
+@probe("R42 huge digit strings in limit/offset")
+def _():
+    ada, _, _ = world()
+    err(call("GET", "/activity?limit=" + "9" * 5000, token=ada), 422, "validation_failed")
+    b = ok(call("GET", "/activity?offset=" + "9" * 5000, token=ada), 200)
+    assert b["payments"] == [] and b["has_more"] is False
+    assert ok(call("GET", "/requests?limit=000200&offset=00", token=ada), 200)["requests"] == []
+
+
+@probe("R59 number identity: numeric value, never equal to a string")
+def _():
+    ada, _, _ = world()
+    for a, b, want in (('1.5', '"1.5"', 409), ('1e40', '"1E+40"', 409), ('1.50', '1.5', 200),
+                       ('1000', '1000.0', 200), ('1', 'true', 409)):
+        key = k()
+        ok(call("POST", "/payments", raw='{"to_handle":"bob","amount":1,"x":%s}' % a, token=ada, key=key), 201)
+        r = call("POST", "/payments", raw='{"to_handle":"bob","amount":1,"x":%s}' % b, token=ada, key=key)
+        assert r[0] == want, (a, b, "want", want, "got", r[0])
+
+
+@probe("R105 strict import: corrupted export pieces rejected, destination unchanged")
+def _():
+    ada, bob, _ = world()
+    ok(call("POST", "/payments", {"to_handle": "bob", "amount": 10}, token=ada, key=k()), 201)
+    ok(call("POST", "/requests", {"payer_handle": "ada", "amount": 1}, token=bob, key=k()), 201)
+    ok(call("POST", "/splits", {"amount": 1, "participant_handles": ["ada", "bob", "cy"]}, token=ada, key=k()), 201)
+    ex = call("GET", "/_test/export")[1]
+    s, _, _ = call("POST", "/_test/import", ex)
+    assert s == 204, "zero-share requests must still import"
+    st = ex["state"]
+    import copy
+    bads = []
+    for path, val in ((("users", 0, "balance"), -1), (("users", 0, "balance"), 1.5), (("payments", 0, "amount"), "10"),
+                      (("payments", 0, "created_at"), "yesterday"), (("payments", 0, "from_user_id"), "u_nobody"),
+                      (("requests", 0, "status"), "open"), (("tokens",), []), (("idempotency",), "x")):
+        b = copy.deepcopy(ex)
+        node = b["state"]
+        for part in path[:-1]:
+            node = node[part]
+        node[path[-1]] = val
+        bads.append((path, b))
+    reset(fx())
+    a2 = tok("ada")
+    for path, b in bads:
+        err(call("POST", "/_test/import", b), 422, "validation_failed", path)
+    assert bal(a2) == 10000, "a rejected import changed the destination"
+
+
 def main():
     only = sys.argv[2:]
     fails = 0
