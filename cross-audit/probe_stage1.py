@@ -11,6 +11,7 @@ import urllib.request
 
 BASE = os.environ.get('AUDIT_BASE','http://127.0.0.1:18081')
 DEST = os.environ.get('AUDIT_DEST','http://127.0.0.1:18082')
+REV = os.environ.get('AUDIT_REV','69289b3')
 RESULTS = []
 TOK = {}
 FIX = {'currency':'EUR','minor_units':2,'users':[
@@ -339,5 +340,5 @@ if __name__=='__main__':
             check(name+'-uncaught',False,repr(e))
         print('DONE',name,round(time.monotonic()-start,3),flush=True)
     out={'probes':len(RESULTS),'passed':sum(r['passed'] for r in RESULTS),'failed':[r for r in RESULTS if not r['passed']],'results':RESULTS}
-    with open(os.path.join(os.path.dirname(__file__),'evidence-69289b3-'+'-'.join(selected)+'.json'),'w') as f: json.dump(out,f,indent=2,ensure_ascii=True)
+    with open(os.path.join(os.path.dirname(__file__),'evidence-'+REV+'-'+'-'.join(selected)+'.json'),'w') as f: json.dump(out,f,indent=2,ensure_ascii=True)
     print('TOTAL',out['probes'],'PASS',out['passed'],'FAIL',len(out['failed']))

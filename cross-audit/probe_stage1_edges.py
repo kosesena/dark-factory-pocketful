@@ -57,5 +57,5 @@ check('50-login-success',all(r[0]==200 for r in rs),[r[0] for r in rs])
 check('50-login-under-5s',max(r[3] for r in rs)<5,max(r[3] for r in rs))
 
 out={'probes':len(RESULTS),'passed':sum(r['passed'] for r in RESULTS),'failed':[r for r in RESULTS if not r['passed']],'results':RESULTS}
-with open(os.path.join(os.path.dirname(__file__),'evidence-69289b3-edges.json'),'w') as f: json.dump(out,f,indent=2)
+with open(os.path.join(os.path.dirname(__file__),'evidence-'+REV+'-edges.json'),'w') as f: json.dump(out,f,indent=2)
 print('TOTAL',out['probes'],'PASS',out['passed'],'FAIL',len(out['failed']))

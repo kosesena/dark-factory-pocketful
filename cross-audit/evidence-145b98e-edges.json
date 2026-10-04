@@ -1,0 +1,305 @@
+{
+  "probes": 46,
+  "passed": 44,
+  "failed": [
+    {
+      "probe": "invalid-state-orphan-operator",
+      "passed": false,
+      "detail": {
+        "status": 204,
+        "body": null
+      }
+    },
+    {
+      "probe": "invalid-state-nochange-orphan-operator",
+      "passed": false,
+      "detail": null
+    }
+  ],
+  "results": [
+    {
+      "probe": "reset",
+      "passed": true,
+      "detail": null
+    },
+    {
+      "probe": "fractional-/payments",
+      "passed": true,
+      "detail": null
+    },
+    {
+      "probe": "fractional-nochange-/payments",
+      "passed": true,
+      "detail": null
+    },
+    {
+      "probe": "fractional-/requests",
+      "passed": true,
+      "detail": null
+    },
+    {
+      "probe": "fractional-nochange-/requests",
+      "passed": true,
+      "detail": null
+    },
+    {
+      "probe": "fractional-/splits",
+      "passed": true,
+      "detail": null
+    },
+    {
+      "probe": "fractional-nochange-/splits",
+      "passed": true,
+      "detail": null
+    },
+    {
+      "probe": "fractional-/settlements",
+      "passed": true,
+      "detail": null
+    },
+    {
+      "probe": "fractional-nochange-/settlements",
+      "passed": true,
+      "detail": null
+    },
+    {
+      "probe": "exact-idem-0",
+      "passed": true,
+      "detail": null
+    },
+    {
+      "probe": "exact-idem-1",
+      "passed": true,
+      "detail": null
+    },
+    {
+      "probe": "huge-offset-/activity",
+      "passed": true,
+      "detail": null
+    },
+    {
+      "probe": "huge-limit-/activity",
+      "passed": true,
+      "detail": null
+    },
+    {
+      "probe": "unicode-query-/activity",
+      "passed": true,
+      "detail": null
+    },
+    {
+      "probe": "huge-offset-/requests",
+      "passed": true,
+      "detail": null
+    },
+    {
+      "probe": "huge-limit-/requests",
+      "passed": true,
+      "detail": null
+    },
+    {
+      "probe": "unicode-query-/requests",
+      "passed": true,
+      "detail": null
+    },
+    {
+      "probe": "reset",
+      "passed": true,
+      "detail": null
+    },
+    {
+      "probe": "invalid-state-negative-balance",
+      "passed": true,
+      "detail": null
+    },
+    {
+      "probe": "invalid-state-nochange-negative-balance",
+      "passed": true,
+      "detail": null
+    },
+    {
+      "probe": "invalid-state-boolean-balance",
+      "passed": true,
+      "detail": null
+    },
+    {
+      "probe": "invalid-state-nochange-boolean-balance",
+      "passed": true,
+      "detail": null
+    },
+    {
+      "probe": "invalid-state-bad-handle",
+      "passed": true,
+      "detail": null
+    },
+    {
+      "probe": "invalid-state-nochange-bad-handle",
+      "passed": true,
+      "detail": null
+    },
+    {
+      "probe": "invalid-state-bad-password-hash",
+      "passed": true,
+      "detail": null
+    },
+    {
+      "probe": "invalid-state-nochange-bad-password-hash",
+      "passed": true,
+      "detail": null
+    },
+    {
+      "probe": "invalid-state-orphan-token",
+      "passed": true,
+      "detail": null
+    },
+    {
+      "probe": "invalid-state-nochange-orphan-token",
+      "passed": true,
+      "detail": null
+    },
+    {
+      "probe": "invalid-state-orphan-operator",
+      "passed": false,
+      "detail": {
+        "status": 204,
+        "body": null
+      }
+    },
+    {
+      "probe": "invalid-state-nochange-orphan-operator",
+      "passed": false,
+      "detail": null
+    },
+    {
+      "probe": "invalid-state-orphan-payment",
+      "passed": true,
+      "detail": null
+    },
+    {
+      "probe": "invalid-state-nochange-orphan-payment",
+      "passed": true,
+      "detail": null
+    },
+    {
+      "probe": "invalid-state-bad-request-status",
+      "passed": true,
+      "detail": null
+    },
+    {
+      "probe": "invalid-state-nochange-bad-request-status",
+      "passed": true,
+      "detail": null
+    },
+    {
+      "probe": "invalid-state-bad-payment-timestamp",
+      "passed": true,
+      "detail": null
+    },
+    {
+      "probe": "invalid-state-nochange-bad-payment-timestamp",
+      "passed": true,
+      "detail": null
+    },
+    {
+      "probe": "invalid-state-overlimit-payment",
+      "passed": true,
+      "detail": null
+    },
+    {
+      "probe": "invalid-state-nochange-overlimit-payment",
+      "passed": true,
+      "detail": null
+    },
+    {
+      "probe": "invalid-envelope-boolean-version",
+      "passed": true,
+      "detail": null
+    },
+    {
+      "probe": "invalid-envelope-fractional-version",
+      "passed": true,
+      "detail": null
+    },
+    {
+      "probe": "reset",
+      "passed": true,
+      "detail": null
+    },
+    {
+      "probe": "snapshot-concurrency-noerrors",
+      "passed": true,
+      "detail": null
+    },
+    {
+      "probe": "snapshot-conservation",
+      "passed": true,
+      "detail": null
+    },
+    {
+      "probe": "snapshot-complete-transfers",
+      "passed": true,
+      "detail": null
+    },
+    {
+      "probe": "50-login-success",
+      "passed": true,
+      "detail": [
+        200,
+        200,
+        200,
+        200,
+        200,
+        200,
+        200,
+        200,
+        200,
+        200,
+        200,
+        200,
+        200,
+        200,
+        200,
+        200,
+        200,
+        200,
+        200,
+        200,
+        200,
+        200,
+        200,
+        200,
+        200,
+        200,
+        200,
+        200,
+        200,
+        200,
+        200,
+        200,
+        200,
+        200,
+        200,
+        200,
+        200,
+        200,
+        200,
+        200,
+        200,
+        200,
+        200,
+        200,
+        200,
+        200,
+        200,
+        200,
+        200,
+        200
+      ]
+    },
+    {
+      "probe": "50-login-under-5s",
+      "passed": true,
+      "detail": 0.17187408400059212
+    }
+  ]
+}
