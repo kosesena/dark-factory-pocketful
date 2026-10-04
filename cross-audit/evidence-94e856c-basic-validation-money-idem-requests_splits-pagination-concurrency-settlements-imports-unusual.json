@@ -1,0 +1,2818 @@
+{
+  "probes": 483,
+  "passed": 483,
+  "failed": [],
+  "results": [
+    {
+      "probe": "health",
+      "passed": true,
+      "detail": null
+    },
+    {
+      "probe": "health-body",
+      "passed": true,
+      "detail": null
+    },
+    {
+      "probe": "json-content-type",
+      "passed": true,
+      "detail": {
+        "Server": "BaseHTTP/0.6 Python/3.12.14",
+        "Date": "Sun, 04 Oct 2026 09:14:22 GMT",
+        "Content-Type": "application/json; charset=utf-8",
+        "Content-Length": "16"
+      }
+    },
+    {
+      "probe": "reset",
+      "passed": true,
+      "detail": null
+    },
+    {
+      "probe": "auth-GET/meNone",
+      "passed": true,
+      "detail": null
+    },
+    {
+      "probe": "auth-GET/meunknown",
+      "passed": true,
+      "detail": null
+    },
+    {
+      "probe": "auth-GET/activityNone",
+      "passed": true,
+      "detail": null
+    },
+    {
+      "probe": "auth-GET/activityunknown",
+      "passed": true,
+      "detail": null
+    },
+    {
+      "probe": "auth-GET/requestsNone",
+      "passed": true,
+      "detail": null
+    },
+    {
+      "probe": "auth-GET/requestsunknown",
+      "passed": true,
+      "detail": null
+    },
+    {
+      "probe": "auth-POST/paymentsNone",
+      "passed": true,
+      "detail": null
+    },
+    {
+      "probe": "auth-POST/paymentsunknown",
+      "passed": true,
+      "detail": null
+    },
+    {
+      "probe": "auth-POST/requestsNone",
+      "passed": true,
+      "detail": null
+    },
+    {
+      "probe": "auth-POST/requestsunknown",
+      "passed": true,
+      "detail": null
+    },
+    {
+      "probe": "auth-POST/splitsNone",
+      "passed": true,
+      "detail": null
+    },
+    {
+      "probe": "auth-POST/splitsunknown",
+      "passed": true,
+      "detail": null
+    },
+    {
+      "probe": "auth-POST/settlementsNone",
+      "passed": true,
+      "detail": null
+    },
+    {
+      "probe": "auth-POST/settlementsunknown",
+      "passed": true,
+      "detail": null
+    },
+    {
+      "probe": "auth-POST/requests/no/payNone",
+      "passed": true,
+      "detail": null
+    },
+    {
+      "probe": "auth-POST/requests/no/payunknown",
+      "passed": true,
+      "detail": null
+    },
+    {
+      "probe": "auth-POST/requests/no/cancelNone",
+      "passed": true,
+      "detail": null
+    },
+    {
+      "probe": "auth-POST/requests/no/cancelunknown",
+      "passed": true,
+      "detail": null
+    },
+    {
+      "probe": "auth-POST/requests/no/declineNone",
+      "passed": true,
+      "detail": null
+    },
+    {
+      "probe": "auth-POST/requests/no/declineunknown",
+      "passed": true,
+      "detail": null
+    },
+    {
+      "probe": "malformed-auth",
+      "passed": true,
+      "detail": null
+    },
+    {
+      "probe": "malformed-auth",
+      "passed": true,
+      "detail": null
+    },
+    {
+      "probe": "malformed-auth",
+      "passed": true,
+      "detail": null
+    },
+    {
+      "probe": "malformed-auth",
+      "passed": true,
+      "detail": null
+    },
+    {
+      "probe": "unknown-endpoint",
+      "passed": true,
+      "detail": null
+    },
+    {
+      "probe": "me-fields",
+      "passed": true,
+      "detail": {
+        "user_id": "u_a",
+        "display_name": "A",
+        "handle": "a",
+        "balance": 10000,
+        "total": 10000,
+        "available": 10000,
+        "held": 0,
+        "currency": "EUR",
+        "minor_units": 2
+      }
+    },
+    {
+      "probe": "signup-invalid-{'email': 'a@example.com', 'password': 'abcdefgh', 'display_name': 'X'}",
+      "passed": true,
+      "detail": null
+    },
+    {
+      "probe": "signup-invalid-{'email': 'bad', 'password': 'abcdefgh', 'display_name': 'X'}",
+      "passed": true,
+      "detail": null
+    },
+    {
+      "probe": "signup-invalid-{'email': '@example.com', 'password': 'abcdefgh', 'display_name': 'X'}",
+      "passed": true,
+      "detail": null
+    },
+    {
+      "probe": "signup-invalid-{'email': 'x@', 'password': 'abcdefgh', 'display_name': 'X'}",
+      "passed": true,
+      "detail": null
+    },
+    {
+      "probe": "signup-invalid-{'email': 'x@example.com', 'password': '1234567', 'display_name': 'X'}",
+      "passed": true,
+      "detail": null
+    },
+    {
+      "probe": "signup-invalid-{'email': 8, 'password': 'abcdefgh', 'display_name': 'X'}",
+      "passed": true,
+      "detail": null
+    },
+    {
+      "probe": "signup-invalid-{'email': 'x@example.com', 'password': False, 'display_name': 'X'}",
+      "passed": true,
+      "detail": null
+    },
+    {
+      "probe": "signup-invalid-{'email': 'x@example.com', 'password': 'abcdefgh', 'display_name': None}",
+      "passed": true,
+      "detail": null
+    },
+    {
+      "probe": "signup-invalid-{'email': 'x@example.com', 'password': 'abcdefgh'}",
+      "passed": true,
+      "detail": null
+    },
+    {
+      "probe": "bad-login",
+      "passed": true,
+      "detail": null
+    },
+    {
+      "probe": "bad-login",
+      "passed": true,
+      "detail": null
+    },
+    {
+      "probe": "multiple-login",
+      "passed": true,
+      "detail": null
+    },
+    {
+      "probe": "old-token-valid",
+      "passed": true,
+      "detail": null
+    },
+    {
+      "probe": "new-token-valid",
+      "passed": true,
+      "detail": null
+    },
+    {
+      "probe": "derived-signup",
+      "passed": true,
+      "detail": null
+    },
+    {
+      "probe": "derive-and-zero",
+      "passed": true,
+      "detail": {
+        "user_id": "u_e5449de178e748c1",
+        "display_name": "Unicode \ud83e\udeb7",
+        "handle": "ab_c_def_12345678901",
+        "balance": 0,
+        "total": 0,
+        "available": 0,
+        "held": 0,
+        "currency": "EUR",
+        "minor_units": 2
+      }
+    },
+    {
+      "probe": "new-receives",
+      "passed": true,
+      "detail": null
+    },
+    {
+      "probe": "new-requestable",
+      "passed": true,
+      "detail": null
+    },
+    {
+      "probe": "handle-collision",
+      "passed": true,
+      "detail": null
+    },
+    {
+      "probe": "collision-no-account",
+      "passed": true,
+      "detail": null
+    },
+    {
+      "probe": "negative-reset",
+      "passed": true,
+      "detail": null
+    },
+    {
+      "probe": "negative-reset-atomic",
+      "passed": true,
+      "detail": null
+    },
+    {
+      "probe": "reset",
+      "passed": true,
+      "detail": null
+    },
+    {
+      "probe": "reset-clears-token",
+      "passed": true,
+      "detail": null
+    },
+    {
+      "probe": "reset",
+      "passed": true,
+      "detail": null
+    },
+    {
+      "probe": "seed-no-replay-EUR",
+      "passed": true,
+      "detail": null
+    },
+    {
+      "probe": "currency-EUR",
+      "passed": true,
+      "detail": null
+    },
+    {
+      "probe": "seed-feed-private-EUR",
+      "passed": true,
+      "detail": null
+    },
+    {
+      "probe": "reset",
+      "passed": true,
+      "detail": null
+    },
+    {
+      "probe": "seed-no-replay-JPY",
+      "passed": true,
+      "detail": null
+    },
+    {
+      "probe": "currency-JPY",
+      "passed": true,
+      "detail": null
+    },
+    {
+      "probe": "seed-feed-private-JPY",
+      "passed": true,
+      "detail": null
+    },
+    {
+      "probe": "reset",
+      "passed": true,
+      "detail": null
+    },
+    {
+      "probe": "seed-no-replay-BHD",
+      "passed": true,
+      "detail": null
+    },
+    {
+      "probe": "currency-BHD",
+      "passed": true,
+      "detail": null
+    },
+    {
+      "probe": "seed-feed-private-BHD",
+      "passed": true,
+      "detail": null
+    },
+    {
+      "probe": "reset",
+      "passed": true,
+      "detail": null
+    },
+    {
+      "probe": "missing-key-/payments",
+      "passed": true,
+      "detail": null
+    },
+    {
+      "probe": "missing-key-/payments",
+      "passed": true,
+      "detail": null
+    },
+    {
+      "probe": "long-key-/payments",
+      "passed": true,
+      "detail": null
+    },
+    {
+      "probe": "bad-json-root-/payments{",
+      "passed": true,
+      "detail": null
+    },
+    {
+      "probe": "bad-json-root-/payments[]",
+      "passed": true,
+      "detail": null
+    },
+    {
+      "probe": "bad-json-root-/paymentsnull",
+      "passed": true,
+      "detail": null
+    },
+    {
+      "probe": "bad-json-root-/payments1",
+      "passed": true,
+      "detail": null
+    },
+    {
+      "probe": "bad-json-root-/paymentstrue",
+      "passed": true,
+      "detail": null
+    },
+    {
+      "probe": "bad-json-root-/payments\"abc\"",
+      "passed": true,
+      "detail": null
+    },
+    {
+      "probe": "missing-key-/requests",
+      "passed": true,
+      "detail": null
+    },
+    {
+      "probe": "missing-key-/requests",
+      "passed": true,
+      "detail": null
+    },
+    {
+      "probe": "long-key-/requests",
+      "passed": true,
+      "detail": null
+    },
+    {
+      "probe": "bad-json-root-/requests{",
+      "passed": true,
+      "detail": null
+    },
+    {
+      "probe": "bad-json-root-/requests[]",
+      "passed": true,
+      "detail": null
+    },
+    {
+      "probe": "bad-json-root-/requestsnull",
+      "passed": true,
+      "detail": null
+    },
+    {
+      "probe": "bad-json-root-/requests1",
+      "passed": true,
+      "detail": null
+    },
+    {
+      "probe": "bad-json-root-/requeststrue",
+      "passed": true,
+      "detail": null
+    },
+    {
+      "probe": "bad-json-root-/requests\"abc\"",
+      "passed": true,
+      "detail": null
+    },
+    {
+      "probe": "missing-key-/splits",
+      "passed": true,
+      "detail": null
+    },
+    {
+      "probe": "missing-key-/splits",
+      "passed": true,
+      "detail": null
+    },
+    {
+      "probe": "long-key-/splits",
+      "passed": true,
+      "detail": null
+    },
+    {
+      "probe": "bad-json-root-/splits{",
+      "passed": true,
+      "detail": null
+    },
+    {
+      "probe": "bad-json-root-/splits[]",
+      "passed": true,
+      "detail": null
+    },
+    {
+      "probe": "bad-json-root-/splitsnull",
+      "passed": true,
+      "detail": null
+    },
+    {
+      "probe": "bad-json-root-/splits1",
+      "passed": true,
+      "detail": null
+    },
+    {
+      "probe": "bad-json-root-/splitstrue",
+      "passed": true,
+      "detail": null
+    },
+    {
+      "probe": "bad-json-root-/splits\"abc\"",
+      "passed": true,
+      "detail": null
+    },
+    {
+      "probe": "missing-key-/requests/rq_a21ceaa95dba4330/pay",
+      "passed": true,
+      "detail": null
+    },
+    {
+      "probe": "missing-key-/requests/rq_a21ceaa95dba4330/pay",
+      "passed": true,
+      "detail": null
+    },
+    {
+      "probe": "long-key-/requests/rq_a21ceaa95dba4330/pay",
+      "passed": true,
+      "detail": null
+    },
+    {
+      "probe": "bad-json-root-/requests/rq_a21ceaa95dba4330/pay{",
+      "passed": true,
+      "detail": null
+    },
+    {
+      "probe": "bad-json-root-/requests/rq_a21ceaa95dba4330/pay[]",
+      "passed": true,
+      "detail": null
+    },
+    {
+      "probe": "bad-json-root-/requests/rq_a21ceaa95dba4330/paynull",
+      "passed": true,
+      "detail": null
+    },
+    {
+      "probe": "bad-json-root-/requests/rq_a21ceaa95dba4330/pay1",
+      "passed": true,
+      "detail": null
+    },
+    {
+      "probe": "bad-json-root-/requests/rq_a21ceaa95dba4330/paytrue",
+      "passed": true,
+      "detail": null
+    },
+    {
+      "probe": "bad-json-root-/requests/rq_a21ceaa95dba4330/pay\"abc\"",
+      "passed": true,
+      "detail": null
+    },
+    {
+      "probe": "missing-key-/settlements",
+      "passed": true,
+      "detail": null
+    },
+    {
+      "probe": "missing-key-/settlements",
+      "passed": true,
+      "detail": null
+    },
+    {
+      "probe": "long-key-/settlements",
+      "passed": true,
+      "detail": null
+    },
+    {
+      "probe": "bad-json-root-/settlements{",
+      "passed": true,
+      "detail": null
+    },
+    {
+      "probe": "bad-json-root-/settlements[]",
+      "passed": true,
+      "detail": null
+    },
+    {
+      "probe": "bad-json-root-/settlementsnull",
+      "passed": true,
+      "detail": null
+    },
+    {
+      "probe": "bad-json-root-/settlements1",
+      "passed": true,
+      "detail": null
+    },
+    {
+      "probe": "bad-json-root-/settlementstrue",
+      "passed": true,
+      "detail": null
+    },
+    {
+      "probe": "bad-json-root-/settlements\"abc\"",
+      "passed": true,
+      "detail": null
+    },
+    {
+      "probe": "amount-/payments-0",
+      "passed": true,
+      "detail": null
+    },
+    {
+      "probe": "amount-/payments--1",
+      "passed": true,
+      "detail": null
+    },
+    {
+      "probe": "amount-/payments-1000000001",
+      "passed": true,
+      "detail": null
+    },
+    {
+      "probe": "amount-/payments-1.5",
+      "passed": true,
+      "detail": null
+    },
+    {
+      "probe": "amount-/payments-True",
+      "passed": true,
+      "detail": null
+    },
+    {
+      "probe": "amount-/payments-False",
+      "passed": true,
+      "detail": null
+    },
+    {
+      "probe": "amount-/payments-1",
+      "passed": true,
+      "detail": null
+    },
+    {
+      "probe": "amount-/payments-None",
+      "passed": true,
+      "detail": null
+    },
+    {
+      "probe": "amount-/payments-[]",
+      "passed": true,
+      "detail": null
+    },
+    {
+      "probe": "amount-/payments-{}",
+      "passed": true,
+      "detail": null
+    },
+    {
+      "probe": "note-/payments-None",
+      "passed": true,
+      "detail": null
+    },
+    {
+      "probe": "note-/payments-5",
+      "passed": true,
+      "detail": null
+    },
+    {
+      "probe": "note-/payments-False",
+      "passed": true,
+      "detail": null
+    },
+    {
+      "probe": "note-/payments-[]",
+      "passed": true,
+      "detail": null
+    },
+    {
+      "probe": "note-/payments-{}",
+      "passed": true,
+      "detail": null
+    },
+    {
+      "probe": "note-/payments-xxxxxxxxxxxxxxxxxxxxxxxxxxxxxx",
+      "passed": true,
+      "detail": null
+    },
+    {
+      "probe": "note-/payments-\ud83e\udeb7\ud83e\udeb7\ud83e\udeb7\ud83e\udeb7\ud83e\udeb7\ud83e\udeb7\ud83e\udeb7\ud83e\udeb7\ud83e\udeb7\ud83e\udeb7\ud83e\udeb7\ud83e\udeb7\ud83e\udeb7\ud83e\udeb7\ud83e\udeb7\ud83e\udeb7\ud83e\udeb7\ud83e\udeb7\ud83e\udeb7\ud83e\udeb7\ud83e\udeb7\ud83e\udeb7\ud83e\udeb7\ud83e\udeb7\ud83e\udeb7\ud83e\udeb7\ud83e\udeb7\ud83e\udeb7\ud83e\udeb7\ud83e\udeb7",
+      "passed": true,
+      "detail": null
+    },
+    {
+      "probe": "missing-amount-/payments",
+      "passed": true,
+      "detail": null
+    },
+    {
+      "probe": "amount-/requests-0",
+      "passed": true,
+      "detail": null
+    },
+    {
+      "probe": "amount-/requests--1",
+      "passed": true,
+      "detail": null
+    },
+    {
+      "probe": "amount-/requests-1000000001",
+      "passed": true,
+      "detail": null
+    },
+    {
+      "probe": "amount-/requests-1.5",
+      "passed": true,
+      "detail": null
+    },
+    {
+      "probe": "amount-/requests-True",
+      "passed": true,
+      "detail": null
+    },
+    {
+      "probe": "amount-/requests-False",
+      "passed": true,
+      "detail": null
+    },
+    {
+      "probe": "amount-/requests-1",
+      "passed": true,
+      "detail": null
+    },
+    {
+      "probe": "amount-/requests-None",
+      "passed": true,
+      "detail": null
+    },
+    {
+      "probe": "amount-/requests-[]",
+      "passed": true,
+      "detail": null
+    },
+    {
+      "probe": "amount-/requests-{}",
+      "passed": true,
+      "detail": null
+    },
+    {
+      "probe": "note-/requests-None",
+      "passed": true,
+      "detail": null
+    },
+    {
+      "probe": "note-/requests-5",
+      "passed": true,
+      "detail": null
+    },
+    {
+      "probe": "note-/requests-False",
+      "passed": true,
+      "detail": null
+    },
+    {
+      "probe": "note-/requests-[]",
+      "passed": true,
+      "detail": null
+    },
+    {
+      "probe": "note-/requests-{}",
+      "passed": true,
+      "detail": null
+    },
+    {
+      "probe": "note-/requests-xxxxxxxxxxxxxxxxxxxxxxxxxxxxxx",
+      "passed": true,
+      "detail": null
+    },
+    {
+      "probe": "note-/requests-\ud83e\udeb7\ud83e\udeb7\ud83e\udeb7\ud83e\udeb7\ud83e\udeb7\ud83e\udeb7\ud83e\udeb7\ud83e\udeb7\ud83e\udeb7\ud83e\udeb7\ud83e\udeb7\ud83e\udeb7\ud83e\udeb7\ud83e\udeb7\ud83e\udeb7\ud83e\udeb7\ud83e\udeb7\ud83e\udeb7\ud83e\udeb7\ud83e\udeb7\ud83e\udeb7\ud83e\udeb7\ud83e\udeb7\ud83e\udeb7\ud83e\udeb7\ud83e\udeb7\ud83e\udeb7\ud83e\udeb7\ud83e\udeb7\ud83e\udeb7",
+      "passed": true,
+      "detail": null
+    },
+    {
+      "probe": "missing-amount-/requests",
+      "passed": true,
+      "detail": null
+    },
+    {
+      "probe": "amount-/splits-0",
+      "passed": true,
+      "detail": null
+    },
+    {
+      "probe": "amount-/splits--1",
+      "passed": true,
+      "detail": null
+    },
+    {
+      "probe": "amount-/splits-1000000001",
+      "passed": true,
+      "detail": null
+    },
+    {
+      "probe": "amount-/splits-1.5",
+      "passed": true,
+      "detail": null
+    },
+    {
+      "probe": "amount-/splits-True",
+      "passed": true,
+      "detail": null
+    },
+    {
+      "probe": "amount-/splits-False",
+      "passed": true,
+      "detail": null
+    },
+    {
+      "probe": "amount-/splits-1",
+      "passed": true,
+      "detail": null
+    },
+    {
+      "probe": "amount-/splits-None",
+      "passed": true,
+      "detail": null
+    },
+    {
+      "probe": "amount-/splits-[]",
+      "passed": true,
+      "detail": null
+    },
+    {
+      "probe": "amount-/splits-{}",
+      "passed": true,
+      "detail": null
+    },
+    {
+      "probe": "note-/splits-None",
+      "passed": true,
+      "detail": null
+    },
+    {
+      "probe": "note-/splits-5",
+      "passed": true,
+      "detail": null
+    },
+    {
+      "probe": "note-/splits-False",
+      "passed": true,
+      "detail": null
+    },
+    {
+      "probe": "note-/splits-[]",
+      "passed": true,
+      "detail": null
+    },
+    {
+      "probe": "note-/splits-{}",
+      "passed": true,
+      "detail": null
+    },
+    {
+      "probe": "note-/splits-xxxxxxxxxxxxxxxxxxxxxxxxxxxxxx",
+      "passed": true,
+      "detail": null
+    },
+    {
+      "probe": "note-/splits-\ud83e\udeb7\ud83e\udeb7\ud83e\udeb7\ud83e\udeb7\ud83e\udeb7\ud83e\udeb7\ud83e\udeb7\ud83e\udeb7\ud83e\udeb7\ud83e\udeb7\ud83e\udeb7\ud83e\udeb7\ud83e\udeb7\ud83e\udeb7\ud83e\udeb7\ud83e\udeb7\ud83e\udeb7\ud83e\udeb7\ud83e\udeb7\ud83e\udeb7\ud83e\udeb7\ud83e\udeb7\ud83e\udeb7\ud83e\udeb7\ud83e\udeb7\ud83e\udeb7\ud83e\udeb7\ud83e\udeb7\ud83e\udeb7\ud83e\udeb7",
+      "passed": true,
+      "detail": null
+    },
+    {
+      "probe": "missing-amount-/splits",
+      "passed": true,
+      "detail": null
+    },
+    {
+      "probe": "visibility-/paymentsNone",
+      "passed": true,
+      "detail": null
+    },
+    {
+      "probe": "visibility-/payments1",
+      "passed": true,
+      "detail": null
+    },
+    {
+      "probe": "visibility-/paymentsTrue",
+      "passed": true,
+      "detail": null
+    },
+    {
+      "probe": "visibility-/payments{}",
+      "passed": true,
+      "detail": null
+    },
+    {
+      "probe": "visibility-/payments[]",
+      "passed": true,
+      "detail": null
+    },
+    {
+      "probe": "visibility-/paymentsPUBLIC",
+      "passed": true,
+      "detail": null
+    },
+    {
+      "probe": "visibility-/payments",
+      "passed": true,
+      "detail": null
+    },
+    {
+      "probe": "visibility-/requests/rq_a21ceaa95dba4330/payNone",
+      "passed": true,
+      "detail": null
+    },
+    {
+      "probe": "visibility-/requests/rq_a21ceaa95dba4330/pay1",
+      "passed": true,
+      "detail": null
+    },
+    {
+      "probe": "visibility-/requests/rq_a21ceaa95dba4330/payTrue",
+      "passed": true,
+      "detail": null
+    },
+    {
+      "probe": "visibility-/requests/rq_a21ceaa95dba4330/pay{}",
+      "passed": true,
+      "detail": null
+    },
+    {
+      "probe": "visibility-/requests/rq_a21ceaa95dba4330/pay[]",
+      "passed": true,
+      "detail": null
+    },
+    {
+      "probe": "visibility-/requests/rq_a21ceaa95dba4330/payPUBLIC",
+      "passed": true,
+      "detail": null
+    },
+    {
+      "probe": "visibility-/requests/rq_a21ceaa95dba4330/pay",
+      "passed": true,
+      "detail": null
+    },
+    {
+      "probe": "wrong-type-to_handleNone",
+      "passed": true,
+      "detail": null
+    },
+    {
+      "probe": "wrong-type-to_handle1",
+      "passed": true,
+      "detail": null
+    },
+    {
+      "probe": "wrong-type-to_handleTrue",
+      "passed": true,
+      "detail": null
+    },
+    {
+      "probe": "wrong-type-to_handle{}",
+      "passed": true,
+      "detail": null
+    },
+    {
+      "probe": "wrong-type-payer_handleNone",
+      "passed": true,
+      "detail": null
+    },
+    {
+      "probe": "wrong-type-payer_handle1",
+      "passed": true,
+      "detail": null
+    },
+    {
+      "probe": "wrong-type-payer_handleTrue",
+      "passed": true,
+      "detail": null
+    },
+    {
+      "probe": "wrong-type-payer_handle{}",
+      "passed": true,
+      "detail": null
+    },
+    {
+      "probe": "wrong-type-participant_handlesNone",
+      "passed": true,
+      "detail": null
+    },
+    {
+      "probe": "wrong-type-participant_handles1",
+      "passed": true,
+      "detail": null
+    },
+    {
+      "probe": "wrong-type-participant_handlesTrue",
+      "passed": true,
+      "detail": null
+    },
+    {
+      "probe": "wrong-type-participant_handles{}",
+      "passed": true,
+      "detail": null
+    },
+    {
+      "probe": "self-payment",
+      "passed": true,
+      "detail": null
+    },
+    {
+      "probe": "self-request",
+      "passed": true,
+      "detail": null
+    },
+    {
+      "probe": "unknown-payment",
+      "passed": true,
+      "detail": null
+    },
+    {
+      "probe": "unknown-request",
+      "passed": true,
+      "detail": null
+    },
+    {
+      "probe": "split-parts-[]",
+      "passed": true,
+      "detail": null
+    },
+    {
+      "probe": "split-parts-['a', 'a']",
+      "passed": true,
+      "detail": null
+    },
+    {
+      "probe": "split-parts-['a', 'zzz']",
+      "passed": true,
+      "detail": null
+    },
+    {
+      "probe": "query-/activity-limit0",
+      "passed": true,
+      "detail": null
+    },
+    {
+      "probe": "query-/activity-limit201",
+      "passed": true,
+      "detail": null
+    },
+    {
+      "probe": "query-/activity-limit-1",
+      "passed": true,
+      "detail": null
+    },
+    {
+      "probe": "query-/activity-limit4.0",
+      "passed": true,
+      "detail": null
+    },
+    {
+      "probe": "query-/activity-limit1e2",
+      "passed": true,
+      "detail": null
+    },
+    {
+      "probe": "query-/activity-limit%2B4",
+      "passed": true,
+      "detail": null
+    },
+    {
+      "probe": "query-/activity-limit",
+      "passed": true,
+      "detail": null
+    },
+    {
+      "probe": "query-/activity-limitabc",
+      "passed": true,
+      "detail": null
+    },
+    {
+      "probe": "query-/activity-limittrue",
+      "passed": true,
+      "detail": null
+    },
+    {
+      "probe": "query-/activity-offset-1",
+      "passed": true,
+      "detail": null
+    },
+    {
+      "probe": "query-/activity-offset1e9",
+      "passed": true,
+      "detail": null
+    },
+    {
+      "probe": "query-/activity-offset4.0",
+      "passed": true,
+      "detail": null
+    },
+    {
+      "probe": "query-/activity-offset%2B4",
+      "passed": true,
+      "detail": null
+    },
+    {
+      "probe": "query-/activity-offset",
+      "passed": true,
+      "detail": null
+    },
+    {
+      "probe": "query-/activity-offsetabc",
+      "passed": true,
+      "detail": null
+    },
+    {
+      "probe": "query-/activity-offsettrue",
+      "passed": true,
+      "detail": null
+    },
+    {
+      "probe": "valid-query-/activitylimit=1&offset=0",
+      "passed": true,
+      "detail": null
+    },
+    {
+      "probe": "valid-query-/activitylimit=200&offset=9999999999999999999999999",
+      "passed": true,
+      "detail": null
+    },
+    {
+      "probe": "valid-query-/activitylimit=01&offset=00",
+      "passed": true,
+      "detail": null
+    },
+    {
+      "probe": "valid-query-/activityweird=yes",
+      "passed": true,
+      "detail": null
+    },
+    {
+      "probe": "query-/requests-limit0",
+      "passed": true,
+      "detail": null
+    },
+    {
+      "probe": "query-/requests-limit201",
+      "passed": true,
+      "detail": null
+    },
+    {
+      "probe": "query-/requests-limit-1",
+      "passed": true,
+      "detail": null
+    },
+    {
+      "probe": "query-/requests-limit4.0",
+      "passed": true,
+      "detail": null
+    },
+    {
+      "probe": "query-/requests-limit1e2",
+      "passed": true,
+      "detail": null
+    },
+    {
+      "probe": "query-/requests-limit%2B4",
+      "passed": true,
+      "detail": null
+    },
+    {
+      "probe": "query-/requests-limit",
+      "passed": true,
+      "detail": null
+    },
+    {
+      "probe": "query-/requests-limitabc",
+      "passed": true,
+      "detail": null
+    },
+    {
+      "probe": "query-/requests-limittrue",
+      "passed": true,
+      "detail": null
+    },
+    {
+      "probe": "query-/requests-offset-1",
+      "passed": true,
+      "detail": null
+    },
+    {
+      "probe": "query-/requests-offset1e9",
+      "passed": true,
+      "detail": null
+    },
+    {
+      "probe": "query-/requests-offset4.0",
+      "passed": true,
+      "detail": null
+    },
+    {
+      "probe": "query-/requests-offset%2B4",
+      "passed": true,
+      "detail": null
+    },
+    {
+      "probe": "query-/requests-offset",
+      "passed": true,
+      "detail": null
+    },
+    {
+      "probe": "query-/requests-offsetabc",
+      "passed": true,
+      "detail": null
+    },
+    {
+      "probe": "query-/requests-offsettrue",
+      "passed": true,
+      "detail": null
+    },
+    {
+      "probe": "valid-query-/requestslimit=1&offset=0",
+      "passed": true,
+      "detail": null
+    },
+    {
+      "probe": "valid-query-/requestslimit=200&offset=9999999999999999999999999",
+      "passed": true,
+      "detail": null
+    },
+    {
+      "probe": "valid-query-/requestslimit=01&offset=00",
+      "passed": true,
+      "detail": null
+    },
+    {
+      "probe": "valid-query-/requestsweird=yes",
+      "passed": true,
+      "detail": null
+    },
+    {
+      "probe": "bad-filter-direction=oops",
+      "passed": true,
+      "detail": null
+    },
+    {
+      "probe": "bad-filter-status=oops",
+      "passed": true,
+      "detail": null
+    },
+    {
+      "probe": "reset",
+      "passed": true,
+      "detail": null
+    },
+    {
+      "probe": "insufficient-payment",
+      "passed": true,
+      "detail": null
+    },
+    {
+      "probe": "failed-payment-no-trace",
+      "passed": true,
+      "detail": null
+    },
+    {
+      "probe": "integral-spelling-0",
+      "passed": true,
+      "detail": null
+    },
+    {
+      "probe": "integral-spelling-1",
+      "passed": true,
+      "detail": null
+    },
+    {
+      "probe": "integral-spelling-2",
+      "passed": true,
+      "detail": null
+    },
+    {
+      "probe": "unicode-payment",
+      "passed": true,
+      "detail": null
+    },
+    {
+      "probe": "note-verbatim",
+      "passed": true,
+      "detail": null
+    },
+    {
+      "probe": "payment-fields",
+      "passed": true,
+      "detail": {
+        "payment_id": "p_2c2666380a9e4b41",
+        "from_user_id": "u_a",
+        "from_handle": "a",
+        "to_user_id": "u_b",
+        "to_handle": "b",
+        "amount": 10,
+        "currency": "EUR",
+        "note": "  e\u0301 \u00e9 \n\t <>&\" \ud83e\udeb7 \u0000  ",
+        "visibility": "private",
+        "request_id": null,
+        "settlement_id": null,
+        "authorization_id": null,
+        "created_at": "2026-10-04T09:14:22+00:00"
+      }
+    },
+    {
+      "probe": "payment-linkage",
+      "passed": true,
+      "detail": null
+    },
+    {
+      "probe": "time-offset",
+      "passed": true,
+      "detail": null
+    },
+    {
+      "probe": "id-bound",
+      "passed": true,
+      "detail": null
+    },
+    {
+      "probe": "note-200-emoji",
+      "passed": true,
+      "detail": null
+    },
+    {
+      "probe": "private-both-parties",
+      "passed": true,
+      "detail": null
+    },
+    {
+      "probe": "defaults",
+      "passed": true,
+      "detail": null
+    },
+    {
+      "probe": "defaults-values",
+      "passed": true,
+      "detail": null
+    },
+    {
+      "probe": "public-third-party",
+      "passed": true,
+      "detail": null
+    },
+    {
+      "probe": "money-conserved",
+      "passed": true,
+      "detail": null
+    },
+    {
+      "probe": "reset",
+      "passed": true,
+      "detail": null
+    },
+    {
+      "probe": "upper-exact-balance",
+      "passed": true,
+      "detail": null
+    },
+    {
+      "probe": "upper-exact-observed",
+      "passed": true,
+      "detail": null
+    },
+    {
+      "probe": "reset",
+      "passed": true,
+      "detail": null
+    },
+    {
+      "probe": "idem-first",
+      "passed": true,
+      "detail": null
+    },
+    {
+      "probe": "idem-replay",
+      "passed": true,
+      "detail": null
+    },
+    {
+      "probe": "idem-replay-exact",
+      "passed": true,
+      "detail": null
+    },
+    {
+      "probe": "idem-invalid-precedence",
+      "passed": true,
+      "detail": null
+    },
+    {
+      "probe": "idem-order",
+      "passed": true,
+      "detail": null
+    },
+    {
+      "probe": "idem-numeric-and-order",
+      "passed": true,
+      "detail": null
+    },
+    {
+      "probe": "idem-unknown-diff",
+      "passed": true,
+      "detail": null
+    },
+    {
+      "probe": "idem-user-scope",
+      "passed": true,
+      "detail": null
+    },
+    {
+      "probe": "idem-path-scope",
+      "passed": true,
+      "detail": null
+    },
+    {
+      "probe": "idem-failure",
+      "passed": true,
+      "detail": null
+    },
+    {
+      "probe": "idem-failure-reuse",
+      "passed": true,
+      "detail": null
+    },
+    {
+      "probe": "key-255",
+      "passed": true,
+      "detail": null
+    },
+    {
+      "probe": "key-1",
+      "passed": true,
+      "detail": null
+    },
+    {
+      "probe": "request-first",
+      "passed": true,
+      "detail": null
+    },
+    {
+      "probe": "cancel-request",
+      "passed": true,
+      "detail": null
+    },
+    {
+      "probe": "request-replay",
+      "passed": true,
+      "detail": null
+    },
+    {
+      "probe": "request-replay-after-cancel",
+      "passed": true,
+      "detail": null
+    },
+    {
+      "probe": "pay-first",
+      "passed": true,
+      "detail": null
+    },
+    {
+      "probe": "pay-replay",
+      "passed": true,
+      "detail": null
+    },
+    {
+      "probe": "pay-replay-exact",
+      "passed": true,
+      "detail": null
+    },
+    {
+      "probe": "pay-default-different-body",
+      "passed": true,
+      "detail": null
+    },
+    {
+      "probe": "split-idem-first",
+      "passed": true,
+      "detail": null
+    },
+    {
+      "probe": "split-idem-repeat",
+      "passed": true,
+      "detail": null
+    },
+    {
+      "probe": "split-idem-replay",
+      "passed": true,
+      "detail": null
+    },
+    {
+      "probe": "split-precedence",
+      "passed": true,
+      "detail": null
+    },
+    {
+      "probe": "request-precedence",
+      "passed": true,
+      "detail": null
+    },
+    {
+      "probe": "bool-extra-first",
+      "passed": true,
+      "detail": null
+    },
+    {
+      "probe": "bool-not-number-idem",
+      "passed": true,
+      "detail": null
+    },
+    {
+      "probe": "reset",
+      "passed": true,
+      "detail": null
+    },
+    {
+      "probe": "overdrawn-request",
+      "passed": true,
+      "detail": null
+    },
+    {
+      "probe": "request-no-visibility",
+      "passed": true,
+      "detail": null
+    },
+    {
+      "probe": "overdrawn-pay",
+      "passed": true,
+      "detail": null
+    },
+    {
+      "probe": "overdrawn-pay-nochange",
+      "passed": true,
+      "detail": null
+    },
+    {
+      "probe": "fund-payer",
+      "passed": true,
+      "detail": null
+    },
+    {
+      "probe": "pay-wrong-user",
+      "passed": true,
+      "detail": null
+    },
+    {
+      "probe": "later-pay",
+      "passed": true,
+      "detail": null
+    },
+    {
+      "probe": "paid-roles",
+      "passed": true,
+      "detail": null
+    },
+    {
+      "probe": "paid-link",
+      "passed": true,
+      "detail": null
+    },
+    {
+      "probe": "payer-visibility",
+      "passed": true,
+      "detail": null
+    },
+    {
+      "probe": "paid-again-other-key",
+      "passed": true,
+      "detail": null
+    },
+    {
+      "probe": "paid-decline",
+      "passed": true,
+      "detail": null
+    },
+    {
+      "probe": "paid-cancel",
+      "passed": true,
+      "detail": null
+    },
+    {
+      "probe": "wrong-decline",
+      "passed": true,
+      "detail": null
+    },
+    {
+      "probe": "decline",
+      "passed": true,
+      "detail": null
+    },
+    {
+      "probe": "decline-status",
+      "passed": true,
+      "detail": null
+    },
+    {
+      "probe": "repeat-decline",
+      "passed": true,
+      "detail": null
+    },
+    {
+      "probe": "repeat-decline",
+      "passed": true,
+      "detail": null
+    },
+    {
+      "probe": "terminal-conflict-decline",
+      "passed": true,
+      "detail": null
+    },
+    {
+      "probe": "terminal-pay-decline",
+      "passed": true,
+      "detail": null
+    },
+    {
+      "probe": "wrong-cancel",
+      "passed": true,
+      "detail": null
+    },
+    {
+      "probe": "cancel",
+      "passed": true,
+      "detail": null
+    },
+    {
+      "probe": "cancel-status",
+      "passed": true,
+      "detail": null
+    },
+    {
+      "probe": "repeat-cancel",
+      "passed": true,
+      "detail": null
+    },
+    {
+      "probe": "repeat-cancel",
+      "passed": true,
+      "detail": null
+    },
+    {
+      "probe": "terminal-conflict-cancel",
+      "passed": true,
+      "detail": null
+    },
+    {
+      "probe": "terminal-pay-cancel",
+      "passed": true,
+      "detail": null
+    },
+    {
+      "probe": "unknown-pay",
+      "passed": true,
+      "detail": null
+    },
+    {
+      "probe": "unknown-cancel",
+      "passed": true,
+      "detail": null
+    },
+    {
+      "probe": "unknown-decline",
+      "passed": true,
+      "detail": null
+    },
+    {
+      "probe": "request-privacy",
+      "passed": true,
+      "detail": null
+    },
+    {
+      "probe": "split-round-1000",
+      "passed": true,
+      "detail": null
+    },
+    {
+      "probe": "shares-1000",
+      "passed": true,
+      "detail": null
+    },
+    {
+      "probe": "split-requests-1000",
+      "passed": true,
+      "detail": null
+    },
+    {
+      "probe": "split-round-1",
+      "passed": true,
+      "detail": null
+    },
+    {
+      "probe": "shares-1",
+      "passed": true,
+      "detail": null
+    },
+    {
+      "probe": "split-requests-1",
+      "passed": true,
+      "detail": null
+    },
+    {
+      "probe": "pay-zero-share",
+      "passed": true,
+      "detail": null
+    },
+    {
+      "probe": "pay-zero-share",
+      "passed": true,
+      "detail": null
+    },
+    {
+      "probe": "split-round-10",
+      "passed": true,
+      "detail": null
+    },
+    {
+      "probe": "shares-10",
+      "passed": true,
+      "detail": null
+    },
+    {
+      "probe": "split-requests-10",
+      "passed": true,
+      "detail": null
+    },
+    {
+      "probe": "split-round-999",
+      "passed": true,
+      "detail": null
+    },
+    {
+      "probe": "shares-999",
+      "passed": true,
+      "detail": null
+    },
+    {
+      "probe": "split-requests-999",
+      "passed": true,
+      "detail": null
+    },
+    {
+      "probe": "split-round-5",
+      "passed": true,
+      "detail": null
+    },
+    {
+      "probe": "shares-5",
+      "passed": true,
+      "detail": null
+    },
+    {
+      "probe": "split-requests-5",
+      "passed": true,
+      "detail": null
+    },
+    {
+      "probe": "split-only-self",
+      "passed": true,
+      "detail": null
+    },
+    {
+      "probe": "split-only-self-empty",
+      "passed": true,
+      "detail": null
+    },
+    {
+      "probe": "split-caller-omitted",
+      "passed": true,
+      "detail": null
+    },
+    {
+      "probe": "omitted-shares",
+      "passed": true,
+      "detail": null
+    },
+    {
+      "probe": "split-reorder",
+      "passed": true,
+      "detail": null
+    },
+    {
+      "probe": "split-first-extra",
+      "passed": true,
+      "detail": null
+    },
+    {
+      "probe": "split-conservation",
+      "passed": true,
+      "detail": null
+    },
+    {
+      "probe": "no-request-feed",
+      "passed": true,
+      "detail": null
+    },
+    {
+      "probe": "reset",
+      "passed": true,
+      "detail": null
+    },
+    {
+      "probe": "default-page-/activity",
+      "passed": true,
+      "detail": null
+    },
+    {
+      "probe": "last-page-/activity",
+      "passed": true,
+      "detail": null
+    },
+    {
+      "probe": "empty-page-/activity",
+      "passed": true,
+      "detail": null
+    },
+    {
+      "probe": "newest-first-/activity",
+      "passed": true,
+      "detail": null
+    },
+    {
+      "probe": "default-page-/requests",
+      "passed": true,
+      "detail": null
+    },
+    {
+      "probe": "last-page-/requests",
+      "passed": true,
+      "detail": null
+    },
+    {
+      "probe": "empty-page-/requests",
+      "passed": true,
+      "detail": null
+    },
+    {
+      "probe": "newest-first-/requests",
+      "passed": true,
+      "detail": null
+    },
+    {
+      "probe": "direction-aincoming",
+      "passed": true,
+      "detail": null
+    },
+    {
+      "probe": "direction-aoutgoing",
+      "passed": true,
+      "detail": null
+    },
+    {
+      "probe": "direction-bincoming",
+      "passed": true,
+      "detail": null
+    },
+    {
+      "probe": "direction-boutgoing",
+      "passed": true,
+      "detail": null
+    },
+    {
+      "probe": "status-filter",
+      "passed": true,
+      "detail": null
+    },
+    {
+      "probe": "reset",
+      "passed": true,
+      "detail": null
+    },
+    {
+      "probe": "concurrent-idem-/payments",
+      "passed": true,
+      "detail": [
+        200,
+        201,
+        200,
+        200,
+        200,
+        200,
+        200,
+        200,
+        200,
+        200,
+        200,
+        200,
+        200,
+        200,
+        200,
+        200,
+        200,
+        200,
+        200,
+        200,
+        200,
+        200,
+        200,
+        200,
+        200,
+        200,
+        200,
+        200,
+        200,
+        200,
+        200,
+        200,
+        200,
+        200,
+        200,
+        200,
+        200,
+        200,
+        200,
+        200,
+        200,
+        200,
+        200,
+        200,
+        200,
+        200,
+        200,
+        200,
+        200,
+        200
+      ]
+    },
+    {
+      "probe": "concurrent-timeout-/payments",
+      "passed": true,
+      "detail": 0.007175832994107623
+    },
+    {
+      "probe": "concurrent-idem-/requests",
+      "passed": true,
+      "detail": [
+        201,
+        200,
+        200,
+        200,
+        200,
+        200,
+        200,
+        200,
+        200,
+        200,
+        200,
+        200,
+        200,
+        200,
+        200,
+        200,
+        200,
+        200,
+        200,
+        200,
+        200,
+        200,
+        200,
+        200,
+        200,
+        200,
+        200,
+        200,
+        200,
+        200,
+        200,
+        200,
+        200,
+        200,
+        200,
+        200,
+        200,
+        200,
+        200,
+        200,
+        200,
+        200,
+        200,
+        200,
+        200,
+        200,
+        200,
+        200,
+        200,
+        200
+      ]
+    },
+    {
+      "probe": "concurrent-timeout-/requests",
+      "passed": true,
+      "detail": 0.008582457994634751
+    },
+    {
+      "probe": "concurrent-idem-/splits",
+      "passed": true,
+      "detail": [
+        200,
+        200,
+        201,
+        200,
+        200,
+        200,
+        200,
+        200,
+        200,
+        200,
+        200,
+        200,
+        200,
+        200,
+        200,
+        200,
+        200,
+        200,
+        200,
+        200,
+        200,
+        200,
+        200,
+        200,
+        200,
+        200,
+        200,
+        200,
+        200,
+        200,
+        200,
+        200,
+        200,
+        200,
+        200,
+        200,
+        200,
+        200,
+        200,
+        200,
+        200,
+        200,
+        200,
+        200,
+        200,
+        200,
+        200,
+        200,
+        200,
+        200
+      ]
+    },
+    {
+      "probe": "concurrent-timeout-/splits",
+      "passed": true,
+      "detail": 0.011825665998912882
+    },
+    {
+      "probe": "concurrent-idem-/settlements",
+      "passed": true,
+      "detail": [
+        201,
+        200,
+        200,
+        200,
+        200,
+        200,
+        200,
+        200,
+        200,
+        200,
+        200,
+        200,
+        200,
+        200,
+        200,
+        200,
+        200,
+        200,
+        200,
+        200,
+        200,
+        200,
+        200,
+        200,
+        200,
+        200,
+        200,
+        200,
+        200,
+        200,
+        200,
+        200,
+        200,
+        200,
+        200,
+        200,
+        200,
+        200,
+        200,
+        200,
+        200,
+        200,
+        200,
+        200,
+        200,
+        200,
+        200,
+        200,
+        200,
+        200
+      ]
+    },
+    {
+      "probe": "concurrent-timeout-/settlements",
+      "passed": true,
+      "detail": 0.007070040999678895
+    },
+    {
+      "probe": "concurrent-idem-/requests/rq_ce03c9b1f8dd419e/pay",
+      "passed": true,
+      "detail": [
+        201,
+        200,
+        200,
+        200,
+        200,
+        200,
+        200,
+        200,
+        200,
+        200,
+        200,
+        200,
+        200,
+        200,
+        200,
+        200,
+        200,
+        200,
+        200,
+        200,
+        200,
+        200,
+        200,
+        200,
+        200,
+        200,
+        200,
+        200,
+        200,
+        200,
+        200,
+        200,
+        200,
+        200,
+        200,
+        200,
+        200,
+        200,
+        200,
+        200,
+        200,
+        200,
+        200,
+        200,
+        200,
+        200,
+        200,
+        200,
+        200,
+        200
+      ]
+    },
+    {
+      "probe": "concurrent-timeout-/requests/rq_ce03c9b1f8dd419e/pay",
+      "passed": true,
+      "detail": 0.00738279199867975
+    },
+    {
+      "probe": "concurrent-conservation",
+      "passed": true,
+      "detail": null
+    },
+    {
+      "probe": "reset",
+      "passed": true,
+      "detail": null
+    },
+    {
+      "probe": "overspend-race",
+      "passed": true,
+      "detail": [
+        201,
+        201,
+        201,
+        201,
+        201,
+        201,
+        201,
+        201,
+        201,
+        201,
+        409,
+        409,
+        409,
+        409,
+        409,
+        409,
+        409,
+        409,
+        409,
+        409,
+        409,
+        409,
+        409,
+        409,
+        409,
+        409,
+        409,
+        409,
+        409,
+        409,
+        409,
+        409,
+        409,
+        409,
+        409,
+        409,
+        409,
+        409,
+        409,
+        409,
+        409,
+        409,
+        409,
+        409,
+        409,
+        409,
+        409,
+        409,
+        409,
+        409
+      ]
+    },
+    {
+      "probe": "overspend-balances",
+      "passed": true,
+      "detail": null
+    },
+    {
+      "probe": "reset",
+      "passed": true,
+      "detail": null
+    },
+    {
+      "probe": "request-terminal-race",
+      "passed": true,
+      "detail": [
+        201,
+        409,
+        409,
+        409,
+        409,
+        409,
+        409,
+        409,
+        409,
+        409,
+        409,
+        409,
+        409,
+        409,
+        409,
+        409,
+        409,
+        409,
+        409,
+        409,
+        409,
+        409,
+        409,
+        409,
+        409,
+        409,
+        409,
+        409,
+        409,
+        409,
+        409,
+        409,
+        409,
+        409,
+        409,
+        409,
+        409,
+        409,
+        409,
+        409,
+        409,
+        409,
+        409,
+        409,
+        409,
+        409,
+        409,
+        409,
+        409,
+        409
+      ]
+    },
+    {
+      "probe": "request-race-conservation",
+      "passed": true,
+      "detail": null
+    },
+    {
+      "probe": "reset",
+      "passed": true,
+      "detail": null
+    },
+    {
+      "probe": "operator-required",
+      "passed": true,
+      "detail": null
+    },
+    {
+      "probe": "batch-shape-None",
+      "passed": true,
+      "detail": null
+    },
+    {
+      "probe": "batch-shape-{}",
+      "passed": true,
+      "detail": null
+    },
+    {
+      "probe": "batch-shape-x",
+      "passed": true,
+      "detail": null
+    },
+    {
+      "probe": "batch-shape-[]",
+      "passed": true,
+      "detail": null
+    },
+    {
+      "probe": "batch-shape-[None]",
+      "passed": true,
+      "detail": null
+    },
+    {
+      "probe": "batch-shape-[1]",
+      "passed": true,
+      "detail": null
+    },
+    {
+      "probe": "batch-shape-[{}]",
+      "passed": true,
+      "detail": null
+    },
+    {
+      "probe": "batch-shape-[{'from_handle': 'a', 'to_hand",
+      "passed": true,
+      "detail": null
+    },
+    {
+      "probe": "batch-entry-{'amount': True}",
+      "passed": true,
+      "detail": null
+    },
+    {
+      "probe": "batch-entry-{'amount': 0}",
+      "passed": true,
+      "detail": null
+    },
+    {
+      "probe": "batch-entry-{'amount': 1000000001}",
+      "passed": true,
+      "detail": null
+    },
+    {
+      "probe": "batch-entry-{'note': None}",
+      "passed": true,
+      "detail": null
+    },
+    {
+      "probe": "batch-entry-{'visibility': None}",
+      "passed": true,
+      "detail": null
+    },
+    {
+      "probe": "batch-entry-{'to_handle': 'a'}",
+      "passed": true,
+      "detail": null
+    },
+    {
+      "probe": "batch-entry-{'to_handle': 'none'}",
+      "passed": true,
+      "detail": null
+    },
+    {
+      "probe": "validation-before-funds",
+      "passed": true,
+      "detail": null
+    },
+    {
+      "probe": "entry-input-order",
+      "passed": true,
+      "detail": null
+    },
+    {
+      "probe": "entry-input-order-reverse",
+      "passed": true,
+      "detail": null
+    },
+    {
+      "probe": "net-insufficient",
+      "passed": true,
+      "detail": null
+    },
+    {
+      "probe": "failed-net-atomic",
+      "passed": true,
+      "detail": null
+    },
+    {
+      "probe": "net-funded-cycle",
+      "passed": true,
+      "detail": null
+    },
+    {
+      "probe": "net-unchanged-balances",
+      "passed": true,
+      "detail": null
+    },
+    {
+      "probe": "settlement-members",
+      "passed": true,
+      "detail": null
+    },
+    {
+      "probe": "settlement-order",
+      "passed": true,
+      "detail": null
+    },
+    {
+      "probe": "settlement-private",
+      "passed": true,
+      "detail": null
+    },
+    {
+      "probe": "settlement-replay",
+      "passed": true,
+      "detail": null
+    },
+    {
+      "probe": "settlement-replay-exact",
+      "passed": true,
+      "detail": null
+    },
+    {
+      "probe": "settlement-precedence",
+      "passed": true,
+      "detail": null
+    },
+    {
+      "probe": "operator-no-request-access",
+      "passed": true,
+      "detail": null
+    },
+    {
+      "probe": "32-entry-batch",
+      "passed": true,
+      "detail": null
+    },
+    {
+      "probe": "reset",
+      "passed": true,
+      "detail": null
+    },
+    {
+      "probe": "no-default-operators",
+      "passed": true,
+      "detail": null
+    },
+    {
+      "probe": "reset",
+      "passed": true,
+      "detail": null
+    },
+    {
+      "probe": "failed-export-key",
+      "passed": true,
+      "detail": null
+    },
+    {
+      "probe": "export-envelope",
+      "passed": true,
+      "detail": null
+    },
+    {
+      "probe": "export-readonly",
+      "passed": true,
+      "detail": null
+    },
+    {
+      "probe": "no-plaintext-export",
+      "passed": true,
+      "detail": null
+    },
+    {
+      "probe": "reset",
+      "passed": true,
+      "detail": null
+    },
+    {
+      "probe": "import-cross-process-0",
+      "passed": true,
+      "detail": null
+    },
+    {
+      "probe": "import-exact-state-0",
+      "passed": true,
+      "detail": null
+    },
+    {
+      "probe": "old-dest-token-invalid",
+      "passed": true,
+      "detail": null
+    },
+    {
+      "probe": "old-dest-login-invalid",
+      "passed": true,
+      "detail": null
+    },
+    {
+      "probe": "import-token-valid",
+      "passed": true,
+      "detail": null
+    },
+    {
+      "probe": "import-hashed-login",
+      "passed": true,
+      "detail": null
+    },
+    {
+      "probe": "import-replay-status",
+      "passed": true,
+      "detail": null
+    },
+    {
+      "probe": "import-replay-/payments",
+      "passed": true,
+      "detail": null
+    },
+    {
+      "probe": "import-replay-status",
+      "passed": true,
+      "detail": null
+    },
+    {
+      "probe": "import-replay-/requests",
+      "passed": true,
+      "detail": null
+    },
+    {
+      "probe": "import-replay-status",
+      "passed": true,
+      "detail": null
+    },
+    {
+      "probe": "import-replay-/requests/rq_2d5dea56fae94be1/pay",
+      "passed": true,
+      "detail": null
+    },
+    {
+      "probe": "import-replay-status",
+      "passed": true,
+      "detail": null
+    },
+    {
+      "probe": "import-replay-/splits",
+      "passed": true,
+      "detail": null
+    },
+    {
+      "probe": "import-replay-status",
+      "passed": true,
+      "detail": null
+    },
+    {
+      "probe": "import-replay-/settlements",
+      "passed": true,
+      "detail": null
+    },
+    {
+      "probe": "import-failed-key-reusable",
+      "passed": true,
+      "detail": null
+    },
+    {
+      "probe": "import-permissions",
+      "passed": true,
+      "detail": null
+    },
+    {
+      "probe": "import-cross-process-1",
+      "passed": true,
+      "detail": null
+    },
+    {
+      "probe": "import-exact-state-1",
+      "passed": true,
+      "detail": null
+    },
+    {
+      "probe": "old-dest-token-invalid",
+      "passed": true,
+      "detail": null
+    },
+    {
+      "probe": "old-dest-login-invalid",
+      "passed": true,
+      "detail": null
+    },
+    {
+      "probe": "import-token-valid",
+      "passed": true,
+      "detail": null
+    },
+    {
+      "probe": "import-hashed-login",
+      "passed": true,
+      "detail": null
+    },
+    {
+      "probe": "import-replay-status",
+      "passed": true,
+      "detail": null
+    },
+    {
+      "probe": "import-replay-/payments",
+      "passed": true,
+      "detail": null
+    },
+    {
+      "probe": "import-replay-status",
+      "passed": true,
+      "detail": null
+    },
+    {
+      "probe": "import-replay-/requests",
+      "passed": true,
+      "detail": null
+    },
+    {
+      "probe": "import-replay-status",
+      "passed": true,
+      "detail": null
+    },
+    {
+      "probe": "import-replay-/requests/rq_2d5dea56fae94be1/pay",
+      "passed": true,
+      "detail": null
+    },
+    {
+      "probe": "import-replay-status",
+      "passed": true,
+      "detail": null
+    },
+    {
+      "probe": "import-replay-/splits",
+      "passed": true,
+      "detail": null
+    },
+    {
+      "probe": "import-replay-status",
+      "passed": true,
+      "detail": null
+    },
+    {
+      "probe": "import-replay-/settlements",
+      "passed": true,
+      "detail": null
+    },
+    {
+      "probe": "import-failed-key-reusable",
+      "passed": true,
+      "detail": null
+    },
+    {
+      "probe": "import-permissions",
+      "passed": true,
+      "detail": null
+    },
+    {
+      "probe": "invalid-import-{}",
+      "passed": true,
+      "detail": null
+    },
+    {
+      "probe": "invalid-import-unchanged",
+      "passed": true,
+      "detail": null
+    },
+    {
+      "probe": "invalid-import-{'track': 'wrong', 'format_version': 1, 'state': {}}",
+      "passed": true,
+      "detail": null
+    },
+    {
+      "probe": "invalid-import-unchanged",
+      "passed": true,
+      "detail": null
+    },
+    {
+      "probe": "invalid-import-{'track': 'pocketful', 'format_version': 2, 'state': {}}",
+      "passed": true,
+      "detail": null
+    },
+    {
+      "probe": "invalid-import-unchanged",
+      "passed": true,
+      "detail": null
+    },
+    {
+      "probe": "invalid-import-{'track': 'pocketful', 'format_version': 1, 'state': {}}",
+      "passed": true,
+      "detail": null
+    },
+    {
+      "probe": "invalid-import-unchanged",
+      "passed": true,
+      "detail": null
+    },
+    {
+      "probe": "invalid-import-{'track': 'pocketful', 'format_version': 1, 'state': None}",
+      "passed": true,
+      "detail": null
+    },
+    {
+      "probe": "invalid-import-unchanged",
+      "passed": true,
+      "detail": null
+    },
+    {
+      "probe": "malformed-import",
+      "passed": true,
+      "detail": null
+    },
+    {
+      "probe": "reset",
+      "passed": true,
+      "detail": null
+    },
+    {
+      "probe": "reset-imported-token",
+      "passed": true,
+      "detail": null
+    },
+    {
+      "probe": "reset",
+      "passed": true,
+      "detail": null
+    },
+    {
+      "probe": "exact-numeric-{\"to_handle\":\"b\",\"amount\":1e999}",
+      "passed": true,
+      "detail": null
+    },
+    {
+      "probe": "exact-numeric-{\"to_handle\":\"b\",\"amount\":1e-999}",
+      "passed": true,
+      "detail": null
+    },
+    {
+      "probe": "exact-numeric-{\"to_handle\":\"b\",\"amount\":1000000000.00000001}",
+      "passed": true,
+      "detail": null
+    },
+    {
+      "probe": "exact-numeric-{\"to_handle\":\"b\",\"amount\":1.0000000000000001}",
+      "passed": true,
+      "detail": null
+    },
+    {
+      "probe": "non-json-number-NaN",
+      "passed": true,
+      "detail": null
+    },
+    {
+      "probe": "non-json-number-Infinity",
+      "passed": true,
+      "detail": null
+    },
+    {
+      "probe": "non-json-number--Infinity",
+      "passed": true,
+      "detail": null
+    },
+    {
+      "probe": "unknown-large-numeric-1e999",
+      "passed": true,
+      "detail": null
+    },
+    {
+      "probe": "unknown-large-numeric--1e999",
+      "passed": true,
+      "detail": null
+    },
+    {
+      "probe": "idem-precision0",
+      "passed": true,
+      "detail": null
+    },
+    {
+      "probe": "idem-precision1",
+      "passed": true,
+      "detail": null
+    },
+    {
+      "probe": "idem-precision-fraction0",
+      "passed": true,
+      "detail": null
+    },
+    {
+      "probe": "idem-precision-fraction1",
+      "passed": true,
+      "detail": null
+    }
+  ]
+}

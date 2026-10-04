@@ -74,7 +74,9 @@ def basic():
         expect('malformed-auth',call('GET','/me',headers={'Authorization':h}),401,'unauthenticated')
     expect('unknown-endpoint',call('GET','/not-an-endpoint',user='a'),404,'not_found')
     m=call('GET','/me',user='a')[1]
-    check('me-fields',m=={'user_id':'u_a','display_name':'A','handle':'a','balance':10000,'currency':'EUR','minor_units':2},m)
+    expected_me={'user_id':'u_a','display_name':'A','handle':'a','balance':10000,'currency':'EUR','minor_units':2}
+    if os.environ.get('AUDIT_STAGE')=='2': expected_me.update(total=10000,available=10000,held=0)
+    check('me-fields',m==expected_me,m)
     for body,code,status in [({'email':'a@example.com','password':'abcdefgh','display_name':'X'},'email_taken',409),({'email':'bad','password':'abcdefgh','display_name':'X'},'validation_failed',422),({'email':'@example.com','password':'abcdefgh','display_name':'X'},'validation_failed',422),({'email':'x@','password':'abcdefgh','display_name':'X'},'validation_failed',422),({'email':'x@example.com','password':'1234567','display_name':'X'},'validation_failed',422),({'email':8,'password':'abcdefgh','display_name':'X'},'malformed_request',400),({'email':'x@example.com','password':False,'display_name':'X'},'malformed_request',400),({'email':'x@example.com','password':'abcdefgh','display_name':None},'malformed_request',400),({'email':'x@example.com','password':'abcdefgh'},'validation_failed',422)]:
         expect('signup-invalid-'+str(body),call('POST','/auth/signup',body),status,code)
     for body in [{'email':'a@example.com','password':'wrongpass'},{'email':'none@example.com','password':'eight chars'}]: expect('bad-login',call('POST','/auth/login',body),401,'unauthenticated')

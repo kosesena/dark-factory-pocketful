@@ -1,0 +1,69 @@
+{
+  "probes": 12,
+  "passed": 12,
+  "failed": [],
+  "results": [
+    {
+      "probe": "reset",
+      "passed": true,
+      "detail": null
+    },
+    {
+      "probe": "ui-wallet-1000",
+      "passed": true,
+      "detail": null
+    },
+    {
+      "probe": "refused-preserves",
+      "passed": true,
+      "detail": null
+    },
+    {
+      "probe": "stale-button-removed",
+      "passed": true,
+      "detail": null
+    },
+    {
+      "probe": "reset",
+      "passed": true,
+      "detail": null
+    },
+    {
+      "probe": "lost-not-refused",
+      "passed": true,
+      "detail": null
+    },
+    {
+      "probe": "ui-wallet-9900",
+      "passed": true,
+      "detail": null
+    },
+    {
+      "probe": "retry-same-identity",
+      "passed": true,
+      "detail": null
+    },
+    {
+      "probe": "retry-once",
+      "passed": true,
+      "detail": {
+        "payment_count": 1
+      }
+    },
+    {
+      "probe": "ui-wallet-9800",
+      "passed": true,
+      "detail": null
+    },
+    {
+      "probe": "latest-refresh-wins",
+      "passed": true,
+      "detail": null
+    },
+    {
+      "probe": "refresh-preserves-form",
+      "passed": true,
+      "detail": null
+    }
+  ]
+}

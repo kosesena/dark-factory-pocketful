@@ -1,0 +1,27 @@
+{
+  "probes": 4,
+  "passed": 4,
+  "failed": [],
+  "results": [
+    {
+      "probe": "reset",
+      "passed": true,
+      "detail": null
+    },
+    {
+      "probe": "ui-wallet-9900",
+      "passed": true,
+      "detail": null
+    },
+    {
+      "probe": "loading-state-visible",
+      "passed": true,
+      "detail": null
+    },
+    {
+      "probe": "all-browser-assets-local",
+      "passed": true,
+      "detail": []
+    }
+  ]
+}
