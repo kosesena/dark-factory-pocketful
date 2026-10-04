@@ -1544,6 +1544,41 @@ class Ledger(unittest.TestCase):
         self.assertEqual(call("POST", "/payments/ab/corrections", {"expected_revision": 1, "amount": 70, "effective_at": "2020-01-02T00:00:00+00:00", "reason": "r"},
                               token=a, key="k")[1]["error"]["code"], "historical_overdraft")
 
+    def test_future_known_at_snapshot_survives_later_corrections_and_import(self):
+        s, a, _ = call("GET", "/statement?known_at=2090-01-01T00:00:00%2B00:00&to=2090-01-01T00:00:00%2B00:00", token=self.ada)
+        tok = a["snapshot"]
+        self.corr(self.ada, "p_a", {"expected_revision": 1, "amount": 400, "effective_at": "2026-09-20T12:00:00+00:00", "reason": "later"})
+        s, before, _ = call("GET", "/statement?snapshot=%s&limit=200" % tok, token=self.ada)
+        self.assertEqual([x["payment"]["amount"] for x in before["entries"] if x["payment"]["payment_id"] == "p_a"], [500])
+        s, snap, _ = call("GET", "/_test/export")
+        self.assertEqual(call("POST", "/_test/import", snap)[0], 204)
+        self.assertEqual(call("GET", "/statement?snapshot=%s&limit=200" % tok, token=self.ada)[1], before)
+        # a fresh statement with the same future known_at sees the correction
+        s, fresh, _ = call("GET", "/statement?known_at=2090-01-01T00:00:00%2B00:00", token=self.ada)
+        self.assertEqual([x["payment"]["amount"] for x in fresh["entries"] if x["payment"]["payment_id"] == "p_a"], [400])
+
+    def test_future_instants_in_saved_statements_survive_later_events(self):
+        toks = {}
+        for q in ("known_at=2090-01-01T00:00:00%2B00:00", "from=2090-01-01T00:00:00%2B00:00", "to=2090-01-01T00:00:00%2B00:00",
+                  "from=2020-01-01T00:00:00%2B00:00&to=2090-01-01T00:00:00%2B00:00&known_at=2090-06-01T00:00:00%2B00:00",
+                  "known_at=2000-01-01T00:00:00%2B00:00"):
+            toks[q] = call("GET", "/statement?" + q, token=self.bob)[1]["snapshot"]
+        pages = {q: call("GET", "/statement?snapshot=%s&limit=200" % t_, token=self.bob)[1] for q, t_ in toks.items()}
+        # later events: a payment, a correction, a hold
+        call("POST", "/payments", {"to_handle": "cy", "amount": 7}, token=self.bob, key="fi1")
+        self.corr(self.ada, "p_a", {"expected_revision": 1, "amount": 450, "effective_at": "2026-09-20T12:00:00+00:00", "reason": "later"}, "fi2")
+        call("POST", "/authorizations", {"to_handle": "cy", "amount": 9}, token=self.bob, key="fi3")
+        s, snap, _ = call("GET", "/_test/export")
+        self.assertEqual(call("POST", "/_test/import", snap)[0], 204)
+        for q, t_ in toks.items():
+            self.assertEqual(call("GET", "/statement?snapshot=%s&limit=200" % t_, token=self.bob)[1], pages[q], q)
+        # tampering still fails for the future-dated ones
+        bad = json.loads(json.dumps(snap))
+        for sn in bad["state"]["snapshots"]:
+            if sn["entries"]:
+                sn["entries"][0][6] += 1
+        self.assertEqual(call("POST", "/_test/import", bad)[0], 422)
+
     def test_import_from_earlier_stage_exports(self):
         s, snap, _ = call("GET", "/_test/export")
         st = snap["state"]
@@ -1558,6 +1593,97 @@ class Ledger(unittest.TestCase):
         self.assertEqual(call("GET", "/me?as_of=2026-09-19T00:00:00%2B00:00", token=self.ada)[1]["balance"], 9300)
         s, e, _ = call("GET", "/_test/export")
         self.assertEqual(call("POST", "/_test/import", e)[0], 204)
+
+
+class Stage3GapList(unittest.TestCase):
+    """Scripted checks for the spec-auditor's stage-3 gap list (items not covered elsewhere)."""
+
+    def setUp(self):
+        self.assertEqual(call("POST", "/_test/reset", hist_fixture())[0], 204)
+        self.ada, self.bob, self.cy = login("ada"), login("bob"), login("cy")
+
+    def corr(self, tok, pid, **kw):
+        body = {"expected_revision": 1, "amount": 0, "effective_at": "2026-09-20T12:00:00+00:00", "reason": "r"}
+        body.update(kw)
+        return call("POST", "/payments/%s/corrections" % pid, body, token=tok, key=kw.get("key", "k-%s-%s" % (pid, body["expected_revision"])))
+
+    def test_known_at_between_pay_and_correction(self):
+        s, pay, _ = call("POST", "/payments", {"to_handle": "bob", "amount": 100}, token=self.ada, key="g1")
+        time.sleep(1.1)
+        mid = datetime_now_iso()
+        time.sleep(0.05)
+        s, c, _ = call("POST", "/payments/%s/corrections" % pay["payment_id"], {"expected_revision": 1, "amount": 0, "effective_at": pay["created_at"], "reason": "zero"}, token=self.ada, key="g2")
+        e = lambda ts: ts.replace("+", "%2B")
+        _, st, _ = call("GET", "/statement?known_at=" + e(mid), token=self.ada)
+        mine = [x for x in st["entries"] if x["payment"]["payment_id"] == pay["payment_id"]]
+        self.assertEqual([(x["revision"], x["delta"]) for x in mine], [(1, -100)])
+        _, st, _ = call("GET", "/statement", token=self.ada)
+        mine = [x for x in st["entries"] if x["payment"]["payment_id"] == pay["payment_id"]]
+        self.assertEqual([(x["revision"], x["delta"], x["payment"]["amount"]) for x in mine], [(2, 0, 0)])  # a zero entry, counted once
+        _, st, _ = call("GET", "/statement?known_at=2000-01-01T00:00:00%2B00:00", token=self.ada)
+        self.assertEqual(st["entries"], [])
+        self.assertEqual(st["opening_balance"], st["closing_balance"])
+
+    def test_recorded_at_strictly_increases_within_a_second(self):
+        s, pay, _ = call("POST", "/payments", {"to_handle": "bob", "amount": 100}, token=self.ada, key="r1")
+        times = [pay["created_at"]]
+        for i, amt in enumerate((90, 80, 70, 60)):
+            s, r, _ = call("POST", "/payments/%s/corrections" % pay["payment_id"], {"expected_revision": i + 1, "amount": amt, "effective_at": pay["created_at"], "reason": "r%d" % i}, token=self.ada, key="r-%d" % i)
+            self.assertEqual(s, 201)
+            times.append(r["recorded_at"])
+        from datetime import datetime
+        parsed = [datetime.fromisoformat(x).timestamp() for x in times]
+        self.assertEqual(parsed, sorted(set(parsed)))
+
+    def test_backdating_moves_entries_between_windows(self):
+        win = "?from=2026-09-20T00:00:00%2B00:00&to=2026-09-21T00:00:00%2B00:00"
+        _, before, _ = call("GET", "/statement" + win, token=self.bob)
+        self.assertEqual([x["payment"]["payment_id"] for x in before["entries"]], ["p_a"])
+        # move p_c (09-22) into the window, and p_a out of it
+        self.assertEqual(self.corr(self.bob, "p_c", amount=300, effective_at="2026-09-20T18:00:00+00:00", key="m1")[0], 201)
+        self.assertEqual(self.corr(self.ada, "p_a", amount=500, effective_at="2026-09-23T00:00:00+00:00", key="m2")[0], 201)
+        _, after, _ = call("GET", "/statement" + win, token=self.bob)
+        self.assertEqual([x["payment"]["payment_id"] for x in after["entries"]], ["p_c"])
+        self.assertNotEqual((before["opening_balance"], before["closing_balance"]), (after["opening_balance"], after["closing_balance"]))
+        self.assertEqual(after["opening_balance"] + sum(x["delta"] for x in after["entries"]), after["closing_balance"])
+
+    def test_insufficient_funds_beats_historical_overdraft(self):
+        fx = hist_fixture()
+        fx["payments"] = [{"id": "q1", "from_user_id": "u_ada", "to_user_id": "u_bob", "amount": 500, "created_at": "2026-09-20T10:00:00+00:00"},
+                          {"id": "q2", "from_user_id": "u_bob", "to_user_id": "u_cy", "amount": 500, "created_at": "2026-09-21T10:00:00+00:00"},
+                          {"id": "q3", "from_user_id": "u_cy", "to_user_id": "u_bob", "amount": 600, "created_at": "2026-09-22T10:00:00+00:00"}]
+        fx["users"][0]["balance"], fx["users"][1]["balance"], fx["users"][2]["balance"] = 5000, 600, 1000
+        self.assertEqual(call("POST", "/_test/reset", fx)[0], 204)
+        ada, bob = login("ada"), login("bob")
+        body = {"expected_revision": 1, "amount": 400, "effective_at": "2026-09-20T10:00:00+00:00", "reason": "r"}
+        self.assertEqual(call("POST", "/payments/q1/corrections", body, token=ada, key="p1")[1]["error"]["code"], "historical_overdraft")
+        call("POST", "/authorizations", {"to_handle": "ada", "amount": 600}, token=bob, key="lock")  # bob's available is now 0
+        self.assertEqual(call("POST", "/payments/q1/corrections", body, token=ada, key="p2")[1]["error"]["code"], "insufficient_funds")
+        # a backdated increase before the sender had the money
+        body = {"expected_revision": 1, "amount": 900, "effective_at": "2026-09-20T09:00:00+00:00", "reason": "r"}
+        s, b, _ = call("POST", "/payments/q2/corrections", body, token=bob, key="p3")
+        self.assertIn(b["error"]["code"], ("historical_overdraft", "insufficient_funds"))
+        self.assertEqual(call("GET", "/payments/q2/revisions", token=bob)[1]["revisions"][0]["amount"], 500)
+
+    def test_default_statement_snapshot_is_frozen_after_lifecycle_events(self):
+        _, first, _ = call("GET", "/statement", token=self.ada)
+        call("POST", "/authorizations", {"to_handle": "bob", "amount": 10}, token=self.ada, key="l1")
+        call("POST", "/payments", {"to_handle": "cy", "amount": 3}, token=self.ada, key="l2")
+        self.corr(self.ada, "p_a", amount=1, key="l3")
+        _, again, _ = call("GET", "/statement?snapshot=%s&limit=200" % first["snapshot"], token=self.ada)
+        self.assertEqual((again["opening_balance"], again["closing_balance"], [x["payment"]["amount"] for x in again["entries"]]),
+                         (first["opening_balance"], first["closing_balance"], [x["payment"]["amount"] for x in first["entries"]]))
+
+    def test_created_at_on_every_payment_endpoint(self):
+        pay = call("POST", "/payments", {"to_handle": "bob", "amount": 5}, token=self.ada, key="c1")[1]
+        rq = call("POST", "/requests", {"payer_handle": "ada", "amount": 5}, token=self.bob, key="c2")[1]["request_id"]
+        paid = call("POST", "/requests/%s/pay" % rq, {}, token=self.ada, key="c3")[1]
+        st = call("POST", "/settlements", {"transfers": [{"from_handle": "ada", "to_handle": "bob", "amount": 1}]}, token=self.ada, key="c4")[1]
+        a = call("POST", "/authorizations", {"to_handle": "bob", "amount": 5}, token=self.ada, key="c5")[1]["authorization_id"]
+        cap = call("POST", "/authorizations/%s/capture" % a, {}, token=self.bob, key="c6")[1]
+        rows = [pay, paid, st["payments"][0], cap] + call("GET", "/activity", token=self.ada)[1]["payments"]
+        rows += [e["payment"] for e in call("GET", "/statement", token=self.ada)[1]["entries"]]
+        self.assertTrue(all(isinstance(r.get("created_at"), str) and r["created_at"][-6:] in ("+00:00",) for r in rows))
 
 
 if __name__ == "__main__":
