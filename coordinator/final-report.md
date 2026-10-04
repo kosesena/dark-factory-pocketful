@@ -7,11 +7,11 @@ Written from the room messages I handled and from `git log` of this repository. 
 | Stage | Revision | reviewer | spec-auditor | customer | cross-auditor |
 |---|---|---|---|---|---|
 | 1 | 999fda2 | 9e15771 (12:10) | 4cccd40 (12:17) | d8f95ee (12:08) | 472b276 (12:10) |
-| 2 | d78f1bd | ac0c9ca (13:?—see log) | d878773 (13:14) | d83c750 (12:19) | a5bf128 (12:32) |
+| 2 | d78f1bd | ac0c9ca (12:18) | d878773 (13:14) | d83c750 (12:19) | a5bf128 (12:32) |
 | 3 | 397a14947d89806e107e8a8f09268fecfcd78300 | 3ffa1f6 (14:52) | 1afecf3 (15:01) | 84d1a17 (14:48) | e67cf57 (15:04) |
-| 4 | 000d7acadb64fdb8c37a3c48ce55d37af28b823a | bdca469 (~15:58) | 6d92c3a (15:57) | 9eed164 (15:52) | 95b99b8 (15:50) |
+| 4 | 000d7acadb64fdb8c37a3c48ce55d37af28b823a | bdca469 (15:59; re-recorded as 28d24f0) | 6d92c3a (15:57) | 9eed164 (15:52) | 95b99b8 (15:50) |
 
-Stages 1 and 2 were closed before this part of the session; I took their accepts from the commit log (I did not re-read those verdict files). Stage 3 closed at 15:04, stage 4 at about 15:58 (reviewer's final accept bdca469).
+Stages 1 and 2 were closed before this part of the session; I took their accepts from the commit log (I did not re-read those verdict files). Stage 3 closed at 15:04, stage 4 at 15:59 (reviewer's final accept bdca469, restated in 28d24f0).
 
 ## What the reviewer ran (stage 3 and 4)
 Clean detached worktrees; shipped harness `--stage N` standard and `--mode isolated` (stages 1..N pass, "claimed stage: N"); unit tests (stage 3: 89, stage 4: 117 in container); probes, edges, s2/s3/s4; model_check, model_check_s3, model_check_s4 (0 mismatches); reset_tolerance; snapshot_tamper 41; receipt_tamper 27; future_snapshots 24; import34 33/33; ui_check_s2 88/88; the cross- and spec-auditor probes; legacy-migration and adversarial probes on a 2 CPU / 2 GiB container.
