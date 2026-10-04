@@ -1,0 +1,57 @@
+{
+  "probes": 10,
+  "passed": 10,
+  "failed": [],
+  "results": [
+    {
+      "probe": "reset",
+      "passed": true,
+      "detail": null
+    },
+    {
+      "probe": "stage3-upgrade",
+      "passed": true,
+      "detail": null
+    },
+    {
+      "probe": "stage3-snapshot-preserved",
+      "passed": true,
+      "detail": null
+    },
+    {
+      "probe": "stage3-correction-preserved",
+      "passed": true,
+      "detail": null
+    },
+    {
+      "probe": "reset",
+      "passed": true,
+      "detail": null
+    },
+    {
+      "probe": "stage4-import",
+      "passed": true,
+      "detail": null
+    },
+    {
+      "probe": "stage4-export-identical",
+      "passed": true,
+      "detail": null
+    },
+    {
+      "probe": "imported-refund-retry",
+      "passed": true,
+      "detail": null
+    },
+    {
+      "probe": "imported-batch-retry",
+      "passed": true,
+      "detail": null
+    },
+    {
+      "probe": "imported-stage4-snapshot",
+      "passed": true,
+      "detail": null
+    }
+  ]
+}

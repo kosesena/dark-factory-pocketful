@@ -1,0 +1,402 @@
+{
+  "probes": 58,
+  "passed": 52,
+  "failed": [
+    {
+      "probe": "batch-receipt-partial",
+      "passed": false,
+      "detail": {
+        "status": 204,
+        "body": null
+      }
+    },
+    {
+      "probe": "batch-receipt-partial-atomic",
+      "passed": false,
+      "detail": null
+    },
+    {
+      "probe": "batch-receipt-reordered",
+      "passed": false,
+      "detail": {
+        "status": 204,
+        "body": null
+      }
+    },
+    {
+      "probe": "batch-receipt-reordered-atomic",
+      "passed": false,
+      "detail": null
+    },
+    {
+      "probe": "batch-receipt-nonoperator-owner",
+      "passed": false,
+      "detail": {
+        "status": 204,
+        "body": null
+      }
+    },
+    {
+      "probe": "batch-receipt-owner-atomic",
+      "passed": false,
+      "detail": null
+    }
+  ],
+  "results": [
+    {
+      "probe": "reset",
+      "passed": true,
+      "detail": null
+    },
+    {
+      "probe": "stage4-invalid-refund-unknown-target",
+      "passed": true,
+      "detail": null
+    },
+    {
+      "probe": "stage4-atomic-refund-unknown-target",
+      "passed": true,
+      "detail": null
+    },
+    {
+      "probe": "stage4-invalid-refund-self-target",
+      "passed": true,
+      "detail": null
+    },
+    {
+      "probe": "stage4-atomic-refund-self-target",
+      "passed": true,
+      "detail": null
+    },
+    {
+      "probe": "stage4-invalid-refund-wrong-note",
+      "passed": true,
+      "detail": null
+    },
+    {
+      "probe": "stage4-atomic-refund-wrong-note",
+      "passed": true,
+      "detail": null
+    },
+    {
+      "probe": "stage4-invalid-refund-wrong-visibility",
+      "passed": true,
+      "detail": null
+    },
+    {
+      "probe": "stage4-atomic-refund-wrong-visibility",
+      "passed": true,
+      "detail": null
+    },
+    {
+      "probe": "stage4-invalid-refund-corrected",
+      "passed": true,
+      "detail": null
+    },
+    {
+      "probe": "stage4-atomic-refund-corrected",
+      "passed": true,
+      "detail": null
+    },
+    {
+      "probe": "stage4-invalid-batch-members-different-recorded",
+      "passed": true,
+      "detail": null
+    },
+    {
+      "probe": "stage4-atomic-batch-members-different-recorded",
+      "passed": true,
+      "detail": null
+    },
+    {
+      "probe": "stage4-invalid-batch-member-wrong-id",
+      "passed": true,
+      "detail": null
+    },
+    {
+      "probe": "stage4-atomic-batch-member-wrong-id",
+      "passed": true,
+      "detail": null
+    },
+    {
+      "probe": "stage4-invalid-settlement-member-missing-batch",
+      "passed": true,
+      "detail": null
+    },
+    {
+      "probe": "stage4-atomic-settlement-member-missing-batch",
+      "passed": true,
+      "detail": null
+    },
+    {
+      "probe": "stage4-invalid-batch-id-wrong-type",
+      "passed": true,
+      "detail": null
+    },
+    {
+      "probe": "stage4-atomic-batch-id-wrong-type",
+      "passed": true,
+      "detail": null
+    },
+    {
+      "probe": "stage4-invalid-batch-id-too-long",
+      "passed": true,
+      "detail": null
+    },
+    {
+      "probe": "stage4-atomic-batch-id-too-long",
+      "passed": true,
+      "detail": null
+    },
+    {
+      "probe": "stage4-invalid-settlement-member-different-effective",
+      "passed": true,
+      "detail": null
+    },
+    {
+      "probe": "stage4-atomic-settlement-member-different-effective",
+      "passed": true,
+      "detail": null
+    },
+    {
+      "probe": "batch-receipt-id",
+      "passed": true,
+      "detail": null
+    },
+    {
+      "probe": "batch-receipt-id-atomic",
+      "passed": true,
+      "detail": null
+    },
+    {
+      "probe": "batch-receipt-recorded",
+      "passed": true,
+      "detail": null
+    },
+    {
+      "probe": "batch-receipt-recorded-atomic",
+      "passed": true,
+      "detail": null
+    },
+    {
+      "probe": "batch-receipt-member-id",
+      "passed": true,
+      "detail": null
+    },
+    {
+      "probe": "batch-receipt-member-id-atomic",
+      "passed": true,
+      "detail": null
+    },
+    {
+      "probe": "batch-receipt-member-amount",
+      "passed": true,
+      "detail": null
+    },
+    {
+      "probe": "batch-receipt-member-amount-atomic",
+      "passed": true,
+      "detail": null
+    },
+    {
+      "probe": "batch-receipt-partial",
+      "passed": false,
+      "detail": {
+        "status": 204,
+        "body": null
+      }
+    },
+    {
+      "probe": "batch-receipt-partial-atomic",
+      "passed": false,
+      "detail": null
+    },
+    {
+      "probe": "batch-receipt-duplicate",
+      "passed": true,
+      "detail": null
+    },
+    {
+      "probe": "batch-receipt-duplicate-atomic",
+      "passed": true,
+      "detail": null
+    },
+    {
+      "probe": "batch-receipt-reordered",
+      "passed": false,
+      "detail": {
+        "status": 204,
+        "body": null
+      }
+    },
+    {
+      "probe": "batch-receipt-reordered-atomic",
+      "passed": false,
+      "detail": null
+    },
+    {
+      "probe": "batch-receipt-nonoperator-owner",
+      "passed": false,
+      "detail": {
+        "status": 204,
+        "body": null
+      }
+    },
+    {
+      "probe": "batch-receipt-owner-atomic",
+      "passed": false,
+      "detail": null
+    },
+    {
+      "probe": "refund-receipt-wrong-target",
+      "passed": true,
+      "detail": null
+    },
+    {
+      "probe": "refund-receipt-target-atomic",
+      "passed": true,
+      "detail": null
+    },
+    {
+      "probe": "refund-receipt-wrong-target",
+      "passed": true,
+      "detail": null
+    },
+    {
+      "probe": "refund-receipt-target-atomic",
+      "passed": true,
+      "detail": null
+    },
+    {
+      "probe": "reset",
+      "passed": true,
+      "detail": null
+    },
+    {
+      "probe": "refund-decimal",
+      "passed": true,
+      "detail": null
+    },
+    {
+      "probe": "refund-decimal-replay",
+      "passed": true,
+      "detail": null
+    },
+    {
+      "probe": "refund-decimal-string-conflict",
+      "passed": true,
+      "detail": null
+    },
+    {
+      "probe": "batch-body-exact",
+      "passed": true,
+      "detail": null
+    },
+    {
+      "probe": "batch-body-replay",
+      "passed": true,
+      "detail": null
+    },
+    {
+      "probe": "batch-body-string-conflict",
+      "passed": true,
+      "detail": null
+    },
+    {
+      "probe": "batch-request-payment",
+      "passed": true,
+      "detail": null
+    },
+    {
+      "probe": "batch-capture-immutable",
+      "passed": true,
+      "detail": null
+    },
+    {
+      "probe": "batch-refund-immutable",
+      "passed": true,
+      "detail": null
+    },
+    {
+      "probe": "reset",
+      "passed": true,
+      "detail": null
+    },
+    {
+      "probe": "refund-correction-race",
+      "passed": true,
+      "detail": [
+        201,
+        422
+      ]
+    },
+    {
+      "probe": "race-total",
+      "passed": true,
+      "detail": null
+    },
+    {
+      "probe": "reset",
+      "passed": true,
+      "detail": null
+    },
+    {
+      "probe": "refund-history-two-movements",
+      "passed": true,
+      "detail": {
+        "opening_balance": 10000,
+        "entries": [
+          {
+            "payment": {
+              "payment_id": "p_~000000000001",
+              "from_user_id": "u_a",
+              "from_handle": "a",
+              "to_user_id": "u_b",
+              "to_handle": "b",
+              "amount": 50,
+              "currency": "EUR",
+              "note": "",
+              "visibility": "public",
+              "request_id": null,
+              "settlement_id": null,
+              "authorization_id": null,
+              "refund_of": null,
+              "created_at": "2026-10-04T10:08:30+00:00"
+            },
+            "delta": -50,
+            "balance_after": 9950,
+            "revision": 2,
+            "effective_at": "2026-10-04T10:08:30+00:00",
+            "recorded_at": "2026-10-04T10:08:30.669165+00:00"
+          },
+          {
+            "payment": {
+              "payment_id": "p_~000000000002",
+              "from_user_id": "u_b",
+              "from_handle": "b",
+              "to_user_id": "u_a",
+              "to_handle": "a",
+              "amount": 20,
+              "currency": "EUR",
+              "note": "",
+              "visibility": "public",
+              "request_id": null,
+              "settlement_id": null,
+              "authorization_id": null,
+              "refund_of": "p_~000000000001",
+              "created_at": "2026-10-04T10:08:30+00:00"
+            },
+            "delta": 20,
+            "balance_after": 9970,
+            "revision": 1,
+            "effective_at": "2026-10-04T10:08:30+00:00",
+            "recorded_at": "2026-10-04T10:08:30+00:00"
+          }
+        ],
+        "closing_balance": 9970,
+        "has_more": false,
+        "snapshot": "KOd43cfY4SoAV2W07MPo_NHTdLHSTrDi"
+      }
+    }
+  ]
+}

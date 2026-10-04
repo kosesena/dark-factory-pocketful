@@ -1,0 +1,1577 @@
+{
+  "probes": 60,
+  "passed": 39,
+  "failed": [
+    {
+      "probe": "snapshot-invalid-unknown-revision",
+      "passed": false,
+      "detail": {
+        "status": 204,
+        "body": null
+      }
+    },
+    {
+      "probe": "snapshot-atomic-unknown-revision",
+      "passed": false,
+      "detail": null
+    },
+    {
+      "probe": "diagnostic-unknown-revision",
+      "passed": false,
+      "detail": {
+        "status": 200,
+        "body": {
+          "opening_balance": 1000,
+          "entries": [
+            {
+              "payment": {
+                "payment_id": "p_a",
+                "from_user_id": "u_b",
+                "from_handle": "b",
+                "to_user_id": "u_a",
+                "to_handle": "a",
+                "amount": 30,
+                "currency": "EUR",
+                "note": "two",
+                "visibility": "public",
+                "request_id": null,
+                "settlement_id": null,
+                "authorization_id": null,
+                "refund_of": null,
+                "created_at": "2020-01-02T00:00:00+00:00"
+              },
+              "delta": 30,
+              "balance_after": 1030,
+              "revision": 99,
+              "effective_at": "2020-01-02T00:00:00+00:00",
+              "recorded_at": "2020-01-02T00:00:00+00:00"
+            },
+            {
+              "payment": {
+                "payment_id": "p_b",
+                "from_user_id": "u_a",
+                "from_handle": "a",
+                "to_user_id": "u_b",
+                "to_handle": "b",
+                "amount": 100,
+                "currency": "EUR",
+                "note": "one",
+                "visibility": "private",
+                "request_id": null,
+                "settlement_id": null,
+                "authorization_id": null,
+                "refund_of": null,
+                "created_at": "2020-01-02T00:00:00+00:00"
+              },
+              "delta": -100,
+              "balance_after": 930,
+              "revision": 1,
+              "effective_at": "2020-01-02T00:00:00+00:00",
+              "recorded_at": "2020-01-02T00:00:00+00:00"
+            },
+            {
+              "payment": {
+                "payment_id": "p_c",
+                "from_user_id": "u_a",
+                "from_handle": "a",
+                "to_user_id": "u_c",
+                "to_handle": "c",
+                "amount": 200,
+                "currency": "EUR",
+                "note": "three",
+                "visibility": "public",
+                "request_id": null,
+                "settlement_id": null,
+                "authorization_id": null,
+                "refund_of": null,
+                "created_at": "2020-01-03T00:00:00+00:00"
+              },
+              "delta": -200,
+              "balance_after": 730,
+              "revision": 1,
+              "effective_at": "2020-01-03T00:00:00+00:00",
+              "recorded_at": "2020-01-03T00:00:00+00:00"
+            }
+          ],
+          "closing_balance": 730,
+          "has_more": false,
+          "snapshot": "yRsXmSVCRiZksZf64-yJKQcsdEdhiVGw",
+          "known_at": "2020-01-05T00:00:00+00:00"
+        }
+      }
+    },
+    {
+      "probe": "snapshot-invalid-wrong-effective-time",
+      "passed": false,
+      "detail": {
+        "status": 204,
+        "body": null
+      }
+    },
+    {
+      "probe": "snapshot-atomic-wrong-effective-time",
+      "passed": false,
+      "detail": null
+    },
+    {
+      "probe": "diagnostic-wrong-effective-time",
+      "passed": false,
+      "detail": {
+        "status": 200,
+        "body": {
+          "opening_balance": 1000,
+          "entries": [
+            {
+              "payment": {
+                "payment_id": "p_a",
+                "from_user_id": "u_b",
+                "from_handle": "b",
+                "to_user_id": "u_a",
+                "to_handle": "a",
+                "amount": 30,
+                "currency": "EUR",
+                "note": "two",
+                "visibility": "public",
+                "request_id": null,
+                "settlement_id": null,
+                "authorization_id": null,
+                "refund_of": null,
+                "created_at": "2020-01-02T00:00:00+00:00"
+              },
+              "delta": 30,
+              "balance_after": 1030,
+              "revision": 1,
+              "effective_at": "2020-01-01T00:00:00+00:00",
+              "recorded_at": "2020-01-02T00:00:00+00:00"
+            },
+            {
+              "payment": {
+                "payment_id": "p_b",
+                "from_user_id": "u_a",
+                "from_handle": "a",
+                "to_user_id": "u_b",
+                "to_handle": "b",
+                "amount": 100,
+                "currency": "EUR",
+                "note": "one",
+                "visibility": "private",
+                "request_id": null,
+                "settlement_id": null,
+                "authorization_id": null,
+                "refund_of": null,
+                "created_at": "2020-01-02T00:00:00+00:00"
+              },
+              "delta": -100,
+              "balance_after": 930,
+              "revision": 1,
+              "effective_at": "2020-01-02T00:00:00+00:00",
+              "recorded_at": "2020-01-02T00:00:00+00:00"
+            },
+            {
+              "payment": {
+                "payment_id": "p_c",
+                "from_user_id": "u_a",
+                "from_handle": "a",
+                "to_user_id": "u_c",
+                "to_handle": "c",
+                "amount": 200,
+                "currency": "EUR",
+                "note": "three",
+                "visibility": "public",
+                "request_id": null,
+                "settlement_id": null,
+                "authorization_id": null,
+                "refund_of": null,
+                "created_at": "2020-01-03T00:00:00+00:00"
+              },
+              "delta": -200,
+              "balance_after": 730,
+              "revision": 1,
+              "effective_at": "2020-01-03T00:00:00+00:00",
+              "recorded_at": "2020-01-03T00:00:00+00:00"
+            }
+          ],
+          "closing_balance": 730,
+          "has_more": false,
+          "snapshot": "yRsXmSVCRiZksZf64-yJKQcsdEdhiVGw",
+          "known_at": "2020-01-05T00:00:00+00:00"
+        }
+      }
+    },
+    {
+      "probe": "snapshot-invalid-wrong-recorded-time",
+      "passed": false,
+      "detail": {
+        "status": 204,
+        "body": null
+      }
+    },
+    {
+      "probe": "snapshot-atomic-wrong-recorded-time",
+      "passed": false,
+      "detail": null
+    },
+    {
+      "probe": "diagnostic-wrong-recorded-time",
+      "passed": false,
+      "detail": {
+        "status": 200,
+        "body": {
+          "opening_balance": 1000,
+          "entries": [
+            {
+              "payment": {
+                "payment_id": "p_a",
+                "from_user_id": "u_b",
+                "from_handle": "b",
+                "to_user_id": "u_a",
+                "to_handle": "a",
+                "amount": 30,
+                "currency": "EUR",
+                "note": "two",
+                "visibility": "public",
+                "request_id": null,
+                "settlement_id": null,
+                "authorization_id": null,
+                "refund_of": null,
+                "created_at": "2020-01-02T00:00:00+00:00"
+              },
+              "delta": 30,
+              "balance_after": 1030,
+              "revision": 1,
+              "effective_at": "2020-01-02T00:00:00+00:00",
+              "recorded_at": "2020-01-01T00:00:00+00:00"
+            },
+            {
+              "payment": {
+                "payment_id": "p_b",
+                "from_user_id": "u_a",
+                "from_handle": "a",
+                "to_user_id": "u_b",
+                "to_handle": "b",
+                "amount": 100,
+                "currency": "EUR",
+                "note": "one",
+                "visibility": "private",
+                "request_id": null,
+                "settlement_id": null,
+                "authorization_id": null,
+                "refund_of": null,
+                "created_at": "2020-01-02T00:00:00+00:00"
+              },
+              "delta": -100,
+              "balance_after": 930,
+              "revision": 1,
+              "effective_at": "2020-01-02T00:00:00+00:00",
+              "recorded_at": "2020-01-02T00:00:00+00:00"
+            },
+            {
+              "payment": {
+                "payment_id": "p_c",
+                "from_user_id": "u_a",
+                "from_handle": "a",
+                "to_user_id": "u_c",
+                "to_handle": "c",
+                "amount": 200,
+                "currency": "EUR",
+                "note": "three",
+                "visibility": "public",
+                "request_id": null,
+                "settlement_id": null,
+                "authorization_id": null,
+                "refund_of": null,
+                "created_at": "2020-01-03T00:00:00+00:00"
+              },
+              "delta": -200,
+              "balance_after": 730,
+              "revision": 1,
+              "effective_at": "2020-01-03T00:00:00+00:00",
+              "recorded_at": "2020-01-03T00:00:00+00:00"
+            }
+          ],
+          "closing_balance": 730,
+          "has_more": false,
+          "snapshot": "yRsXmSVCRiZksZf64-yJKQcsdEdhiVGw",
+          "known_at": "2020-01-05T00:00:00+00:00"
+        }
+      }
+    },
+    {
+      "probe": "snapshot-invalid-coherent-wrong-selected-amount",
+      "passed": false,
+      "detail": {
+        "status": 204,
+        "body": null
+      }
+    },
+    {
+      "probe": "snapshot-atomic-coherent-wrong-selected-amount",
+      "passed": false,
+      "detail": null
+    },
+    {
+      "probe": "diagnostic-coherent-wrong-selected-amount",
+      "passed": false,
+      "detail": {
+        "status": 200,
+        "body": {
+          "opening_balance": 1000,
+          "entries": [
+            {
+              "payment": {
+                "payment_id": "p_a",
+                "from_user_id": "u_b",
+                "from_handle": "b",
+                "to_user_id": "u_a",
+                "to_handle": "a",
+                "amount": 31,
+                "currency": "EUR",
+                "note": "two",
+                "visibility": "public",
+                "request_id": null,
+                "settlement_id": null,
+                "authorization_id": null,
+                "refund_of": null,
+                "created_at": "2020-01-02T00:00:00+00:00"
+              },
+              "delta": 31,
+              "balance_after": 1031,
+              "revision": 1,
+              "effective_at": "2020-01-02T00:00:00+00:00",
+              "recorded_at": "2020-01-02T00:00:00+00:00"
+            },
+            {
+              "payment": {
+                "payment_id": "p_b",
+                "from_user_id": "u_a",
+                "from_handle": "a",
+                "to_user_id": "u_b",
+                "to_handle": "b",
+                "amount": 100,
+                "currency": "EUR",
+                "note": "one",
+                "visibility": "private",
+                "request_id": null,
+                "settlement_id": null,
+                "authorization_id": null,
+                "refund_of": null,
+                "created_at": "2020-01-02T00:00:00+00:00"
+              },
+              "delta": -100,
+              "balance_after": 931,
+              "revision": 1,
+              "effective_at": "2020-01-02T00:00:00+00:00",
+              "recorded_at": "2020-01-02T00:00:00+00:00"
+            },
+            {
+              "payment": {
+                "payment_id": "p_c",
+                "from_user_id": "u_a",
+                "from_handle": "a",
+                "to_user_id": "u_c",
+                "to_handle": "c",
+                "amount": 200,
+                "currency": "EUR",
+                "note": "three",
+                "visibility": "public",
+                "request_id": null,
+                "settlement_id": null,
+                "authorization_id": null,
+                "refund_of": null,
+                "created_at": "2020-01-03T00:00:00+00:00"
+              },
+              "delta": -200,
+              "balance_after": 731,
+              "revision": 1,
+              "effective_at": "2020-01-03T00:00:00+00:00",
+              "recorded_at": "2020-01-03T00:00:00+00:00"
+            }
+          ],
+          "closing_balance": 731,
+          "has_more": false,
+          "snapshot": "yRsXmSVCRiZksZf64-yJKQcsdEdhiVGw",
+          "known_at": "2020-01-05T00:00:00+00:00"
+        }
+      }
+    },
+    {
+      "probe": "snapshot-invalid-invalid-echo",
+      "passed": false,
+      "detail": {
+        "status": 204,
+        "body": null
+      }
+    },
+    {
+      "probe": "snapshot-atomic-invalid-echo",
+      "passed": false,
+      "detail": null
+    },
+    {
+      "probe": "diagnostic-invalid-echo",
+      "passed": false,
+      "detail": {
+        "status": 200,
+        "body": {
+          "opening_balance": 1000,
+          "entries": [
+            {
+              "payment": {
+                "payment_id": "p_a",
+                "from_user_id": "u_b",
+                "from_handle": "b",
+                "to_user_id": "u_a",
+                "to_handle": "a",
+                "amount": 30,
+                "currency": "EUR",
+                "note": "two",
+                "visibility": "public",
+                "request_id": null,
+                "settlement_id": null,
+                "authorization_id": null,
+                "refund_of": null,
+                "created_at": "2020-01-02T00:00:00+00:00"
+              },
+              "delta": 30,
+              "balance_after": 1030,
+              "revision": 1,
+              "effective_at": "2020-01-02T00:00:00+00:00",
+              "recorded_at": "2020-01-02T00:00:00+00:00"
+            },
+            {
+              "payment": {
+                "payment_id": "p_b",
+                "from_user_id": "u_a",
+                "from_handle": "a",
+                "to_user_id": "u_b",
+                "to_handle": "b",
+                "amount": 100,
+                "currency": "EUR",
+                "note": "one",
+                "visibility": "private",
+                "request_id": null,
+                "settlement_id": null,
+                "authorization_id": null,
+                "refund_of": null,
+                "created_at": "2020-01-02T00:00:00+00:00"
+              },
+              "delta": -100,
+              "balance_after": 930,
+              "revision": 1,
+              "effective_at": "2020-01-02T00:00:00+00:00",
+              "recorded_at": "2020-01-02T00:00:00+00:00"
+            },
+            {
+              "payment": {
+                "payment_id": "p_c",
+                "from_user_id": "u_a",
+                "from_handle": "a",
+                "to_user_id": "u_c",
+                "to_handle": "c",
+                "amount": 200,
+                "currency": "EUR",
+                "note": "three",
+                "visibility": "public",
+                "request_id": null,
+                "settlement_id": null,
+                "authorization_id": null,
+                "refund_of": null,
+                "created_at": "2020-01-03T00:00:00+00:00"
+              },
+              "delta": -200,
+              "balance_after": 730,
+              "revision": 1,
+              "effective_at": "2020-01-03T00:00:00+00:00",
+              "recorded_at": "2020-01-03T00:00:00+00:00"
+            }
+          ],
+          "closing_balance": 730,
+          "has_more": false,
+          "snapshot": "yRsXmSVCRiZksZf64-yJKQcsdEdhiVGw",
+          "known_at": "bad-time"
+        }
+      }
+    },
+    {
+      "probe": "snapshot-invalid-knowledge-before-selected-revision",
+      "passed": false,
+      "detail": {
+        "status": 204,
+        "body": null
+      }
+    },
+    {
+      "probe": "snapshot-atomic-knowledge-before-selected-revision",
+      "passed": false,
+      "detail": null
+    },
+    {
+      "probe": "diagnostic-knowledge-before-selected-revision",
+      "passed": false,
+      "detail": {
+        "status": 200,
+        "body": {
+          "opening_balance": 1000,
+          "entries": [
+            {
+              "payment": {
+                "payment_id": "p_a",
+                "from_user_id": "u_b",
+                "from_handle": "b",
+                "to_user_id": "u_a",
+                "to_handle": "a",
+                "amount": 30,
+                "currency": "EUR",
+                "note": "two",
+                "visibility": "public",
+                "request_id": null,
+                "settlement_id": null,
+                "authorization_id": null,
+                "refund_of": null,
+                "created_at": "2020-01-02T00:00:00+00:00"
+              },
+              "delta": 30,
+              "balance_after": 1030,
+              "revision": 1,
+              "effective_at": "2020-01-02T00:00:00+00:00",
+              "recorded_at": "2020-01-02T00:00:00+00:00"
+            },
+            {
+              "payment": {
+                "payment_id": "p_b",
+                "from_user_id": "u_a",
+                "from_handle": "a",
+                "to_user_id": "u_b",
+                "to_handle": "b",
+                "amount": 100,
+                "currency": "EUR",
+                "note": "one",
+                "visibility": "private",
+                "request_id": null,
+                "settlement_id": null,
+                "authorization_id": null,
+                "refund_of": null,
+                "created_at": "2020-01-02T00:00:00+00:00"
+              },
+              "delta": -100,
+              "balance_after": 930,
+              "revision": 1,
+              "effective_at": "2020-01-02T00:00:00+00:00",
+              "recorded_at": "2020-01-02T00:00:00+00:00"
+            },
+            {
+              "payment": {
+                "payment_id": "p_c",
+                "from_user_id": "u_a",
+                "from_handle": "a",
+                "to_user_id": "u_c",
+                "to_handle": "c",
+                "amount": 200,
+                "currency": "EUR",
+                "note": "three",
+                "visibility": "public",
+                "request_id": null,
+                "settlement_id": null,
+                "authorization_id": null,
+                "refund_of": null,
+                "created_at": "2020-01-03T00:00:00+00:00"
+              },
+              "delta": -200,
+              "balance_after": 730,
+              "revision": 1,
+              "effective_at": "2020-01-03T00:00:00+00:00",
+              "recorded_at": "2020-01-03T00:00:00+00:00"
+            }
+          ],
+          "closing_balance": 730,
+          "has_more": false,
+          "snapshot": "yRsXmSVCRiZksZf64-yJKQcsdEdhiVGw",
+          "known_at": "2020-01-01T00:00:00+00:00"
+        }
+      }
+    },
+    {
+      "probe": "snapshot-invalid-entries-outside-echo-window",
+      "passed": false,
+      "detail": {
+        "status": 204,
+        "body": null
+      }
+    },
+    {
+      "probe": "snapshot-atomic-entries-outside-echo-window",
+      "passed": false,
+      "detail": null
+    },
+    {
+      "probe": "diagnostic-entries-outside-echo-window",
+      "passed": false,
+      "detail": {
+        "status": 200,
+        "body": {
+          "opening_balance": 1000,
+          "entries": [
+            {
+              "payment": {
+                "payment_id": "p_a",
+                "from_user_id": "u_b",
+                "from_handle": "b",
+                "to_user_id": "u_a",
+                "to_handle": "a",
+                "amount": 30,
+                "currency": "EUR",
+                "note": "two",
+                "visibility": "public",
+                "request_id": null,
+                "settlement_id": null,
+                "authorization_id": null,
+                "refund_of": null,
+                "created_at": "2020-01-02T00:00:00+00:00"
+              },
+              "delta": 30,
+              "balance_after": 1030,
+              "revision": 1,
+              "effective_at": "2020-01-02T00:00:00+00:00",
+              "recorded_at": "2020-01-02T00:00:00+00:00"
+            },
+            {
+              "payment": {
+                "payment_id": "p_b",
+                "from_user_id": "u_a",
+                "from_handle": "a",
+                "to_user_id": "u_b",
+                "to_handle": "b",
+                "amount": 100,
+                "currency": "EUR",
+                "note": "one",
+                "visibility": "private",
+                "request_id": null,
+                "settlement_id": null,
+                "authorization_id": null,
+                "refund_of": null,
+                "created_at": "2020-01-02T00:00:00+00:00"
+              },
+              "delta": -100,
+              "balance_after": 930,
+              "revision": 1,
+              "effective_at": "2020-01-02T00:00:00+00:00",
+              "recorded_at": "2020-01-02T00:00:00+00:00"
+            },
+            {
+              "payment": {
+                "payment_id": "p_c",
+                "from_user_id": "u_a",
+                "from_handle": "a",
+                "to_user_id": "u_c",
+                "to_handle": "c",
+                "amount": 200,
+                "currency": "EUR",
+                "note": "three",
+                "visibility": "public",
+                "request_id": null,
+                "settlement_id": null,
+                "authorization_id": null,
+                "refund_of": null,
+                "created_at": "2020-01-03T00:00:00+00:00"
+              },
+              "delta": -200,
+              "balance_after": 730,
+              "revision": 1,
+              "effective_at": "2020-01-03T00:00:00+00:00",
+              "recorded_at": "2020-01-03T00:00:00+00:00"
+            }
+          ],
+          "closing_balance": 730,
+          "has_more": false,
+          "snapshot": "yRsXmSVCRiZksZf64-yJKQcsdEdhiVGw",
+          "known_at": "2020-01-05T00:00:00+00:00",
+          "to": "2020-01-01T00:00:00+00:00"
+        }
+      }
+    }
+  ],
+  "results": [
+    {
+      "probe": "reset",
+      "passed": true,
+      "detail": null
+    },
+    {
+      "probe": "snapshot-invalid-unknown-owner",
+      "passed": true,
+      "detail": null
+    },
+    {
+      "probe": "snapshot-atomic-unknown-owner",
+      "passed": true,
+      "detail": null
+    },
+    {
+      "probe": "snapshot-invalid-unrelated-owner",
+      "passed": true,
+      "detail": null
+    },
+    {
+      "probe": "snapshot-atomic-unrelated-owner",
+      "passed": true,
+      "detail": null
+    },
+    {
+      "probe": "snapshot-invalid-unknown-payment",
+      "passed": true,
+      "detail": null
+    },
+    {
+      "probe": "snapshot-atomic-unknown-payment",
+      "passed": true,
+      "detail": null
+    },
+    {
+      "probe": "snapshot-invalid-unknown-revision",
+      "passed": false,
+      "detail": {
+        "status": 204,
+        "body": null
+      }
+    },
+    {
+      "probe": "snapshot-atomic-unknown-revision",
+      "passed": false,
+      "detail": null
+    },
+    {
+      "probe": "diagnostic-unknown-revision",
+      "passed": false,
+      "detail": {
+        "status": 200,
+        "body": {
+          "opening_balance": 1000,
+          "entries": [
+            {
+              "payment": {
+                "payment_id": "p_a",
+                "from_user_id": "u_b",
+                "from_handle": "b",
+                "to_user_id": "u_a",
+                "to_handle": "a",
+                "amount": 30,
+                "currency": "EUR",
+                "note": "two",
+                "visibility": "public",
+                "request_id": null,
+                "settlement_id": null,
+                "authorization_id": null,
+                "refund_of": null,
+                "created_at": "2020-01-02T00:00:00+00:00"
+              },
+              "delta": 30,
+              "balance_after": 1030,
+              "revision": 99,
+              "effective_at": "2020-01-02T00:00:00+00:00",
+              "recorded_at": "2020-01-02T00:00:00+00:00"
+            },
+            {
+              "payment": {
+                "payment_id": "p_b",
+                "from_user_id": "u_a",
+                "from_handle": "a",
+                "to_user_id": "u_b",
+                "to_handle": "b",
+                "amount": 100,
+                "currency": "EUR",
+                "note": "one",
+                "visibility": "private",
+                "request_id": null,
+                "settlement_id": null,
+                "authorization_id": null,
+                "refund_of": null,
+                "created_at": "2020-01-02T00:00:00+00:00"
+              },
+              "delta": -100,
+              "balance_after": 930,
+              "revision": 1,
+              "effective_at": "2020-01-02T00:00:00+00:00",
+              "recorded_at": "2020-01-02T00:00:00+00:00"
+            },
+            {
+              "payment": {
+                "payment_id": "p_c",
+                "from_user_id": "u_a",
+                "from_handle": "a",
+                "to_user_id": "u_c",
+                "to_handle": "c",
+                "amount": 200,
+                "currency": "EUR",
+                "note": "three",
+                "visibility": "public",
+                "request_id": null,
+                "settlement_id": null,
+                "authorization_id": null,
+                "refund_of": null,
+                "created_at": "2020-01-03T00:00:00+00:00"
+              },
+              "delta": -200,
+              "balance_after": 730,
+              "revision": 1,
+              "effective_at": "2020-01-03T00:00:00+00:00",
+              "recorded_at": "2020-01-03T00:00:00+00:00"
+            }
+          ],
+          "closing_balance": 730,
+          "has_more": false,
+          "snapshot": "yRsXmSVCRiZksZf64-yJKQcsdEdhiVGw",
+          "known_at": "2020-01-05T00:00:00+00:00"
+        }
+      }
+    },
+    {
+      "probe": "snapshot-invalid-boolean-revision",
+      "passed": true,
+      "detail": null
+    },
+    {
+      "probe": "snapshot-atomic-boolean-revision",
+      "passed": true,
+      "detail": null
+    },
+    {
+      "probe": "snapshot-invalid-wrong-delta",
+      "passed": true,
+      "detail": null
+    },
+    {
+      "probe": "snapshot-atomic-wrong-delta",
+      "passed": true,
+      "detail": null
+    },
+    {
+      "probe": "snapshot-invalid-wrong-balance-after",
+      "passed": true,
+      "detail": null
+    },
+    {
+      "probe": "snapshot-atomic-wrong-balance-after",
+      "passed": true,
+      "detail": null
+    },
+    {
+      "probe": "snapshot-invalid-bad-effective-time",
+      "passed": true,
+      "detail": null
+    },
+    {
+      "probe": "snapshot-atomic-bad-effective-time",
+      "passed": true,
+      "detail": null
+    },
+    {
+      "probe": "snapshot-invalid-wrong-effective-time",
+      "passed": false,
+      "detail": {
+        "status": 204,
+        "body": null
+      }
+    },
+    {
+      "probe": "snapshot-atomic-wrong-effective-time",
+      "passed": false,
+      "detail": null
+    },
+    {
+      "probe": "diagnostic-wrong-effective-time",
+      "passed": false,
+      "detail": {
+        "status": 200,
+        "body": {
+          "opening_balance": 1000,
+          "entries": [
+            {
+              "payment": {
+                "payment_id": "p_a",
+                "from_user_id": "u_b",
+                "from_handle": "b",
+                "to_user_id": "u_a",
+                "to_handle": "a",
+                "amount": 30,
+                "currency": "EUR",
+                "note": "two",
+                "visibility": "public",
+                "request_id": null,
+                "settlement_id": null,
+                "authorization_id": null,
+                "refund_of": null,
+                "created_at": "2020-01-02T00:00:00+00:00"
+              },
+              "delta": 30,
+              "balance_after": 1030,
+              "revision": 1,
+              "effective_at": "2020-01-01T00:00:00+00:00",
+              "recorded_at": "2020-01-02T00:00:00+00:00"
+            },
+            {
+              "payment": {
+                "payment_id": "p_b",
+                "from_user_id": "u_a",
+                "from_handle": "a",
+                "to_user_id": "u_b",
+                "to_handle": "b",
+                "amount": 100,
+                "currency": "EUR",
+                "note": "one",
+                "visibility": "private",
+                "request_id": null,
+                "settlement_id": null,
+                "authorization_id": null,
+                "refund_of": null,
+                "created_at": "2020-01-02T00:00:00+00:00"
+              },
+              "delta": -100,
+              "balance_after": 930,
+              "revision": 1,
+              "effective_at": "2020-01-02T00:00:00+00:00",
+              "recorded_at": "2020-01-02T00:00:00+00:00"
+            },
+            {
+              "payment": {
+                "payment_id": "p_c",
+                "from_user_id": "u_a",
+                "from_handle": "a",
+                "to_user_id": "u_c",
+                "to_handle": "c",
+                "amount": 200,
+                "currency": "EUR",
+                "note": "three",
+                "visibility": "public",
+                "request_id": null,
+                "settlement_id": null,
+                "authorization_id": null,
+                "refund_of": null,
+                "created_at": "2020-01-03T00:00:00+00:00"
+              },
+              "delta": -200,
+              "balance_after": 730,
+              "revision": 1,
+              "effective_at": "2020-01-03T00:00:00+00:00",
+              "recorded_at": "2020-01-03T00:00:00+00:00"
+            }
+          ],
+          "closing_balance": 730,
+          "has_more": false,
+          "snapshot": "yRsXmSVCRiZksZf64-yJKQcsdEdhiVGw",
+          "known_at": "2020-01-05T00:00:00+00:00"
+        }
+      }
+    },
+    {
+      "probe": "snapshot-invalid-bad-recorded-time",
+      "passed": true,
+      "detail": null
+    },
+    {
+      "probe": "snapshot-atomic-bad-recorded-time",
+      "passed": true,
+      "detail": null
+    },
+    {
+      "probe": "snapshot-invalid-wrong-recorded-time",
+      "passed": false,
+      "detail": {
+        "status": 204,
+        "body": null
+      }
+    },
+    {
+      "probe": "snapshot-atomic-wrong-recorded-time",
+      "passed": false,
+      "detail": null
+    },
+    {
+      "probe": "diagnostic-wrong-recorded-time",
+      "passed": false,
+      "detail": {
+        "status": 200,
+        "body": {
+          "opening_balance": 1000,
+          "entries": [
+            {
+              "payment": {
+                "payment_id": "p_a",
+                "from_user_id": "u_b",
+                "from_handle": "b",
+                "to_user_id": "u_a",
+                "to_handle": "a",
+                "amount": 30,
+                "currency": "EUR",
+                "note": "two",
+                "visibility": "public",
+                "request_id": null,
+                "settlement_id": null,
+                "authorization_id": null,
+                "refund_of": null,
+                "created_at": "2020-01-02T00:00:00+00:00"
+              },
+              "delta": 30,
+              "balance_after": 1030,
+              "revision": 1,
+              "effective_at": "2020-01-02T00:00:00+00:00",
+              "recorded_at": "2020-01-01T00:00:00+00:00"
+            },
+            {
+              "payment": {
+                "payment_id": "p_b",
+                "from_user_id": "u_a",
+                "from_handle": "a",
+                "to_user_id": "u_b",
+                "to_handle": "b",
+                "amount": 100,
+                "currency": "EUR",
+                "note": "one",
+                "visibility": "private",
+                "request_id": null,
+                "settlement_id": null,
+                "authorization_id": null,
+                "refund_of": null,
+                "created_at": "2020-01-02T00:00:00+00:00"
+              },
+              "delta": -100,
+              "balance_after": 930,
+              "revision": 1,
+              "effective_at": "2020-01-02T00:00:00+00:00",
+              "recorded_at": "2020-01-02T00:00:00+00:00"
+            },
+            {
+              "payment": {
+                "payment_id": "p_c",
+                "from_user_id": "u_a",
+                "from_handle": "a",
+                "to_user_id": "u_c",
+                "to_handle": "c",
+                "amount": 200,
+                "currency": "EUR",
+                "note": "three",
+                "visibility": "public",
+                "request_id": null,
+                "settlement_id": null,
+                "authorization_id": null,
+                "refund_of": null,
+                "created_at": "2020-01-03T00:00:00+00:00"
+              },
+              "delta": -200,
+              "balance_after": 730,
+              "revision": 1,
+              "effective_at": "2020-01-03T00:00:00+00:00",
+              "recorded_at": "2020-01-03T00:00:00+00:00"
+            }
+          ],
+          "closing_balance": 730,
+          "has_more": false,
+          "snapshot": "yRsXmSVCRiZksZf64-yJKQcsdEdhiVGw",
+          "known_at": "2020-01-05T00:00:00+00:00"
+        }
+      }
+    },
+    {
+      "probe": "snapshot-invalid-wrong-selected-amount",
+      "passed": true,
+      "detail": null
+    },
+    {
+      "probe": "snapshot-atomic-wrong-selected-amount",
+      "passed": true,
+      "detail": null
+    },
+    {
+      "probe": "snapshot-invalid-coherent-wrong-selected-amount",
+      "passed": false,
+      "detail": {
+        "status": 204,
+        "body": null
+      }
+    },
+    {
+      "probe": "snapshot-atomic-coherent-wrong-selected-amount",
+      "passed": false,
+      "detail": null
+    },
+    {
+      "probe": "diagnostic-coherent-wrong-selected-amount",
+      "passed": false,
+      "detail": {
+        "status": 200,
+        "body": {
+          "opening_balance": 1000,
+          "entries": [
+            {
+              "payment": {
+                "payment_id": "p_a",
+                "from_user_id": "u_b",
+                "from_handle": "b",
+                "to_user_id": "u_a",
+                "to_handle": "a",
+                "amount": 31,
+                "currency": "EUR",
+                "note": "two",
+                "visibility": "public",
+                "request_id": null,
+                "settlement_id": null,
+                "authorization_id": null,
+                "refund_of": null,
+                "created_at": "2020-01-02T00:00:00+00:00"
+              },
+              "delta": 31,
+              "balance_after": 1031,
+              "revision": 1,
+              "effective_at": "2020-01-02T00:00:00+00:00",
+              "recorded_at": "2020-01-02T00:00:00+00:00"
+            },
+            {
+              "payment": {
+                "payment_id": "p_b",
+                "from_user_id": "u_a",
+                "from_handle": "a",
+                "to_user_id": "u_b",
+                "to_handle": "b",
+                "amount": 100,
+                "currency": "EUR",
+                "note": "one",
+                "visibility": "private",
+                "request_id": null,
+                "settlement_id": null,
+                "authorization_id": null,
+                "refund_of": null,
+                "created_at": "2020-01-02T00:00:00+00:00"
+              },
+              "delta": -100,
+              "balance_after": 931,
+              "revision": 1,
+              "effective_at": "2020-01-02T00:00:00+00:00",
+              "recorded_at": "2020-01-02T00:00:00+00:00"
+            },
+            {
+              "payment": {
+                "payment_id": "p_c",
+                "from_user_id": "u_a",
+                "from_handle": "a",
+                "to_user_id": "u_c",
+                "to_handle": "c",
+                "amount": 200,
+                "currency": "EUR",
+                "note": "three",
+                "visibility": "public",
+                "request_id": null,
+                "settlement_id": null,
+                "authorization_id": null,
+                "refund_of": null,
+                "created_at": "2020-01-03T00:00:00+00:00"
+              },
+              "delta": -200,
+              "balance_after": 731,
+              "revision": 1,
+              "effective_at": "2020-01-03T00:00:00+00:00",
+              "recorded_at": "2020-01-03T00:00:00+00:00"
+            }
+          ],
+          "closing_balance": 731,
+          "has_more": false,
+          "snapshot": "yRsXmSVCRiZksZf64-yJKQcsdEdhiVGw",
+          "known_at": "2020-01-05T00:00:00+00:00"
+        }
+      }
+    },
+    {
+      "probe": "snapshot-invalid-wrong-opening",
+      "passed": true,
+      "detail": null
+    },
+    {
+      "probe": "snapshot-atomic-wrong-opening",
+      "passed": true,
+      "detail": null
+    },
+    {
+      "probe": "snapshot-invalid-wrong-closing",
+      "passed": true,
+      "detail": null
+    },
+    {
+      "probe": "snapshot-atomic-wrong-closing",
+      "passed": true,
+      "detail": null
+    },
+    {
+      "probe": "snapshot-invalid-boolean-opening",
+      "passed": true,
+      "detail": null
+    },
+    {
+      "probe": "snapshot-atomic-boolean-opening",
+      "passed": true,
+      "detail": null
+    },
+    {
+      "probe": "snapshot-invalid-reverse-order",
+      "passed": true,
+      "detail": null
+    },
+    {
+      "probe": "snapshot-atomic-reverse-order",
+      "passed": true,
+      "detail": null
+    },
+    {
+      "probe": "snapshot-invalid-duplicate-entry",
+      "passed": true,
+      "detail": null
+    },
+    {
+      "probe": "snapshot-atomic-duplicate-entry",
+      "passed": true,
+      "detail": null
+    },
+    {
+      "probe": "snapshot-invalid-short-entry",
+      "passed": true,
+      "detail": null
+    },
+    {
+      "probe": "snapshot-atomic-short-entry",
+      "passed": true,
+      "detail": null
+    },
+    {
+      "probe": "snapshot-invalid-invalid-echo",
+      "passed": false,
+      "detail": {
+        "status": 204,
+        "body": null
+      }
+    },
+    {
+      "probe": "snapshot-atomic-invalid-echo",
+      "passed": false,
+      "detail": null
+    },
+    {
+      "probe": "diagnostic-invalid-echo",
+      "passed": false,
+      "detail": {
+        "status": 200,
+        "body": {
+          "opening_balance": 1000,
+          "entries": [
+            {
+              "payment": {
+                "payment_id": "p_a",
+                "from_user_id": "u_b",
+                "from_handle": "b",
+                "to_user_id": "u_a",
+                "to_handle": "a",
+                "amount": 30,
+                "currency": "EUR",
+                "note": "two",
+                "visibility": "public",
+                "request_id": null,
+                "settlement_id": null,
+                "authorization_id": null,
+                "refund_of": null,
+                "created_at": "2020-01-02T00:00:00+00:00"
+              },
+              "delta": 30,
+              "balance_after": 1030,
+              "revision": 1,
+              "effective_at": "2020-01-02T00:00:00+00:00",
+              "recorded_at": "2020-01-02T00:00:00+00:00"
+            },
+            {
+              "payment": {
+                "payment_id": "p_b",
+                "from_user_id": "u_a",
+                "from_handle": "a",
+                "to_user_id": "u_b",
+                "to_handle": "b",
+                "amount": 100,
+                "currency": "EUR",
+                "note": "one",
+                "visibility": "private",
+                "request_id": null,
+                "settlement_id": null,
+                "authorization_id": null,
+                "refund_of": null,
+                "created_at": "2020-01-02T00:00:00+00:00"
+              },
+              "delta": -100,
+              "balance_after": 930,
+              "revision": 1,
+              "effective_at": "2020-01-02T00:00:00+00:00",
+              "recorded_at": "2020-01-02T00:00:00+00:00"
+            },
+            {
+              "payment": {
+                "payment_id": "p_c",
+                "from_user_id": "u_a",
+                "from_handle": "a",
+                "to_user_id": "u_c",
+                "to_handle": "c",
+                "amount": 200,
+                "currency": "EUR",
+                "note": "three",
+                "visibility": "public",
+                "request_id": null,
+                "settlement_id": null,
+                "authorization_id": null,
+                "refund_of": null,
+                "created_at": "2020-01-03T00:00:00+00:00"
+              },
+              "delta": -200,
+              "balance_after": 730,
+              "revision": 1,
+              "effective_at": "2020-01-03T00:00:00+00:00",
+              "recorded_at": "2020-01-03T00:00:00+00:00"
+            }
+          ],
+          "closing_balance": 730,
+          "has_more": false,
+          "snapshot": "yRsXmSVCRiZksZf64-yJKQcsdEdhiVGw",
+          "known_at": "bad-time"
+        }
+      }
+    },
+    {
+      "probe": "snapshot-invalid-knowledge-before-selected-revision",
+      "passed": false,
+      "detail": {
+        "status": 204,
+        "body": null
+      }
+    },
+    {
+      "probe": "snapshot-atomic-knowledge-before-selected-revision",
+      "passed": false,
+      "detail": null
+    },
+    {
+      "probe": "diagnostic-knowledge-before-selected-revision",
+      "passed": false,
+      "detail": {
+        "status": 200,
+        "body": {
+          "opening_balance": 1000,
+          "entries": [
+            {
+              "payment": {
+                "payment_id": "p_a",
+                "from_user_id": "u_b",
+                "from_handle": "b",
+                "to_user_id": "u_a",
+                "to_handle": "a",
+                "amount": 30,
+                "currency": "EUR",
+                "note": "two",
+                "visibility": "public",
+                "request_id": null,
+                "settlement_id": null,
+                "authorization_id": null,
+                "refund_of": null,
+                "created_at": "2020-01-02T00:00:00+00:00"
+              },
+              "delta": 30,
+              "balance_after": 1030,
+              "revision": 1,
+              "effective_at": "2020-01-02T00:00:00+00:00",
+              "recorded_at": "2020-01-02T00:00:00+00:00"
+            },
+            {
+              "payment": {
+                "payment_id": "p_b",
+                "from_user_id": "u_a",
+                "from_handle": "a",
+                "to_user_id": "u_b",
+                "to_handle": "b",
+                "amount": 100,
+                "currency": "EUR",
+                "note": "one",
+                "visibility": "private",
+                "request_id": null,
+                "settlement_id": null,
+                "authorization_id": null,
+                "refund_of": null,
+                "created_at": "2020-01-02T00:00:00+00:00"
+              },
+              "delta": -100,
+              "balance_after": 930,
+              "revision": 1,
+              "effective_at": "2020-01-02T00:00:00+00:00",
+              "recorded_at": "2020-01-02T00:00:00+00:00"
+            },
+            {
+              "payment": {
+                "payment_id": "p_c",
+                "from_user_id": "u_a",
+                "from_handle": "a",
+                "to_user_id": "u_c",
+                "to_handle": "c",
+                "amount": 200,
+                "currency": "EUR",
+                "note": "three",
+                "visibility": "public",
+                "request_id": null,
+                "settlement_id": null,
+                "authorization_id": null,
+                "refund_of": null,
+                "created_at": "2020-01-03T00:00:00+00:00"
+              },
+              "delta": -200,
+              "balance_after": 730,
+              "revision": 1,
+              "effective_at": "2020-01-03T00:00:00+00:00",
+              "recorded_at": "2020-01-03T00:00:00+00:00"
+            }
+          ],
+          "closing_balance": 730,
+          "has_more": false,
+          "snapshot": "yRsXmSVCRiZksZf64-yJKQcsdEdhiVGw",
+          "known_at": "2020-01-01T00:00:00+00:00"
+        }
+      }
+    },
+    {
+      "probe": "snapshot-invalid-entries-outside-echo-window",
+      "passed": false,
+      "detail": {
+        "status": 204,
+        "body": null
+      }
+    },
+    {
+      "probe": "snapshot-atomic-entries-outside-echo-window",
+      "passed": false,
+      "detail": null
+    },
+    {
+      "probe": "diagnostic-entries-outside-echo-window",
+      "passed": false,
+      "detail": {
+        "status": 200,
+        "body": {
+          "opening_balance": 1000,
+          "entries": [
+            {
+              "payment": {
+                "payment_id": "p_a",
+                "from_user_id": "u_b",
+                "from_handle": "b",
+                "to_user_id": "u_a",
+                "to_handle": "a",
+                "amount": 30,
+                "currency": "EUR",
+                "note": "two",
+                "visibility": "public",
+                "request_id": null,
+                "settlement_id": null,
+                "authorization_id": null,
+                "refund_of": null,
+                "created_at": "2020-01-02T00:00:00+00:00"
+              },
+              "delta": 30,
+              "balance_after": 1030,
+              "revision": 1,
+              "effective_at": "2020-01-02T00:00:00+00:00",
+              "recorded_at": "2020-01-02T00:00:00+00:00"
+            },
+            {
+              "payment": {
+                "payment_id": "p_b",
+                "from_user_id": "u_a",
+                "from_handle": "a",
+                "to_user_id": "u_b",
+                "to_handle": "b",
+                "amount": 100,
+                "currency": "EUR",
+                "note": "one",
+                "visibility": "private",
+                "request_id": null,
+                "settlement_id": null,
+                "authorization_id": null,
+                "refund_of": null,
+                "created_at": "2020-01-02T00:00:00+00:00"
+              },
+              "delta": -100,
+              "balance_after": 930,
+              "revision": 1,
+              "effective_at": "2020-01-02T00:00:00+00:00",
+              "recorded_at": "2020-01-02T00:00:00+00:00"
+            },
+            {
+              "payment": {
+                "payment_id": "p_c",
+                "from_user_id": "u_a",
+                "from_handle": "a",
+                "to_user_id": "u_c",
+                "to_handle": "c",
+                "amount": 200,
+                "currency": "EUR",
+                "note": "three",
+                "visibility": "public",
+                "request_id": null,
+                "settlement_id": null,
+                "authorization_id": null,
+                "refund_of": null,
+                "created_at": "2020-01-03T00:00:00+00:00"
+              },
+              "delta": -200,
+              "balance_after": 730,
+              "revision": 1,
+              "effective_at": "2020-01-03T00:00:00+00:00",
+              "recorded_at": "2020-01-03T00:00:00+00:00"
+            }
+          ],
+          "closing_balance": 730,
+          "has_more": false,
+          "snapshot": "yRsXmSVCRiZksZf64-yJKQcsdEdhiVGw",
+          "known_at": "2020-01-05T00:00:00+00:00",
+          "to": "2020-01-01T00:00:00+00:00"
+        }
+      }
+    },
+    {
+      "probe": "snapshot-invalid-duplicate-token",
+      "passed": true,
+      "detail": null
+    },
+    {
+      "probe": "snapshot-atomic-duplicate-token",
+      "passed": true,
+      "detail": null
+    },
+    {
+      "probe": "snapshot-invalid-empty-token",
+      "passed": true,
+      "detail": null
+    },
+    {
+      "probe": "snapshot-atomic-empty-token",
+      "passed": true,
+      "detail": null
+    },
+    {
+      "probe": "old-snapshot-import-after-writes",
+      "passed": true,
+      "detail": null
+    },
+    {
+      "probe": "old-page-identical",
+      "passed": true,
+      "detail": null
+    },
+    {
+      "probe": "receipt-with-snapshot-invalid",
+      "passed": true,
+      "detail": null
+    },
+    {
+      "probe": "receipt-with-snapshot-atomic",
+      "passed": true,
+      "detail": null
+    }
+  ]
+}
