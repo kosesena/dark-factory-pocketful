@@ -11,17 +11,19 @@ from refunds import refunded_total
 from wallet import pay_view
 
 
-def _entry_view(s, e):
+def _entry_view(s, e, legacy=False):
     pid, rev_no, delta, after, eff_at, rec_at, amount = e
     pv = pay_view(s, s.payments_by_id[pid])
     pv["amount"] = amount  # the amount of the selected revision, for this statement
+    if legacy:  # a snapshot taken before stage 4 pages exactly as it was: payments had no refund_of then
+        pv.pop("refund_of", None)
     return {"payment": pv, "delta": delta, "balance_after": after, "revision": rev_no,
             "effective_at": eff_at, "recorded_at": rec_at}
 
 
 def _page(s, snap, limit, offset):
     chunk = snap["entries"][offset:offset + limit]
-    body = {"opening_balance": snap["opening_balance"], "entries": [_entry_view(s, e) for e in chunk],
+    body = {"opening_balance": snap["opening_balance"], "entries": [_entry_view(s, e, snap.get("view") != 4) for e in chunk],
             "closing_balance": snap["closing_balance"], "has_more": len(snap["entries"]) > offset + limit,
             "snapshot": snap["token"]}
     body.update(snap["echo"])
@@ -77,7 +79,7 @@ def statement(req):
             echo[name] = v[1]
     snap = {"token": secrets.token_urlsafe(24), "user_id": uid, "opening_balance": opening,
             "entries": entries, "closing_balance": running, "echo": echo,
-            "taken_ts": taken_ts, "taken_seq": taken_seq}
+            "taken_ts": taken_ts, "taken_seq": taken_seq, "view": 4}
     s.snapshots[snap["token"]] = snap
     return 200, _page(s, snap, limit, offset)
 

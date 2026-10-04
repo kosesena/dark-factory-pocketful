@@ -1420,6 +1420,29 @@ class Ledger(unittest.TestCase):
         fx["payments"][1]["request_id"] = "r1"
         self.assertEqual(call("POST", "/_test/reset", fx)[0], 204)
 
+    def test_saved_statements_keep_their_original_form(self):
+        self.assertEqual(call("POST", "/payments/p_b/corrections", {"expected_revision": 1, "amount": 1000, "effective_at": "2026-09-21T10:00:00+00:00", "reason": "r"}, token=self.bob, key="sf1")[0], 201)
+        s, first, _ = call("GET", "/statement?limit=1", token=self.ada)
+        tok = first["snapshot"]
+        s, p4, _ = call("GET", "/statement?snapshot=%s&limit=200" % tok, token=self.ada)
+        self.assertIn("refund_of", p4["entries"][0]["payment"])
+        # later refunds and corrections never change a saved page, nor does export/import
+        call("POST", "/payments/p_b/refunds", {"amount": 5}, token=self.ada, key="sf2")
+        s, snap, _ = call("GET", "/_test/export")
+        self.assertEqual(call("POST", "/_test/import", snap)[0], 204)
+        self.assertEqual(call("GET", "/statement?snapshot=%s&limit=200" % tok, token=self.ada)[1], p4)
+        # a snapshot exported by a stage-3 service has no `view` marker: it pages without refund_of
+        old = json.loads(json.dumps(snap))
+        for sn in old["state"]["snapshots"]:
+            sn.pop("view")
+        self.assertEqual(call("POST", "/_test/import", old)[0], 204)
+        s, p3, _ = call("GET", "/statement?snapshot=%s&limit=200" % tok, token=self.ada)
+        self.assertTrue(all("refund_of" not in e["payment"] for e in p3["entries"]))
+        strip = json.loads(json.dumps(p4))
+        for e in strip["entries"]:
+            e["payment"].pop("refund_of")
+        self.assertEqual(p3, strip)
+
     def test_import_validates_the_ledger(self):
         call("POST", "/payments", {"to_handle": "bob", "amount": 100}, token=self.ada, key="lg1")
         pid = call("GET", "/activity", token=self.ada)[1]["payments"][0]["payment_id"]

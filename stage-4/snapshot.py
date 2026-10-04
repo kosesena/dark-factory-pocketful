@@ -236,10 +236,10 @@ def load_state(st):
     if hasattr(s, "open_auths"):
         sweep(s, time.time())
     for sn in st.get("snapshots", []):  # frozen statements survive an import (older exports have none)
-        _need(isinstance(sn, dict) and set(sn) in ({"token", "user_id", "opening_balance", "entries",
-                                                     "closing_balance", "echo"},
-                                                    {"token", "user_id", "opening_balance", "entries",
-                                                     "closing_balance", "echo", "taken_ts", "taken_seq"}))
+        base = {"token", "user_id", "opening_balance", "entries", "closing_balance", "echo"}
+        _need(isinstance(sn, dict) and set(sn) in (base, base | {"taken_ts", "taken_seq"},
+                                                   base | {"taken_ts", "taken_seq", "view"}))
+        _need("view" not in sn or sn["view"] == 4)
         _need(_str(sn["token"]) and sn["token"] and sn["token"] not in s.snapshots and sn["user_id"] in s.users)
         _need(_int(sn["opening_balance"]) and _int(sn["closing_balance"]) and isinstance(sn["entries"], list))
         _need(isinstance(sn["echo"], dict) and set(sn["echo"]) <= {"from", "to", "known_at"}
