@@ -101,6 +101,22 @@ def _no_const(name):
     raise ValueError(name)
 
 
+class _Huge(Decimal):
+    """A JSON number whose exponent Decimal cannot represent: kept as a stand-in far outside any valid range."""
+
+
+def _parse_float(text):
+    try:
+        return Decimal(text)
+    except ArithmeticError:
+        h = _Huge("-1E+999999999" if text.startswith("-") else "1E+999999999")
+        h.text = text.lower()
+        if "e-" in h.text:  # a vanishing magnitude: not integral, not an amount
+            h = _Huge("-1E-999999999" if text.startswith("-") else "1E-999999999")
+            h.text = text.lower()
+        return h
+
+
 def _big_int(text):
     # huge integers stay exact Decimals (range-checked later) instead of tripping int()'s digit limit
     return int(text) if len(text) <= 18 else Decimal(text)
@@ -114,7 +130,7 @@ def parse_json(raw, allow_empty=False, decimal=True):
         raise ApiError(400, "malformed_request", "request body is required")
     try:
         value = json.loads(raw.decode("utf-8"), parse_constant=_no_const,
-                           parse_float=Decimal if decimal else float,
+                           parse_float=_parse_float if decimal else float,
                            parse_int=_big_int if decimal else int)
     except (ValueError, RecursionError):
         raise ApiError(400, "malformed_request", "body is not valid JSON")
@@ -138,6 +154,26 @@ def get_str(body, field, required=True):
     return v
 
 
+def decimal_int(d):
+    """Exact integer value of a Decimal without arithmetic (no Overflow on huge exponents).
+    Returns None when not integral; values beyond 10**25 collapse to +-10**30 (out of range anyway)."""
+    sign, digits, exp = d.as_tuple()
+    if not isinstance(exp, int):
+        return None  # NaN / Infinity
+    if not any(digits):
+        return 0
+    if exp >= 0:
+        if exp + len(digits) > 25:
+            return -(10 ** 30) if sign else 10 ** 30
+        n = int("".join(map(str, digits))) * 10 ** exp
+    else:
+        k = -exp
+        if len(digits) <= k or any(digits[-k:]):
+            return None
+        n = int("".join(map(str, digits[:-k])))
+    return -n if sign else n
+
+
 def parse_amount(body, field="amount"):
     if field not in body:
         raise validation(field + " is required")
@@ -145,7 +181,8 @@ def parse_amount(body, field="amount"):
     if isinstance(v, bool) or not isinstance(v, (int, Decimal)):
         raise validation(field + " must be an integer")
     if isinstance(v, Decimal):  # exact decimal value: 1000.0 and 1e3 are fine, 1.0000000000000001 is not
-        if v != v.to_integral_value():
+        v = decimal_int(v)
+        if v is None:
             raise validation(field + " must be an integer")
     if v < 1 or v > MAX_AMOUNT:
         raise validation(field + " out of range")
@@ -207,20 +244,73 @@ def authenticate(req):
 
 # --- idempotency -----------------------------------------------------------
 
-def _norm(v):
+def _num(d):
+    """Canonical text of a JSON number: equal values (1, 1.0, 1e0, 1.50 vs 1.5) give equal text."""
+    if isinstance(d, _Huge):
+        return "huge:" + d.text
+    sign, digits, exp = d.as_tuple()
+    digits = list(digits)
+    if not any(digits):
+        return "0"
+    while digits[-1] == 0:
+        digits.pop()
+        exp += 1
+    return ("-" if sign else "") + "".join(map(str, digits)) + "e" + str(exp)
+
+
+def _canon(v):
+    # numbers are bare tokens, strings are quoted: a number can never collide with a string
+    if v is None:
+        return "null"
+    if isinstance(v, bool):
+        return "true" if v else "false"
+    if isinstance(v, str):
+        return json.dumps(v)
+    if isinstance(v, int):
+        return _num(Decimal(v))
     if isinstance(v, Decimal):
-        if v == v.to_integral_value() and abs(v) < 10 ** 30:
-            return int(v)
-        return format(v.normalize(), "f")  # 1.5 and 1.50 are the same JSON value
+        return _num(v)
+    if isinstance(v, float):
+        return _num(Decimal(repr(v)))
     if isinstance(v, dict):
-        return {k: _norm(x) for k, x in v.items()}
-    if isinstance(v, list):
-        return [_norm(x) for x in v]
-    return v
+        return "{" + ",".join(json.dumps(k) + ":" + _canon(x) for k, x in sorted(v.items())) + "}"
+    return "[" + ",".join(_canon(x) for x in v) + "]"
 
 
 def fingerprint(body):
-    return json.dumps(_norm(body), sort_keys=True, separators=(",", ":"))
+    try:
+        return "v2:" + _canon(body)
+    except RecursionError:
+        raise ApiError(400, "malformed_request", "body is nested too deeply")
+
+
+def _legacy(v, floats):
+    """Fingerprints written by earlier revisions (kept so imported exports still replay)."""
+    if isinstance(v, Decimal):
+        n = decimal_int(v)
+        if n is not None and abs(n) < 10 ** 30:
+            return n
+        return float(v) if floats else str(v)
+    if isinstance(v, dict):
+        return {k: _legacy(x, floats) for k, x in v.items()}
+    if isinstance(v, list):
+        return [_legacy(x, floats) for x in v]
+    return v
+
+
+def same_body(stored, body):
+    fp = fingerprint(body)
+    if stored == fp:
+        return True
+    if stored.startswith("v2:"):
+        return False
+    for floats in (True, False):
+        try:
+            if stored == json.dumps(_legacy(body, floats), sort_keys=True, separators=(",", ":")):
+                return True
+        except (ValueError, OverflowError, RecursionError):
+            pass
+    return False
 
 
 def idempotent(req, user, handler):
@@ -233,12 +323,11 @@ def idempotent(req, user, handler):
         raise validation("Idempotency-Key must be 1 to 255 characters")
     s = store.state
     ik = (user["id"], key, req.path)
-    fp = fingerprint(body)
     rec = s.idem.get(ik)
     if rec is not None:
-        if rec[0] == fp:
+        if same_body(rec[0], body):
             return 200, rec[1]
         raise ApiError(409, "idempotency_key_reuse", "key already used with a different body")
     resp = handler(body)
-    s.idem[ik] = (fp, resp)
+    s.idem[ik] = (fingerprint(body), resp)
     return 201, resp

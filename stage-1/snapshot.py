@@ -127,7 +127,98 @@ def load_state(st):
         _need(r["payment_id"] is None or r["payment_id"] in s.payments_by_id)
     _need(_int(st["seq"]))
     s.seq = max(st["seq"], max([p["seq"] for p in s.payments] + [r["seq"] for r in s.requests] + [0]))
+    check_receipts(s)
     return s
+
+
+# --- idempotency receipts must agree with the imported records (immutable facts only) ---------
+
+PATH_PAYMENTS = re.compile(r"/payments")
+PATH_REQUESTS = re.compile(r"/requests")
+PATH_PAY = re.compile(r"/requests/([^/]+)/pay")
+PATH_SPLITS = re.compile(r"/splits")
+PATH_SETTLEMENTS = re.compile(r"/settlements")
+
+REQUEST_KEYS = {"request_id", "requester_id", "requester_handle", "payer_id", "payer_handle", "amount",
+                "currency", "note", "status", "payment_id", "created_at"}
+
+
+def _payment_receipt(s, resp):
+    from wallet import pay_view
+    _need(isinstance(resp, dict) and resp.get("payment_id") in s.payments_by_id)
+    expected = pay_view(s, s.payments_by_id[resp["payment_id"]])
+    if "authorization_id" not in resp:  # receipts written before stage 2 have no such field
+        expected.pop("authorization_id", None)
+    _need(resp == expected)
+    return s.payments_by_id[resp["payment_id"]]
+
+
+def _request_receipt(s, resp):
+    _need(isinstance(resp, dict) and set(resp) == REQUEST_KEYS and resp["request_id"] in s.requests_by_id)
+    r = s.requests_by_id[resp["request_id"]]
+    a, b = s.users[r["requester_id"]], s.users[r["payer_id"]]
+    # status and payment_id are mutable: the receipt keeps the state at creation time
+    _need(resp["requester_id"] == a["id"] and resp["requester_handle"] == a["handle"]
+          and resp["payer_id"] == b["id"] and resp["payer_handle"] == b["handle"]
+          and resp["amount"] == r["amount"] and resp["currency"] == s.currency
+          and resp["note"] == r["note"] and resp["created_at"] == r["created_at"])
+    _need(resp["status"] in STATUSES)
+    _need(resp["payment_id"] is None or resp["payment_id"] in s.payments_by_id)
+    return r
+
+
+def _split_receipt(s, resp):
+    _need(isinstance(resp, dict) and set(resp) == {"split_id", "amount", "currency", "note", "shares",
+                                                    "requests", "created_at"})
+    _need(_amount(resp["amount"], 1) and resp["currency"] == s.currency and _str(resp["note"]))
+    _ts_str(resp["created_at"])
+    shares = resp["shares"]
+    _need(isinstance(shares, list) and shares)
+    for sh in shares:
+        _need(isinstance(sh, dict) and set(sh) == {"handle", "amount"} and sh["handle"] in s.by_handle
+              and _amount(sh["amount"]))
+    _need(sum(sh["amount"] for sh in shares) == resp["amount"])
+    amounts = [sh["amount"] for sh in shares]
+    _need(max(amounts) - min(amounts) <= 1 and amounts == sorted(amounts, reverse=True))
+    _need(isinstance(resp["requests"], list))
+    for rq in resp["requests"]:
+        r = _request_receipt(s, rq)
+        _need(rq["amount"] in amounts and s.users[r["payer_id"]]["handle"] in [sh["handle"] for sh in shares])
+
+
+def _settlement_receipt(s, resp):
+    _need(isinstance(resp, dict) and set(resp) == {"settlement_id", "committed_at", "payments"})
+    st = s.settlements.get(resp["settlement_id"])
+    _need(st is not None and resp["committed_at"] == st["committed_at"] and isinstance(resp["payments"], list)
+          and [p.get("payment_id") if isinstance(p, dict) else None for p in resp["payments"]] == st["payment_ids"])
+    for p in resp["payments"]:
+        _need(_payment_receipt(s, p)["settlement_id"] == st["id"])
+
+
+def check_receipts(s):
+    for (uid, key, path), (fp, resp) in s.idem.items():
+        _need(uid in s.users and (fp.startswith("v2:") or isinstance(json.loads(fp), dict)))
+        m = PATH_PAY.fullmatch(path)
+        if PATH_PAYMENTS.fullmatch(path):
+            p = _payment_receipt(s, resp)
+            _need(p["from_user_id"] == uid and p["request_id"] is None and p["settlement_id"] is None
+                  and p.get("authorization_id") is None)
+        elif m:
+            p = _payment_receipt(s, resp)
+            _need(p["from_user_id"] == uid and p["request_id"] == m.group(1)
+                  and s.requests_by_id[m.group(1)]["payer_id"] == uid)
+        elif PATH_REQUESTS.fullmatch(path):
+            _need(_request_receipt(s, resp)["requester_id"] == uid)
+        elif PATH_SPLITS.fullmatch(path):
+            _split_receipt(s, resp)
+            _need(resp["split_id"] in s.splits)
+        elif PATH_SETTLEMENTS.fullmatch(path):
+            _settlement_receipt(s, resp)
+        else:
+            _need(False)
+    for sid, sp in s.splits.items():
+        _split_receipt(s, sp)
+        _need(sp["split_id"] == sid)
 
 
 def import_state(req):

@@ -193,12 +193,94 @@ class Strictness(Base):
         self.assertEqual(call("POST", "/payments", raw=b % "15e-1", token=self.ada, key="TZ")[0], 200)
         self.assertEqual(call("POST", "/payments", raw=b % "1.51", token=self.ada, key="TZ")[0], 409)
 
+    def test_numbers_never_collide_with_strings_or_overflow(self):
+        b = '{"to_handle":"bob","amount":1,"x":%s}'
+        self.assertEqual(call("POST", "/payments", raw=b % "1.5", token=self.ada, key="NC")[0], 201)
+        self.assertEqual(call("POST", "/payments", raw=b % '"1.5"', token=self.ada, key="NC")[0], 409)
+        self.assertEqual(call("POST", "/payments", raw=b % "1.50", token=self.ada, key="NC")[0], 200)
+        self.assertEqual(call("POST", "/payments", raw=b % "1e40", token=self.ada, key="NC2")[0], 201)
+        self.assertEqual(call("POST", "/payments", raw=b % '"1E+40"', token=self.ada, key="NC2")[0], 409)
+        self.assertEqual(call("POST", "/payments", raw=b % "true", token=self.ada, key="NC3")[0], 201)
+        self.assertEqual(call("POST", "/payments", raw=b % "1", token=self.ada, key="NC3")[0], 409)
+        self.assertEqual(call("POST", "/payments", raw=b % "[1]", token=self.ada, key="NC4")[0], 201)
+        self.assertEqual(call("POST", "/payments", raw=b % '[1.0]', token=self.ada, key="NC4")[0], 200)
+        for huge in ("1E+999999999", "1e1000000000", "1E-999999999", "-1e999999999", "1e99999999999999999999"):
+            s, bb, _ = call("POST", "/payments", raw='{"to_handle":"bob","amount":%s}' % huge, token=self.ada, key="hg" + huge)
+            self.assertEqual(s, 422, huge)
+            s, bb, _ = call("POST", "/payments", raw=b % huge, token=self.ada, key="hx" + huge)
+            self.assertEqual(s, 201, huge)
+            self.assertEqual(call("POST", "/payments", raw=b % huge, token=self.ada, key="hx" + huge)[0], 200)
+
+    def test_legacy_fingerprints_still_replay(self):
+        s, p, _ = call("POST", "/payments", {"to_handle": "bob", "amount": 100}, token=self.ada, key="LG")
+        s, snap, _ = call("GET", "/_test/export")
+        for rec in snap["state"]["idempotency"]:
+            rec[3] = json.dumps({"amount": 100, "to_handle": "bob"}, sort_keys=True, separators=(",", ":"))
+        self.assertEqual(call("POST", "/_test/import", snap)[0], 204)
+        self.assertEqual(call("POST", "/payments", {"to_handle": "bob", "amount": 100.0}, token=self.ada, key="LG")[0], 200)
+        self.assertEqual(call("POST", "/payments", {"to_handle": "bob", "amount": 101}, token=self.ada, key="LG")[0], 409)
+
     def test_huge_integers(self):
         big = "9" * 5000
         for path, body in (("/payments", '{"to_handle":"bob","amount":%s}'), ("/requests", '{"payer_handle":"bob","amount":%s}'),
                            ("/splits", '{"participant_handles":["bob"],"amount":%s}')):
             self.assertEqual(call("POST", path, raw=body % big, token=self.ada, key="h" + path)[0], 422, path)
         self.assertEqual(call("POST", "/payments", raw='{"to_handle":"bob","amount":1,"x":%s}' % big, token=self.ada, key="hx")[0], 201)
+
+
+    def writes_everything(self):
+        call("POST", "/payments", {"to_handle": "bob", "amount": 100, "note": "n"}, token=self.ada, key="w-p")
+        rq = call("POST", "/requests", {"payer_handle": "ada", "amount": 50}, token=self.bob, key="w-r")[1]["request_id"]
+        call("POST", "/requests/%s/pay" % rq, {"visibility": "private"}, token=self.ada, key="w-pay")
+        rq2 = call("POST", "/requests", {"payer_handle": "ada", "amount": 70}, token=self.bob, key="w-r2")[1]["request_id"]
+        call("POST", "/requests/%s/cancel" % rq2, token=self.bob)
+        call("POST", "/splits", {"amount": 1, "participant_handles": ["cy", "bob", "ada"]}, token=self.ada, key="w-s")
+        call("POST", "/settlements", {"transfers": [{"from_handle": "ada", "to_handle": "bob", "amount": 5}]}, token=self.ada, key="w-st")
+
+        if False:
+            a = call("POST", "/authorizations", {"to_handle": "bob", "amount": 300}, token=self.ada, key="w-a")[1]["authorization_id"]
+            call("POST", "/authorizations/%s/capture" % a, {"amount": 100, "final": False}, token=self.bob, key="w-c")
+            a2 = call("POST", "/authorizations", {"to_handle": "cy", "amount": 50}, token=self.ada, key="w-a2")[1]["authorization_id"]
+            call("POST", "/authorizations/%s/void" % a2, token=self.ada)
+
+    def test_receipts_round_trip_and_tampering(self):
+        self.writes_everything()
+        s, snap, _ = call("GET", "/_test/export")
+        self.assertEqual(call("POST", "/_test/import", snap)[0], 204)
+        # original receipts replay after the live resources changed
+        self.assertEqual(call("POST", "/requests", {"payer_handle": "ada", "amount": 70}, token=self.bob, key="w-r2")[1]["status"], "pending")
+        recs = snap["state"]["idempotency"]
+        self.assertGreaterEqual(len(recs), 6)
+        def tamper(i, f):
+            m = json.loads(json.dumps(snap))
+            f(m["state"]["idempotency"][i][4])
+            self.assertEqual(call("POST", "/_test/import", m)[0], 422, (i, recs[i][2]))
+        for i, rec in enumerate(recs):
+            path = rec[2]
+            if path in ("/payments",) or path.endswith("/pay") or path.endswith("/capture"):
+                tamper(i, lambda r: r.__setitem__("amount", r["amount"] + 1))
+                tamper(i, lambda r: r.__setitem__("to_handle", "cy"))
+                tamper(i, lambda r: r.__setitem__("created_at", "2001-01-01T00:00:00+00:00"))
+                tamper(i, lambda r: r.__setitem__("payment_id", "nope"))
+            elif path == "/requests":
+                tamper(i, lambda r: r.__setitem__("amount", r["amount"] + 1))
+                tamper(i, lambda r: r.__setitem__("status", "bogus"))
+                tamper(i, lambda r: r.__setitem__("payer_handle", "cy"))
+            elif path == "/splits":
+                tamper(i, lambda r: r.__setitem__("amount", r["amount"] + 1))
+                tamper(i, lambda r: r["shares"][0].__setitem__("amount", r["shares"][0]["amount"] + 1))
+            elif path == "/settlements":
+                tamper(i, lambda r: r["payments"][0].__setitem__("amount", 6))
+                tamper(i, lambda r: r.__setitem__("committed_at", "2001-01-01T00:00:00+00:00"))
+            elif path == "/authorizations":
+                tamper(i, lambda r: r.__setitem__("amount", r["amount"] + 1))
+                tamper(i, lambda r: r.__setitem__("expires_at", "2001-01-01T00:00:00+00:00"))
+        for f in (lambda st: st["idempotency"][0].__setitem__(0, "ghost"),
+                  lambda st: st["idempotency"][0].__setitem__(2, "/unknown")):
+            m = json.loads(json.dumps(snap)); f(m["state"])
+            self.assertEqual(call("POST", "/_test/import", m)[0], 422)
+        self.assertEqual(self.bal(self.ada), call("GET", "/me", token=self.ada)[1]["balance"])
+        self.assertEqual(call("POST", "/_test/import", snap)[0], 204)
 
     def test_zero_share_state_roundtrips(self):
         s, sp, _ = call("POST", "/splits", {"amount": 1, "participant_handles": ["cy", "bob", "ada"]}, token=self.ada, key="Z")
