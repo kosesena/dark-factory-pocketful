@@ -101,6 +101,15 @@ FAULTS += [
      'and resp["amount"] == r["amount"] and resp["currency"] == s.currency', 'and resp["currency"] == s.currency'),
 ]
 
+# faults in code changed by 999fda2 (shared invariant checker wired into reset)
+FAULTS += [
+    ("F31", "§10 reset rejects states import would reject (invariants on reset)", "accounts.py",
+     "    try:\n        check_state_invariants(s)\n    except", "    try:\n        pass\n    except"),
+    ("F32", "R31/R34 a seeded paid request linked by payment_id is a valid fixture", "accounts.py",
+     '        if p is not None and p["request_id"] is None:\n            p["request_id"] = r["id"]',
+     '        if False:\n            p["request_id"] = r["id"]'),
+]
+
 ALT = {"F03": ('for k, x in sorted(v.items())) + "}"', 'for k, x in v.items()) + "}"'),
        "F13": ("if isinstance(v, bool) or not isinstance(v, (int, Decimal)):", "if not isinstance(v, (int, Decimal)):"),
        "F16": ('        if v is None:\n            raise validation(field + " must be an integer")',
