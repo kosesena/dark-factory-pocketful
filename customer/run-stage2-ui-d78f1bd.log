@@ -1,0 +1,154 @@
+ok   d login no overflow
+ok   d signup no overflow
+ok   d auth-error shown
+ok   d current-handle exact
+ok   d current-user has name
+ok   d wallet-balance
+ok   d wallet-available
+ok   d wallet-held
+ok   d available is largest number
+ok   d feed items
+ok   d feed vis attr
+ok   d empty note present
+ok   d activity amount
+ok   d newest first DOM
+ok   d / no overflow
+ok   d nav labels single-line
+ok   d contrast avail >=4.5
+ok   d contrast held >=4.5
+ok   d contrast bal >=4.5
+ok   d contrast note >=4.5
+ok   d contrast parties >=4.5
+ok   d 15.005 rejected locally
+ok   d nonnumeric rejected
+ok   d paid 15 -> 85.00
+ok   d pay form preserved
+ok   d pay-error gone
+ok   d repeat submit no second payment
+ok   d changed field new payment (15.5)
+ok   d insufficient vs available -> pay-error, inputs kept
+ok   d request-error self
+ok   d wallet-refresh exists
+ok   d refresh updates, keeps form
+ok   d double refresh consistent
+ok   d logout -> login
+ok   d requests testids
+ok   d request lists
+ok   d request amount
+ok   d declined row no buttons
+ok   d /requests no overflow
+ok   d cancelled elsewhere -> request-error, pay btn gone
+ok   d cancel own request
+ok   d cy has request rq_3
+ok   d signup -> handle derived
+ok   d empty-activity
+ok   d zero balance no held element
+ok   d empty-requests
+ok   d empty-authorizations
+ok   d signup email taken -> auth-error
+ok   d split preview 10/3
+ok   d split preview order 0.01
+ok   d split created requests with matching shares
+ok   d split-error unknown handle
+ok   d split bad decimals error
+ok   d /split no overflow
+ok   d auth items
+ok   d auth attrs
+ok   d auth amounts
+ok   d void only outgoing open
+ok   d capture only incoming open
+ok   d expires RFC3339
+ok   d /authorizations no overflow
+ok   d authorize created, shows new item
+ok   d newest first
+ok   d available updated on auth page
+ok   d authorize-error insufficient
+ok   d authorize decimals rejected
+ok   d capture 15 of 20 -> captured
+ok   d capture buttons gone
+ok   d capture too much -> authorization-error
+ok   d void via UI
+ok   d uncertain shown, not pay-error
+ok   d retry clears both, moves once
+ok   d no JS errors (non-network)
+ok   m login no overflow
+ok   m signup no overflow
+ok   m auth-error shown
+ok   m current-handle exact
+ok   m current-user has name
+ok   m wallet-balance
+ok   m wallet-available
+ok   m wallet-held
+ok   m available is largest number
+ok   m feed items
+ok   m feed vis attr
+ok   m empty note present
+ok   m activity amount
+ok   m newest first DOM
+ok   m / no overflow
+ok   m nav labels single-line
+ok   m contrast avail >=4.5
+ok   m contrast held >=4.5
+ok   m contrast bal >=4.5
+ok   m contrast note >=4.5
+ok   m contrast parties >=4.5
+ok   m 15.005 rejected locally
+ok   m nonnumeric rejected
+ok   m paid 15 -> 85.00
+ok   m pay form preserved
+ok   m pay-error gone
+ok   m repeat submit no second payment
+ok   m changed field new payment (15.5)
+ok   m insufficient vs available -> pay-error, inputs kept
+ok   m request-error self
+ok   m wallet-refresh exists
+ok   m refresh updates, keeps form
+ok   m double refresh consistent
+ok   m logout -> login
+ok   m requests testids
+ok   m request lists
+ok   m request amount
+ok   m declined row no buttons
+ok   m /requests no overflow
+ok   m cancelled elsewhere -> request-error, pay btn gone
+ok   m cancel own request
+ok   m cy has request rq_3
+ok   m signup -> handle derived
+ok   m empty-activity
+ok   m zero balance no held element
+ok   m empty-requests
+ok   m empty-authorizations
+ok   m signup email taken -> auth-error
+ok   m split preview 10/3
+ok   m split preview order 0.01
+ok   m split created requests with matching shares
+ok   m split-error unknown handle
+ok   m split bad decimals error
+ok   m /split no overflow
+ok   m auth items
+ok   m auth attrs
+ok   m auth amounts
+ok   m void only outgoing open
+ok   m capture only incoming open
+ok   m expires RFC3339
+ok   m /authorizations no overflow
+ok   m authorize created, shows new item
+ok   m newest first
+ok   m available updated on auth page
+ok   m authorize-error insufficient
+ok   m authorize decimals rejected
+ok   m capture 15 of 20 -> captured
+ok   m capture buttons gone
+ok   m capture too much -> authorization-error
+ok   m void via UI
+ok   m uncertain shown, not pay-error
+ok   m retry clears both, moves once
+ok   m no JS errors (non-network)
+ok   JPY balance format
+ok   JPY too many decimals rejected
+ok   JPY pay works
+ok   BHD balance format
+ok   BHD too many decimals rejected
+ok   BHD pay works
+
+UI 152 checks, 0 failed: []
