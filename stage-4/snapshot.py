@@ -5,7 +5,8 @@ import time
 import re
 
 from invariants import check_state_invariants
-from ledger import compute_opening, ensure_revisions, first_revision, instants_agree
+from history import build_statement
+from ledger import parse_instant, compute_opening, ensure_revisions, first_revision, instants_agree
 from common import (sweep, MAX_AMOUNT, parse_ts, HANDLE_RE, held_of, STATUSES, State, parse_json, store, validation)
 
 
@@ -235,12 +236,26 @@ def load_state(st):
     if hasattr(s, "open_auths"):
         sweep(s, time.time())
     for sn in st.get("snapshots", []):  # frozen statements survive an import (older exports have none)
-        _need(isinstance(sn, dict) and set(sn) == {"token", "user_id", "opening_balance", "entries",
-                                                    "closing_balance", "echo"})
+        _need(isinstance(sn, dict) and set(sn) in ({"token", "user_id", "opening_balance", "entries",
+                                                     "closing_balance", "echo"},
+                                                    {"token", "user_id", "opening_balance", "entries",
+                                                     "closing_balance", "echo", "taken_ts", "taken_seq"}))
         _need(_str(sn["token"]) and sn["token"] and sn["token"] not in s.snapshots and sn["user_id"] in s.users)
         _need(_int(sn["opening_balance"]) and _int(sn["closing_balance"]) and isinstance(sn["entries"], list))
         _need(isinstance(sn["echo"], dict) and set(sn["echo"]) <= {"from", "to", "known_at"}
               and all(_str(v) for v in sn["echo"].values()))
+        win = {}
+        for name, text in sn["echo"].items():  # the query instants must be RFC 3339 with an offset
+            try:
+                win[name] = parse_instant(text)
+            except ValueError:
+                _need(False)
+        lo = win.get("from")
+        hi = win.get("to")
+        if lo is not None and hi is not None and hi < lo:
+            hi = lo
+        known = win.get("known_at")
+        prev = None
         running = sn["opening_balance"]
         entries = []
         for e in sn["entries"]:
@@ -252,10 +267,23 @@ def load_state(st):
             _need(delta == (-amount if p["from_user_id"] == sn["user_id"] else amount))
             _ts_str(eff_at)
             _ts_str(rec_at)
+            _need(rev_no <= len(p["revisions"]))
+            r = p["revisions"][rev_no - 1]  # the entry is a frozen copy of exactly this revision
+            _need(amount == r["amount"] and eff_at == r["effective_at"] and rec_at == r["recorded_at"])
+            if known is not None:  # the revision selected for known_at: latest recorded at or before it
+                _need(r["recorded_ts"] <= known and (rev_no == len(p["revisions"])
+                                                     or p["revisions"][rev_no]["recorded_ts"] > known))
+            _need((lo is None or r["effective_ts"] >= lo) and (hi is None or r["effective_ts"] < hi))
+            _need(prev is None or prev <= (r["effective_ts"], pid))
+            prev = (r["effective_ts"], pid)
             running += delta
             _need(after == running)
             entries.append(tuple(e))
         _need(running == sn["closing_balance"])
+        if "taken_ts" in sn:  # frozen facts: rebuild the whole statement and require exact equality
+            _need(_num(sn["taken_ts"]) and _int(sn["taken_seq"]) and 0 <= sn["taken_seq"])
+            ob, rebuilt, cb = build_statement(s, sn["user_id"], lo, hi, known, sn["taken_ts"], sn["taken_seq"])
+            _need(ob == sn["opening_balance"] and cb == sn["closing_balance"] and rebuilt == entries)
         s.snapshots[sn["token"]] = dict(sn, entries=entries)
     check_state_invariants(s)
     check_receipts(s)

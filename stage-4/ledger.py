@@ -81,11 +81,13 @@ def instants_agree(text, ts):
         return False
 
 
-def effects(s, uid, known, override=None, originals=False):
+def effects(s, uid, known, override=None, originals=False, max_seq=None):
     """[(effective_ts, payment id, revision, delta)] for payments of uid under the selection."""
     out = []
     for p in s.payments:
         if p["from_user_id"] != uid and p["to_user_id"] != uid:
+            continue
+        if max_seq is not None and p["seq"] > max_seq:
             continue
         r = p["revisions"][0] if originals else (
             override[p["id"]] if override and p["id"] in override else selected_revision(p, known))
