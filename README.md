@@ -22,6 +22,12 @@ Entry for the WeAreDevelopers x BAND "Dark Factory" hackathon (lablab.ai).
 
 Every figure is derived, with its source, in [FACTORY.md](FACTORY.md) section 7.
 
+**Live demo:** https://felt-five-pocketful.onrender.com — the delivered `stage-4/`, built from its own
+Dockerfile, unchanged. Sign in as `ada@demo.felt` / `felt-demo-ada` or `bob@demo.felt` /
+`felt-demo-bob` (demo data only), or create an account. State lives in memory, as the
+specification allows, and `POST /_test/reset` is public by specification, so anyone can clear the
+demo; if it looks empty, sign up and use it fresh.
+
 ![The delivered wallet at desktop width, from the customer seat's final screenshots](customer/screens-stage4-final/d-home-held.png)
 
 *The delivered wallet (stage 4), as the customer seat saw it at 1280 px. Every screen at desktop
