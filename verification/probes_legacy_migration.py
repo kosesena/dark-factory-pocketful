@@ -9,7 +9,7 @@ SRC is a real older stage-3 service whose exports carry metadata-free snapshots 
   C. malformed legacy snapshots -> 422 (never 500), destination unchanged
   D. scale: many later facts and several legacy snapshots -> import within the 5 s request limit
 
-Usage: python3 probes_legacy_migration.py http://localhost:DST http://localhost:SRC [later_facts=2100]
+Usage: python3 probes_legacy_migration.py http://localhost:DST http://localhost:SRC [later_facts=2100] [snapshots=5]
 """
 import copy
 import json
@@ -22,6 +22,7 @@ from datetime import datetime, timedelta, timezone
 
 DST, SRC = sys.argv[1].rstrip("/"), sys.argv[2].rstrip("/")
 N_LATER = int(sys.argv[3]) if len(sys.argv) > 3 else 2100
+N_SNAPS = int(sys.argv[4]) if len(sys.argv) > 4 else 5
 RESULTS = []
 
 
@@ -151,7 +152,7 @@ st, b = call(DST, "POST", "/_test/import", bad)
 # The reverted snapshot is byte-identical to a genuine metadata-free snapshot taken before the correction
 # (section A "later correction" migrates exactly that state), so stage 4 cannot refuse it without refusing a
 # genuine export. Recorded as information for the coordinator's ruling, not as a pass/fail check.
-print("INFO  B revert-correction tamper (outside the two ruled classes) -> %s" % st)
+print("INFO  B revert-correction tamper (admitted: coordinator ruling de5f3df5, any earlier recorded moment) -> %s" % st)
 if st == 204:
     got = page(DST, login(DST, "a"), sB["snapshot"])
     print("INFO  B genuine entry: %s" % json.dumps([e for e in genuine["entries"] if e["payment"]["payment_id"] == "p_s1"])[:400])
@@ -195,10 +196,11 @@ call(DST, "POST", "/_test/import", exB)
 call(SRC, "POST", "/_test/reset", fixture())
 ta = login(SRC, "a")
 early = {}
-for i, q in enumerate(["", "&from=" + urllib.parse.quote((T1 - timedelta(hours=1)).isoformat()),
-                       "&to=" + urllib.parse.quote((NOW + timedelta(days=1)).isoformat()),
-                       "&known_at=" + urllib.parse.quote((NOW + timedelta(days=1)).isoformat()), ""]):
-    s = call(SRC, "GET", "/statement?limit=1" + q, None, ta)[1]
+QS = ["", "&from=" + urllib.parse.quote((T1 - timedelta(hours=1)).isoformat()),
+      "&to=" + urllib.parse.quote((NOW + timedelta(days=1)).isoformat()),
+      "&known_at=" + urllib.parse.quote((NOW + timedelta(days=1)).isoformat())]
+for i in range(N_SNAPS):
+    s = call(SRC, "GET", "/statement?limit=1" + QS[i % len(QS)], None, ta)[1]
     early[s["snapshot"]] = page(SRC, ta, s["snapshot"])
 t = time.time()
 for i in range(N_LATER):
@@ -206,6 +208,22 @@ for i in range(N_LATER):
 check("D created %d later payments on the source" % N_LATER, True, "%.1fs" % (time.time() - t))
 dt = migrate("%d later facts, %d legacy snapshots" % (N_LATER, len(early)), call(SRC, "GET", "/_test/export")[1], early, "a")
 print("D import took %.2fs" % dt)
+# tampered at the same scale (one snapshot's balances shifted +1): refused within the same bound, unchanged
+exD = call(SRC, "GET", "/_test/export")[1]
+baseD = call(DST, "GET", "/_test/export")[1]
+badD = copy.deepcopy(exD)
+snD = badD["state"]["snapshots"][-1]
+snD["opening_balance"] += 1
+snD["closing_balance"] += 1
+for e in snD["entries"]:
+    e[3] += 1
+t = time.time()
+st, b = call(DST, "POST", "/_test/import", badD)
+dt = time.time() - t
+check("D tampered (%d facts, %d snapshots, one shifted +1) -> 422" % (N_LATER, N_SNAPS), st == 422, (st, b))
+check("D tampered refused within 5 s", dt < 5, "%.2fs" % dt)
+check("D tampered leaves destination unchanged", call(DST, "GET", "/_test/export")[1] == baseD, "")
+print("D tampered import took %.2fs" % dt)
 
 fails = [r for r in RESULTS if not r[1]]
 for n, ok, d in RESULTS:
