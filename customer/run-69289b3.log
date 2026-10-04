@@ -1,0 +1,189 @@
+ok   reset 204
+ok   reset negative 422
+ok   state kept after bad reset
+ok   me
+ok   me no token 401
+ok   me bad token
+ok   login wrong 401
+ok   login unknown 401
+ok   signup 201
+ok   derived handle
+ok   email_taken
+ok   handle_taken
+ok   handle_taken no account
+ok   short pw 422
+ok   bad email 422
+ok   long handle truncated 20
+ok   signup bad json 400
+ok   pay 201
+ok   pay body
+ok   pay replay 200 same
+ok   balance after
+ok   key reuse 409
+ok   key reuse precedes validation
+ok   missing key 400
+ok   empty key 400
+ok   256 key 422
+ok   255 key ok
+FAIL key scoped per user (422, {'error': {'code': 'self_payment', 'message': 'cannot pay yourself'}})
+ok   same key other path ok
+ok   amount0
+ok   amount neg
+ok   amount big
+ok   amount max ok-funds
+ok   amount frac
+ok   amount str
+ok   amount bool
+ok   amount null
+ok   amount missing
+ok   note null
+ok   note 201
+ok   vis bad
+ok   self pay
+ok   unknown handle
+ok   handle wrong type
+ok   array body
+ok   bad json 400
+ok   pay unauth 401
+ok   1e1 amount ok + extra ignored
+ok   10.0 ok
+ok   note 200 ok
+ok   insufficient 409
+ok   failed pay no trace
+ok   key reusable after 4xx
+ok   private pay
+ok   private visible sender
+ok   private visible receiver
+ok   private hidden third
+ok   private hidden from operator
+ok   public visible to third
+ok   seeded payment p_1 in feed
+ok   limit 2 has_more
+ok   newest first
+ok   activity bad ?limit=0
+ok   activity bad ?limit=201
+ok   activity bad ?offset=-1
+ok   activity bad ?limit=1e1
+ok   activity bad ?limit=4.0
+ok   activity bad ?limit=+4
+ok   activity bad ?limit=abc
+ok   activity bad ?offset=1e1
+ok   unknown query ignored
+ok   offset beyond
+ok   activity 401
+ok   request > balance ok
+ok   req replay
+ok   req self
+ok   req unk
+ok   req amt0
+ok   req note
+ok   req no key
+ok   rq_1 listed for payer & requester
+ok   requests not visible to third
+ok   op not granted requests
+ok   incoming only
+ok   outgoing for bob
+ok   requests bad ?direction=x
+ok   requests bad ?status=x
+ok   requests bad ?limit=0
+ok   requests bad ?offset=-1
+ok   requests bad ?limit=4.0
+ok   requests status filter
+ok   requests newest first
+ok   requests not in feed
+ok   pay short 409
+ok   still pending
+ok   requester can't pay 403
+ok   third pay 403 or 404
+ok   pay unknown 404
+ok   pay bad vis 422
+ok   pay no key 400
+ok   pay rq_1 201
+ok   balances moved
+ok   rq_1 paid with payment_id
+ok   pay replay 200 same
+ok   pay replay diff body 409
+ok   pay again new key 409 not_pending
+ok   no double move
+ok   private req payment hidden from third
+ok   decline paid 409
+ok   cancel paid 409
+ok   decline by requester 403
+ok   cancel by payer 403
+ok   decline
+ok   decline twice 200
+ok   cancel declined 409
+ok   pay declined 409
+ok   cancel
+ok   cancel twice 200
+ok   decline cancelled 409
+ok   decline unknown 404
+ok   replay after cancel returns original
+ok   cy short
+ok   same key after 4xx now pays
+ok   split 1000/3
+ok   split replay
+ok   split no feed
+ok   split 1/3
+ok   split 10/3
+ok   split 999/3
+ok   split 5/5
+ok   zero share request exists
+ok   1/3 caller middle: zero-share requests
+ok   solo split
+ok   caller omitted
+ok   split empty
+ok   split dup
+ok   split unk
+ok   split amt
+ok   split note
+ok   split no key
+ok   settle non-op 403
+ok   settle no tok 401
+ok   settle no key 400
+ok   settle 201
+ok   settle replay
+ok   settle sum
+ok   settle private hidden from third
+ok   plain payment settlement_id null
+ok   op no funds 409
+ok   collective insufficient 409
+ok   chain affordable by net
+ok   settle sum 2
+ok   settle self
+ok   settle unk
+ok   settle empty
+ok   settle 33
+ok   settle notobj
+ok   settle amt
+ok   settle order
+ok   settle missing
+ok   32 ok
+FAIL op sees no others' requests 
+ok   concurrent: 0..., only 0 successes beyond balance
+ok   concurrent double spend
+ok   concurrent 25 succeed of 50 (2500/100)
+ok   bob 0, sum kept
+ok   concurrent same key: one 201, rest 200
+ok   request pays once
+ok   export
+ok   import 204
+ok   import again 204
+ok   token valid after import
+ok   retry after import 200 same
+ok   settlement replay after import
+ok   post-export write gone
+ok   login hashed after import
+ok   operator preserved
+ok   import invalid 422
+ok   import invalid 422
+ok   import invalid 422
+ok   import invalid 422
+ok   import bad json 400
+ok   still working after bad import
+ok   currency JPY
+ok   currency BHD
+ok   reset wipes signup
+ok   unauth GET requests
+
+187 checks, 2 failed: ['key scoped per user', "op sees no others' requests"]
