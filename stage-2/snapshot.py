@@ -72,6 +72,8 @@ def load_state(st):
         _need(_id(rec["id"]) and 0 <= rec["balance"] <= 2 ** 53 and _int(rec["balance"]))
         _need(HANDLE_RE.fullmatch(rec["handle"]))
         bytes.fromhex(rec["salt"]), bytes.fromhex(rec["hash"])
+        rec["n"] = u.get("n", 2 ** 12)  # stage-1 exports carry no cost parameter
+        _need(rec["n"] in (2 ** 10, 2 ** 11, 2 ** 12, 2 ** 14))
         _need(rec["id"] not in s.users and rec["handle"] not in s.by_handle
               and rec["email"].lower() not in s.by_email)
         s.users[rec["id"]] = rec
