@@ -300,7 +300,8 @@ def main():
         x = by_id(auths(a), ax["authorization_id"])
         m = me(a)
         check("ttl %d: at expires_at the hold is expired (status)" % ttl, x["status"] == "expired", x)
-        check("ttl %d: at expires_at the remainder is released (available)" % ttl, m["held"] == 0 and m["available"] == 10000, m)
+        # the fixture's own a_open (2000) stays held; only the new 100 must be released
+        check("ttl %d: at expires_at the remainder is released (available)" % ttl, m["held"] == 2000 and m["available"] == 8000, m)
         err("ttl %d: capture at expires_at -> authorization_expired" % ttl,
             call("POST", "/authorizations/%s/capture" % ax["authorization_id"], {}, token=b, key="ex%d" % ttl),
             409, "authorization_expired")
