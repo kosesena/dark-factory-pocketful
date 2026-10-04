@@ -1,0 +1,140 @@
+{
+  "probes": 18,
+  "passed": 16,
+  "failed": [
+    {
+      "probe": "destination-unchanged-import-correction",
+      "passed": false,
+      "detail": {
+        "status": 422,
+        "body": {
+          "error": {
+            "code": "validation_failed",
+            "message": "state is not a valid pocketful state"
+          }
+        }
+      }
+    },
+    {
+      "probe": "destination-unchanged-import-payment",
+      "passed": false,
+      "detail": {
+        "status": 422,
+        "body": {
+          "error": {
+            "code": "validation_failed",
+            "message": "state is not a valid pocketful state"
+          }
+        }
+      }
+    }
+  ],
+  "results": [
+    {
+      "probe": "reset",
+      "passed": true,
+      "detail": null
+    },
+    {
+      "probe": "metadata-free-source-none",
+      "passed": true,
+      "detail": null
+    },
+    {
+      "probe": "source-unchanged-import-none",
+      "passed": true,
+      "detail": null
+    },
+    {
+      "probe": "source-original-page-none",
+      "passed": true,
+      "detail": null
+    },
+    {
+      "probe": "destination-unchanged-import-none",
+      "passed": true,
+      "detail": null
+    },
+    {
+      "probe": "destination-original-page-none",
+      "passed": true,
+      "detail": null
+    },
+    {
+      "probe": "reset",
+      "passed": true,
+      "detail": null
+    },
+    {
+      "probe": "source-write-correction",
+      "passed": true,
+      "detail": null
+    },
+    {
+      "probe": "metadata-free-source-correction",
+      "passed": true,
+      "detail": null
+    },
+    {
+      "probe": "source-unchanged-import-correction",
+      "passed": true,
+      "detail": null
+    },
+    {
+      "probe": "source-original-page-correction",
+      "passed": true,
+      "detail": null
+    },
+    {
+      "probe": "destination-unchanged-import-correction",
+      "passed": false,
+      "detail": {
+        "status": 422,
+        "body": {
+          "error": {
+            "code": "validation_failed",
+            "message": "state is not a valid pocketful state"
+          }
+        }
+      }
+    },
+    {
+      "probe": "reset",
+      "passed": true,
+      "detail": null
+    },
+    {
+      "probe": "source-write-payment",
+      "passed": true,
+      "detail": null
+    },
+    {
+      "probe": "metadata-free-source-payment",
+      "passed": true,
+      "detail": null
+    },
+    {
+      "probe": "source-unchanged-import-payment",
+      "passed": true,
+      "detail": null
+    },
+    {
+      "probe": "source-original-page-payment",
+      "passed": true,
+      "detail": null
+    },
+    {
+      "probe": "destination-unchanged-import-payment",
+      "passed": false,
+      "detail": {
+        "status": 422,
+        "body": {
+          "error": {
+            "code": "validation_failed",
+            "message": "state is not a valid pocketful state"
+          }
+        }
+      }
+    }
+  ]
+}

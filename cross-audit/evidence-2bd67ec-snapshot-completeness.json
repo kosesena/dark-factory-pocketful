@@ -1,0 +1,72 @@
+{
+  "probes": 13,
+  "passed": 13,
+  "failed": [],
+  "results": [
+    {
+      "probe": "reset",
+      "passed": true,
+      "detail": null
+    },
+    {
+      "probe": "snapshot-completeness-False-drop-last",
+      "passed": true,
+      "detail": null
+    },
+    {
+      "probe": "snapshot-completeness-atomic",
+      "passed": true,
+      "detail": null
+    },
+    {
+      "probe": "snapshot-completeness-False-empty",
+      "passed": true,
+      "detail": null
+    },
+    {
+      "probe": "snapshot-completeness-atomic",
+      "passed": true,
+      "detail": null
+    },
+    {
+      "probe": "snapshot-completeness-False-shift-balances",
+      "passed": true,
+      "detail": null
+    },
+    {
+      "probe": "snapshot-completeness-atomic",
+      "passed": true,
+      "detail": null
+    },
+    {
+      "probe": "snapshot-completeness-True-drop-last",
+      "passed": true,
+      "detail": null
+    },
+    {
+      "probe": "snapshot-completeness-atomic",
+      "passed": true,
+      "detail": null
+    },
+    {
+      "probe": "snapshot-completeness-True-empty",
+      "passed": true,
+      "detail": null
+    },
+    {
+      "probe": "snapshot-completeness-atomic",
+      "passed": true,
+      "detail": null
+    },
+    {
+      "probe": "snapshot-completeness-True-shift-balances",
+      "passed": true,
+      "detail": null
+    },
+    {
+      "probe": "snapshot-completeness-atomic",
+      "passed": true,
+      "detail": null
+    }
+  ]
+}

@@ -1,0 +1,272 @@
+{
+  "probes": 53,
+  "passed": 53,
+  "failed": [],
+  "results": [
+    {
+      "probe": "reset",
+      "passed": true,
+      "detail": null
+    },
+    {
+      "probe": "snapshot-invalid-unknown-owner",
+      "passed": true,
+      "detail": null
+    },
+    {
+      "probe": "snapshot-atomic-unknown-owner",
+      "passed": true,
+      "detail": null
+    },
+    {
+      "probe": "snapshot-invalid-unrelated-owner",
+      "passed": true,
+      "detail": null
+    },
+    {
+      "probe": "snapshot-atomic-unrelated-owner",
+      "passed": true,
+      "detail": null
+    },
+    {
+      "probe": "snapshot-invalid-unknown-payment",
+      "passed": true,
+      "detail": null
+    },
+    {
+      "probe": "snapshot-atomic-unknown-payment",
+      "passed": true,
+      "detail": null
+    },
+    {
+      "probe": "snapshot-invalid-unknown-revision",
+      "passed": true,
+      "detail": null
+    },
+    {
+      "probe": "snapshot-atomic-unknown-revision",
+      "passed": true,
+      "detail": null
+    },
+    {
+      "probe": "snapshot-invalid-boolean-revision",
+      "passed": true,
+      "detail": null
+    },
+    {
+      "probe": "snapshot-atomic-boolean-revision",
+      "passed": true,
+      "detail": null
+    },
+    {
+      "probe": "snapshot-invalid-wrong-delta",
+      "passed": true,
+      "detail": null
+    },
+    {
+      "probe": "snapshot-atomic-wrong-delta",
+      "passed": true,
+      "detail": null
+    },
+    {
+      "probe": "snapshot-invalid-wrong-balance-after",
+      "passed": true,
+      "detail": null
+    },
+    {
+      "probe": "snapshot-atomic-wrong-balance-after",
+      "passed": true,
+      "detail": null
+    },
+    {
+      "probe": "snapshot-invalid-bad-effective-time",
+      "passed": true,
+      "detail": null
+    },
+    {
+      "probe": "snapshot-atomic-bad-effective-time",
+      "passed": true,
+      "detail": null
+    },
+    {
+      "probe": "snapshot-invalid-wrong-effective-time",
+      "passed": true,
+      "detail": null
+    },
+    {
+      "probe": "snapshot-atomic-wrong-effective-time",
+      "passed": true,
+      "detail": null
+    },
+    {
+      "probe": "snapshot-invalid-bad-recorded-time",
+      "passed": true,
+      "detail": null
+    },
+    {
+      "probe": "snapshot-atomic-bad-recorded-time",
+      "passed": true,
+      "detail": null
+    },
+    {
+      "probe": "snapshot-invalid-wrong-recorded-time",
+      "passed": true,
+      "detail": null
+    },
+    {
+      "probe": "snapshot-atomic-wrong-recorded-time",
+      "passed": true,
+      "detail": null
+    },
+    {
+      "probe": "snapshot-invalid-wrong-selected-amount",
+      "passed": true,
+      "detail": null
+    },
+    {
+      "probe": "snapshot-atomic-wrong-selected-amount",
+      "passed": true,
+      "detail": null
+    },
+    {
+      "probe": "snapshot-invalid-coherent-wrong-selected-amount",
+      "passed": true,
+      "detail": null
+    },
+    {
+      "probe": "snapshot-atomic-coherent-wrong-selected-amount",
+      "passed": true,
+      "detail": null
+    },
+    {
+      "probe": "snapshot-invalid-wrong-opening",
+      "passed": true,
+      "detail": null
+    },
+    {
+      "probe": "snapshot-atomic-wrong-opening",
+      "passed": true,
+      "detail": null
+    },
+    {
+      "probe": "snapshot-invalid-wrong-closing",
+      "passed": true,
+      "detail": null
+    },
+    {
+      "probe": "snapshot-atomic-wrong-closing",
+      "passed": true,
+      "detail": null
+    },
+    {
+      "probe": "snapshot-invalid-boolean-opening",
+      "passed": true,
+      "detail": null
+    },
+    {
+      "probe": "snapshot-atomic-boolean-opening",
+      "passed": true,
+      "detail": null
+    },
+    {
+      "probe": "snapshot-invalid-reverse-order",
+      "passed": true,
+      "detail": null
+    },
+    {
+      "probe": "snapshot-atomic-reverse-order",
+      "passed": true,
+      "detail": null
+    },
+    {
+      "probe": "snapshot-invalid-duplicate-entry",
+      "passed": true,
+      "detail": null
+    },
+    {
+      "probe": "snapshot-atomic-duplicate-entry",
+      "passed": true,
+      "detail": null
+    },
+    {
+      "probe": "snapshot-invalid-short-entry",
+      "passed": true,
+      "detail": null
+    },
+    {
+      "probe": "snapshot-atomic-short-entry",
+      "passed": true,
+      "detail": null
+    },
+    {
+      "probe": "snapshot-invalid-invalid-echo",
+      "passed": true,
+      "detail": null
+    },
+    {
+      "probe": "snapshot-atomic-invalid-echo",
+      "passed": true,
+      "detail": null
+    },
+    {
+      "probe": "snapshot-invalid-knowledge-before-selected-revision",
+      "passed": true,
+      "detail": null
+    },
+    {
+      "probe": "snapshot-atomic-knowledge-before-selected-revision",
+      "passed": true,
+      "detail": null
+    },
+    {
+      "probe": "snapshot-invalid-entries-outside-echo-window",
+      "passed": true,
+      "detail": null
+    },
+    {
+      "probe": "snapshot-atomic-entries-outside-echo-window",
+      "passed": true,
+      "detail": null
+    },
+    {
+      "probe": "snapshot-invalid-duplicate-token",
+      "passed": true,
+      "detail": null
+    },
+    {
+      "probe": "snapshot-atomic-duplicate-token",
+      "passed": true,
+      "detail": null
+    },
+    {
+      "probe": "snapshot-invalid-empty-token",
+      "passed": true,
+      "detail": null
+    },
+    {
+      "probe": "snapshot-atomic-empty-token",
+      "passed": true,
+      "detail": null
+    },
+    {
+      "probe": "old-snapshot-import-after-writes",
+      "passed": true,
+      "detail": null
+    },
+    {
+      "probe": "old-page-identical",
+      "passed": true,
+      "detail": null
+    },
+    {
+      "probe": "receipt-with-snapshot-invalid",
+      "passed": true,
+      "detail": null
+    },
+    {
+      "probe": "receipt-with-snapshot-atomic",
+      "passed": true,
+      "detail": null
+    }
+  ]
+}
