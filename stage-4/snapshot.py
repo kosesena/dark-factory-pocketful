@@ -241,6 +241,9 @@ def load_state(st):
         _need(isinstance(sn, dict) and set(sn) in (base, base | {"taken_ts", "taken_seq"},
                                                    base | {"taken_ts", "taken_seq", "view"}))
         _need("view" not in sn or sn["view"] == 4)
+        # a view-less snapshot is a pre-refund (stage 1-3) page: it cannot hold a refund entry
+        _need("view" in sn or all(isinstance(e, list) and e and s.payments_by_id.get(e[0], {}).get("refund_of") is None
+                                  for e in sn["entries"] if isinstance(e, list)))
         _need(_str(sn["token"]) and sn["token"] and sn["token"] not in s.snapshots and sn["user_id"] in s.users)
         _need(_int(sn["opening_balance"]) and _int(sn["closing_balance"]) and isinstance(sn["entries"], list))
         _need(isinstance(sn["echo"], dict) and set(sn["echo"]) <= {"from", "to", "known_at"}

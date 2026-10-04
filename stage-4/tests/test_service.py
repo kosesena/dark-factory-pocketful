@@ -2074,6 +2074,12 @@ class Stage4GapList(unittest.TestCase):
         self.assertEqual(sum(call("GET", "/me", token=t)[1]["balance"] for t in (self.ada, self.bob, self.cy)), 10000 + 2500 + 600)
 
 
+def refund_values(o):
+    if isinstance(o, dict):
+        return [v for k, val in o.items() for v in (([val] if k == "refund_of" else []) + refund_values(val))]
+    return [v for x in o for v in refund_values(x)] if isinstance(o, list) else []
+
+
 class SnapshotFuzz(unittest.TestCase):
     """Every mutation of an exported statement snapshot must be refused (422) or leave exactly the same page."""
 
@@ -2147,7 +2153,10 @@ class SnapshotFuzz(unittest.TestCase):
                 # query keys (flattened onto the page top level) differ: a re-labelled, self-consistent statement
                 drop |= {"from", "to", "known_at"}
             if name == "del view":
-                drop.add("refund_of")  # equivalence: a view-less snapshot is the stage-3 shape; same facts, older field set without refund_of
+                # equivalence: a view-less snapshot is the stage-3 shape; same facts, older field set. Only an absent/None
+                # refund_of may disappear; a snapshot holding a refund entry must be refused (422), never paged without it
+                drop.add("refund_of")
+                self.assertFalse(any(x is not None for x in refund_values(pages["page"])), "refund entry paged without view")
             nested = name == "del view"  # refund_of lives inside the payment objects; echo keys only at the top
             def strip(o, top=True):
                 if isinstance(o, dict):
@@ -2209,6 +2218,25 @@ class SnapshotFuzz(unittest.TestCase):
                 e[3] += 1
             sn["closing_balance"] += 1
         self.assertEqual(legacy(shift), 422)
+
+
+class ViewlessSnapshotWithRefund(unittest.TestCase):
+    def test_view_less_snapshot_cannot_hold_a_refund_entry(self):
+        self.assertEqual(call("POST", "/_test/reset", hist_fixture())[0], 204)
+        ada, bob = login("ada"), login("bob")
+        s, p, _ = call("POST", "/payments", {"to_handle": "bob", "amount": 500}, token=ada, key="v1")
+        self.assertEqual(call("POST", "/payments/%s/refunds" % p["payment_id"], {"amount": 50}, token=bob, key="v2")[0], 201)
+        tok = call("GET", "/statement?limit=200", token=ada)[1]["snapshot"]
+        s, snap, _ = call("GET", "/_test/export")
+        self.assertEqual(call("POST", "/_test/import", snap)[0], 204)
+        m = json.loads(json.dumps(snap))
+        for sn in m["state"]["snapshots"]:
+            if sn["token"] == tok:
+                sn.pop("view")
+        self.assertEqual(call("POST", "/_test/import", m)[0], 422)
+        # destination unchanged: the saved page still carries refund_of
+        page = call("GET", "/statement?snapshot=%s&limit=200" % tok, token=ada)[1]
+        self.assertTrue(any(v for v in refund_values(page)))
 
 
 if __name__ == "__main__":
