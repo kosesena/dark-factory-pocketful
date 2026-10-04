@@ -696,7 +696,8 @@ def _():
 def _():
     ada, _, _ = world()
     for a, b, want in (('1.5', '"1.5"', 409), ('1e40', '"1E+40"', 409), ('1.50', '1.5', 200),
-                       ('1000', '1000.0', 200), ('1', 'true', 409)):
+                       ('1000', '1000.0', 200), ('1', 'true', 409), ('"true"', 'true', 409),
+                       ('"null"', 'null', 409), ('"false"', 'false', 409)):
         key = k()
         ok(call("POST", "/payments", raw='{"to_handle":"bob","amount":1,"x":%s}' % a, token=ada, key=key), 201)
         r = call("POST", "/payments", raw='{"to_handle":"bob","amount":1,"x":%s}' % b, token=ada, key=key)
@@ -729,6 +730,19 @@ def _():
     for path, b in bads:
         err(call("POST", "/_test/import", b), 422, "validation_failed", path)
     assert bal(a2) == 10000, "a rejected import changed the destination"
+
+
+@probe("R105 import rejects corrupted seeded records (no receipt to cross-check)")
+def _():
+    import copy
+    reset(fx(payments=[{"id": "p_1", "from_user_id": "u_ada", "to_user_id": "u_bob", "amount": 5,
+                        "note": "", "visibility": "public"}]))
+    ex = call("GET", "/_test/export")[1]
+    for field, val in (("created_at", "yesterday"), ("created_at", "2026-02-30T10:00:00+00:00"),
+                       ("request_id", "rq_gone"), ("settlement_id", "st_gone")):
+        b = copy.deepcopy(ex)
+        b["state"]["payments"][0][field] = val
+        err(call("POST", "/_test/import", b), 422, "validation_failed", (field, val))
 
 
 def main():

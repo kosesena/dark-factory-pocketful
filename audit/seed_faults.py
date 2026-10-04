@@ -85,7 +85,29 @@ FAULTS += [
      "return int(v) if v == v.to_integral_value() and abs(v) < 10 ** 30 else str(v)", "return str(v)"),
 ]
 
-ALT = {"F13": ("if isinstance(v, bool) or not isinstance(v, (int, Decimal)):", "if not isinstance(v, (int, Decimal)):")}
+# faults in code changed by the final fix revision 0e8dea4 (as_tuple integrality, canonical identity, receipt checks, reset validation)
+FAULTS += [
+    ("F25", "R16/R73 1.5 is not an integer amount (as_tuple integrality)", "common.py",
+     "if len(digits) <= k or any(digits[-k:]):", "if len(digits) <= k:"),
+    ("F26", "R59 1.5 and 1.50 are the same JSON value", "common.py",
+     "    while digits[-1] == 0:\n        digits.pop()\n        exp += 1", "    pass"),
+    ("F27", "R59 a string never equals a literal (\"true\" vs true, \"null\" vs null)", "common.py",
+     "    if isinstance(v, str):\n        return json.dumps(v)", "    if isinstance(v, str):\n        return v"),
+    ("F28", "R105/§10 reset rejects dangling references (export must re-import)", "accounts.py",
+     'raise validation("request refers to an unknown payment")', 'pass'),
+    ("F29", "R30/§10 reset rejects balance above 2^53 (export must re-import)", "accounts.py",
+     'bal = _int(u.get("balance", 0), 0, 2 ** 53)', 'bal = _int(u.get("balance", 0), 0)'),
+    ("F30", "R105 import rejects a receipt that disagrees with its record", "snapshot.py",
+     'and resp["amount"] == r["amount"] and resp["currency"] == s.currency', 'and resp["currency"] == s.currency'),
+]
+
+ALT = {"F03": ('for k, x in sorted(v.items())) + "}"', 'for k, x in v.items()) + "}"'),
+       "F13": ("if isinstance(v, bool) or not isinstance(v, (int, Decimal)):", "if not isinstance(v, (int, Decimal)):"),
+       "F16": ('        if v is None:\n            raise validation(field + " must be an integer")',
+               '        if v is None:\n            v = 1'),
+       "F17": ("parse_float=_parse_float if decimal else float,",
+               "parse_float=(lambda s: _parse_float(repr(float(s)))) if decimal else float,"),
+       "F24": ("    if isinstance(v, int):\n        return _num(Decimal(v))", "    if isinstance(v, int):\n        return str(v)")}
 
 
 def make(fid, fname, old, new):
