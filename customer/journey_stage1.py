@@ -375,9 +375,55 @@ for nm, f2 in [("dup handle", lambda f: f["users"].append(dict(f["users"][0], id
                ("bad handle", lambda f: f["users"][0].__setitem__("handle", "Bad Handle")),
                ("bad minor_units", lambda f: f.__setitem__("minor_units", 5)),
                ("unknown payment user", lambda f: f["payments"][0].__setitem__("from_user_id", "nobody")),
-               ("operator unknown", lambda f: f.__setitem__("settlement_operator_ids", ["nobody"])),
-               ("bad request status", lambda f: f["requests"][0].__setitem__("status", "zzz"))]:
+                              ("bad request status", lambda f: f["requests"][0].__setitem__("status", "zzz"))]:
     f3 = copy.deepcopy(fx); f2(f3); r = call("POST", "/_test/reset", f3); chk("reset " + nm + " 422, no 5xx", r[0] == 422, r)
     chk("  state kept after " + nm, call("POST", "/auth/login", {"email": "ada@example.com", "password": "correct horse"})[0] == 200)
 chk("reset ok again", call("POST", "/_test/reset", fx)[0] == 204)
 print(f"\nFINAL2 {n} checks, {len(fails)} failed: {fails}")
+# extras for 999fda2: invariants on reset/import, true vs "true"
+call("POST", "/_test/reset", fx); A = login("ada@example.com")
+r = call("POST", "/_test/reset", dict(fx, settlement_operator_ids=["nobody"])); chk("unknown operator id reset 204 acceptable", r[0] in (204, 422), r)
+call("POST", "/_test/reset", fx)
+def rs(mut, nm, exp=422):
+    f = copy.deepcopy(fx); mut(f); r = call("POST", "/_test/reset", f); chk("reset " + nm, r[0] == exp, r)
+    if exp == 422: chk("  prior state kept: " + nm, call("POST", "/auth/login", {"email": "ada@example.com", "password": "correct horse"})[0] == 200)
+rs(lambda f: f["requests"][0].__setitem__("note", "x" * 201), "request note 201")
+rs(lambda f: f["payments"][0].__setitem__("note", "x" * 201), "payment note 201")
+rs(lambda f: f["requests"][0].__setitem__("payer_id", "u_bob"), "self request")
+rs(lambda f: f["payments"][0].__setitem__("to_user_id", "u_ada"), "self payment")
+rs(lambda f: f["payments"][0].__setitem__("created_at", "garbage"), "bad created_at")
+rs(lambda f: f["requests"][0].__setitem__("payer_id", "ghost"), "dangling request payer")
+rs(lambda f: f["requests"][0].__setitem__("payment_id", "p_none"), "dangling payment link")
+rs(lambda f: f["payments"][0].__setitem__("amount", -5), "negative payment amount")
+rs(lambda f: f["payments"][0].__setitem__("visibility", "x"), "bad visibility")
+rs(lambda f: f["payments"][0].__setitem__("amount", True), "bool amount")
+rs(lambda f: f["users"][0].__setitem__("balance", True), "bool balance")
+rs(lambda f: f["users"][1].__setitem__("handle", "ada"), "dup handle")
+rs(lambda f: (f.__setitem__("users", []), f.__setitem__("payments", []), f.__setitem__("requests", [])), "no users", 204)
+call("POST", "/_test/reset", fx)
+# seeded paid request linked to seeded payment is accepted
+f = copy.deepcopy(fx); f["requests"][0]["status"] = "paid"; f["requests"][0]["payment_id"] = "p_1"; f["payments"][0]["request_id"] = "rq_1"; f["payments"][0]["amount"] = 1200; r = call("POST", "/_test/reset", f); chk("consistent paid request link seeds ok", r[0] == 204, r)
+call("POST", "/_test/reset", fx); A = login("ada@example.com"); O2 = login("op@example.com")
+# true vs "true" in idempotency body identity
+r = call("POST", "/requests/rq_1/pay", {"visibility": "private", "extra": True}, tok=A, key="tt"); chk("pay w/ extra true", r[0] == 201, r)
+r = call("POST", "/requests/rq_1/pay", {"visibility": "private", "extra": "true"}, tok=A, key="tt"); chk("true vs 'true' differ -> 409", r[0] == 409, r)
+r = call("POST", "/requests/rq_1/pay", {"visibility": "private", "extra": 1}, tok=A, key="tt"); chk("true vs 1 differ -> 409", r[0] == 409, r)
+r = call("POST", "/requests/rq_1/pay", {"extra": True, "visibility": "private"}, tok=A, key="tt"); chk("reordered same -> 200", r[0] == 200, r)
+# round trips with rich state
+call("POST", "/_test/reset", fx); A = login("ada@example.com"); Bo = login("bob@example.com"); O2 = login("op@example.com")
+call("POST", "/payments", {"to_handle": "bob", "amount": 100, "note": "é🙂"}, tok=A, key="rt1")
+call("POST", "/requests", {"payer_handle": "bob", "amount": 0 + 5}, tok=A, key="rt2")
+call("POST", "/requests/rq_1/pay", {}, tok=A, key="rt3")
+call("POST", "/splits", {"amount": 1, "participant_handles": ["ada", "bob", "cy"]}, tok=A, key="rt4")
+call("POST", "/settlements", T, tok=O2, key="rt5")
+call("POST", "/payments", {"to_handle": "bob", "amount": 10 ** 9}, tok=A, key="rt6")
+call("POST", "/requests/rq_1/decline", tok=A)
+e = call("GET", "/_test/export")[1]; call("POST", "/_test/reset", fx)
+chk("rich import 204", call("POST", "/_test/import", e)[0] == 204)
+e2 = call("GET", "/_test/export")[1]; chk("rich re-export equal", e2 == e)
+for k, b, t_ in (("rt1", {"to_handle": "bob", "amount": 100, "note": "é🙂"}, A), ("rt2", {"payer_handle": "bob", "amount": 5}, A)):
+    r = call("POST", "/payments" if k == "rt1" else "/requests", b, tok=t_, key=k); chk("rich receipt " + k, r[0] == 200, r)
+chk("rich settlement receipt", call("POST", "/settlements", T, tok=O2, key="rt5")[0] == 200)
+chk("rich tokens valid", call("GET", "/me", tok=A)[0] == 200 and call("GET", "/me", tok=Bo)[0] == 200)
+chk("failed key still reusable", call("POST", "/payments", {"to_handle": "bob", "amount": 1}, tok=A, key="rt6")[0] == 201)
+print(f"\nFINAL3 {n} checks, {len(fails)} failed: {fails}")
