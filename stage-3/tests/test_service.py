@@ -1502,6 +1502,30 @@ class Ledger(unittest.TestCase):
         self.assertEqual(call("POST", "/payments/ab/corrections", {"expected_revision": 1, "amount": 0, "effective_at": "2020-01-02T00:00:00+00:00", "reason": "r"},
                               token=login_user("a@x.io"), key="k")[1]["error"]["code"], "insufficient_funds" if False else "historical_overdraft")
 
+    def test_import_rejects_a_backdating_that_overdraws_available(self):
+        fx = {"currency": "EUR", "minor_units": 2, "users": [
+            {"id": "u_a", "email": "a@x.io", "password": "correct horse", "display_name": "A", "handle": "ha", "balance": 30},
+            {"id": "u_b", "email": "b@x.io", "password": "correct horse", "display_name": "B", "handle": "hb", "balance": 70},
+            {"id": "u_c", "email": "c@x.io", "password": "correct horse", "display_name": "C", "handle": "hc", "balance": 0}],
+              "payments": [{"id": "ab", "from_user_id": "u_a", "to_user_id": "u_b", "amount": 70, "created_at": "2020-01-04T00:00:00+00:00"}],
+              "authorizations": [{"id": "h1", "from_user_id": "u_a", "to_user_id": "u_c", "amount": 80, "status": "open",
+                                  "created_at": "2020-01-02T00:00:00+00:00", "expires_at": "2020-01-03T00:00:00+00:00"}]}
+        self.assertEqual(call("POST", "/_test/reset", fx)[0], 204)
+        a = login_user("a@x.io")
+        s, v, _ = call("GET", "/me?as_of=2020-01-02T00:00:00%2B00:00", token=a)
+        self.assertEqual((v["total"], v["held"], v["available"]), (100, 80, 20))
+        # backdating the payment to the hold's creation would leave total 30 with 80 held
+        s, snap, _ = call("GET", "/_test/export")
+        snap["state"]["idempotency"] = []
+        ab = [x for x in snap["state"]["payments"] if x["id"] == "ab"][0]
+        rev = dict(ab["revisions"][0])
+        rev.update({"revision": 2, "effective_at": "2020-01-02T00:00:00+00:00", "effective_ts": 1577923200.0,
+                    "recorded_at": "2020-01-05T00:00:00+00:00", "recorded_ts": 1578182400.0, "reason": "backdate"})
+        ab["revisions"].append(rev)
+        self.assertEqual(call("POST", "/_test/import", snap)[0], 422)
+        self.assertEqual(call("POST", "/payments/ab/corrections", {"expected_revision": 1, "amount": 70, "effective_at": "2020-01-02T00:00:00+00:00", "reason": "r"},
+                              token=a, key="k")[1]["error"]["code"], "historical_overdraft")
+
     def test_import_from_earlier_stage_exports(self):
         s, snap, _ = call("GET", "/_test/export")
         st = snap["state"]
