@@ -198,7 +198,8 @@ def parse_page(query):
         v = query[name]
         if not DIGITS_RE.fullmatch(v):
             raise validation(name + " must be plain decimal digits")
-        n = int(v)
+        v = v.lstrip("0") or "0"
+        n = int(v) if len(v) <= 18 else 10 ** 18  # avoids Python's int() digit limit; still out of range
         if n < lo or (hi is not None and n > hi):
             raise validation(name + " out of range")
         return n

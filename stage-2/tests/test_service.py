@@ -148,6 +148,11 @@ class Basics(Base):
             for q in ("limit=4.0", "limit=%2B4", "offset=1e1", "limit=", "limit=0", "limit=201", "offset=-1", "limit=1e9"):
                 self.assertEqual(call("GET", p + "?" + q, token=self.ada)[0], 422, (p, q))
             self.assertEqual(call("GET", p + "?limit=200&offset=0&foo=bar", token=self.ada)[0], 200)
+        for p in ("/activity", "/requests"):
+            self.assertEqual(call("GET", p + "?limit=" + "9" * 5000, token=self.ada)[0], 422)
+            s, b, _ = call("GET", p + "?offset=" + "9" * 5000, token=self.ada)
+            self.assertEqual((s, b["has_more"]), (200, False))
+            self.assertEqual(call("GET", p + "?limit=" + "0" * 5000 + "5", token=self.ada)[0], 200)
         self.assertEqual(call("GET", "/requests?status=x", token=self.ada)[0], 422)
         self.assertEqual(call("GET", "/requests?direction=x", token=self.ada)[0], 422)
 
