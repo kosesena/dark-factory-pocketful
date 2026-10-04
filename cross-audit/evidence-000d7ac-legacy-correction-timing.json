@@ -1,0 +1,41 @@
+{
+  "probes": 6,
+  "passed": 6,
+  "failed": [],
+  "results": [
+    {
+      "probe": "source-shape",
+      "passed": true,
+      "detail": null
+    },
+    {
+      "probe": "diagnostic-correction20-genuine",
+      "passed": true,
+      "detail": null
+    },
+    {
+      "probe": "diagnostic-correction20-genuine-time",
+      "passed": true,
+      "detail": {
+        "seconds": 1.212227668002015
+      }
+    },
+    {
+      "probe": "diagnostic-correction20-reordered",
+      "passed": true,
+      "detail": null
+    },
+    {
+      "probe": "diagnostic-correction20-reordered-time",
+      "passed": true,
+      "detail": {
+        "seconds": 0.6221421669979463
+      }
+    },
+    {
+      "probe": "diagnostic-correction20-reordered-atomic",
+      "passed": true,
+      "detail": null
+    }
+  ]
+}

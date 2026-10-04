@@ -1,0 +1,29 @@
+{
+  "probes": 4,
+  "passed": 4,
+  "failed": [],
+  "results": [
+    {
+      "probe": "reset",
+      "passed": true,
+      "detail": null
+    },
+    {
+      "probe": "same-amount-5000-import",
+      "passed": true,
+      "detail": null
+    },
+    {
+      "probe": "same-amount-5000-time",
+      "passed": true,
+      "detail": {
+        "seconds": 0.7895913749962347
+      }
+    },
+    {
+      "probe": "same-amount-5000-frozen",
+      "passed": true,
+      "detail": null
+    }
+  ]
+}

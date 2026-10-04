@@ -1,0 +1,107 @@
+{
+  "probes": 20,
+  "passed": 20,
+  "failed": [],
+  "results": [
+    {
+      "probe": "reset",
+      "passed": true,
+      "detail": null
+    },
+    {
+      "probe": "metadata-free-source-none",
+      "passed": true,
+      "detail": null
+    },
+    {
+      "probe": "source-unchanged-import-none",
+      "passed": true,
+      "detail": null
+    },
+    {
+      "probe": "source-original-page-none",
+      "passed": true,
+      "detail": null
+    },
+    {
+      "probe": "destination-unchanged-import-none",
+      "passed": true,
+      "detail": null
+    },
+    {
+      "probe": "destination-original-page-none",
+      "passed": true,
+      "detail": null
+    },
+    {
+      "probe": "reset",
+      "passed": true,
+      "detail": null
+    },
+    {
+      "probe": "source-write-correction",
+      "passed": true,
+      "detail": null
+    },
+    {
+      "probe": "metadata-free-source-correction",
+      "passed": true,
+      "detail": null
+    },
+    {
+      "probe": "source-unchanged-import-correction",
+      "passed": true,
+      "detail": null
+    },
+    {
+      "probe": "source-original-page-correction",
+      "passed": true,
+      "detail": null
+    },
+    {
+      "probe": "destination-unchanged-import-correction",
+      "passed": true,
+      "detail": null
+    },
+    {
+      "probe": "destination-original-page-correction",
+      "passed": true,
+      "detail": null
+    },
+    {
+      "probe": "reset",
+      "passed": true,
+      "detail": null
+    },
+    {
+      "probe": "source-write-payment",
+      "passed": true,
+      "detail": null
+    },
+    {
+      "probe": "metadata-free-source-payment",
+      "passed": true,
+      "detail": null
+    },
+    {
+      "probe": "source-unchanged-import-payment",
+      "passed": true,
+      "detail": null
+    },
+    {
+      "probe": "source-original-page-payment",
+      "passed": true,
+      "detail": null
+    },
+    {
+      "probe": "destination-unchanged-import-payment",
+      "passed": true,
+      "detail": null
+    },
+    {
+      "probe": "destination-original-page-payment",
+      "passed": true,
+      "detail": null
+    }
+  ]
+}
