@@ -288,6 +288,16 @@ def extra_checks():
             api("/_test/reset", users(("JPY", 0)))
             ui_login(page, "ada")
             expect(page.get_by_test_id("wallet-balance")).to_have_text("5000000 JPY")
+            for route in ("/", "/split", "/authorizations"):
+                page.goto(base + route)
+                labels = page.evaluate("Array.from(document.querySelectorAll('label')).map(l => l.textContent)")
+                assert labels and not any("EUR" in x for x in labels), (route, labels)
+                assert any("JPY" in x for x in labels), (route, labels)
+                for tid in ("pay-amount", "request-amount", "authorize-amount", "split-amount"):
+                    el = page.get_by_test_id(tid)
+                    if el.count():
+                        assert el.get_attribute("placeholder") == "0", (route, tid, el.get_attribute("placeholder"))
+            page.goto(base + "/")
             bodies = []
             page.on("request", lambda r: bodies.append(r.post_data) if r.method == "POST" else None)
             page.get_by_test_id("pay-handle").fill("bob"); page.get_by_test_id("pay-amount").fill("15.5")

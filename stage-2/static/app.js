@@ -51,6 +51,7 @@
     if (n < 1) return { error: 'Enter an amount greater than zero.' };
     return { minor: n };
   }
+  function zeroAmount() { return CFG.mu ? '0.' + '0'.repeat(CFG.mu) : '0'; }
   function fmtTime(iso) {
     const d = new Date(iso);
     return isNaN(d) ? iso : d.toLocaleString(undefined, { dateStyle: 'medium', timeStyle: 'short' });
@@ -204,7 +205,7 @@
              keepValues, reuseOnSuccess, errTest, uncertainTest, successTest, onDone} */
     const p = cfg.testPrefix;
     const handle = h('input', { t: p + '-handle', autocomplete: 'off', autocapitalize: 'none', spellcheck: 'false', placeholder: 'e.g. bob' });
-    const amount = h('input', { t: p + '-amount', inputmode: 'decimal', autocomplete: 'off', class: 'num', placeholder: '0.00' });
+    const amount = h('input', { t: p + '-amount', inputmode: 'decimal', autocomplete: 'off', class: 'num', placeholder: zeroAmount() });
     const note = h('input', { t: p + '-note', maxlength: '200', placeholder: 'What is it for? (optional)' });
     const vis = cfg.withVisibility ? visSelect(p + '-visibility') : null;
     const msg = slot();
@@ -383,7 +384,7 @@
 
   function pageSplit() {
     const bal = balanceCard({ compact: true });
-    const amount = h('input', { t: 'split-amount', inputmode: 'decimal', autocomplete: 'off', class: 'num', placeholder: '0.00' });
+    const amount = h('input', { t: 'split-amount', inputmode: 'decimal', autocomplete: 'off', class: 'num', placeholder: zeroAmount() });
     const handles = h('input', { t: 'split-handles', autocomplete: 'off', autocapitalize: 'none', spellcheck: 'false', placeholder: 'ada, bob, cy' });
     const note = h('input', { t: 'split-note', maxlength: '200', placeholder: 'What was it for? (optional)' });
     const preview = h('div', { class: 'preview', t: 'split-preview', 'aria-live': 'polite' });
@@ -549,10 +550,15 @@
 
   /* ---------- boot ---------- */
   if (!PUBLIC && !S.token) { location.replace('/login'); return; }
-  if (path === '/login') pageAuth('login');
-  else if (path === '/signup') pageAuth('signup');
-  else if (path === '/requests') pageRequests();
-  else if (path === '/split') pageSplit();
-  else if (path === '/authorizations') pageAuthorizations();
-  else pageHome();
+  const start = () => {
+    if (path === '/login') pageAuth('login');
+    else if (path === '/signup') pageAuth('signup');
+    else if (path === '/requests') pageRequests();
+    else if (path === '/split') pageSplit();
+    else if (path === '/authorizations') pageAuthorizations();
+    else pageHome();
+  };
+  /* learn the service currency before building forms so labels never show a wrong default */
+  if (S.token) api('GET', '/me').then(r => { if (r.ok) { CFG.currency = r.data.currency; CFG.mu = r.data.minor_units; } }).then(start, start);
+  else start();
 })();

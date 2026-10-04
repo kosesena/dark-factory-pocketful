@@ -200,6 +200,13 @@ class Strictness(Base):
         self.assertEqual(call("POST", "/payments", raw=b % "1.0", token=self.ada, key="K2")[0], 201)
         self.assertEqual(call("POST", "/payments", raw=b % "1", token=self.ada, key="K2")[0], 200)
 
+    def test_trailing_zeros_are_the_same_value(self):
+        b = '{"to_handle":"bob","amount":1,"x":%s}'
+        self.assertEqual(call("POST", "/payments", raw=b % "1.5", token=self.ada, key="TZ")[0], 201)
+        self.assertEqual(call("POST", "/payments", raw=b % "1.50", token=self.ada, key="TZ")[0], 200)
+        self.assertEqual(call("POST", "/payments", raw=b % "15e-1", token=self.ada, key="TZ")[0], 200)
+        self.assertEqual(call("POST", "/payments", raw=b % "1.51", token=self.ada, key="TZ")[0], 409)
+
     def test_huge_integers(self):
         big = "9" * 5000
         for path, body in (("/payments", '{"to_handle":"bob","amount":%s}'), ("/requests", '{"payer_handle":"bob","amount":%s}'),
@@ -700,6 +707,20 @@ class Authorizations(Base):
         self.assertEqual(call("POST", "/authorizations/%s/void" % a["authorization_id"], token=ada)[0], 409)
         for ttl in (0, -1, "5", True, 1.5):
             self.assertEqual(call("POST", "/_test/reset", fixture(authorization_ttl_seconds=ttl))[0], 422)
+
+    def test_deadline_is_the_shown_expires_at(self):
+        import time
+        from datetime import datetime
+        call("POST", "/_test/reset", fixture(authorization_ttl_seconds=2))
+        ada, bob = login("ada"), login("bob")
+        for n in range(3):
+            a = self.auth(ada, {"to_handle": "bob", "amount": 100}, "dl%d" % n)[1]
+            wait = datetime.fromisoformat(a["expires_at"]).timestamp() + 0.02 - time.time()
+            self.assertGreater(wait, 0)
+            time.sleep(wait)
+            self.assertEqual(call("GET", "/authorizations?status=open", token=ada)[1]["authorizations"], [])
+            self.assertEqual(self.me(ada)["held"], 0)
+            self.assertEqual(self.cap(bob, a["authorization_id"], {}, "dc%d" % n)[1]["error"]["code"], "authorization_expired")
 
     def test_seeded_holds(self):
         past = "2000-01-01T00:00:00+00:00"

@@ -34,7 +34,7 @@ def create_authorization(req):
         if available_of(s, user) < amount:
             raise ApiError(409, "insufficient_funds", "insufficient available funds")
         ts, created = now_ts()
-        ets = ts + s.auth_ttl  # real deadline; the displayed one is created_at + ttl to the second
+        ets = int(ts) + s.auth_ttl  # the deadline is exactly the displayed expires_at
         a = {"id": new_id("a_"), "from_user_id": user["id"], "to_user_id": to["id"],
              "amount": amount, "captured_amount": 0, "note": note, "visibility": vis,
              "status": "open", "expires_at": fmt_ts(int(ts) + s.auth_ttl), "expires_ts": ets, "payment_ids": [],
