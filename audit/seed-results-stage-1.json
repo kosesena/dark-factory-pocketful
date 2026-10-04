@@ -7,10 +7,7 @@
   "new": "LOCK = threading.RLock()",
   "caught_by": [],
   "auditor_fails": [],
-  "customer_fails": [
-   "key scoped per user",
-   "op sees no others' requests"
-  ]
+  "customer_fails": []
  },
  {
   "id": "F01",
@@ -20,14 +17,19 @@
   "new": "ik = (user[\"id\"], key, req.path.split(\"/\")[1])",
   "caught_by": [
    "impl",
+   "shipped",
+   "customer",
+   "reviewer",
    "auditor"
   ],
   "auditor_fails": [
-   "R55 same key+body on another request's pay path is a fi"
+   "R97-R109 export/import preserves tokens, replays, faile",
+   "R55 same key+body on another request's pay path is a fi",
+   "R105 strict import: corrupted export pieces rejected, d"
   ],
   "customer_fails": [
-   "key scoped per user",
-   "op sees no others' requests"
+   "import 204",
+   "import again 204"
   ]
  },
  {
@@ -50,17 +52,27 @@
    "R97-R109 export/import preserves tokens, replays, faile",
    "R59 key order and whitespace do not matter -- Assertion",
    "R86/R88/R91/R95 splits: caller omitted, payable, replay",
-   "R61 replay returns the original after the resource chan"
+   "R61 replay returns the original after the resource chan",
+   "R59 number identity: numeric value, never equal to a st"
   ],
   "customer_fails": [
+   "1.50e2 == 150 replay",
+   "15e1 == 150 replay",
+   "1E1 == 10 replay",
    "concurrent same key: one 201, rest 200",
-   "key scoped per user",
-   "op sees no others' requests",
+   "pay receipt after import",
    "pay replay 200 same",
+   "receipt valid after import ie1",
+   "reorder + 5.0 replay",
+   "reordered same -> 200",
    "replay after cancel returns original",
    "req replay",
    "retry after import 200 same",
+   "rich receipt rt1",
+   "rich receipt rt2",
+   "rich settlement receipt",
    "settle replay",
+   "settlement receipt after import",
    "settlement replay after import",
    "split replay"
   ]
@@ -69,18 +81,19 @@
   "id": "F03",
   "requirement": "R59 body equality ignores key order",
   "file": "common.py",
-  "old": "json.dumps(_norm(body), sort_keys=True,",
-  "new": "json.dumps(_norm(body), sort_keys=False,",
+  "old": "for k, x in sorted(v.items())) + \"}\"",
+  "new": "for k, x in v.items()) + \"}\"",
   "caught_by": [
    "impl",
+   "customer",
    "auditor"
   ],
   "auditor_fails": [
    "R59 key order and whitespace do not matter -- Assertion"
   ],
   "customer_fails": [
-   "key scoped per user",
-   "op sees no others' requests"
+   "reorder + 5.0 replay",
+   "reordered same -> 200"
   ]
  },
  {
@@ -100,9 +113,9 @@
    "R74/R75/R78/R79/R80 request state machine -- AssertionE"
   ],
   "customer_fails": [
-   "key scoped per user",
+   "import 204",
+   "import again 204",
    "no double move",
-   "op sees no others' requests",
    "pay again new key 409 not_pending",
    "request pays once"
   ]
@@ -122,9 +135,7 @@
    "R118 net affordability independent of entry order -- As"
   ],
   "customer_fails": [
-   "chain affordable by net",
-   "key scoped per user",
-   "op sees no others' requests"
+   "chain affordable by net"
   ]
  },
  {
@@ -143,8 +154,8 @@
    "R118 net affordability independent of entry order -- As"
   ],
   "customer_fails": [
-   "key scoped per user",
-   "op sees no others' requests",
+   "import 204",
+   "import again 204",
    "settle 201",
    "settle private hidden from third"
   ]
@@ -165,9 +176,7 @@
    "R34 seeded payment shape -- KeyError('settlement_id')"
   ],
   "customer_fails": [
-   "key scoped per user",
-   "op sees no others' requests",
-   "plain payment settlement_id null {'payment_id': 'p_528e61c1a621452e', 'from_user_id': 'u_ada', 'from_handle': 'ada', 'to_user_id': 'u_bob', 'to_handle': 'bob', 'amount': 1500, 'currency': 'EUR', 'note': 'dinner \u2713 \ud83c\udf55  ', 'visibility': 'public', 'request_id': None, 'created_at': '2026-10-04T08:21:18+00:00'}"
+   "plain payment settlement_id null {'payment_id': 'p_b6e6bad4cd394c3e', 'from_user_id': 'u_ada', 'from_handle': 'ada', 'to_user_id': 'u_bob', 'to_handle': 'bob', 'amount': 1500, 'currency': 'EUR', 'note': 'dinner \u2713 \ud83c\udf55  ', 'visibility': 'public', 'request_id': None, 'created_at': '2026-10-04T09:10:31+00:00'}"
   ]
  },
  {
@@ -185,8 +194,6 @@
    "R114-R117/R120 settlement validation and precedence -- "
   ],
   "customer_fails": [
-   "key scoped per user",
-   "op sees no others' requests",
    "settle order",
    "settle self"
   ]
@@ -207,8 +214,6 @@
    "R112/R113 settlement auth: 401, 403, missing key 400 --"
   ],
   "customer_fails": [
-   "key scoped per user",
-   "op sees no others' requests",
    "settle non-op 403"
   ]
  },
@@ -228,10 +233,21 @@
    "R97-R109 export/import preserves tokens, replays, faile"
   ],
   "customer_fails": [
-   "key scoped per user",
-   "op sees no others' requests",
+   "export stable after import",
+   "pay receipt after import",
+   "receipt valid after import ie1",
    "retry after import 200 same",
-   "settlement replay after import"
+   "rich re-export equal",
+   "rich receipt rt1",
+   "rich receipt rt2",
+   "rich settlement receipt",
+   "settlement receipt after import",
+   "settlement replay after import",
+   "state unchanged after amount->string",
+   "state unchanged after balance->-1",
+   "state unchanged after state list",
+   "state unchanged after status->bogus",
+   "state unchanged after visibility->bogus"
   ]
  },
  {
@@ -249,10 +265,7 @@
   "auditor_fails": [
    "R97-R109 export/import preserves tokens, replays, faile"
   ],
-  "customer_fails": [
-   "key scoped per user",
-   "op sees no others' requests"
-  ]
+  "customer_fails": []
  },
  {
   "id": "F12",
@@ -267,17 +280,14 @@
   "auditor_fails": [
    "R42/R83 query integer forms and default limit 50 -- Ass"
   ],
-  "customer_fails": [
-   "key scoped per user",
-   "op sees no others' requests"
-  ]
+  "customer_fails": []
  },
  {
   "id": "F13",
   "requirement": "R17 booleans are not amounts",
   "file": "common.py",
-  "old": "if isinstance(v, bool) or not isinstance(v, (int, float)):",
-  "new": "if not isinstance(v, (int, float)):",
+  "old": "if isinstance(v, bool) or not isinstance(v, (int, Decimal)):",
+  "new": "if not isinstance(v, (int, Decimal)):",
   "caught_by": [
    "impl",
    "customer",
@@ -289,9 +299,7 @@
    "R16/R17 1000.0 and 1e3 valid; booleans 422 on every amo"
   ],
   "customer_fails": [
-   "amount bool",
-   "key scoped per user",
-   "op sees no others' requests"
+   "amount bool"
   ]
  },
  {
@@ -311,9 +319,7 @@
   ],
   "customer_fails": [
    "cancel declined 409",
-   "decline cancelled 409",
-   "key scoped per user",
-   "op sees no others' requests"
+   "decline cancelled 409"
   ]
  },
  {
@@ -323,14 +329,312 @@
   "old": "if len(parts) != 2 or parts[0].lower() != \"bearer\":",
   "new": "if len(parts) != 2:",
   "caught_by": [
+   "impl",
    "auditor"
   ],
   "auditor_fails": [
    "R40/R51 401 on every authenticated endpoint -- Assertio"
   ],
+  "customer_fails": []
+ },
+ {
+  "id": "F16",
+  "requirement": "R16/R73 fractional amounts are 422, never rounded",
+  "file": "common.py",
+  "old": "        if v is None:\n            raise validation(field + \" must be an integer\")",
+  "new": "        if v is None:\n            v = 1",
+  "caught_by": [
+   "impl",
+   "shipped",
+   "customer",
+   "reviewer",
+   "auditor"
+  ],
+  "auditor_fails": [
+   "R16/R44 exact and huge numbers never 5xx, never rounded"
+  ],
   "customer_fails": [
-   "key scoped per user",
-   "op sees no others' requests"
+   "1.000..1 422",
+   "1e-999999999 no 5xx 422",
+   "amount frac",
+   "fractional/huge amount 422",
+   "request tiny exp 422"
   ]
+ },
+ {
+  "id": "F17",
+  "requirement": "R16 exact parse: 1.0000000000000001 is not an integer",
+  "file": "common.py",
+  "old": "parse_float=_parse_float if decimal else float,",
+  "new": "parse_float=(lambda s: _parse_float(repr(float(s)))) if decimal else float,",
+  "caught_by": [
+   "impl",
+   "customer",
+   "auditor"
+  ],
+  "auditor_fails": [
+   "R16/R44 exact and huge numbers never 5xx, never rounded"
+  ],
+  "customer_fails": [
+   "1.000..1 422",
+   "fractional/huge amount 422"
+  ]
+ },
+ {
+  "id": "F18",
+  "requirement": "R44/R73 huge integer amounts are 422, not 400/5xx",
+  "file": "common.py",
+  "old": "return int(text) if len(text) <= 18 else Decimal(text)",
+  "new": "return int(text)",
+  "caught_by": [
+   "impl",
+   "customer",
+   "auditor"
+  ],
+  "auditor_fails": [
+   "R16/R44 exact and huge numbers never 5xx, never rounded"
+  ],
+  "customer_fails": [
+   "5000-digit int 422"
+  ]
+ },
+ {
+  "id": "F19",
+  "requirement": "R42 huge offset is valid (empty page), huge limit 422",
+  "file": "common.py",
+  "old": "n = int(v) if len(v) <= 18 else 10 ** 18",
+  "new": "n = int(v) if len(v) <= 18 else 0",
+  "caught_by": [
+   "impl",
+   "customer"
+  ],
+  "auditor_fails": [],
+  "customer_fails": [
+   "huge offset empty 200"
+  ]
+ },
+ {
+  "id": "F20",
+  "requirement": "R105 import rejects an invalid timestamp",
+  "file": "snapshot.py",
+  "old": "    _need(_str(v) and RFC3339.fullmatch(v))\n    parse_ts(v)",
+  "new": "    return",
+  "caught_by": [],
+  "auditor_fails": [],
+  "customer_fails": []
+ },
+ {
+  "id": "F21",
+  "requirement": "R105 import rejects dangling payment->request references",
+  "file": "snapshot.py",
+  "old": "_need(p[\"request_id\"] is None or p[\"request_id\"] in s.requests_by_id)",
+  "new": "pass",
+  "caught_by": [],
+  "auditor_fails": [],
+  "customer_fails": []
+ },
+ {
+  "id": "F22",
+  "requirement": "R105 import rejects a negative/fractional balance",
+  "file": "snapshot.py",
+  "old": "_need(_id(rec[\"id\"]) and 0 <= rec[\"balance\"] <= 2 ** 53 and _int(rec[\"balance\"]))",
+  "new": "_need(_id(rec[\"id\"]))",
+  "caught_by": [],
+  "auditor_fails": [],
+  "customer_fails": []
+ },
+ {
+  "id": "F23",
+  "requirement": "R31 seeded users log in (per-record KDF cost honoured)",
+  "file": "common.py",
+  "old": "user.get(\"n\", 2 ** 12))",
+  "new": "2 ** 12)",
+  "caught_by": [
+   "impl",
+   "shipped",
+   "customer",
+   "reviewer",
+   "auditor"
+  ],
+  "auditor_fails": [
+   "R60 concurrent same key /payments -- AssertionError(('l",
+   "R60 concurrent same key /requests/{id}/pay, /splits, /s",
+   "R2 drain in parts under 50 in flight -- AssertionError(",
+   "R1/R2 ring of three wallets conserves total -- Assertio",
+   "R3 same request paid concurrently with different keys -",
+   "R3 pay races cancel -- AssertionError(('login', 'ada', ",
+   "R62 used key + invalid body -> 409 reuse (payments, pay",
+   "R63 malformed body / no token on a claimed key -- Asser",
+   "R118 net affordability independent of entry order -- As",
+   "R119 unaffordable settlement is all-or-nothing -- Asser",
+   "R122/R123/R65 settlement_id, request_id, created_at == ",
+   "R112/R113 settlement auth: 401, 403, missing key 400 --",
+   "R114-R117/R120 settlement validation and precedence -- ",
+   "R125 settlement replay 200 identical; R124 operator see",
+   "R40/R51 401 on every authenticated endpoint -- Assertio",
+   "R97-R109 export/import preserves tokens, replays, faile",
+   "R55 same key+body on another request's pay path is a fi",
+   "R59 key order and whitespace do not matter -- Assertion",
+   "R16/R17 1000.0 and 1e3 valid; booleans 422 on every amo",
+   "R37 wrong-type non-amount fields -> 400; non-object bod",
+   "R47-R50/R52 signup and login table -- AssertionError(('",
+   "R8 reset clears tokens, signups and keys -- AssertionEr",
+   "R42/R83 query integer forms and default limit 50 -- Ass",
+   "R86/R88/R91/R95 splits: caller omitted, payable, replay",
+   "R74/R75/R78/R79/R80 request state machine -- AssertionE",
+   "R61 replay returns the original after the resource chan",
+   "R82 combined filters -- AssertionError(('login', 'ada',",
+   "R10/R11/R14 content type, timestamps, id length -- Asse",
+   "R39/R41 key bounds: empty 400, 255 ok, 256 422 -- Asser",
+   "R26/R67 private request-payment hidden from third party",
+   "R30 large balances exact -- AssertionError(('login', 'a",
+   "R19/R21 non-ASCII handle derivation; new user can be as",
+   "R12/R43 unknown fields ignored, missing required fields",
+   "R34 seeded payment shape -- AssertionError(('login', 'c",
+   "R16/R44 exact and huge numbers never 5xx, never rounded",
+   "R42 huge digit strings in limit/offset -- AssertionErro",
+   "R59 number identity: numeric value, never equal to a st",
+   "R105 strict import: corrupted export pieces rejected, d"
+  ],
+  "customer_fails": [
+   "state kept after bad reset"
+  ]
+ },
+ {
+  "id": "F24",
+  "requirement": "R59/A2 1000 and 1000.0 are the same body",
+  "file": "common.py",
+  "old": "    if isinstance(v, int):\n        return _num(Decimal(v))",
+  "new": "    if isinstance(v, int):\n        return str(v)",
+  "caught_by": [
+   "impl",
+   "customer",
+   "auditor"
+  ],
+  "auditor_fails": [
+   "R59 number identity: numeric value, never equal to a st"
+  ],
+  "customer_fails": [
+   "15e1 == 150 replay",
+   "1E1 == 10 replay",
+   "reorder + 5.0 replay"
+  ]
+ },
+ {
+  "id": "F25",
+  "requirement": "R16/R73 1.5 is not an integer amount (as_tuple integrality)",
+  "file": "common.py",
+  "old": "if len(digits) <= k or any(digits[-k:]):",
+  "new": "if len(digits) <= k:",
+  "caught_by": [
+   "impl",
+   "shipped",
+   "customer",
+   "reviewer",
+   "auditor"
+  ],
+  "auditor_fails": [
+   "R16/R44 exact and huge numbers never 5xx, never rounded"
+  ],
+  "customer_fails": [
+   "1.000..1 422",
+   "amount frac",
+   "fractional/huge amount 422"
+  ]
+ },
+ {
+  "id": "F26",
+  "requirement": "R59 1.5 and 1.50 are the same JSON value",
+  "file": "common.py",
+  "old": "    while digits[-1] == 0:\n        digits.pop()\n        exp += 1",
+  "new": "    pass",
+  "caught_by": [
+   "impl",
+   "customer",
+   "auditor"
+  ],
+  "auditor_fails": [
+   "R59 number identity: numeric value, never equal to a st"
+  ],
+  "customer_fails": [
+   "1.50e2 == 150 replay",
+   "15e1 == 150 replay",
+   "1E1 == 10 replay",
+   "reorder + 5.0 replay"
+  ]
+ },
+ {
+  "id": "F27",
+  "requirement": "R59 a string never equals a literal (\"true\" vs true, \"null\" vs null)",
+  "file": "common.py",
+  "old": "    if isinstance(v, str):\n        return json.dumps(v)",
+  "new": "    if isinstance(v, str):\n        return v",
+  "caught_by": [
+   "impl",
+   "customer",
+   "auditor"
+  ],
+  "auditor_fails": [
+   "R59 number identity: numeric value, never equal to a st"
+  ],
+  "customer_fails": [
+   "true vs 'true' differ -> 409"
+  ]
+ },
+ {
+  "id": "F28",
+  "requirement": "R105/\u00a710 reset rejects dangling references (export must re-import)",
+  "file": "accounts.py",
+  "old": "raise validation(\"request refers to an unknown payment\")",
+  "new": "pass",
+  "caught_by": [],
+  "auditor_fails": [],
+  "customer_fails": []
+ },
+ {
+  "id": "F29",
+  "requirement": "R30/\u00a710 reset rejects balance above 2^53 (export must re-import)",
+  "file": "accounts.py",
+  "old": "bal = _int(u.get(\"balance\", 0), 0, 2 ** 53)",
+  "new": "bal = _int(u.get(\"balance\", 0), 0)",
+  "caught_by": [],
+  "auditor_fails": [],
+  "customer_fails": []
+ },
+ {
+  "id": "F30",
+  "requirement": "R105 import rejects a receipt that disagrees with its record",
+  "file": "snapshot.py",
+  "old": "and resp[\"amount\"] == r[\"amount\"] and resp[\"currency\"] == s.currency",
+  "new": "and resp[\"currency\"] == s.currency",
+  "caught_by": [
+   "impl"
+  ],
+  "auditor_fails": [],
+  "customer_fails": []
+ },
+ {
+  "id": "F31",
+  "requirement": "\u00a710 reset rejects states import would reject (invariants on reset)",
+  "file": "accounts.py",
+  "old": "    try:\n        check_state_invariants(s)\n    except",
+  "new": "    try:\n        pass\n    except",
+  "caught_by": [
+   "impl"
+  ],
+  "auditor_fails": [],
+  "customer_fails": []
+ },
+ {
+  "id": "F32",
+  "requirement": "R31/R34 a seeded paid request linked by payment_id is a valid fixture",
+  "file": "accounts.py",
+  "old": "        if p is not None and p[\"request_id\"] is None:\n            p[\"request_id\"] = r[\"id\"]",
+  "new": "        if False:\n            p[\"request_id\"] = r[\"id\"]",
+  "caught_by": [
+   "impl"
+  ],
+  "auditor_fails": [],
+  "customer_fails": []
  }
 ]

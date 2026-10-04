@@ -1,0 +1,180 @@
+[
+ {
+  "id": "H00",
+  "requirement": "baseline: unmodified copy (must be caught by nothing)",
+  "file": "ledger.py",
+  "old": "def whole(ts):",
+  "new": "def whole(ts):",
+  "fails": {
+   "impl": [],
+   "reviewer:probes_s3.py": [],
+   "reviewer:model": [],
+   "customer:journey_stage3_api.py": [],
+   "customer:journey_stage3_extra.py": [
+    "exit"
+   ],
+   "customer:journey_stage3_fix.py": [
+    "reset receiver spends before receiving"
+   ],
+   "customer:journey_stage3_future.py": [],
+   "customer:journey_stage3_fuzz.py": [],
+   "customer:journey_stage3_snap.py": [],
+   "cross:probe_stage3.py": [
+    "{\"probe\": \"bad-instant-as_of-2020-01-01T24:00:00Z\", \"passed\": false, \"detail\": {",
+    "{\"probe\": \"bad-instant-from-2020-01-01T24:00:00Z\", \"passed\": false, \"detail\": {\"",
+    "{\"probe\": \"bad-instant-known_at-2020-01-01T24:00:00Z\", \"passed\": false, \"detail\"",
+    "{\"probe\": \"bad-instant-to-2020-01-01T24:00:00Z\", \"passed\": false, \"detail\": {\"st"
+   ],
+   "cross:probe_stage3_extra.py": [
+    "{\"probe\": \"older_exports-uncaught\", \"passed\": false, \"detail\": \"'token'\"}",
+    "{\"probe\": \"reset\", \"passed\": false, \"detail\": {\"status\": 0, \"body\": {\"transport_"
+   ],
+   "cross:probe_stage3_freeze.py": [],
+   "cross:probe_stage3_snapshot_completeness.py": [
+    "{\"probe\": \"diagnostic-inconsistent-snapshot\", \"passed\": false, \"detail\": {\"mode\"",
+    "{\"probe\": \"snapshot-completeness-True-drop-last\", \"passed\": false, \"detail\": {\"s",
+    "{\"probe\": \"snapshot-completeness-True-empty\", \"passed\": false, \"detail\": {\"statu",
+    "{\"probe\": \"snapshot-completeness-True-shift-balances\", \"passed\": false, \"detail\"",
+    "{\"probe\": \"snapshot-completeness-atomic\", \"passed\": false, \"detail\": null}"
+   ],
+   "cross:probe_stage3_snapshots.py": [],
+   "auditor": [],
+   "shipped": []
+  },
+  "caught_by": [],
+  "new_fails": {}
+ },
+ {
+  "id": "H17",
+  "requirement": "S3-42 a frozen snapshot with a future known_at selects revisions known when it was taken",
+  "file": "snapshot.py",
+  "old": "k = min(known, sn[\"taken_ts\"]) if \"taken_ts\" in sn else known",
+  "new": "k = known",
+  "fails": {
+   "impl": [
+    "(failures=2)",
+    "exit"
+   ],
+   "reviewer:probes_s3.py": [],
+   "reviewer:model": [],
+   "customer:journey_stage3_api.py": [],
+   "customer:journey_stage3_extra.py": [
+    "exit"
+   ],
+   "customer:journey_stage3_fix.py": [
+    "reset receiver spends before receiving"
+   ],
+   "customer:journey_stage3_future.py": [],
+   "customer:journey_stage3_fuzz.py": [],
+   "customer:journey_stage3_snap.py": [],
+   "cross:probe_stage3.py": [
+    "{\"probe\": \"bad-instant-as_of-2020-01-01T24:00:00Z\", \"passed\": false, \"detail\": {",
+    "{\"probe\": \"bad-instant-from-2020-01-01T24:00:00Z\", \"passed\": false, \"detail\": {\"",
+    "{\"probe\": \"bad-instant-known_at-2020-01-01T24:00:00Z\", \"passed\": false, \"detail\"",
+    "{\"probe\": \"bad-instant-to-2020-01-01T24:00:00Z\", \"passed\": false, \"detail\": {\"st"
+   ],
+   "cross:probe_stage3_extra.py": [
+    "{\"probe\": \"older_exports-uncaught\", \"passed\": false, \"detail\": \"'token'\"}",
+    "{\"probe\": \"reset\", \"passed\": false, \"detail\": {\"status\": 0, \"body\": {\"transport_"
+   ],
+   "cross:probe_stage3_freeze.py": [
+    "{\"probe\": \"all-genuine-snapshots-import\", \"passed\": false, \"detail\": {\"status\": ",
+    "{\"probe\": \"individual-genuine-snapshot-import-{\\\"from\\\": \\\"2020-01-02T02:00:00+0",
+    "{\"probe\": \"individual-genuine-snapshot-import-{\\\"known_at\\\": \\\"2090-01-01T00:00:",
+    "{\"probe\": \"individual-genuine-snapshot-import-{\\\"to\\\": \\\"2090-01-01T00:00:00Z\\\","
+   ],
+   "cross:probe_stage3_snapshot_completeness.py": [
+    "{\"probe\": \"diagnostic-inconsistent-snapshot\", \"passed\": false, \"detail\": {\"mode\"",
+    "{\"probe\": \"snapshot-completeness-True-drop-last\", \"passed\": false, \"detail\": {\"s",
+    "{\"probe\": \"snapshot-completeness-True-empty\", \"passed\": false, \"detail\": {\"statu",
+    "{\"probe\": \"snapshot-completeness-True-shift-balances\", \"passed\": false, \"detail\"",
+    "{\"probe\": \"snapshot-completeness-atomic\", \"passed\": false, \"detail\": null}"
+   ],
+   "cross:probe_stage3_snapshots.py": [],
+   "auditor": [],
+   "shipped": []
+  },
+  "caught_by": [
+   "cross",
+   "impl"
+  ],
+  "new_fails": {
+   "impl": [
+    "(failures=2)",
+    "exit"
+   ],
+   "cross:probe_stage3_freeze.py": [
+    "{\"probe\": \"all-genuine-snapshots-import\", \"passed\": false, \"detail\": {\"status\": ",
+    "{\"probe\": \"individual-genuine-snapshot-import-{\\\"from\\\": \\\"2020-01-02T02:00:00+0",
+    "{\"probe\": \"individual-genuine-snapshot-import-{\\\"known_at\\\": \\\"2090-01-01T00:00:",
+    "{\"probe\": \"individual-genuine-snapshot-import-{\\\"to\\\": \\\"2090-01-01T00:00:00Z\\\","
+   ]
+  }
+ },
+ {
+  "id": "H18",
+  "requirement": "S3-42/44 an imported snapshot must have been taken in the ledger's past",
+  "file": "snapshot.py",
+  "old": "_need(sn[\"taken_seq\"] <= st[\"seq\"] and sn[\"taken_ts\"] <= time.time() + 86400)",
+  "new": "_need(True)",
+  "fails": {
+   "impl": [
+    "(failures=1)",
+    "exit"
+   ],
+   "reviewer:probes_s3.py": [],
+   "reviewer:model": [],
+   "customer:journey_stage3_api.py": [],
+   "customer:journey_stage3_extra.py": [],
+   "customer:journey_stage3_fix.py": [
+    "reset receiver spends before receiving"
+   ],
+   "customer:journey_stage3_future.py": [
+    "tampered taken_ts +10 days -> 422"
+   ],
+   "customer:journey_stage3_fuzz.py": [],
+   "customer:journey_stage3_snap.py": [
+    "corrupt snapshot",
+    "re-import twice 204"
+   ],
+   "cross:probe_stage3.py": [
+    "{\"probe\": \"bad-instant-as_of-2020-01-01T24:00:00Z\", \"passed\": false, \"detail\": {",
+    "{\"probe\": \"bad-instant-from-2020-01-01T24:00:00Z\", \"passed\": false, \"detail\": {\"",
+    "{\"probe\": \"bad-instant-known_at-2020-01-01T24:00:00Z\", \"passed\": false, \"detail\"",
+    "{\"probe\": \"bad-instant-to-2020-01-01T24:00:00Z\", \"passed\": false, \"detail\": {\"st"
+   ],
+   "cross:probe_stage3_extra.py": [
+    "{\"probe\": \"older_exports-uncaught\", \"passed\": false, \"detail\": \"'token'\"}",
+    "{\"probe\": \"reset\", \"passed\": false, \"detail\": {\"status\": 0, \"body\": {\"transport_"
+   ],
+   "cross:probe_stage3_freeze.py": [],
+   "cross:probe_stage3_snapshot_completeness.py": [
+    "{\"probe\": \"diagnostic-inconsistent-snapshot\", \"passed\": false, \"detail\": {\"mode\"",
+    "{\"probe\": \"snapshot-completeness-True-drop-last\", \"passed\": false, \"detail\": {\"s",
+    "{\"probe\": \"snapshot-completeness-True-empty\", \"passed\": false, \"detail\": {\"statu",
+    "{\"probe\": \"snapshot-completeness-True-shift-balances\", \"passed\": false, \"detail\"",
+    "{\"probe\": \"snapshot-completeness-atomic\", \"passed\": false, \"detail\": null}"
+   ],
+   "cross:probe_stage3_snapshots.py": [],
+   "auditor": [],
+   "shipped": []
+  },
+  "caught_by": [
+   "customer",
+   "impl"
+  ],
+  "new_fails": {
+   "impl": [
+    "(failures=1)",
+    "exit"
+   ],
+   "customer:journey_stage3_future.py": [
+    "tampered taken_ts +10 days -> 422"
+   ],
+   "customer:journey_stage3_snap.py": [
+    "corrupt snapshot",
+    "re-import twice 204"
+   ]
+  }
+ }
+]

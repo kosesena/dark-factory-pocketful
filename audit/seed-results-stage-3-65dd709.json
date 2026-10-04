@@ -1,0 +1,1651 @@
+[
+ {
+  "id": "H00",
+  "requirement": "baseline: unmodified copy (must be caught by nothing)",
+  "file": "ledger.py",
+  "old": "def whole(ts):",
+  "new": "def whole(ts):",
+  "fails": {
+   "impl": [],
+   "reviewer:probes_s3.py": [],
+   "reviewer:model": [],
+   "customer:journey_stage3_api.py": [],
+   "customer:journey_stage3_extra.py": [],
+   "customer:journey_stage3_fix.py": [
+    "reset receiver spends before receiving"
+   ],
+   "customer:journey_stage3_fuzz.py": [],
+   "customer:journey_stage3_snap.py": [
+    "corrupt snapshot",
+    "re-import twice 204"
+   ],
+   "cross:probe_stage3.py": [
+    "{\"probe\": \"bad-instant-as_of-2020-01-01T24:00:00Z\", \"passed\": false, \"detail\": {",
+    "{\"probe\": \"bad-instant-from-2020-01-01T24:00:00Z\", \"passed\": false, \"detail\": {\"",
+    "{\"probe\": \"bad-instant-known_at-2020-01-01T24:00:00Z\", \"passed\": false, \"detail\"",
+    "{\"probe\": \"bad-instant-to-2020-01-01T24:00:00Z\", \"passed\": false, \"detail\": {\"st"
+   ],
+   "cross:probe_stage3_extra.py": [
+    "{\"probe\": \"older_exports-uncaught\", \"passed\": false, \"detail\": \"'token'\"}",
+    "{\"probe\": \"reset\", \"passed\": false, \"detail\": {\"status\": 0, \"body\": {\"transport_"
+   ],
+   "cross:probe_stage3_freeze.py": [
+    "{\"probe\": \"all-genuine-snapshots-import\", \"passed\": false, \"detail\": {\"status\": ",
+    "{\"probe\": \"individual-genuine-snapshot-import-{\\\"from\\\": \\\"2020-01-02T02:00:00+0",
+    "{\"probe\": \"individual-genuine-snapshot-import-{\\\"known_at\\\": \\\"2090-01-01T00:00:"
+   ],
+   "cross:probe_stage3_snapshots.py": [],
+   "auditor": [],
+   "shipped": []
+  },
+  "caught_by": [],
+  "new_fails": {}
+ },
+ {
+  "id": "H01",
+  "requirement": "S3-8 as_of is inclusive",
+  "file": "ledger.py",
+  "old": "if as_of is None or eff <= as_of:",
+  "new": "if as_of is None or eff < as_of:",
+  "fails": {
+   "impl": [
+    "(failures=2)",
+    "exit"
+   ],
+   "reviewer:probes_s3.py": [
+    "as_of exactly at payment counts it  ->"
+   ],
+   "reviewer:model": [
+    "exit"
+   ],
+   "customer:journey_stage3_api.py": [
+    "after nonfinal capture {'user_id'",
+    "as_of at eff counts rev2",
+    "as_of at latest -> current",
+    "as_of exactly at p_a counts",
+    "as_of tB",
+    "as_of tC",
+    "bob as_of tB"
+   ],
+   "customer:journey_stage3_extra.py": [
+    "exit"
+   ],
+   "customer:journey_stage3_fix.py": [
+    "as_of == created_at includes payment #0",
+    "as_of == created_at includes payment #1",
+    "as_of == created_at includes payment #2",
+    "as_of == created_at includes payment #3",
+    "as_of == created_at includes payment #4",
+    "as_of exactly effective counts; 1\u00b5s earlier doesn't",
+    "reset receiver spends before receiving"
+   ],
+   "customer:journey_stage3_fuzz.py": [],
+   "customer:journey_stage3_snap.py": [
+    "corrupt snapshot",
+    "re-import twice 204"
+   ],
+   "cross:probe_stage3.py": [
+    "{\"probe\": \"asof-inclusive-2020-01-02T00:00:00+00:00\", \"passed\": false, \"detail\":",
+    "{\"probe\": \"asof-inclusive-2020-01-03T00:00:00+00:00\", \"passed\": false, \"detail\":",
+    "{\"probe\": \"bad-instant-as_of-2020-01-01T24:00:00Z\", \"passed\": false, \"detail\": {",
+    "{\"probe\": \"bad-instant-from-2020-01-01T24:00:00Z\", \"passed\": false, \"detail\": {\"",
+    "{\"probe\": \"bad-instant-known_at-2020-01-01T24:00:00Z\", \"passed\": false, \"detail\"",
+    "{\"probe\": \"bad-instant-to-2020-01-01T24:00:00Z\", \"passed\": false, \"detail\": {\"st",
+    "{\"probe\": \"exact-query-echo\", \"passed\": false, \"detail\": {\"user_id\": \"u_a\", \"dis",
+    "{\"probe\": \"final-releases-historical\", \"passed\": false, \"detail\": null}",
+    "{\"probe\": \"hold-history-2026-10-04T10:25:45+00:00\", \"passed\": false, \"detail\": {",
+    "{\"probe\": \"knowledge-inclusive-backdate\", \"passed\": false, \"detail\": {\"user_id\":",
+    "{\"probe\": \"oracle-balance\", \"passed\": false, \"detail\": null}"
+   ],
+   "cross:probe_stage3_extra.py": [
+    "{\"probe\": \"older_exports-uncaught\", \"passed\": false, \"detail\": \"'token'\"}",
+    "{\"probe\": \"reset\", \"passed\": false, \"detail\": {\"status\": 0, \"body\": {\"transport_"
+   ],
+   "cross:probe_stage3_freeze.py": [
+    "{\"probe\": \"all-genuine-snapshots-import\", \"passed\": false, \"detail\": {\"status\": ",
+    "{\"probe\": \"individual-genuine-snapshot-import-{\\\"from\\\": \\\"2020-01-02T02:00:00+0",
+    "{\"probe\": \"individual-genuine-snapshot-import-{\\\"known_at\\\": \\\"2090-01-01T00:00:"
+   ],
+   "cross:probe_stage3_snapshots.py": [],
+   "auditor": [
+    "S3-2/3/4/5/9/12 seeded history"
+   ],
+   "shipped": []
+  },
+  "caught_by": [
+   "auditor",
+   "cross",
+   "customer",
+   "impl",
+   "reviewer"
+  ],
+  "new_fails": {
+   "impl": [
+    "(failures=2)",
+    "exit"
+   ],
+   "reviewer:probes_s3.py": [
+    "as_of exactly at payment counts it  ->"
+   ],
+   "reviewer:model": [
+    "exit"
+   ],
+   "customer:journey_stage3_api.py": [
+    "after nonfinal capture {'user_id'",
+    "as_of at eff counts rev2",
+    "as_of at latest -> current",
+    "as_of exactly at p_a counts",
+    "as_of tB",
+    "as_of tC",
+    "bob as_of tB"
+   ],
+   "customer:journey_stage3_extra.py": [
+    "exit"
+   ],
+   "customer:journey_stage3_fix.py": [
+    "as_of == created_at includes payment #0",
+    "as_of == created_at includes payment #1",
+    "as_of == created_at includes payment #2",
+    "as_of == created_at includes payment #3",
+    "as_of == created_at includes payment #4",
+    "as_of exactly effective counts; 1\u00b5s earlier doesn't"
+   ],
+   "cross:probe_stage3.py": [
+    "{\"probe\": \"asof-inclusive-2020-01-02T00:00:00+00:00\", \"passed\": false, \"detail\":",
+    "{\"probe\": \"asof-inclusive-2020-01-03T00:00:00+00:00\", \"passed\": false, \"detail\":",
+    "{\"probe\": \"exact-query-echo\", \"passed\": false, \"detail\": {\"user_id\": \"u_a\", \"dis",
+    "{\"probe\": \"final-releases-historical\", \"passed\": false, \"detail\": null}",
+    "{\"probe\": \"hold-history-2026-10-04T10:25:45+00:00\", \"passed\": false, \"detail\": {",
+    "{\"probe\": \"knowledge-inclusive-backdate\", \"passed\": false, \"detail\": {\"user_id\":",
+    "{\"probe\": \"oracle-balance\", \"passed\": false, \"detail\": null}"
+   ],
+   "auditor": [
+    "S3-2/3/4/5/9/12 seeded history"
+   ]
+  }
+ },
+ {
+  "id": "H02",
+  "requirement": "S3-34 known_at selects by recorded time",
+  "file": "ledger.py",
+  "old": "if r[\"recorded_ts\"] <= known:",
+  "new": "if r[\"effective_ts\"] <= known:",
+  "fails": {
+   "impl": [
+    "(failures=2)",
+    "exit"
+   ],
+   "reviewer:probes_s3.py": [
+    "known_at before correction -> revision 1  -> {'opening_balance'",
+    "me known_at before correction  ->"
+   ],
+   "reviewer:model": [
+    "exit"
+   ],
+   "customer:journey_stage3_api.py": [],
+   "customer:journey_stage3_extra.py": [],
+   "customer:journey_stage3_fix.py": [
+    "import 204",
+    "known_at == recorded_at of rev2 selects it",
+    "known_at == recorded_at of rev3 selects it",
+    "known_at == recorded_at of rev4 selects it",
+    "known_at == recorded_at of rev5 selects it",
+    "known_at == recorded_at of rev6 selects it",
+    "snapshot after import",
+    "snapshot survives export/import identical pages"
+   ],
+   "customer:journey_stage3_fuzz.py": [],
+   "customer:journey_stage3_snap.py": [
+    "all snapshot pages identical after import",
+    "genuine export with 6 old snapshots imports unchanged",
+    "known_at snapshot echo retained",
+    "other-user snapshot 404 after import",
+    "snapshot + from/to/known_at still 422 after import",
+    "snapshot after double import",
+    "snapshots still frozen after new writes post-import",
+    "state unchanged after"
+   ],
+   "cross:probe_stage3.py": [
+    "{\"probe\": \"bad-instant-as_of-2020-01-01T24:00:00Z\", \"passed\": false, \"detail\": {",
+    "{\"probe\": \"bad-instant-from-2020-01-01T24:00:00Z\", \"passed\": false, \"detail\": {\"",
+    "{\"probe\": \"bad-instant-known_at-2020-01-01T24:00:00Z\", \"passed\": false, \"detail\"",
+    "{\"probe\": \"bad-instant-to-2020-01-01T24:00:00Z\", \"passed\": false, \"detail\": {\"st",
+    "{\"probe\": \"knowledge-before-revision\", \"passed\": false, \"detail\": {\"user_id\": \"u",
+    "{\"probe\": \"old-knowledge-original\", \"passed\": false, \"detail\": {\"user_id\": \"u_a\"",
+    "{\"probe\": \"oracle-balance\", \"passed\": false, \"detail\": null}",
+    "{\"probe\": \"oracle-statement\", \"passed\": false, \"detail\": null}",
+    "{\"probe\": \"oracle-statement\", \"passed\": false, \"detail\": {\"actual\": [[\"r04\", 1, ",
+    "{\"probe\": \"oracle-statement\", \"passed\": false, \"detail\": {\"actual\": [[\"r05\", 2, ",
+    "{\"probe\": \"oracle-statement\", \"passed\": false, \"detail\": {\"actual\": [[\"r06\", 2, ",
+    "{\"probe\": \"oracle-statement\", \"passed\": false, \"detail\": {\"actual\": [[\"r08\", 3, ",
+    "{\"probe\": \"unknown-payments-contribute-nothing\", \"passed\": false, \"detail\": {\"us"
+   ],
+   "cross:probe_stage3_extra.py": [
+    "{\"probe\": \"older_exports-uncaught\", \"passed\": false, \"detail\": \"'token'\"}",
+    "{\"probe\": \"reset\", \"passed\": false, \"detail\": {\"status\": 0, \"body\": {\"transport_"
+   ],
+   "cross:probe_stage3_freeze.py": [
+    "{\"probe\": \"all-genuine-snapshots-import\", \"passed\": false, \"detail\": {\"status\": ",
+    "{\"probe\": \"individual-genuine-snapshot-import-{\\\"from\\\": \\\"2020-01-02T00:00:00+0",
+    "{\"probe\": \"individual-genuine-snapshot-import-{\\\"from\\\": \\\"2020-01-02T02:00:00+0",
+    "{\"probe\": \"individual-genuine-snapshot-import-{\\\"from\\\": \\\"2020-01-03T00:00:00+0",
+    "{\"probe\": \"individual-genuine-snapshot-import-{\\\"from\\\": \\\"2020-01-04T00:00:00+0",
+    "{\"probe\": \"individual-genuine-snapshot-import-{\\\"known_at\\\": \\\"2020-01-01T00:00:",
+    "{\"probe\": \"individual-genuine-snapshot-import-{\\\"known_at\\\": \\\"2020-01-02T00:00:",
+    "{\"probe\": \"individual-genuine-snapshot-import-{\\\"known_at\\\": \\\"2090-01-01T00:00:",
+    "{\"probe\": \"individual-genuine-snapshot-import-{}\", \"passed\": false, \"detail\": {\""
+   ],
+   "cross:probe_stage3_snapshots.py": [
+    "{\"probe\": \"old-snapshot-import-after-writes\", \"passed\": false, \"detail\": {\"statu"
+   ],
+   "auditor": [
+    "S3-34/35/38/39/37 known_at selection, zero revisions, backdated moves across windows"
+   ],
+   "shipped": []
+  },
+  "caught_by": [
+   "auditor",
+   "cross",
+   "customer",
+   "impl",
+   "reviewer"
+  ],
+  "new_fails": {
+   "impl": [
+    "(failures=2)",
+    "exit"
+   ],
+   "reviewer:probes_s3.py": [
+    "known_at before correction -> revision 1  -> {'opening_balance'",
+    "me known_at before correction  ->"
+   ],
+   "reviewer:model": [
+    "exit"
+   ],
+   "customer:journey_stage3_fix.py": [
+    "import 204",
+    "known_at == recorded_at of rev2 selects it",
+    "known_at == recorded_at of rev3 selects it",
+    "known_at == recorded_at of rev4 selects it",
+    "known_at == recorded_at of rev5 selects it",
+    "known_at == recorded_at of rev6 selects it",
+    "snapshot after import",
+    "snapshot survives export/import identical pages"
+   ],
+   "customer:journey_stage3_snap.py": [
+    "all snapshot pages identical after import",
+    "genuine export with 6 old snapshots imports unchanged",
+    "known_at snapshot echo retained",
+    "other-user snapshot 404 after import",
+    "snapshot + from/to/known_at still 422 after import",
+    "snapshot after double import",
+    "snapshots still frozen after new writes post-import",
+    "state unchanged after"
+   ],
+   "cross:probe_stage3.py": [
+    "{\"probe\": \"knowledge-before-revision\", \"passed\": false, \"detail\": {\"user_id\": \"u",
+    "{\"probe\": \"old-knowledge-original\", \"passed\": false, \"detail\": {\"user_id\": \"u_a\"",
+    "{\"probe\": \"oracle-balance\", \"passed\": false, \"detail\": null}",
+    "{\"probe\": \"oracle-statement\", \"passed\": false, \"detail\": null}",
+    "{\"probe\": \"oracle-statement\", \"passed\": false, \"detail\": {\"actual\": [[\"r04\", 1, ",
+    "{\"probe\": \"oracle-statement\", \"passed\": false, \"detail\": {\"actual\": [[\"r05\", 2, ",
+    "{\"probe\": \"oracle-statement\", \"passed\": false, \"detail\": {\"actual\": [[\"r06\", 2, ",
+    "{\"probe\": \"oracle-statement\", \"passed\": false, \"detail\": {\"actual\": [[\"r08\", 3, ",
+    "{\"probe\": \"unknown-payments-contribute-nothing\", \"passed\": false, \"detail\": {\"us"
+   ],
+   "cross:probe_stage3_freeze.py": [
+    "{\"probe\": \"individual-genuine-snapshot-import-{\\\"from\\\": \\\"2020-01-02T00:00:00+0",
+    "{\"probe\": \"individual-genuine-snapshot-import-{\\\"from\\\": \\\"2020-01-03T00:00:00+0",
+    "{\"probe\": \"individual-genuine-snapshot-import-{\\\"from\\\": \\\"2020-01-04T00:00:00+0",
+    "{\"probe\": \"individual-genuine-snapshot-import-{\\\"known_at\\\": \\\"2020-01-01T00:00:",
+    "{\"probe\": \"individual-genuine-snapshot-import-{\\\"known_at\\\": \\\"2020-01-02T00:00:",
+    "{\"probe\": \"individual-genuine-snapshot-import-{}\", \"passed\": false, \"detail\": {\""
+   ],
+   "cross:probe_stage3_snapshots.py": [
+    "{\"probe\": \"old-snapshot-import-after-writes\", \"passed\": false, \"detail\": {\"statu"
+   ],
+   "auditor": [
+    "S3-34/35/38/39/37 known_at selection, zero revisions, backdated moves across windows"
+   ]
+  }
+ },
+ {
+  "id": "H03",
+  "requirement": "S3-13 ties ordered by payment id ascending",
+  "file": "history.py",
+  "old": "key=lambda e: (e[0], e[1]))",
+  "new": "key=lambda e: (e[0], [-ord(c) for c in e[1]]))",
+  "fails": {
+   "impl": [
+    "(failures=4)",
+    "exit"
+   ],
+   "reviewer:probes_s3.py": [],
+   "reviewer:model": [
+    "exit"
+   ],
+   "customer:journey_stage3_api.py": [
+    "same-instant ordered by id {'opening_balance'"
+   ],
+   "customer:journey_stage3_extra.py": [],
+   "customer:journey_stage3_fix.py": [
+    "import 204",
+    "snapshot after import",
+    "snapshot survives export/import identical pages"
+   ],
+   "customer:journey_stage3_fuzz.py": [],
+   "customer:journey_stage3_snap.py": [
+    "corrupt snapshot",
+    "re-import twice 204"
+   ],
+   "cross:probe_stage3.py": [
+    "{\"probe\": \"bad-instant-as_of-2020-01-01T24:00:00Z\", \"passed\": false, \"detail\": {",
+    "{\"probe\": \"bad-instant-from-2020-01-01T24:00:00Z\", \"passed\": false, \"detail\": {\"",
+    "{\"probe\": \"bad-instant-known_at-2020-01-01T24:00:00Z\", \"passed\": false, \"detail\"",
+    "{\"probe\": \"bad-instant-to-2020-01-01T24:00:00Z\", \"passed\": false, \"detail\": {\"st",
+    "{\"probe\": \"default-full-statement\", \"passed\": false, \"detail\": {\"opening_balance",
+    "{\"probe\": \"oracle-statement\", \"passed\": false, \"detail\": {\"actual\": [[\"r04\", 1, ",
+    "{\"probe\": \"oracle-statement\", \"passed\": false, \"detail\": {\"actual\": [[\"r06\", 2, ",
+    "{\"probe\": \"oracle-statement\", \"passed\": false, \"detail\": {\"actual\": [[\"r08\", 1, ",
+    "{\"probe\": \"oracle-statement\", \"passed\": false, \"detail\": {\"actual\": [[\"r08\", 3, ",
+    "{\"probe\": \"oracle-statement\", \"passed\": false, \"detail\": {\"actual\": [[\"r09\", 1, ",
+    "{\"probe\": \"stage3-import\", \"passed\": false, \"detail\": {\"status\": 422, \"body\": {\"",
+    "{\"probe\": \"zero-entry-and-order\", \"passed\": false, \"detail\": [{\"payment\": {\"paym"
+   ],
+   "cross:probe_stage3_extra.py": [
+    "{\"probe\": \"older_exports-uncaught\", \"passed\": false, \"detail\": \"'token'\"}",
+    "{\"probe\": \"reset\", \"passed\": false, \"detail\": {\"status\": 0, \"body\": {\"transport_"
+   ],
+   "cross:probe_stage3_freeze.py": [
+    "{\"probe\": \"all-genuine-snapshots-import\", \"passed\": false, \"detail\": {\"status\": ",
+    "{\"probe\": \"individual-genuine-snapshot-import-{\\\"from\\\": \\\"2020-01-02T00:00:00+0",
+    "{\"probe\": \"individual-genuine-snapshot-import-{\\\"from\\\": \\\"2020-01-02T02:00:00+0",
+    "{\"probe\": \"individual-genuine-snapshot-import-{\\\"known_at\\\": \\\"2020-01-02T00:00:",
+    "{\"probe\": \"individual-genuine-snapshot-import-{\\\"known_at\\\": \\\"2090-01-01T00:00:",
+    "{\"probe\": \"individual-genuine-snapshot-import-{}\", \"passed\": false, \"detail\": {\""
+   ],
+   "cross:probe_stage3_snapshots.py": [
+    "{\"probe\": \"old-snapshot-import-after-writes\", \"passed\": false, \"detail\": {\"statu"
+   ],
+   "auditor": [
+    "S3-13/14/15/16/17 statement window, order, signs, paging, third parties"
+   ],
+   "shipped": [
+    "stage 3 not pass"
+   ]
+  },
+  "caught_by": [
+   "auditor",
+   "cross",
+   "customer",
+   "impl",
+   "reviewer",
+   "shipped"
+  ],
+  "new_fails": {
+   "impl": [
+    "(failures=4)",
+    "exit"
+   ],
+   "reviewer:model": [
+    "exit"
+   ],
+   "customer:journey_stage3_api.py": [
+    "same-instant ordered by id {'opening_balance'"
+   ],
+   "customer:journey_stage3_fix.py": [
+    "import 204",
+    "snapshot after import",
+    "snapshot survives export/import identical pages"
+   ],
+   "cross:probe_stage3.py": [
+    "{\"probe\": \"default-full-statement\", \"passed\": false, \"detail\": {\"opening_balance",
+    "{\"probe\": \"oracle-statement\", \"passed\": false, \"detail\": {\"actual\": [[\"r04\", 1, ",
+    "{\"probe\": \"oracle-statement\", \"passed\": false, \"detail\": {\"actual\": [[\"r06\", 2, ",
+    "{\"probe\": \"oracle-statement\", \"passed\": false, \"detail\": {\"actual\": [[\"r08\", 1, ",
+    "{\"probe\": \"oracle-statement\", \"passed\": false, \"detail\": {\"actual\": [[\"r08\", 3, ",
+    "{\"probe\": \"oracle-statement\", \"passed\": false, \"detail\": {\"actual\": [[\"r09\", 1, ",
+    "{\"probe\": \"stage3-import\", \"passed\": false, \"detail\": {\"status\": 422, \"body\": {\"",
+    "{\"probe\": \"zero-entry-and-order\", \"passed\": false, \"detail\": [{\"payment\": {\"paym"
+   ],
+   "cross:probe_stage3_freeze.py": [
+    "{\"probe\": \"individual-genuine-snapshot-import-{\\\"from\\\": \\\"2020-01-02T00:00:00+0",
+    "{\"probe\": \"individual-genuine-snapshot-import-{\\\"known_at\\\": \\\"2020-01-02T00:00:",
+    "{\"probe\": \"individual-genuine-snapshot-import-{}\", \"passed\": false, \"detail\": {\""
+   ],
+   "cross:probe_stage3_snapshots.py": [
+    "{\"probe\": \"old-snapshot-import-after-writes\", \"passed\": false, \"detail\": {\"statu"
+   ],
+   "auditor": [
+    "S3-13/14/15/16/17 statement window, order, signs, paging, third parties"
+   ],
+   "shipped": [
+    "stage 3 not pass"
+   ]
+  }
+ },
+ {
+  "id": "H04",
+  "requirement": "S3-12 statement window is half-open (to exclusive)",
+  "file": "history.py",
+  "old": "if hi is not None and t >= hi:",
+  "new": "if hi is not None and t > hi:",
+  "fails": {
+   "impl": [
+    "(failures=2)",
+    "exit"
+   ],
+   "reviewer:probes_s3.py": [
+    "correction moves payment out of window  -> {'opening_balance'",
+    "half-open window"
+   ],
+   "reviewer:model": [
+    "exit"
+   ],
+   "customer:journey_stage3_api.py": [
+    "correction moved p_a out of",
+    "half-open",
+    "to == tA excludes p_a, empty window"
+   ],
+   "customer:journey_stage3_extra.py": [],
+   "customer:journey_stage3_fix.py": [
+    "import 204",
+    "snapshot after import",
+    "snapshot survives export/import identical pages"
+   ],
+   "customer:journey_stage3_fuzz.py": [],
+   "customer:journey_stage3_snap.py": [
+    "corrupt snapshot",
+    "re-import twice 204"
+   ],
+   "cross:probe_stage3.py": [
+    "{\"probe\": \"bad-instant-as_of-2020-01-01T24:00:00Z\", \"passed\": false, \"detail\": {",
+    "{\"probe\": \"bad-instant-from-2020-01-01T24:00:00Z\", \"passed\": false, \"detail\": {\"",
+    "{\"probe\": \"bad-instant-known_at-2020-01-01T24:00:00Z\", \"passed\": false, \"detail\"",
+    "{\"probe\": \"bad-instant-to-2020-01-01T24:00:00Z\", \"passed\": false, \"detail\": {\"st",
+    "{\"probe\": \"correction-moves-into-window\", \"passed\": false, \"detail\": {\"opening_b",
+    "{\"probe\": \"correction-moves-out-window\", \"passed\": false, \"detail\": null}",
+    "{\"probe\": \"half-open\", \"passed\": false, \"detail\": {\"opening_balance\": 1000, \"ent"
+   ],
+   "cross:probe_stage3_extra.py": [
+    "{\"probe\": \"older_exports-uncaught\", \"passed\": false, \"detail\": \"'token'\"}",
+    "{\"probe\": \"reset\", \"passed\": false, \"detail\": {\"status\": 0, \"body\": {\"transport_"
+   ],
+   "cross:probe_stage3_freeze.py": [
+    "{\"probe\": \"all-genuine-snapshots-import\", \"passed\": false, \"detail\": {\"status\": ",
+    "{\"probe\": \"individual-genuine-snapshot-import-{\\\"from\\\": \\\"2020-01-02T00:00:00+0",
+    "{\"probe\": \"individual-genuine-snapshot-import-{\\\"from\\\": \\\"2020-01-02T02:00:00+0",
+    "{\"probe\": \"individual-genuine-snapshot-import-{\\\"from\\\": \\\"2020-01-03T00:00:00+0",
+    "{\"probe\": \"individual-genuine-snapshot-import-{\\\"known_at\\\": \\\"2090-01-01T00:00:",
+    "{\"probe\": \"individual-genuine-snapshot-import-{\\\"to\\\": \\\"2020-01-02T00:00:00+00:"
+   ],
+   "cross:probe_stage3_snapshots.py": [],
+   "auditor": [
+    "S3-13/14/15/16/17 statement window, order, signs, paging, third parties"
+   ],
+   "shipped": []
+  },
+  "caught_by": [
+   "auditor",
+   "cross",
+   "customer",
+   "impl",
+   "reviewer"
+  ],
+  "new_fails": {
+   "impl": [
+    "(failures=2)",
+    "exit"
+   ],
+   "reviewer:probes_s3.py": [
+    "correction moves payment out of window  -> {'opening_balance'",
+    "half-open window"
+   ],
+   "reviewer:model": [
+    "exit"
+   ],
+   "customer:journey_stage3_api.py": [
+    "correction moved p_a out of",
+    "half-open",
+    "to == tA excludes p_a, empty window"
+   ],
+   "customer:journey_stage3_fix.py": [
+    "import 204",
+    "snapshot after import",
+    "snapshot survives export/import identical pages"
+   ],
+   "cross:probe_stage3.py": [
+    "{\"probe\": \"correction-moves-into-window\", \"passed\": false, \"detail\": {\"opening_b",
+    "{\"probe\": \"correction-moves-out-window\", \"passed\": false, \"detail\": null}",
+    "{\"probe\": \"half-open\", \"passed\": false, \"detail\": {\"opening_balance\": 1000, \"ent"
+   ],
+   "cross:probe_stage3_freeze.py": [
+    "{\"probe\": \"individual-genuine-snapshot-import-{\\\"from\\\": \\\"2020-01-02T00:00:00+0",
+    "{\"probe\": \"individual-genuine-snapshot-import-{\\\"from\\\": \\\"2020-01-03T00:00:00+0",
+    "{\"probe\": \"individual-genuine-snapshot-import-{\\\"to\\\": \\\"2020-01-02T00:00:00+00:"
+   ],
+   "auditor": [
+    "S3-13/14/15/16/17 statement window, order, signs, paging, third parties"
+   ]
+  }
+ },
+ {
+  "id": "H05",
+  "requirement": "S3-42 snapshots page their frozen entries",
+  "file": "history.py",
+  "old": "        return 200, _page(s, snap, limit, offset)\n    frm",
+  "new": "        return 200, _page(s, dict(snap, entries=build_statement(s, snap[\"user_id\"], None, None, None, time.time(), s.seq)[1]), limit, offset)\n    frm",
+  "fails": {
+   "impl": [
+    "(failures=1)",
+    "exit"
+   ],
+   "reviewer:probes_s3.py": [
+    "snapshot beyond end  -> {'opening_balance'",
+    "snapshot pages frozen result  -> {'opening_balance'",
+    "snapshot unchanged after correction  ->"
+   ],
+   "reviewer:model": [],
+   "customer:journey_stage3_api.py": [
+    "original snapshot unchanged after correction",
+    "snapshot ignores later payment",
+    "snapshot no params -> full",
+    "snapshot unchanged during concurrent payments"
+   ],
+   "customer:journey_stage3_extra.py": [
+    "exit"
+   ],
+   "customer:journey_stage3_fix.py": [
+    "reset receiver spends before receiving",
+    "snapshot unchanged after post-import correction"
+   ],
+   "customer:journey_stage3_fuzz.py": [],
+   "customer:journey_stage3_snap.py": [
+    "corrupt snapshot",
+    "known_at snapshot echo retained",
+    "re-import twice 204",
+    "snapshots still frozen after new writes post-import"
+   ],
+   "cross:probe_stage3.py": [
+    "{\"probe\": \"bad-instant-as_of-2020-01-01T24:00:00Z\", \"passed\": false, \"detail\": {",
+    "{\"probe\": \"bad-instant-from-2020-01-01T24:00:00Z\", \"passed\": false, \"detail\": {\"",
+    "{\"probe\": \"bad-instant-known_at-2020-01-01T24:00:00Z\", \"passed\": false, \"detail\"",
+    "{\"probe\": \"bad-instant-to-2020-01-01T24:00:00Z\", \"passed\": false, \"detail\": {\"st",
+    "{\"probe\": \"snapshot-frozen-after-concurrent-corrections\", \"passed\": false, \"deta",
+    "{\"probe\": \"snapshot-page-0\", \"passed\": false, \"detail\": null}",
+    "{\"probe\": \"snapshot-page-1\", \"passed\": false, \"detail\": null}",
+    "{\"probe\": \"snapshot-page-2\", \"passed\": false, \"detail\": null}",
+    "{\"probe\": \"snapshot-page-3\", \"passed\": false, \"detail\": null}"
+   ],
+   "cross:probe_stage3_extra.py": [
+    "{\"probe\": \"older_exports-uncaught\", \"passed\": false, \"detail\": \"'token'\"}",
+    "{\"probe\": \"reset\", \"passed\": false, \"detail\": {\"status\": 0, \"body\": {\"transport_",
+    "{\"probe\": \"snapshot-after-partial\", \"passed\": false, \"detail\": null}",
+    "{\"probe\": \"snapshot-after-void\", \"passed\": false, \"detail\": null}"
+   ],
+   "cross:probe_stage3_freeze.py": [
+    "{\"probe\": \"all-genuine-snapshots-import\", \"passed\": false, \"detail\": {\"status\": ",
+    "{\"probe\": \"genuine-frozen-full\", \"passed\": false, \"detail\": null}",
+    "{\"probe\": \"genuine-frozen-page\", \"passed\": false, \"detail\": {\"q\": {\"from\": \"2020",
+    "{\"probe\": \"genuine-frozen-page\", \"passed\": false, \"detail\": {\"q\": {\"known_at\": \"",
+    "{\"probe\": \"genuine-frozen-page\", \"passed\": false, \"detail\": {\"q\": {\"to\": \"2020-0",
+    "{\"probe\": \"genuine-frozen-page\", \"passed\": false, \"detail\": {\"q\": {}, \"actual\": ",
+    "{\"probe\": \"individual-genuine-snapshot-import-{\\\"from\\\": \\\"2020-01-02T02:00:00+0",
+    "{\"probe\": \"individual-genuine-snapshot-import-{\\\"known_at\\\": \\\"2090-01-01T00:00:"
+   ],
+   "cross:probe_stage3_snapshots.py": [
+    "{\"probe\": \"old-page-identical\", \"passed\": false, \"detail\": null}"
+   ],
+   "auditor": [
+    "S3-41/43/44/45/42 snapshots"
+   ],
+   "shipped": []
+  },
+  "caught_by": [
+   "auditor",
+   "cross",
+   "customer",
+   "impl",
+   "reviewer"
+  ],
+  "new_fails": {
+   "impl": [
+    "(failures=1)",
+    "exit"
+   ],
+   "reviewer:probes_s3.py": [
+    "snapshot beyond end  -> {'opening_balance'",
+    "snapshot pages frozen result  -> {'opening_balance'",
+    "snapshot unchanged after correction  ->"
+   ],
+   "customer:journey_stage3_api.py": [
+    "original snapshot unchanged after correction",
+    "snapshot ignores later payment",
+    "snapshot no params -> full",
+    "snapshot unchanged during concurrent payments"
+   ],
+   "customer:journey_stage3_extra.py": [
+    "exit"
+   ],
+   "customer:journey_stage3_fix.py": [
+    "snapshot unchanged after post-import correction"
+   ],
+   "customer:journey_stage3_snap.py": [
+    "known_at snapshot echo retained",
+    "snapshots still frozen after new writes post-import"
+   ],
+   "cross:probe_stage3.py": [
+    "{\"probe\": \"snapshot-frozen-after-concurrent-corrections\", \"passed\": false, \"deta",
+    "{\"probe\": \"snapshot-page-0\", \"passed\": false, \"detail\": null}",
+    "{\"probe\": \"snapshot-page-1\", \"passed\": false, \"detail\": null}",
+    "{\"probe\": \"snapshot-page-2\", \"passed\": false, \"detail\": null}",
+    "{\"probe\": \"snapshot-page-3\", \"passed\": false, \"detail\": null}"
+   ],
+   "cross:probe_stage3_extra.py": [
+    "{\"probe\": \"snapshot-after-partial\", \"passed\": false, \"detail\": null}",
+    "{\"probe\": \"snapshot-after-void\", \"passed\": false, \"detail\": null}"
+   ],
+   "cross:probe_stage3_freeze.py": [
+    "{\"probe\": \"genuine-frozen-full\", \"passed\": false, \"detail\": null}",
+    "{\"probe\": \"genuine-frozen-page\", \"passed\": false, \"detail\": {\"q\": {\"from\": \"2020",
+    "{\"probe\": \"genuine-frozen-page\", \"passed\": false, \"detail\": {\"q\": {\"known_at\": \"",
+    "{\"probe\": \"genuine-frozen-page\", \"passed\": false, \"detail\": {\"q\": {\"to\": \"2020-0",
+    "{\"probe\": \"genuine-frozen-page\", \"passed\": false, \"detail\": {\"q\": {}, \"actual\": "
+   ],
+   "cross:probe_stage3_snapshots.py": [
+    "{\"probe\": \"old-page-identical\", \"passed\": false, \"detail\": null}"
+   ],
+   "auditor": [
+    "S3-41/43/44/45/42 snapshots"
+   ]
+  }
+ },
+ {
+  "id": "H06",
+  "requirement": "S3-16 paging never changes the opening balance",
+  "file": "history.py",
+  "old": "body = {\"opening_balance\": snap[\"opening_balance\"],",
+  "new": "body = {\"opening_balance\": (chunk[0][3] - chunk[0][2]) if chunk else snap[\"opening_balance\"],",
+  "fails": {
+   "impl": [
+    "(failures=1)",
+    "exit"
+   ],
+   "reviewer:probes_s3.py": [
+    "pagination keeps balances  -> {'opening_balance'"
+   ],
+   "reviewer:model": [
+    "exit"
+   ],
+   "customer:journey_stage3_api.py": [
+    "page limit1 offset1"
+   ],
+   "customer:journey_stage3_extra.py": [
+    "exit"
+   ],
+   "customer:journey_stage3_fix.py": [
+    "reset receiver spends before receiving"
+   ],
+   "customer:journey_stage3_fuzz.py": [],
+   "customer:journey_stage3_snap.py": [
+    "corrupt snapshot",
+    "re-import twice 204"
+   ],
+   "cross:probe_stage3.py": [
+    "{\"probe\": \"bad-instant-as_of-2020-01-01T24:00:00Z\", \"passed\": false, \"detail\": {",
+    "{\"probe\": \"bad-instant-from-2020-01-01T24:00:00Z\", \"passed\": false, \"detail\": {\"",
+    "{\"probe\": \"bad-instant-known_at-2020-01-01T24:00:00Z\", \"passed\": false, \"detail\"",
+    "{\"probe\": \"bad-instant-to-2020-01-01T24:00:00Z\", \"passed\": false, \"detail\": {\"st",
+    "{\"probe\": \"page-balances-1\", \"passed\": false, \"detail\": {\"opening_balance\": 1030",
+    "{\"probe\": \"page-balances-2\", \"passed\": false, \"detail\": {\"opening_balance\": 930,",
+    "{\"probe\": \"snapshot-page-1\", \"passed\": false, \"detail\": null}",
+    "{\"probe\": \"snapshot-page-2\", \"passed\": false, \"detail\": null}"
+   ],
+   "cross:probe_stage3_extra.py": [
+    "{\"probe\": \"older_exports-uncaught\", \"passed\": false, \"detail\": \"'token'\"}",
+    "{\"probe\": \"reset\", \"passed\": false, \"detail\": {\"status\": 0, \"body\": {\"transport_"
+   ],
+   "cross:probe_stage3_freeze.py": [
+    "{\"probe\": \"all-genuine-snapshots-import\", \"passed\": false, \"detail\": {\"status\": ",
+    "{\"probe\": \"individual-genuine-snapshot-import-{\\\"from\\\": \\\"2020-01-02T02:00:00+0",
+    "{\"probe\": \"individual-genuine-snapshot-import-{\\\"known_at\\\": \\\"2090-01-01T00:00:"
+   ],
+   "cross:probe_stage3_snapshots.py": [],
+   "auditor": [
+    "S3-13/14/15/16/17 statement window, order, signs, paging, third parties"
+   ],
+   "shipped": []
+  },
+  "caught_by": [
+   "auditor",
+   "cross",
+   "customer",
+   "impl",
+   "reviewer"
+  ],
+  "new_fails": {
+   "impl": [
+    "(failures=1)",
+    "exit"
+   ],
+   "reviewer:probes_s3.py": [
+    "pagination keeps balances  -> {'opening_balance'"
+   ],
+   "reviewer:model": [
+    "exit"
+   ],
+   "customer:journey_stage3_api.py": [
+    "page limit1 offset1"
+   ],
+   "customer:journey_stage3_extra.py": [
+    "exit"
+   ],
+   "cross:probe_stage3.py": [
+    "{\"probe\": \"page-balances-1\", \"passed\": false, \"detail\": {\"opening_balance\": 1030",
+    "{\"probe\": \"page-balances-2\", \"passed\": false, \"detail\": {\"opening_balance\": 930,",
+    "{\"probe\": \"snapshot-page-1\", \"passed\": false, \"detail\": null}",
+    "{\"probe\": \"snapshot-page-2\", \"passed\": false, \"detail\": null}"
+   ],
+   "auditor": [
+    "S3-13/14/15/16/17 statement window, order, signs, paging, third parties"
+   ]
+  }
+ },
+ {
+  "id": "H07",
+  "requirement": "S3-26/27 a decrease debits the receiver (affordability of the receiver)",
+  "file": "history.py",
+  "old": "debtor = sender if diff > 0 else receiver",
+  "new": "debtor = sender",
+  "fails": {
+   "impl": [
+    "(failures=1)",
+    "exit"
+   ],
+   "reviewer:probes_s3.py": [],
+   "reviewer:model": [
+    "exit"
+   ],
+   "customer:journey_stage3_api.py": [],
+   "customer:journey_stage3_extra.py": [
+    "exit"
+   ],
+   "customer:journey_stage3_fix.py": [
+    "reset receiver spends before receiving"
+   ],
+   "customer:journey_stage3_fuzz.py": [],
+   "customer:journey_stage3_snap.py": [
+    "corrupt snapshot",
+    "re-import twice 204"
+   ],
+   "cross:probe_stage3.py": [
+    "{\"probe\": \"bad-instant-as_of-2020-01-01T24:00:00Z\", \"passed\": false, \"detail\": {",
+    "{\"probe\": \"bad-instant-from-2020-01-01T24:00:00Z\", \"passed\": false, \"detail\": {\"",
+    "{\"probe\": \"bad-instant-known_at-2020-01-01T24:00:00Z\", \"passed\": false, \"detail\"",
+    "{\"probe\": \"bad-instant-to-2020-01-01T24:00:00Z\", \"passed\": false, \"detail\": {\"st",
+    "{\"probe\": \"historical-overdraft-refund\", \"passed\": false, \"detail\": {\"status\": 4"
+   ],
+   "cross:probe_stage3_extra.py": [
+    "{\"probe\": \"older_exports-uncaught\", \"passed\": false, \"detail\": \"'token'\"}",
+    "{\"probe\": \"reset\", \"passed\": false, \"detail\": {\"status\": 0, \"body\": {\"transport_"
+   ],
+   "cross:probe_stage3_freeze.py": [
+    "{\"probe\": \"all-genuine-snapshots-import\", \"passed\": false, \"detail\": {\"status\": ",
+    "{\"probe\": \"individual-genuine-snapshot-import-{\\\"from\\\": \\\"2020-01-02T02:00:00+0",
+    "{\"probe\": \"individual-genuine-snapshot-import-{\\\"known_at\\\": \\\"2090-01-01T00:00:"
+   ],
+   "cross:probe_stage3_snapshots.py": [],
+   "auditor": [],
+   "shipped": []
+  },
+  "caught_by": [
+   "cross",
+   "customer",
+   "impl",
+   "reviewer"
+  ],
+  "new_fails": {
+   "impl": [
+    "(failures=1)",
+    "exit"
+   ],
+   "reviewer:model": [
+    "exit"
+   ],
+   "customer:journey_stage3_extra.py": [
+    "exit"
+   ],
+   "cross:probe_stage3.py": [
+    "{\"probe\": \"historical-overdraft-refund\", \"passed\": false, \"detail\": {\"status\": 4"
+   ]
+  }
+ },
+ {
+  "id": "H08",
+  "requirement": "S3-28 historical_overdraft guards past boundaries",
+  "file": "history.py",
+  "old": "if not history_ok(s, (sender[\"id\"], receiver[\"id\"]), {pid: rev}, now):",
+  "new": "if False:",
+  "fails": {
+   "impl": [
+    "(errors=3)",
+    "exit",
+    "test_historical_overdraft_and_funds",
+    "test_import_rejects_a_backdating_that_overdraws_available",
+    "test_import_rejects_a_historical_overdraft"
+   ],
+   "reviewer:probes_s3.py": [
+    "failure changes nothing  ->",
+    "historical overdraft -> 409  ->",
+    "zero revision appears with zero delta  -> {'opening_balance'",
+    "zero-amount reversal 201  ->"
+   ],
+   "reviewer:model": [
+    "exit"
+   ],
+   "customer:journey_stage3_api.py": [
+    "effective shift makes receiver negative in past -> historical_overdraft",
+    "failed key reusable with new body",
+    "historical_overdraft 409",
+    "overdraft preserved state"
+   ],
+   "customer:journey_stage3_extra.py": [
+    "available negative in past -> historical_overdraft",
+    "earlier effective ok",
+    "state unchanged"
+   ],
+   "customer:journey_stage3_fix.py": [
+    "reset receiver spends before receiving"
+   ],
+   "customer:journey_stage3_fuzz.py": [],
+   "customer:journey_stage3_snap.py": [
+    "corrupt snapshot",
+    "re-import twice 204"
+   ],
+   "cross:probe_stage3.py": [
+    "{\"probe\": \"bad-instant-as_of-2020-01-01T24:00:00Z\", \"passed\": false, \"detail\": {",
+    "{\"probe\": \"bad-instant-from-2020-01-01T24:00:00Z\", \"passed\": false, \"detail\": {\"",
+    "{\"probe\": \"bad-instant-known_at-2020-01-01T24:00:00Z\", \"passed\": false, \"detail\"",
+    "{\"probe\": \"bad-instant-to-2020-01-01T24:00:00Z\", \"passed\": false, \"detail\": {\"st",
+    "{\"probe\": \"failed-correction-key-reusable\", \"passed\": false, \"detail\": {\"status\"",
+    "{\"probe\": \"held-history-failure-atomic\", \"passed\": false, \"detail\": null}",
+    "{\"probe\": \"historical-available-overdraft\", \"passed\": false, \"detail\": {\"status\"",
+    "{\"probe\": \"historical-failure-atomic\", \"passed\": false, \"detail\": null}",
+    "{\"probe\": \"historical-overdraft-refund\", \"passed\": false, \"detail\": {\"status\": 2",
+    "{\"probe\": \"move-credit-after-spend\", \"passed\": false, \"detail\": {\"status\": 201, ",
+    "{\"probe\": \"moving-time-failure-atomic\", \"passed\": false, \"detail\": null}",
+    "{\"probe\": \"release-boundary-valid\", \"passed\": false, \"detail\": {\"status\": 409, \""
+   ],
+   "cross:probe_stage3_extra.py": [
+    "{\"probe\": \"older_exports-uncaught\", \"passed\": false, \"detail\": \"'token'\"}",
+    "{\"probe\": \"reset\", \"passed\": false, \"detail\": {\"status\": 0, \"body\": {\"transport_"
+   ],
+   "cross:probe_stage3_freeze.py": [
+    "{\"probe\": \"all-genuine-snapshots-import\", \"passed\": false, \"detail\": {\"status\": ",
+    "{\"probe\": \"individual-genuine-snapshot-import-{\\\"from\\\": \\\"2020-01-02T02:00:00+0",
+    "{\"probe\": \"individual-genuine-snapshot-import-{\\\"known_at\\\": \\\"2090-01-01T00:00:"
+   ],
+   "cross:probe_stage3_snapshots.py": [],
+   "auditor": [
+    "S3-27/28/29/55 insufficient_funds first, historical_overdraft, failures change nothing"
+   ],
+   "shipped": []
+  },
+  "caught_by": [
+   "auditor",
+   "cross",
+   "customer",
+   "impl",
+   "reviewer"
+  ],
+  "new_fails": {
+   "impl": [
+    "(errors=3)",
+    "exit",
+    "test_historical_overdraft_and_funds",
+    "test_import_rejects_a_backdating_that_overdraws_available",
+    "test_import_rejects_a_historical_overdraft"
+   ],
+   "reviewer:probes_s3.py": [
+    "failure changes nothing  ->",
+    "historical overdraft -> 409  ->",
+    "zero revision appears with zero delta  -> {'opening_balance'",
+    "zero-amount reversal 201  ->"
+   ],
+   "reviewer:model": [
+    "exit"
+   ],
+   "customer:journey_stage3_api.py": [
+    "effective shift makes receiver negative in past -> historical_overdraft",
+    "failed key reusable with new body",
+    "historical_overdraft 409",
+    "overdraft preserved state"
+   ],
+   "customer:journey_stage3_extra.py": [
+    "available negative in past -> historical_overdraft",
+    "earlier effective ok",
+    "state unchanged"
+   ],
+   "cross:probe_stage3.py": [
+    "{\"probe\": \"failed-correction-key-reusable\", \"passed\": false, \"detail\": {\"status\"",
+    "{\"probe\": \"held-history-failure-atomic\", \"passed\": false, \"detail\": null}",
+    "{\"probe\": \"historical-available-overdraft\", \"passed\": false, \"detail\": {\"status\"",
+    "{\"probe\": \"historical-failure-atomic\", \"passed\": false, \"detail\": null}",
+    "{\"probe\": \"historical-overdraft-refund\", \"passed\": false, \"detail\": {\"status\": 2",
+    "{\"probe\": \"move-credit-after-spend\", \"passed\": false, \"detail\": {\"status\": 201, ",
+    "{\"probe\": \"moving-time-failure-atomic\", \"passed\": false, \"detail\": null}",
+    "{\"probe\": \"release-boundary-valid\", \"passed\": false, \"detail\": {\"status\": 409, \""
+   ],
+   "auditor": [
+    "S3-27/28/29/55 insufficient_funds first, historical_overdraft, failures change nothing"
+   ]
+  }
+ },
+ {
+  "id": "H09",
+  "requirement": "S3-23 recorded times strictly increase per payment",
+  "file": "history.py",
+  "old": "rec_ts = max(now, cur[\"recorded_ts\"] + 1e-6)",
+  "new": "rec_ts = float(int(now))",
+  "fails": {
+   "impl": [
+    "(failures=3)",
+    "exit"
+   ],
+   "reviewer:probes_s3.py": [],
+   "reviewer:model": [
+    "exit"
+   ],
+   "customer:journey_stage3_api.py": [],
+   "customer:journey_stage3_extra.py": [],
+   "customer:journey_stage3_fix.py": [
+    "import 204",
+    "known_at == recorded_at of rev2 selects it",
+    "known_at == recorded_at of rev3 selects it",
+    "known_at == recorded_at of rev4 selects it",
+    "known_at == recorded_at of rev5 selects it",
+    "known_at == recorded_at of rev6 selects it",
+    "recorded_at strictly increasing",
+    "recorded_at strings distinct",
+    "snapshot after import",
+    "snapshot survives export/import identical pages"
+   ],
+   "customer:journey_stage3_fuzz.py": [],
+   "customer:journey_stage3_snap.py": [
+    "all snapshot pages identical after import",
+    "genuine export with 6 old snapshots imports unchanged",
+    "known_at snapshot echo retained",
+    "other-user snapshot 404 after import",
+    "snapshot + from/to/known_at still 422 after import",
+    "snapshot after double import",
+    "snapshots still frozen after new writes post-import",
+    "state unchanged after"
+   ],
+   "cross:probe_stage3.py": [
+    "{\"probe\": \"bad-instant-as_of-2020-01-01T24:00:00Z\", \"passed\": false, \"detail\": {",
+    "{\"probe\": \"bad-instant-from-2020-01-01T24:00:00Z\", \"passed\": false, \"detail\": {\"",
+    "{\"probe\": \"bad-instant-known_at-2020-01-01T24:00:00Z\", \"passed\": false, \"detail\"",
+    "{\"probe\": \"bad-instant-to-2020-01-01T24:00:00Z\", \"passed\": false, \"detail\": {\"st",
+    "{\"probe\": \"recorded-strict\", \"passed\": false, \"detail\": null}",
+    "{\"probe\": \"stage3-import\", \"passed\": false, \"detail\": {\"status\": 422, \"body\": {\""
+   ],
+   "cross:probe_stage3_extra.py": [
+    "{\"probe\": \"genuine-request-correction-import\", \"passed\": false, \"detail\": {\"stat",
+    "{\"probe\": \"older_exports-uncaught\", \"passed\": false, \"detail\": \"'token'\"}",
+    "{\"probe\": \"reset\", \"passed\": false, \"detail\": {\"status\": 0, \"body\": {\"transport_"
+   ],
+   "cross:probe_stage3_freeze.py": [
+    "{\"probe\": \"all-genuine-snapshots-import\", \"passed\": false, \"detail\": {\"status\": ",
+    "{\"probe\": \"individual-genuine-snapshot-import-{\\\"from\\\": \\\"2020-01-02T00:00:00+0",
+    "{\"probe\": \"individual-genuine-snapshot-import-{\\\"from\\\": \\\"2020-01-02T02:00:00+0",
+    "{\"probe\": \"individual-genuine-snapshot-import-{\\\"from\\\": \\\"2020-01-03T00:00:00+0",
+    "{\"probe\": \"individual-genuine-snapshot-import-{\\\"from\\\": \\\"2020-01-04T00:00:00+0",
+    "{\"probe\": \"individual-genuine-snapshot-import-{\\\"known_at\\\": \\\"2020-01-01T00:00:",
+    "{\"probe\": \"individual-genuine-snapshot-import-{\\\"known_at\\\": \\\"2020-01-02T00:00:",
+    "{\"probe\": \"individual-genuine-snapshot-import-{\\\"known_at\\\": \\\"2090-01-01T00:00:",
+    "{\"probe\": \"individual-genuine-snapshot-import-{\\\"to\\\": \\\"2020-01-02T00:00:00+00:",
+    "{\"probe\": \"individual-genuine-snapshot-import-{}\", \"passed\": false, \"detail\": {\""
+   ],
+   "cross:probe_stage3_snapshots.py": [],
+   "auditor": [
+    "S3-20/21/24/25/23 correction validation, staleness, idempotency, strictly increasing recor"
+   ],
+   "shipped": []
+  },
+  "caught_by": [
+   "auditor",
+   "cross",
+   "customer",
+   "impl",
+   "reviewer"
+  ],
+  "new_fails": {
+   "impl": [
+    "(failures=3)",
+    "exit"
+   ],
+   "reviewer:model": [
+    "exit"
+   ],
+   "customer:journey_stage3_fix.py": [
+    "import 204",
+    "known_at == recorded_at of rev2 selects it",
+    "known_at == recorded_at of rev3 selects it",
+    "known_at == recorded_at of rev4 selects it",
+    "known_at == recorded_at of rev5 selects it",
+    "known_at == recorded_at of rev6 selects it",
+    "recorded_at strictly increasing",
+    "recorded_at strings distinct",
+    "snapshot after import",
+    "snapshot survives export/import identical pages"
+   ],
+   "customer:journey_stage3_snap.py": [
+    "all snapshot pages identical after import",
+    "genuine export with 6 old snapshots imports unchanged",
+    "known_at snapshot echo retained",
+    "other-user snapshot 404 after import",
+    "snapshot + from/to/known_at still 422 after import",
+    "snapshot after double import",
+    "snapshots still frozen after new writes post-import",
+    "state unchanged after"
+   ],
+   "cross:probe_stage3.py": [
+    "{\"probe\": \"recorded-strict\", \"passed\": false, \"detail\": null}",
+    "{\"probe\": \"stage3-import\", \"passed\": false, \"detail\": {\"status\": 422, \"body\": {\""
+   ],
+   "cross:probe_stage3_extra.py": [
+    "{\"probe\": \"genuine-request-correction-import\", \"passed\": false, \"detail\": {\"stat"
+   ],
+   "cross:probe_stage3_freeze.py": [
+    "{\"probe\": \"individual-genuine-snapshot-import-{\\\"from\\\": \\\"2020-01-02T00:00:00+0",
+    "{\"probe\": \"individual-genuine-snapshot-import-{\\\"from\\\": \\\"2020-01-03T00:00:00+0",
+    "{\"probe\": \"individual-genuine-snapshot-import-{\\\"from\\\": \\\"2020-01-04T00:00:00+0",
+    "{\"probe\": \"individual-genuine-snapshot-import-{\\\"known_at\\\": \\\"2020-01-01T00:00:",
+    "{\"probe\": \"individual-genuine-snapshot-import-{\\\"known_at\\\": \\\"2020-01-02T00:00:",
+    "{\"probe\": \"individual-genuine-snapshot-import-{\\\"to\\\": \\\"2020-01-02T00:00:00+00:",
+    "{\"probe\": \"individual-genuine-snapshot-import-{}\", \"passed\": false, \"detail\": {\""
+   ],
+   "auditor": [
+    "S3-20/21/24/25/23 correction validation, staleness, idempotency, strictly increasing recor"
+   ]
+  }
+ },
+ {
+  "id": "H10",
+  "requirement": "S3-24/33 a stale expected revision is 409",
+  "file": "history.py",
+  "old": "if expected != cur[\"revision\"]:",
+  "new": "if expected > cur[\"revision\"]:",
+  "fails": {
+   "impl": [
+    "(failures=1, errors=1)",
+    "exit",
+    "test_corrections_basic"
+   ],
+   "reviewer:probes_s3.py": [
+    "concurrent same expected_revision",
+    "correction moving effective time 201  ->",
+    "revisions for receiver  -> {'revisions'",
+    "stale revision -> 409  -> got 201 {'payment_id'",
+    "statement uses corrected revision once  -> {'opening_balance'"
+   ],
+   "reviewer:model": [
+    "exit"
+   ],
+   "customer:journey_stage3_api.py": [
+    "concurrent corrections",
+    "revision history length 2",
+    "revisions list",
+    "stale revision 409",
+    "statement ordering by effective_at",
+    "zero correction 201",
+    "zero revision still an entry w/ zero delta"
+   ],
+   "customer:journey_stage3_extra.py": [
+    "exit"
+   ],
+   "customer:journey_stage3_fix.py": [
+    "reset receiver spends before receiving"
+   ],
+   "customer:journey_stage3_fuzz.py": [],
+   "customer:journey_stage3_snap.py": [
+    "corrupt snapshot",
+    "re-import twice 204"
+   ],
+   "cross:probe_stage3.py": [
+    "{\"probe\": \"bad-instant-as_of-2020-01-01T24:00:00Z\", \"passed\": false, \"detail\": {",
+    "{\"probe\": \"bad-instant-from-2020-01-01T24:00:00Z\", \"passed\": false, \"detail\": {\"",
+    "{\"probe\": \"bad-instant-known_at-2020-01-01T24:00:00Z\", \"passed\": false, \"detail\"",
+    "{\"probe\": \"bad-instant-to-2020-01-01T24:00:00Z\", \"passed\": false, \"detail\": {\"st",
+    "{\"probe\": \"competing-corrections-one-success\", \"passed\": false, \"detail\": [201, ",
+    "{\"probe\": \"revision-list\", \"passed\": false, \"detail\": [{\"payment_id\": \"p_b\", \"re",
+    "{\"probe\": \"stale\", \"passed\": false, \"detail\": {\"status\": 201, \"body\": {\"payment_",
+    "{\"probe\": \"zero-entry-and-order\", \"passed\": false, \"detail\": [{\"payment\": {\"paym"
+   ],
+   "cross:probe_stage3_extra.py": [
+    "{\"probe\": \"older_exports-uncaught\", \"passed\": false, \"detail\": \"'token'\"}",
+    "{\"probe\": \"reset\", \"passed\": false, \"detail\": {\"status\": 0, \"body\": {\"transport_"
+   ],
+   "cross:probe_stage3_freeze.py": [
+    "{\"probe\": \"all-genuine-snapshots-import\", \"passed\": false, \"detail\": {\"status\": ",
+    "{\"probe\": \"individual-genuine-snapshot-import-{\\\"from\\\": \\\"2020-01-02T02:00:00+0",
+    "{\"probe\": \"individual-genuine-snapshot-import-{\\\"known_at\\\": \\\"2090-01-01T00:00:"
+   ],
+   "cross:probe_stage3_snapshots.py": [],
+   "auditor": [
+    "S3-20/21/24/25/23 correction validation, staleness, idempotency, strictly increasing recor",
+    "S3-33 concurrent corrections with the same expected revision"
+   ],
+   "shipped": []
+  },
+  "caught_by": [
+   "auditor",
+   "cross",
+   "customer",
+   "impl",
+   "reviewer"
+  ],
+  "new_fails": {
+   "impl": [
+    "(failures=1, errors=1)",
+    "exit",
+    "test_corrections_basic"
+   ],
+   "reviewer:probes_s3.py": [
+    "concurrent same expected_revision",
+    "correction moving effective time 201  ->",
+    "revisions for receiver  -> {'revisions'",
+    "stale revision -> 409  -> got 201 {'payment_id'",
+    "statement uses corrected revision once  -> {'opening_balance'"
+   ],
+   "reviewer:model": [
+    "exit"
+   ],
+   "customer:journey_stage3_api.py": [
+    "concurrent corrections",
+    "revision history length 2",
+    "revisions list",
+    "stale revision 409",
+    "statement ordering by effective_at",
+    "zero correction 201",
+    "zero revision still an entry w/ zero delta"
+   ],
+   "customer:journey_stage3_extra.py": [
+    "exit"
+   ],
+   "cross:probe_stage3.py": [
+    "{\"probe\": \"competing-corrections-one-success\", \"passed\": false, \"detail\": [201, ",
+    "{\"probe\": \"revision-list\", \"passed\": false, \"detail\": [{\"payment_id\": \"p_b\", \"re",
+    "{\"probe\": \"stale\", \"passed\": false, \"detail\": {\"status\": 201, \"body\": {\"payment_",
+    "{\"probe\": \"zero-entry-and-order\", \"passed\": false, \"detail\": [{\"payment\": {\"paym"
+   ],
+   "auditor": [
+    "S3-20/21/24/25/23 correction validation, staleness, idempotency, strictly increasing recor",
+    "S3-33 concurrent corrections with the same expected revision"
+   ]
+  }
+ },
+ {
+  "id": "H11",
+  "requirement": "S3-49 settlement members are immutable to single corrections",
+  "file": "history.py",
+  "old": "if p[\"settlement_id\"] is not None or p.get(\"authorization_id\") is not None:",
+  "new": "if p.get(\"authorization_id\") is not None:",
+  "fails": {
+   "impl": [
+    "(errors=1)",
+    "exit",
+    "test_linked_payments_immutable"
+   ],
+   "reviewer:probes_s3.py": [
+    "settlement member correction -> 422 linked_payment_immutable  -> got 201 {'payment_id'"
+   ],
+   "reviewer:model": [],
+   "customer:journey_stage3_api.py": [
+    "settlement member correction 422"
+   ],
+   "customer:journey_stage3_extra.py": [
+    "stage1",
+    "stage2"
+   ],
+   "customer:journey_stage3_fix.py": [
+    "reset receiver spends before receiving"
+   ],
+   "customer:journey_stage3_fuzz.py": [],
+   "customer:journey_stage3_snap.py": [
+    "corrupt snapshot",
+    "re-import twice 204"
+   ],
+   "cross:probe_stage3.py": [
+    "{\"probe\": \"bad-instant-as_of-2020-01-01T24:00:00Z\", \"passed\": false, \"detail\": {",
+    "{\"probe\": \"bad-instant-from-2020-01-01T24:00:00Z\", \"passed\": false, \"detail\": {\"",
+    "{\"probe\": \"bad-instant-known_at-2020-01-01T24:00:00Z\", \"passed\": false, \"detail\"",
+    "{\"probe\": \"bad-instant-to-2020-01-01T24:00:00Z\", \"passed\": false, \"detail\": {\"st",
+    "{\"probe\": \"settlement-immutable\", \"passed\": false, \"detail\": {\"status\": 201, \"bo",
+    "{\"probe\": \"stage3-import\", \"passed\": false, \"detail\": {\"status\": 422, \"body\": {\""
+   ],
+   "cross:probe_stage3_extra.py": [
+    "{\"probe\": \"older_exports-uncaught\", \"passed\": false, \"detail\": \"'token'\"}",
+    "{\"probe\": \"reset\", \"passed\": false, \"detail\": {\"status\": 0, \"body\": {\"transport_"
+   ],
+   "cross:probe_stage3_freeze.py": [
+    "{\"probe\": \"all-genuine-snapshots-import\", \"passed\": false, \"detail\": {\"status\": ",
+    "{\"probe\": \"individual-genuine-snapshot-import-{\\\"from\\\": \\\"2020-01-02T02:00:00+0",
+    "{\"probe\": \"individual-genuine-snapshot-import-{\\\"known_at\\\": \\\"2090-01-01T00:00:"
+   ],
+   "cross:probe_stage3_snapshots.py": [],
+   "auditor": [
+    "S3-48/49 settlement members and captures are immutable; member revision 1 at committed_at"
+   ],
+   "shipped": []
+  },
+  "caught_by": [
+   "auditor",
+   "cross",
+   "customer",
+   "impl",
+   "reviewer"
+  ],
+  "new_fails": {
+   "impl": [
+    "(errors=1)",
+    "exit",
+    "test_linked_payments_immutable"
+   ],
+   "reviewer:probes_s3.py": [
+    "settlement member correction -> 422 linked_payment_immutable  -> got 201 {'payment_id'"
+   ],
+   "customer:journey_stage3_api.py": [
+    "settlement member correction 422"
+   ],
+   "customer:journey_stage3_extra.py": [
+    "stage1",
+    "stage2"
+   ],
+   "cross:probe_stage3.py": [
+    "{\"probe\": \"settlement-immutable\", \"passed\": false, \"detail\": {\"status\": 201, \"bo",
+    "{\"probe\": \"stage3-import\", \"passed\": false, \"detail\": {\"status\": 422, \"body\": {\""
+   ],
+   "auditor": [
+    "S3-48/49 settlement members and captures are immutable; member revision 1 at committed_at"
+   ]
+  }
+ },
+ {
+  "id": "H12",
+  "requirement": "S3-32 revisions are hidden from third parties even for public payments",
+  "file": "history.py",
+  "old": "if p is None or user[\"id\"] not in (p[\"from_user_id\"], p[\"to_user_id\"]):",
+  "new": "if p is None or (p[\"visibility\"] != \"public\" and user[\"id\"] not in (p[\"from_user_id\"], p[\"to_user_id\"])):",
+  "fails": {
+   "impl": [
+    "(failures=1)",
+    "exit"
+   ],
+   "reviewer:probes_s3.py": [
+    "revisions third party"
+   ],
+   "reviewer:model": [],
+   "customer:journey_stage3_api.py": [
+    "third party 404 even public"
+   ],
+   "customer:journey_stage3_extra.py": [
+    "exit"
+   ],
+   "customer:journey_stage3_fix.py": [
+    "reset receiver spends before receiving"
+   ],
+   "customer:journey_stage3_fuzz.py": [],
+   "customer:journey_stage3_snap.py": [
+    "corrupt snapshot",
+    "re-import twice 204"
+   ],
+   "cross:probe_stage3.py": [
+    "{\"probe\": \"bad-instant-as_of-2020-01-01T24:00:00Z\", \"passed\": false, \"detail\": {",
+    "{\"probe\": \"bad-instant-from-2020-01-01T24:00:00Z\", \"passed\": false, \"detail\": {\"",
+    "{\"probe\": \"bad-instant-known_at-2020-01-01T24:00:00Z\", \"passed\": false, \"detail\"",
+    "{\"probe\": \"bad-instant-to-2020-01-01T24:00:00Z\", \"passed\": false, \"detail\": {\"st",
+    "{\"probe\": \"revisions-hidden-public\", \"passed\": false, \"detail\": {\"status\": 200, "
+   ],
+   "cross:probe_stage3_extra.py": [
+    "{\"probe\": \"older_exports-uncaught\", \"passed\": false, \"detail\": \"'token'\"}",
+    "{\"probe\": \"reset\", \"passed\": false, \"detail\": {\"status\": 0, \"body\": {\"transport_"
+   ],
+   "cross:probe_stage3_freeze.py": [
+    "{\"probe\": \"all-genuine-snapshots-import\", \"passed\": false, \"detail\": {\"status\": ",
+    "{\"probe\": \"individual-genuine-snapshot-import-{\\\"from\\\": \\\"2020-01-02T02:00:00+0",
+    "{\"probe\": \"individual-genuine-snapshot-import-{\\\"known_at\\\": \\\"2090-01-01T00:00:"
+   ],
+   "cross:probe_stage3_snapshots.py": [],
+   "auditor": [
+    "S3-19/22/26/31/32 corrections move the difference; revisions endpoint; feed unchanged"
+   ],
+   "shipped": []
+  },
+  "caught_by": [
+   "auditor",
+   "cross",
+   "customer",
+   "impl",
+   "reviewer"
+  ],
+  "new_fails": {
+   "impl": [
+    "(failures=1)",
+    "exit"
+   ],
+   "reviewer:probes_s3.py": [
+    "revisions third party"
+   ],
+   "customer:journey_stage3_api.py": [
+    "third party 404 even public"
+   ],
+   "customer:journey_stage3_extra.py": [
+    "exit"
+   ],
+   "cross:probe_stage3.py": [
+    "{\"probe\": \"revisions-hidden-public\", \"passed\": false, \"detail\": {\"status\": 200, "
+   ],
+   "auditor": [
+    "S3-19/22/26/31/32 corrections move the difference; revisions endpoint; feed unchanged"
+   ]
+  }
+ },
+ {
+  "id": "H13",
+  "requirement": "S3-43 known_at may not accompany a snapshot",
+  "file": "history.py",
+  "old": "if any(k in q for k in (\"from\", \"to\", \"known_at\")):",
+  "new": "if any(k in q for k in (\"from\", \"to\")):",
+  "fails": {
+   "impl": [
+    "(failures=1)",
+    "exit"
+   ],
+   "reviewer:probes_s3.py": [
+    "snapshot + known_at -> 422  -> got 200 {'opening_balance'"
+   ],
+   "reviewer:model": [],
+   "customer:journey_stage3_api.py": [
+    "snapshot+known_at 422"
+   ],
+   "customer:journey_stage3_extra.py": [],
+   "customer:journey_stage3_fix.py": [
+    "reset receiver spends before receiving"
+   ],
+   "customer:journey_stage3_fuzz.py": [],
+   "customer:journey_stage3_snap.py": [
+    "corrupt snapshot",
+    "snapshot + from/to/known_at still 422 after import"
+   ],
+   "cross:probe_stage3.py": [
+    "{\"probe\": \"bad-instant-as_of-2020-01-01T24:00:00Z\", \"passed\": false, \"detail\": {",
+    "{\"probe\": \"bad-instant-from-2020-01-01T24:00:00Z\", \"passed\": false, \"detail\": {\"",
+    "{\"probe\": \"bad-instant-known_at-2020-01-01T24:00:00Z\", \"passed\": false, \"detail\"",
+    "{\"probe\": \"bad-instant-to-2020-01-01T24:00:00Z\", \"passed\": false, \"detail\": {\"st",
+    "{\"probe\": \"snapshot-query-exclusion-known_at\", \"passed\": false, \"detail\": {\"stat"
+   ],
+   "cross:probe_stage3_extra.py": [
+    "{\"probe\": \"older_exports-uncaught\", \"passed\": false, \"detail\": \"'token'\"}",
+    "{\"probe\": \"reset\", \"passed\": false, \"detail\": {\"status\": 0, \"body\": {\"transport_"
+   ],
+   "cross:probe_stage3_freeze.py": [
+    "{\"probe\": \"all-genuine-snapshots-import\", \"passed\": false, \"detail\": {\"status\": ",
+    "{\"probe\": \"individual-genuine-snapshot-import-{\\\"from\\\": \\\"2020-01-02T02:00:00+0",
+    "{\"probe\": \"individual-genuine-snapshot-import-{\\\"known_at\\\": \\\"2090-01-01T00:00:"
+   ],
+   "cross:probe_stage3_snapshots.py": [],
+   "auditor": [
+    "S3-41/43/44/45/42 snapshots"
+   ],
+   "shipped": []
+  },
+  "caught_by": [
+   "auditor",
+   "cross",
+   "customer",
+   "impl",
+   "reviewer"
+  ],
+  "new_fails": {
+   "impl": [
+    "(failures=1)",
+    "exit"
+   ],
+   "reviewer:probes_s3.py": [
+    "snapshot + known_at -> 422  -> got 200 {'opening_balance'"
+   ],
+   "customer:journey_stage3_api.py": [
+    "snapshot+known_at 422"
+   ],
+   "customer:journey_stage3_snap.py": [
+    "snapshot + from/to/known_at still 422 after import"
+   ],
+   "cross:probe_stage3.py": [
+    "{\"probe\": \"snapshot-query-exclusion-known_at\", \"passed\": false, \"detail\": {\"stat"
+   ],
+   "auditor": [
+    "S3-41/43/44/45/42 snapshots"
+   ]
+  }
+ },
+ {
+  "id": "H14",
+  "requirement": "S3-52 a nonfinal capture reduces the hold at capture time",
+  "file": "ledger.py",
+  "old": "done = early + sum(c[\"amount\"] for c in caps if whole(c[\"ts\"]) <= m)",
+  "new": "done = early + sum(c[\"amount\"] for c in caps)",
+  "fails": {
+   "impl": [],
+   "reviewer:probes_s3.py": [],
+   "reviewer:model": [],
+   "customer:journey_stage3_api.py": [
+    "as_of after create before capture {'user_id'"
+   ],
+   "customer:journey_stage3_extra.py": [
+    "as_of before capture, known now",
+    "future as_of before deadline",
+    "known_at after create only"
+   ],
+   "customer:journey_stage3_fix.py": [
+    "reset receiver spends before receiving"
+   ],
+   "customer:journey_stage3_fuzz.py": [],
+   "customer:journey_stage3_snap.py": [
+    "corrupt snapshot",
+    "re-import twice 204"
+   ],
+   "cross:probe_stage3.py": [
+    "{\"probe\": \"bad-instant-as_of-2020-01-01T24:00:00Z\", \"passed\": false, \"detail\": {",
+    "{\"probe\": \"bad-instant-from-2020-01-01T24:00:00Z\", \"passed\": false, \"detail\": {\"",
+    "{\"probe\": \"bad-instant-known_at-2020-01-01T24:00:00Z\", \"passed\": false, \"detail\"",
+    "{\"probe\": \"bad-instant-to-2020-01-01T24:00:00Z\", \"passed\": false, \"detail\": {\"st",
+    "{\"probe\": \"hold-before-capture-known\", \"passed\": false, \"detail\": {\"user_id\": \"u",
+    "{\"probe\": \"hold-history-2026-10-04T10:30:00+00:00\", \"passed\": false, \"detail\": {"
+   ],
+   "cross:probe_stage3_extra.py": [
+    "{\"probe\": \"older_exports-uncaught\", \"passed\": false, \"detail\": \"'token'\"}",
+    "{\"probe\": \"reset\", \"passed\": false, \"detail\": {\"status\": 0, \"body\": {\"transport_"
+   ],
+   "cross:probe_stage3_freeze.py": [
+    "{\"probe\": \"all-genuine-snapshots-import\", \"passed\": false, \"detail\": {\"status\": ",
+    "{\"probe\": \"individual-genuine-snapshot-import-{\\\"from\\\": \\\"2020-01-02T02:00:00+0",
+    "{\"probe\": \"individual-genuine-snapshot-import-{\\\"known_at\\\": \\\"2090-01-01T00:00:"
+   ],
+   "cross:probe_stage3_snapshots.py": [],
+   "auditor": [
+    "S3-51/52/53/54/56 historical holds and closed_at"
+   ],
+   "shipped": []
+  },
+  "caught_by": [
+   "auditor",
+   "cross",
+   "customer"
+  ],
+  "new_fails": {
+   "customer:journey_stage3_api.py": [
+    "as_of after create before capture {'user_id'"
+   ],
+   "customer:journey_stage3_extra.py": [
+    "as_of before capture, known now",
+    "future as_of before deadline",
+    "known_at after create only"
+   ],
+   "cross:probe_stage3.py": [
+    "{\"probe\": \"hold-before-capture-known\", \"passed\": false, \"detail\": {\"user_id\": \"u",
+    "{\"probe\": \"hold-history-2026-10-04T10:30:00+00:00\", \"passed\": false, \"detail\": {"
+   ],
+   "auditor": [
+    "S3-51/52/53/54/56 historical holds and closed_at"
+   ]
+  }
+ },
+ {
+  "id": "H15",
+  "requirement": "S3-21 a correction's effective time is not later than now",
+  "file": "history.py",
+  "old": "if eff_ts > now:",
+  "new": "if eff_ts > now + 86400:",
+  "fails": {
+   "impl": [],
+   "reviewer:probes_s3.py": [
+    "correction 201 shape  ->",
+    "correction key reuse -> 409  -> got 409 {'error'",
+    "correction replay 200 identical  -> 409",
+    "invalid correction 8 -> 422"
+   ],
+   "reviewer:model": [],
+   "customer:journey_stage3_api.py": [
+    "422 code future eff",
+    "as_of at eff counts rev2",
+    "correction invalid",
+    "revisions list",
+    "statement ordering by effective_at",
+    "zero correction 201",
+    "zero revision still an entry w/ zero delta"
+   ],
+   "customer:journey_stage3_extra.py": [
+    "exit"
+   ],
+   "customer:journey_stage3_fix.py": [
+    "reset receiver spends before receiving"
+   ],
+   "customer:journey_stage3_fuzz.py": [],
+   "customer:journey_stage3_snap.py": [
+    "corrupt snapshot",
+    "re-import twice 204"
+   ],
+   "cross:probe_stage3.py": [
+    "{\"probe\": \"bad-instant-as_of-2020-01-01T24:00:00Z\", \"passed\": false, \"detail\": {",
+    "{\"probe\": \"bad-instant-from-2020-01-01T24:00:00Z\", \"passed\": false, \"detail\": {\"",
+    "{\"probe\": \"bad-instant-known_at-2020-01-01T24:00:00Z\", \"passed\": false, \"detail\"",
+    "{\"probe\": \"bad-instant-to-2020-01-01T24:00:00Z\", \"passed\": false, \"detail\": {\"st"
+   ],
+   "cross:probe_stage3_extra.py": [
+    "{\"probe\": \"older_exports-uncaught\", \"passed\": false, \"detail\": \"'token'\"}",
+    "{\"probe\": \"reset\", \"passed\": false, \"detail\": {\"status\": 0, \"body\": {\"transport_"
+   ],
+   "cross:probe_stage3_freeze.py": [
+    "{\"probe\": \"all-genuine-snapshots-import\", \"passed\": false, \"detail\": {\"status\": ",
+    "{\"probe\": \"individual-genuine-snapshot-import-{\\\"from\\\": \\\"2020-01-02T02:00:00+0",
+    "{\"probe\": \"individual-genuine-snapshot-import-{\\\"known_at\\\": \\\"2090-01-01T00:00:"
+   ],
+   "cross:probe_stage3_snapshots.py": [],
+   "auditor": [
+    "S3-20/21/24/25/23 correction validation, staleness, idempotency, strictly increasing recor"
+   ],
+   "shipped": []
+  },
+  "caught_by": [
+   "auditor",
+   "customer",
+   "reviewer"
+  ],
+  "new_fails": {
+   "reviewer:probes_s3.py": [
+    "correction 201 shape  ->",
+    "correction key reuse -> 409  -> got 409 {'error'",
+    "correction replay 200 identical  -> 409",
+    "invalid correction 8 -> 422"
+   ],
+   "customer:journey_stage3_api.py": [
+    "422 code future eff",
+    "as_of at eff counts rev2",
+    "correction invalid",
+    "revisions list",
+    "statement ordering by effective_at",
+    "zero correction 201",
+    "zero revision still an entry w/ zero delta"
+   ],
+   "customer:journey_stage3_extra.py": [
+    "exit"
+   ],
+   "auditor": [
+    "S3-20/21/24/25/23 correction validation, staleness, idempotency, strictly increasing recor"
+   ]
+  }
+ },
+ {
+  "id": "H16",
+  "requirement": "S3-3 a seeded created_at in the future is a reset error",
+  "file": "accounts.py",
+  "old": "if rec[\"ts\"] > time.time():",
+  "new": "if rec[\"ts\"] > time.time() + 86400:",
+  "fails": {
+   "impl": [],
+   "reviewer:probes_s3.py": [
+    "seeded future created_at -> 422  -> got 204 None"
+   ],
+   "reviewer:model": [],
+   "customer:journey_stage3_api.py": [
+    "future created_at 422, no change"
+   ],
+   "customer:journey_stage3_extra.py": [],
+   "customer:journey_stage3_fix.py": [
+    "reset receiver spends before receiving"
+   ],
+   "customer:journey_stage3_fuzz.py": [],
+   "customer:journey_stage3_snap.py": [
+    "corrupt snapshot",
+    "re-import twice 204"
+   ],
+   "cross:probe_stage3.py": [
+    "{\"probe\": \"bad-instant-as_of-2020-01-01T24:00:00Z\", \"passed\": false, \"detail\": {",
+    "{\"probe\": \"bad-instant-from-2020-01-01T24:00:00Z\", \"passed\": false, \"detail\": {\"",
+    "{\"probe\": \"bad-instant-known_at-2020-01-01T24:00:00Z\", \"passed\": false, \"detail\"",
+    "{\"probe\": \"bad-instant-to-2020-01-01T24:00:00Z\", \"passed\": false, \"detail\": {\"st"
+   ],
+   "cross:probe_stage3_extra.py": [
+    "{\"probe\": \"older_exports-uncaught\", \"passed\": false, \"detail\": \"'token'\"}",
+    "{\"probe\": \"reset\", \"passed\": false, \"detail\": {\"status\": 0, \"body\": {\"transport_"
+   ],
+   "cross:probe_stage3_freeze.py": [
+    "{\"probe\": \"all-genuine-snapshots-import\", \"passed\": false, \"detail\": {\"status\": ",
+    "{\"probe\": \"individual-genuine-snapshot-import-{\\\"from\\\": \\\"2020-01-02T02:00:00+0",
+    "{\"probe\": \"individual-genuine-snapshot-import-{\\\"known_at\\\": \\\"2090-01-01T00:00:"
+   ],
+   "cross:probe_stage3_snapshots.py": [],
+   "auditor": [
+    "S3-2/3/4/5/9/12 seeded history"
+   ],
+   "shipped": []
+  },
+  "caught_by": [
+   "auditor",
+   "customer",
+   "reviewer"
+  ],
+  "new_fails": {
+   "reviewer:probes_s3.py": [
+    "seeded future created_at -> 422  -> got 204 None"
+   ],
+   "customer:journey_stage3_api.py": [
+    "future created_at 422, no change"
+   ],
+   "auditor": [
+    "S3-2/3/4/5/9/12 seeded history"
+   ]
+  }
+ }
+]
