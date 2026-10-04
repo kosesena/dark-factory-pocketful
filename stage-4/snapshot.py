@@ -152,17 +152,19 @@ def _find_moment(s, moments, cache, sn, lo, hi, known, entries, floor_ts, floor_
                       key=lambda x: (x[0], x[2]["revision"]))
         cache[uid] = (mine, revs, sorted({r["effective_ts"] for _, _, r in revs}))
     mine, revs, eff = cache[uid]
-    cnt, tot = _Fenwick(len(eff)), _Fenwick(len(eff))
+    cnt, tot, hsh = _Fenwick(len(eff)), _Fenwick(len(eff)), _Fenwick(len(eff))
     base = s.users[uid]["opening"]
     lo_i = bisect_left(eff, lo) if lo is not None else 0
     hi_i = bisect_left(eff, hi) if hi is not None else len(eff)
     sign = lambda p: -1 if p["from_user_id"] == uid else 1
     selected, active = {}, set()
+    want_hash = sum(hash((e[0], e[1])) % (1 << 61) for e in entries)  # the (payment, revision) pairs the page shows
 
     def put(k, r, mult):
         i = bisect_left(eff, r["effective_ts"])
         cnt.add(i, mult)
         tot.add(i, mult * sign(mine[k]) * r["amount"])
+        hsh.add(i, mult * (hash((mine[k]["id"], r["revision"])) % (1 << 61)))  # additive: range sums are window hashes
 
     ri = pi = 0
     passing = []
@@ -183,10 +185,11 @@ def _find_moment(s, moments, cache, sn, lo, hi, known, entries, floor_ts, floor_
             pi += 1
         if tm < floor_ts or cut < floor_seq:
             continue
-        if (cnt.prefix(hi_i) - cnt.prefix(lo_i) == len(entries)
+        window_hash = hsh.prefix(hi_i) - hsh.prefix(lo_i)
+        if (window_hash == want_hash and cnt.prefix(hi_i) - cnt.prefix(lo_i) == len(entries)
                 and base + tot.prefix(lo_i) == sn["opening_balance"]
                 and base + tot.prefix(hi_i) == sn["closing_balance"]):
-            passing.append((tm, cut, (pi, ri)))
+            passing.append((tm, cut, window_hash))  # every passing moment has the stored content: one rebuild decides
     tried = set()
     for tm, cut, sig in reversed(passing):  # latest first
         if sig in tried:

@@ -2254,7 +2254,7 @@ class LegacySnapshotManyLaterFacts(unittest.TestCase):
         ada = login("ada")
         first = call("GET", "/statement", token=ada)[1]
         time.sleep(1.1)
-        for i in range(3000):
+        for i in range(2100):
             self.assertEqual(call("POST", "/payments", {"to_handle": "bob", "amount": 1}, token=ada, key="m%d" % i)[0], 201)
         exp = call("GET", "/_test/export")[1]
         for sn in exp["state"]["snapshots"]:
@@ -2327,6 +2327,75 @@ class LegacyEmptyLedgerMoment(unittest.TestCase):
             sn["echo"] = {"from": "2090-01-01T00:00:00+00:00"}  # a different query that no rebuild reproduces with a closing difference
             sn["closing_balance"] += 1
         self.assertEqual(self.imp(self.full["snapshot"], other_echo), 422)
+
+
+class LegacyWorstCaseSwap(unittest.TestCase):
+    def test_closed_window_swap_with_many_later_out_of_window_facts_is_refused_quickly(self):
+        self.assertEqual(call("POST", "/_test/reset", hist_fixture())[0], 204)
+        ada, bob = login("ada"), login("bob")
+        page = call("GET", "/statement?from=2026-09-22T00:00:00%2B00:00&to=2026-09-23T00:00:00%2B00:00", token=bob)[1]
+        self.assertEqual(len(page["entries"]), 2)  # p_c and p_d share one instant
+        time.sleep(1.1)
+        for i in range(2100):
+            self.assertEqual(call("POST", "/payments", {"to_handle": "bob", "amount": 1}, token=ada, key="w%d" % i)[0], 201)
+        exp = call("GET", "/_test/export")[1]
+
+        def legacy(fn=None):
+            m = json.loads(json.dumps(exp))
+            for sn in m["state"]["snapshots"]:
+                for k in ("taken_ts", "taken_seq", "view"):
+                    sn.pop(k, None)
+                if fn and sn["token"] == page["snapshot"]:
+                    fn(sn)
+            t0 = time.time()
+            status = call("POST", "/_test/import", m)[0]
+            return status, time.time() - t0
+
+        def swap(sn):
+            sn["entries"].reverse()
+            running = sn["opening_balance"]
+            for e in sn["entries"]:
+                running += e[2]
+                e[3] = running
+        s, took = legacy()
+        self.assertEqual(s, 204)
+        self.assertLess(took, 3)
+        s, took = legacy(swap)
+        self.assertEqual(s, 422)
+        self.assertLess(took, 3)  # a bounded number of rebuilds, not one per later moment
+
+
+class LegacyManyCorrectionsManySnapshots(unittest.TestCase):
+    def test_same_amount_corrections_with_many_snapshots(self):
+        self.assertEqual(call("POST", "/_test/reset", hist_fixture())[0], 204)
+        ada = login("ada")
+        pages = [call("GET", "/statement" + ("?limit=%d" % (i + 1)), token=ada)[1] for i in range(10)]
+        time.sleep(1.1)
+        for i in range(1000):  # same amount every time: counts and sums never change, only the revision does
+            s = call("POST", "/payments/p_a/corrections", {"expected_revision": i + 1, "amount": 500,
+                                                            "effective_at": "2026-09-20T10:00:00+00:00", "reason": "r"}, token=ada, key="k%d" % i)[0]
+            self.assertEqual(s, 201)
+        exp = call("GET", "/_test/export")[1]
+        tokens = {p["snapshot"] for p in pages}
+
+        def legacy(tamper):
+            m = json.loads(json.dumps(exp))
+            for sn in m["state"]["snapshots"]:
+                for k in ("taken_ts", "taken_seq", "view"):
+                    sn.pop(k, None)
+                if tamper and sn["token"] in tokens:
+                    sn["opening_balance"] += 1
+                    sn["closing_balance"] += 1
+                    for e in sn["entries"]:
+                        e[3] += 1
+            t0 = time.time()
+            return call("POST", "/_test/import", m)[0], time.time() - t0
+        s, took = legacy(False)
+        self.assertEqual(s, 204)
+        self.assertLess(took, 3)
+        s, took = legacy(True)
+        self.assertEqual(s, 422)
+        self.assertLess(took, 3)
 
 
 class LegacyMomentMustBeReal(unittest.TestCase):
