@@ -45,3 +45,17 @@ Browser check (Playwright, kickoff venv): `python tests/ui_check.py [screenshot-
 - Exports carry statement snapshots (frozen original form); imports of stage 1-3 exports derive missing ledger fields.
 - Reset and import share one invariant checker: instants at full precision, historical non-negativity, snapshot
   rebuild from the ledger and idempotency receipts (including batch receipts) checked against the records.
+
+### Importing exports from older stages (snapshots)
+
+- A statement snapshot with no `taken_ts`/`taken_seq` (an export of an older stage) is accepted only if its whole
+  page (opening, entries, closing, echoed query) equals the full rebuild at some recorded moment of the imported
+  ledger. The search covers every moment back to the snapshot's own latest recorded instant, with no cap; a snapshot
+  matching no moment is refused with 422 and the destination is unchanged.
+- A recorded instant is only a reconstruction device, not proof that a read happened there. The check is that owner,
+  window, known_at selection, balances and ledger cutoff all agree with a possible read at such a moment.
+- This admits two classes of alternative valid earlier states (never equivalent to the original, non-empty page), which cannot be told from a genuine page: "the
+  last-created fact dropped, closing adjusted" and "cleared entries equal to the empty-ledger statement". Every other
+  change (shifted or reordered balances, duplicated entries, another user, malformed fields) is refused.
+- A snapshot without `view` predates refunds and is refused if any entry is a refund.
+- Current-format snapshots (with `taken_ts`, `taken_seq`, `view`) are checked against their explicit frozen metadata.

@@ -2220,6 +2220,115 @@ class SnapshotFuzz(unittest.TestCase):
         self.assertEqual(legacy(shift), 422)
 
 
+class LegacySnapshotTakenBeforeLaterFacts(unittest.TestCase):
+    def test_older_stage_export_imports_with_its_original_page(self):
+        """An older-stage export has no taken_ts/taken_seq/view; a snapshot taken before later facts is the
+        statement of an earlier moment of the ledger and must import and page unchanged."""
+        for q in ("", "?known_at=2090-01-01T00:00:00%2B00:00", "?from=2090-01-01T00:00:00%2B00:00"):
+            self.assertEqual(call("POST", "/_test/reset", hist_fixture())[0], 204)
+            ada = login("ada")
+            first = call("GET", "/statement" + q, token=ada)[1]
+            time.sleep(1.1)
+            self.assertEqual(call("POST", "/payments/p_a/corrections", {"expected_revision": 1, "amount": 150, "effective_at": "2026-09-20T12:00:00+00:00", "reason": "later"}, token=ada, key="c1")[0], 201)
+            self.assertEqual(call("POST", "/payments", {"to_handle": "bob", "amount": 10}, token=ada, key="c2")[0], 201)
+            exp = call("GET", "/_test/export")[1]
+            for sn in exp["state"]["snapshots"]:
+                for k in ("taken_ts", "taken_seq", "view"):
+                    sn.pop(k, None)
+            self.assertEqual(call("POST", "/_test/import", exp)[0], 204, q)
+            got = call("GET", "/statement?snapshot=" + first["snapshot"], token=ada)[1]
+            def old_shape(o):  # a view-less page is the pre-refund shape: no refund_of key (it is None here anyway)
+                return ({k: old_shape(v) for k, v in o.items() if k != "refund_of"} if isinstance(o, dict)
+                        else [old_shape(v) for v in o] if isinstance(o, list) else o)
+            self.assertEqual(old_shape(got), old_shape(first))
+            # a tampered legacy page that matches no moment of the ledger is still refused
+            bad = json.loads(json.dumps(exp))
+            sn = [x for x in bad["state"]["snapshots"] if x["token"] == first["snapshot"]][0]
+            sn["closing_balance"] += 1
+            self.assertEqual(call("POST", "/_test/import", bad)[0], 422)
+
+
+class LegacySnapshotManyLaterFacts(unittest.TestCase):
+    def test_no_cap_on_how_many_facts_follow_a_legacy_snapshot(self):
+        self.assertEqual(call("POST", "/_test/reset", hist_fixture())[0], 204)
+        ada = login("ada")
+        first = call("GET", "/statement", token=ada)[1]
+        time.sleep(1.1)
+        for i in range(2100):
+            self.assertEqual(call("POST", "/payments", {"to_handle": "bob", "amount": 1}, token=ada, key="m%d" % i)[0], 201)
+        exp = call("GET", "/_test/export")[1]
+        for sn in exp["state"]["snapshots"]:
+            for k in ("taken_ts", "taken_seq", "view"):
+                sn.pop(k, None)
+        t0 = time.time()
+        self.assertEqual(call("POST", "/_test/import", exp)[0], 204)
+        self.assertLess(time.time() - t0, 30)
+        got = call("GET", "/statement?snapshot=" + first["snapshot"], token=ada)[1]
+        no_refund = lambda o: ({k: no_refund(v) for k, v in o.items() if k != "refund_of"} if isinstance(o, dict)
+                               else [no_refund(v) for v in o] if isinstance(o, list) else o)  # view-less pages predate refund_of
+        self.assertEqual(no_refund(got["entries"]), no_refund(first["entries"]))
+        self.assertEqual((got["opening_balance"], got["closing_balance"]), (first["opening_balance"], first["closing_balance"]))
+        bad = json.loads(json.dumps(exp))  # a corrupt legacy page tries every moment and still ends in 422, in bounded time
+        [x for x in bad["state"]["snapshots"] if x["token"] == first["snapshot"]][0]["closing_balance"] += 1
+        t0 = time.time()
+        self.assertEqual(call("POST", "/_test/import", bad)[0], 422)
+        self.assertLess(time.time() - t0, 30)
+
+
+class LegacyEmptyLedgerMoment(unittest.TestCase):
+    """A legacy page with no entries is accepted only as the full rebuild at a recorded moment (the empty ledger)."""
+
+    def setUp(self):
+        fx = hist_fixture()
+        fx["payments"] = []
+        self.assertEqual(call("POST", "/_test/reset", fx)[0], 204)
+        self.ada = login("ada")
+        self.empty = call("GET", "/statement", token=self.ada)[1]  # the first statement is genuinely empty
+        self.assertEqual(self.empty["entries"], [])
+        time.sleep(1.1)
+        self.assertEqual(call("POST", "/payments", {"to_handle": "bob", "amount": 25}, token=self.ada, key="e1")[0], 201)
+        self.full = call("GET", "/statement", token=self.ada)[1]
+        self.exp = call("GET", "/_test/export")[1]
+        for sn in self.exp["state"]["snapshots"]:
+            for k in ("taken_ts", "taken_seq", "view"):
+                sn.pop(k, None)
+
+    def imp(self, token, fn=None):
+        m = json.loads(json.dumps(self.exp))
+        if fn:
+            fn([x for x in m["state"]["snapshots"] if x["token"] == token][0])
+        return call("POST", "/_test/import", m)[0]
+
+    def test_genuine_empty_first_statement_imports(self):
+        self.assertEqual(self.imp(self.empty["snapshot"]), 204)
+        got = call("GET", "/statement?snapshot=" + self.empty["snapshot"], token=self.ada)[1]
+        self.assertEqual((got["entries"], got["opening_balance"], got["closing_balance"]),
+                         ([], self.empty["opening_balance"], self.empty["closing_balance"]))
+
+    def test_cleared_page_is_the_empty_ledger_statement_or_refused(self):
+        def clear(sn):
+            sn["entries"] = []
+            sn["closing_balance"] = sn["opening_balance"]
+        # collision class: it equals the statement of a recorded moment (the empty ledger), so it is a valid earlier state
+        self.assertEqual(self.imp(self.full["snapshot"], clear), 204)
+        got = call("GET", "/statement?snapshot=" + self.full["snapshot"], token=self.ada)[1]
+        self.assertEqual((got["entries"], got["opening_balance"], got["closing_balance"]),
+                         ([], self.empty["opening_balance"], self.empty["closing_balance"]))
+        def unequal(sn):
+            sn["entries"] = []  # opening != closing with no entries
+        self.assertEqual(self.imp(self.full["snapshot"], unequal), 422)
+        def shifted(sn):
+            clear(sn)
+            sn["opening_balance"] += 1
+            sn["closing_balance"] += 1  # equals no recorded moment
+        self.assertEqual(self.imp(self.full["snapshot"], shifted), 422)
+        def other_echo(sn):
+            clear(sn)
+            sn["echo"] = {"from": "2090-01-01T00:00:00+00:00"}  # a different query that no rebuild reproduces with a closing difference
+            sn["closing_balance"] += 1
+        self.assertEqual(self.imp(self.full["snapshot"], other_echo), 422)
+
+
 class ViewlessSnapshotWithRefund(unittest.TestCase):
     def test_view_less_snapshot_cannot_hold_a_refund_entry(self):
         self.assertEqual(call("POST", "/_test/reset", hist_fixture())[0], 204)

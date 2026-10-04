@@ -99,6 +99,30 @@ def _derive_closed(s, rec):
     return src["created_at"], float(math.floor(src["ts"]))
 
 
+def _past_moments(s, state_seq):
+    """(taken_ts, taken_seq) for every moment the ledger changed, latest first: a legacy snapshot carries
+    neither, so it is accepted only if it equals the statement as of one of these moments."""
+    facts = sorted([(x["ts"], x["seq"]) for coll in (s.payments, s.requests, s.auths) for x in coll])
+    times = {r["recorded_ts"] for p in s.payments for r in p["revisions"]} | {ts for ts, _ in facts}
+    if not times:
+        return [(0.0, state_seq)]
+    latest = max(times)
+    best, i = 0, 0
+    by_seq = sorted((seq, ts) for ts, seq in facts)
+    asc = []
+    for tm in sorted(times):
+        while i < len(facts) and facts[i][0] <= tm:
+            best = max(best, facts[i][1])
+            i += 1
+        # a real moment: exactly the facts up to that sequence number were created by then
+        if all(ts <= tm for seq, ts in by_seq if seq <= best) and all(ts > tm for seq, ts in by_seq if seq > best):
+            asc.append((tm, best))
+    if not asc or asc[-1][0] != latest:
+        asc.append((latest, state_seq))
+    asc[-1] = (latest, state_seq)  # the ledger as it stands now
+    return asc[::-1]
+
+
 def load_state(st):
     _need(isinstance(st, dict))
     s = State()
@@ -235,7 +259,7 @@ def load_state(st):
                          + [a["seq"] for a in s.auths] + [0]))
     if hasattr(s, "open_auths"):
         sweep(s, time.time())
-    ledger_latest = [None]
+    past = [None]
     for sn in st.get("snapshots", []):  # frozen statements survive an import (older exports have none)
         base = {"token", "user_id", "opening_balance", "entries", "closing_balance", "echo"}
         _need(isinstance(sn, dict) and set(sn) in (base, base | {"taken_ts", "taken_seq"},
@@ -277,16 +301,27 @@ def load_state(st):
             _need(after == running)
             entries.append(tuple(e))
         _need(running == sn["closing_balance"])
-        if "taken_ts" not in sn:  # a legacy snapshot: derive when it was taken from the ledger and its own entries
-            if ledger_latest[0] is None:
-                ledger_latest[0] = max([r["recorded_ts"] for p in s.payments for r in p["revisions"]] + [0.0])
-            latest = max([ledger_latest[0]] + [parse_instant(e[5]) for e in entries])
-            sn = dict(sn, taken_ts=latest, taken_seq=st["seq"])
-        if True:  # frozen facts: rebuild the whole statement and require exact equality, never skipped
+        if "taken_ts" in sn:  # frozen facts: rebuild the whole statement and require exact equality, never skipped
             _need(_num(sn["taken_ts"]) and _int(sn["taken_seq"]) and 0 <= sn["taken_seq"])
             _need(sn["taken_seq"] <= st["seq"] and sn["taken_ts"] <= time.time() + 86400)  # taken in this ledger's past
             ob, rebuilt, cb = build_statement(s, sn["user_id"], lo, hi, known, sn["taken_ts"], sn["taken_seq"])
             _need(ob == sn["opening_balance"] and cb == sn["closing_balance"] and rebuilt == entries)
+        else:  # a legacy snapshot: it must equal the statement of some moment of this ledger's own history
+            if past[0] is None:
+                past[0] = _past_moments(s, st["seq"])
+            # a moment before the snapshot's own latest entry was recorded cannot be when it was taken: the search
+            # stops there, so it is complete (every possible moment is tried) and bounded by the facts newer than it
+            floor_ts = max([parse_instant(e[5]) for e in entries] + [0.0])
+            floor_seq = max([s.payments_by_id[e[0]]["seq"] for e in entries] + [0])
+            for taken_ts, taken_seq in past[0]:  # latest first; the full rebuild is never skipped
+                if taken_ts < floor_ts or taken_seq < floor_seq:
+                    _need(False)
+                ob, rebuilt, cb = build_statement(s, sn["user_id"], lo, hi, known, taken_ts, taken_seq)
+                if ob == sn["opening_balance"] and cb == sn["closing_balance"] and rebuilt == entries:
+                    sn = dict(sn, taken_ts=taken_ts, taken_seq=taken_seq)
+                    break
+            else:
+                _need(False)
         s.snapshots[sn["token"]] = dict(sn, entries=entries)
     check_state_invariants(s)
     check_receipts(s)
