@@ -1,7 +1,9 @@
 """GET /_test/export and POST /_test/import."""
 import json
+import math
+import re
 
-from common import (HANDLE_RE, held_of, STATUSES, State, parse_json, store, validation)
+from common import (MAX_AMOUNT, parse_ts, HANDLE_RE, held_of, STATUSES, State, parse_json, store, validation)
 
 
 def export(req):
@@ -34,6 +36,30 @@ def _str(v):
     return isinstance(v, str)
 
 
+RFC3339 = re.compile(r"\d{4}-\d\d-\d\dT\d\d:\d\d:\d\d(\.\d+)?(Z|z|[+-]\d\d:\d\d)")
+
+
+def _ts_str(v):
+    _need(_str(v) and RFC3339.fullmatch(v))
+    parse_ts(v)  # raises ValueError for impossible dates
+
+
+def _num(v):
+    return isinstance(v, (int, float)) and not isinstance(v, bool) and math.isfinite(v)
+
+
+def _amount(v, lo=0):
+    return _int(v) and lo <= v <= MAX_AMOUNT
+
+
+def _id(v):
+    return _str(v) and 1 <= len(v) <= 64
+
+
+def _seq(v):
+    return _int(v) and v >= 0
+
+
 def load_state(st):
     _need(isinstance(st, dict))
     s = State()
@@ -43,7 +69,7 @@ def load_state(st):
         _need(isinstance(u, dict))
         rec = {k: u[k] for k in ("id", "email", "display_name", "handle", "balance", "salt", "hash")}
         _need(all(_str(rec[k]) for k in ("id", "email", "display_name", "handle", "salt", "hash")))
-        _need(_int(rec["balance"]) and rec["balance"] >= 0)
+        _need(_id(rec["id"]) and 0 <= rec["balance"] <= 2 ** 53 and _int(rec["balance"]))
         _need(HANDLE_RE.fullmatch(rec["handle"]))
         bytes.fromhex(rec["salt"]), bytes.fromhex(rec["hash"])
         _need(rec["id"] not in s.users and rec["handle"] not in s.by_handle
@@ -53,41 +79,44 @@ def load_state(st):
         s.by_email[rec["email"].lower()] = rec
     _need(isinstance(st["tokens"], dict))
     for t, uid in st["tokens"].items():
-        _need(uid in s.users)
+        _need(_str(t) and t and uid in s.users)
         s.tokens[t] = uid
     for p in st["payments"]:
         rec = {k: p[k] for k in ("id", "from_user_id", "to_user_id", "amount", "note", "visibility",
                                  "request_id", "settlement_id", "created_at", "ts", "seq")}
         rec["authorization_id"] = p.get("authorization_id")  # absent in stage-1 exports
-        _need(_str(rec["id"]) and rec["id"] not in s.payments_by_id)
+        _need(_id(rec["id"]) and rec["id"] not in s.payments_by_id)
         _need(rec["from_user_id"] in s.users and rec["to_user_id"] in s.users)
-        _need(_int(rec["amount"]) and rec["amount"] >= 0 and _str(rec["note"]))
-        _need(rec["visibility"] in ("public", "private") and _str(rec["created_at"]))
-        _need(isinstance(rec["ts"], (int, float)) and _int(rec["seq"]))
+        _need(_amount(rec["amount"]) and _str(rec["note"]))
+        _need(rec["visibility"] in ("public", "private") and _str(rec["visibility"]))
+        _ts_str(rec["created_at"])
+        _need(_num(rec["ts"]) and _seq(rec["seq"]))
         s.payments.append(rec)
         s.payments_by_id[rec["id"]] = rec
     for r in st["requests"]:
         rec = {k: r[k] for k in ("id", "requester_id", "payer_id", "amount", "note", "status",
                                  "payment_id", "created_at", "ts", "seq")}
-        _need(_str(rec["id"]) and rec["id"] not in s.requests_by_id)
+        _need(_id(rec["id"]) and rec["id"] not in s.requests_by_id)
         _need(rec["requester_id"] in s.users and rec["payer_id"] in s.users)
-        _need(_int(rec["amount"]) and rec["amount"] >= 0 and _str(rec["note"]))
-        _need(rec["status"] in STATUSES and _str(rec["created_at"]))
-        _need(isinstance(rec["ts"], (int, float)) and _int(rec["seq"]))
+        _need(_amount(rec["amount"]) and _str(rec["note"]))
+        _need(rec["status"] in STATUSES and _str(rec["status"]))
+        _ts_str(rec["created_at"])
+        _need(_num(rec["ts"]) and _seq(rec["seq"]))
         s.requests.append(rec)
         s.requests_by_id[rec["id"]] = rec
     _need(isinstance(st["splits"], dict) and all(isinstance(v, dict) for v in st["splits"].values()))
     s.splits = dict(st["splits"])
     _need(isinstance(st["settlements"], dict))
     for k, v in st["settlements"].items():
-        _need(isinstance(v, dict) and isinstance(v["payment_ids"], list)
+        _need(isinstance(v, dict) and _str(k) and v["id"] == k and isinstance(v["payment_ids"], list)
               and all(pid in s.payments_by_id for pid in v["payment_ids"]))
+        _ts_str(v["committed_at"])
         s.settlements[k] = {"id": v["id"], "committed_at": v["committed_at"],
                             "payment_ids": list(v["payment_ids"])}
     for item in st["idempotency"]:
         _need(isinstance(item, list) and len(item) == 5)
         u, k, p, fp, resp = item
-        _need(_str(u) and _str(k) and _str(p) and _str(fp) and isinstance(resp, dict))
+        _need(_str(u) and _str(k) and 1 <= len(k) <= 255 and _str(p) and _str(fp) and isinstance(resp, dict))
         s.idem[(u, k, p)] = (fp, resp)
     _need(isinstance(st["operators"], list) and all(_str(x) for x in st["operators"]))
     s.operators = set(st["operators"])
@@ -98,21 +127,32 @@ def load_state(st):
         rec = {k: a[k] for k in ("id", "from_user_id", "to_user_id", "amount", "captured_amount",
                                  "note", "visibility", "status", "expires_at", "expires_ts",
                                  "payment_ids", "created_at", "ts", "seq")}
-        _need(_str(rec["id"]) and rec["id"] not in s.auths_by_id)
+        _need(_id(rec["id"]) and rec["id"] not in s.auths_by_id)
         _need(rec["from_user_id"] in s.users and rec["to_user_id"] in s.users)
-        _need(_int(rec["amount"]) and _int(rec["captured_amount"])
+        _need(_amount(rec["amount"], 1) and _int(rec["captured_amount"])
               and 0 <= rec["captured_amount"] <= rec["amount"] and _str(rec["note"]))
         _need(rec["visibility"] in ("public", "private")
               and rec["status"] in ("open", "captured", "voided", "expired"))
-        _need(_str(rec["expires_at"]) and isinstance(rec["expires_ts"], (int, float)))
+        _ts_str(rec["expires_at"])
+        _need(_num(rec["expires_ts"]))
         _need(isinstance(rec["payment_ids"], list) and all(_str(x) for x in rec["payment_ids"]))
-        _need(_str(rec["created_at"]) and isinstance(rec["ts"], (int, float)) and _int(rec["seq"]))
+        _ts_str(rec["created_at"])
+        _need(_num(rec["ts"]) and _seq(rec["seq"]))
         s.auths.append(rec)
         s.auths_by_id[rec["id"]] = rec
         if rec["status"] == "open":
             s.open_auths[rec["id"]] = rec
     for uid, u in s.users.items():
         _need(held_of(s, uid) <= u["balance"])
+    for a in s.auths:
+        _need(all(pid in s.payments_by_id for pid in a["payment_ids"]))
+    for p in s.payments:
+        _need(p["authorization_id"] is None or p["authorization_id"] in s.auths_by_id)
+    for p in s.payments:
+        _need(p["request_id"] is None or p["request_id"] in s.requests_by_id)
+        _need(p["settlement_id"] is None or p["settlement_id"] in s.settlements)
+    for r in s.requests:
+        _need(r["payment_id"] is None or r["payment_id"] in s.payments_by_id)
     _need(_int(st["seq"]))
     s.seq = max(st["seq"], max([p["seq"] for p in s.payments] + [r["seq"] for r in s.requests]
                          + [a["seq"] for a in s.auths] + [0]))

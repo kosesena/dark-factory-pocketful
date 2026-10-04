@@ -171,6 +171,65 @@ class Pages(Base):
         self.assertEqual(call("GET", "/requests")[0], 401)
 
 
+class Strictness(Base):
+    def test_exact_numbers_in_body_identity(self):
+        b = '{"to_handle":"bob","amount":1,"extra":%s}'
+        self.assertEqual(call("POST", "/payments", raw=b % "1.0000000000000001", token=self.ada, key="K")[0], 201)
+        self.assertEqual(call("POST", "/payments", raw=b % "1.0000000000000001", token=self.ada, key="K")[0], 200)
+        self.assertEqual(call("POST", "/payments", raw=b % "1", token=self.ada, key="K")[0], 409)
+        self.assertEqual(call("POST", "/payments", raw=b % "1.0", token=self.ada, key="K2")[0], 201)
+        self.assertEqual(call("POST", "/payments", raw=b % "1", token=self.ada, key="K2")[0], 200)
+
+    def test_huge_integers(self):
+        big = "9" * 5000
+        for path, body in (("/payments", '{"to_handle":"bob","amount":%s}'), ("/requests", '{"payer_handle":"bob","amount":%s}'),
+                           ("/splits", '{"participant_handles":["bob"],"amount":%s}')):
+            self.assertEqual(call("POST", path, raw=body % big, token=self.ada, key="h" + path)[0], 422, path)
+        self.assertEqual(call("POST", "/payments", raw='{"to_handle":"bob","amount":1,"x":%s}' % big, token=self.ada, key="hx")[0], 201)
+
+    def test_zero_share_state_roundtrips(self):
+        s, sp, _ = call("POST", "/splits", {"amount": 1, "participant_handles": ["cy", "bob", "ada"]}, token=self.ada, key="Z")
+        zero = sp["requests"][1]["request_id"]  # bob's share is 0
+        self.assertEqual(call("POST", "/requests/%s/pay" % zero, {}, token=self.bob, key="ZP")[0], 201)
+        s, snap, _ = call("GET", "/_test/export")
+        call("POST", "/_test/reset", fixture())
+        self.assertEqual(call("POST", "/_test/import", snap)[0], 204)
+        s, b, _ = call("GET", "/requests?status=paid", token=self.bob)
+        self.assertEqual([r["amount"] for r in b["requests"]], [0])
+
+    def test_import_is_strict_and_transactional(self):
+        call("POST", "/payments", {"to_handle": "bob", "amount": 100}, token=self.ada, key="K")
+        call("POST", "/requests", {"payer_handle": "ada", "amount": 100}, token=self.cy, key="Q")
+        s, snap, _ = call("GET", "/_test/export")
+        def mutate(f):
+            m = json.loads(json.dumps(snap))
+            f(m["state"])
+            return m
+        bad = [lambda st: st["payments"][-1].__setitem__("created_at", "not-a-timestamp"),
+               lambda st: st["payments"][-1].__setitem__("created_at", "2026-13-45T00:00:00+00:00"),
+               lambda st: st["payments"][-1].__setitem__("created_at", "2026-01-01T00:00:00"),
+               lambda st: st["payments"][-1].__setitem__("amount", 1000000001),
+               lambda st: st["requests"][-1].__setitem__("amount", -1),
+               lambda st: st["users"][0].__setitem__("balance", -1),
+               lambda st: st["users"][0].__setitem__("balance", 2 ** 53 + 1),
+               lambda st: st["users"][0].__setitem__("balance", 1.5),
+               lambda st: st["users"][0].__setitem__("handle", "Bad Handle"),
+               lambda st: st["users"][1].__setitem__("handle", st["users"][0]["handle"]),
+               lambda st: st["payments"][-1].__setitem__("visibility", "secret"),
+               lambda st: st["payments"][-1].__setitem__("request_id", "nope"),
+               lambda st: st["payments"][-1].__setitem__("from_user_id", "ghost"),
+               lambda st: st["requests"][-1].__setitem__("status", "weird"),
+               lambda st: st["requests"][-1].__setitem__("payment_id", "nope"),
+               lambda st: st["tokens"].__setitem__("t", "ghost"),
+               lambda st: st["payments"][-1].__setitem__("ts", "now"),
+               lambda st: st["payments"][-1].__setitem__("settlement_id", "st_x"),
+               lambda st: st.__setitem__("currency", 5)]
+        for i, f in enumerate(bad):
+            self.assertEqual(call("POST", "/_test/import", mutate(f))[0], 422, i)
+        self.assertEqual(self.bal(self.ada), 9900)
+        self.assertEqual(call("POST", "/_test/import", snap)[0], 204)
+
+
 class Payments(Base):
     def pay(self, tok, body, key="k1"):
         return call("POST", "/payments", body, token=tok, key=key)
