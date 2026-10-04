@@ -5,7 +5,7 @@ import time
 import re
 
 from invariants import check_state_invariants
-from ledger import compute_opening, ensure_revisions, first_revision
+from ledger import compute_opening, ensure_revisions, first_revision, instants_agree
 from common import (sweep, MAX_AMOUNT, parse_ts, HANDLE_RE, held_of, STATUSES, State, parse_json, store, validation)
 
 
@@ -75,12 +75,13 @@ def _check_revisions(p):
     last = None
     for i, r in enumerate(revs, 1):
         _need(isinstance(r, dict) and set(r) == set(first_revision(p)) and r["revision"] == i)
+        _need(r["correction_batch_id"] is None or _str(r["correction_batch_id"]))
         _need(_amount(r["amount"]) and _str(r["reason"]) and len(r["reason"]) <= 200 and (i == 1 or r["reason"]))
         _ts_str(r["effective_at"])
         _ts_str(r["recorded_at"])
         _need(_num(r["effective_ts"]) and _num(r["recorded_ts"]))
-        _ts_match(r["effective_at"], r["effective_ts"])
-        _ts_match(r["recorded_at"], r["recorded_ts"])
+        _need(instants_agree(r["effective_at"], r["effective_ts"]))
+        _need(instants_agree(r["recorded_at"], r["recorded_ts"]))
         _need(last is None or r["recorded_ts"] > last)
         last = r["recorded_ts"]
 
@@ -131,6 +132,9 @@ def load_state(st):
         _need(rec["refund_of"] is None or _str(rec["refund_of"]))
         if "revisions" in p:  # absent before stage 3: revision 1 is derived from the payment itself
             rec["revisions"] = p["revisions"]
+            for r in rec["revisions"]:
+                if isinstance(r, dict):
+                    r.setdefault("correction_batch_id", None)  # absent before stage 4
         _need(_id(rec["id"]) and rec["id"] not in s.payments_by_id)
         _need(rec["from_user_id"] in s.users and rec["to_user_id"] in s.users)
         _need(_amount(rec["amount"]) and _str(rec["note"]) and len(rec["note"]) <= 200)
@@ -189,8 +193,7 @@ def load_state(st):
         _need((rec["closed_at"] is None) == (rec["closed_ts"] is None))
         if rec["closed_at"] is not None:
             _ts_str(rec["closed_at"])
-            _need(_num(rec["closed_ts"]))
-            _ts_match(rec["closed_at"], rec["closed_ts"])
+            _need(_num(rec["closed_ts"]) and instants_agree(rec["closed_at"], rec["closed_ts"]))
         _need(_id(rec["id"]) and rec["id"] not in s.auths_by_id)
         _need(rec["from_user_id"] in s.users and rec["to_user_id"] in s.users)
         _need(_amount(rec["amount"], 1) and _int(rec["captured_amount"])
@@ -200,7 +203,7 @@ def load_state(st):
               and rec["status"] in ("open", "captured", "voided", "expired"))
         _ts_str(rec["expires_at"])
         _need(_num(rec["expires_ts"]))
-        _ts_match(rec["expires_at"], rec["expires_ts"])
+        _need(instants_agree(rec["expires_at"], rec["expires_ts"]))
         _need(isinstance(rec["payment_ids"], list) and all(_str(x) for x in rec["payment_ids"]))
         _ts_str(rec["created_at"])
         _need(_num(rec["ts"]) and _seq(rec["seq"]))
@@ -354,7 +357,7 @@ def _correction_receipt(s, uid, pid, resp):
     """A correction receipt is an immutable revision: it must equal the stored revision it names."""
     p = s.payments_by_id.get(pid)
     _need(p is not None and p["from_user_id"] == uid and isinstance(resp, dict)
-          and set(resp) == {"payment_id", "revision", "amount", "effective_at", "recorded_at", "reason"})
+          and set(resp) - {"correction_batch_id"} == {"payment_id", "revision", "amount", "effective_at", "recorded_at", "reason"})
     _need(resp["payment_id"] == pid and _int(resp["revision"]) and 2 <= resp["revision"] <= len(p["revisions"]))
     r = p["revisions"][resp["revision"] - 1]
     _need(all(resp[k] == r[k] for k in ("amount", "effective_at", "recorded_at", "reason")))

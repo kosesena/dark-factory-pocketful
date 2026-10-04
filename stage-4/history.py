@@ -89,7 +89,26 @@ def _int_field(body, name, lo, hi):
 
 def _rev_view(pid, r):
     return {"payment_id": pid, "revision": r["revision"], "amount": r["amount"],
-            "effective_at": r["effective_at"], "recorded_at": r["recorded_at"], "reason": r["reason"]}
+            "effective_at": r["effective_at"], "recorded_at": r["recorded_at"], "reason": r["reason"],
+            "correction_batch_id": r.get("correction_batch_id")}
+
+
+def correction_fields(body, now):
+    """The ordinary correction fields and their validation (422): shared by single and batch corrections."""
+    expected = _int_field(body, "expected_revision", 1, None)
+    amount = _int_field(body, "amount", 0, MAX_AMOUNT)
+    if "effective_at" not in body or "reason" not in body:
+        raise validation("effective_at and reason are required")
+    try:
+        eff_ts = parse_instant(body["effective_at"])
+    except ValueError:
+        raise validation("effective_at must be an RFC 3339 instant with an offset")
+    if eff_ts > now:
+        raise validation("effective_at cannot be in the future")
+    reason = body["reason"]
+    if not isinstance(reason, str) or not 1 <= len(reason) <= 200:
+        raise validation("reason must be 1 to 200 characters")
+    return expected, amount, eff_ts, reason
 
 
 def correct(req):
@@ -103,20 +122,8 @@ def correct(req):
             raise ApiError(404, "not_found", "no such payment")
         if p["from_user_id"] != user["id"]:
             raise ApiError(403, "forbidden", "only the sender may correct a payment")
-        expected = _int_field(body, "expected_revision", 1, None)
-        amount = _int_field(body, "amount", 0, MAX_AMOUNT)
-        if "effective_at" not in body or "reason" not in body:
-            raise validation("effective_at and reason are required")
-        try:
-            eff_ts = parse_instant(body["effective_at"])
-        except ValueError:
-            raise validation("effective_at must be an RFC 3339 instant with an offset")
         now = time.time()
-        if eff_ts > now:
-            raise validation("effective_at cannot be in the future")
-        reason = body["reason"]
-        if not isinstance(reason, str) or not 1 <= len(reason) <= 200:
-            raise validation("reason must be 1 to 200 characters")
+        expected, amount, eff_ts, reason = correction_fields(body, now)
         if (p["settlement_id"] is not None or p.get("authorization_id") is not None
                 or p.get("refund_of") is not None):
             raise ApiError(422, "linked_payment_immutable", "settlement members and captures cannot be corrected")
@@ -134,7 +141,7 @@ def correct(req):
         rec_at = datetime.fromtimestamp(rec_ts, timezone.utc).isoformat(timespec="microseconds")
         rev = {"revision": cur["revision"] + 1, "amount": amount, "effective_at": body["effective_at"],
                "effective_ts": eff_ts, "recorded_at": rec_at, "recorded_ts": parse_instant(rec_at),
-               "reason": reason}
+               "reason": reason, "correction_batch_id": None}
         if not history_ok(s, (sender["id"], receiver["id"]), {pid: rev}, now):
             raise ApiError(409, "historical_overdraft", "the correction would overdraw a past balance")
         sender["balance"] -= diff

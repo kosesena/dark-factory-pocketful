@@ -4,7 +4,9 @@ Every stored record type is checked against the API's field rules and the model'
 rules. Raises ValueError on the first violation. Identical in stage 1 and stage 2 (stage 1 has no
 authorizations: those parts see empty collections)."""
 import math
+import time
 
+from ledger import history_ok, instants_agree
 from common import HANDLE_RE, MAX_AMOUNT, STATUSES, parse_ts
 
 try:
@@ -69,6 +71,7 @@ def check_state_invariants(s):
                              and p["settlement_id"] is None and p.get("authorization_id") is None))
             _ts_ok(r["effective_at"], r["effective_ts"])
             _ts_ok(r["recorded_at"], r["recorded_ts"])
+            _need(instants_agree(r["effective_at"], r["effective_ts"]) and instants_agree(r["recorded_at"], r["recorded_ts"]))
         seqs.append(p["seq"])
         rid = p["request_id"]
         rof = p.get("refund_of")
@@ -123,8 +126,10 @@ def check_state_invariants(s):
         _need((a["status"] == "open") == (a["closed_at"] is None) == (a["closed_ts"] is None))
         if a["closed_at"] is not None:
             _ts_ok(a["closed_at"], a["closed_ts"])
+            _need(instants_agree(a["closed_at"], a["closed_ts"]))
         _ts_ok(a["created_at"], a["ts"])
         _ts_ok(a["expires_at"], a["expires_ts"])
+        _need(instants_agree(a["expires_at"], a["expires_ts"]))
         seqs.append(a["seq"])
         caps = [s.payments_by_id.get(pid) for pid in a["payment_ids"]]
         _need(all(c is not None and c.get("authorization_id") == a["id"] for c in caps))
@@ -136,6 +141,10 @@ def check_state_invariants(s):
             _need(a["id"] not in s.open_auths)
     for uid in s.users:
         _need(held_of(s, uid) <= s.users[uid]["balance"])
+    now = time.time()  # corrected history must stay nonnegative (total and available) at every past boundary,
+    for uid in s.users:  # unless the seeded/original history was already inconsistent for that user
+        if history_ok(s, [uid], None, now, originals=True):
+            _need(history_ok(s, [uid], None, now))
     _need(len(set(seqs)) == len(seqs))
 
     for sid, sp in s.splits.items():

@@ -46,7 +46,7 @@ def whole(ts):
 def first_revision(p):
     t = whole(p["ts"])
     return {"revision": 1, "amount": p["amount"], "effective_at": p["created_at"], "effective_ts": t,
-            "recorded_at": p["created_at"], "recorded_ts": t, "reason": ""}
+            "recorded_at": p["created_at"], "recorded_ts": t, "reason": "", "correction_batch_id": None}
 
 
 def ensure_revisions(p):
@@ -73,13 +73,22 @@ def delta_of(p, uid, amount):
     return 0
 
 
-def effects(s, uid, known, override=None):
+def instants_agree(text, ts):
+    """The string form must be the exact rendering of the stored numeric instant (microsecond precision)."""
+    try:
+        return abs(parse_instant(text) - ts) < 1e-6
+    except ValueError:
+        return False
+
+
+def effects(s, uid, known, override=None, originals=False):
     """[(effective_ts, payment id, revision, delta)] for payments of uid under the selection."""
     out = []
     for p in s.payments:
         if p["from_user_id"] != uid and p["to_user_id"] != uid:
             continue
-        r = override[p["id"]] if override and p["id"] in override else selected_revision(p, known)
+        r = p["revisions"][0] if originals else (
+            override[p["id"]] if override and p["id"] in override else selected_revision(p, known))
         if r is None:
             continue
         out.append((r["effective_ts"], p["id"], r, delta_of(p, uid, r["amount"])))
@@ -136,11 +145,11 @@ def view_balances(s, user, as_of, known, now):
     return {"balance": total, "total": total, "available": total - held, "held": held}
 
 
-def history_ok(s, uids, override, now):
+def history_ok(s, uids, override, now, originals=False):
     """No total or available is negative at any past effective/event boundary, under the latest
     known revisions with `override` applied. Movements at one instant are combined."""
     for uid in uids:
-        ev = sorted((e[0], e[3]) for e in effects(s, uid, None, override))
+        ev = sorted((e[0], e[3]) for e in effects(s, uid, None, override, originals))
         mine = [a for a in s.auths if a["from_user_id"] == uid]
         times = {t for t, _ in ev if t <= now}
         for a in mine:

@@ -165,6 +165,7 @@ def build_state(fx):
             raise validation("bad authorization")
         try:
             ets, eat = parse_ts(a.get("expires_at"))
+            ets = float(int(ets // 1))
         except (ValueError, OverflowError, OSError):
             raise validation("bad expires_at")
         rec = {"id": aid, "from_user_id": a["from_user_id"], "to_user_id": a["to_user_id"],
