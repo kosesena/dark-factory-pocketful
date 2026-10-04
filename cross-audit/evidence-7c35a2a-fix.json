@@ -1,0 +1,552 @@
+{
+  "probes": 109,
+  "passed": 109,
+  "failed": [],
+  "results": [
+    {
+      "probe": "reset",
+      "passed": true,
+      "detail": null
+    },
+    {
+      "probe": "identity-first-trailing-fraction",
+      "passed": true,
+      "detail": null
+    },
+    {
+      "probe": "identity-repeat-trailing-fraction",
+      "passed": true,
+      "detail": null
+    },
+    {
+      "probe": "identity-receipt-trailing-fraction",
+      "passed": true,
+      "detail": null
+    },
+    {
+      "probe": "identity-first-fraction-string",
+      "passed": true,
+      "detail": null
+    },
+    {
+      "probe": "identity-repeat-fraction-string",
+      "passed": true,
+      "detail": null
+    },
+    {
+      "probe": "identity-first-big-equivalent",
+      "passed": true,
+      "detail": null
+    },
+    {
+      "probe": "identity-repeat-big-equivalent",
+      "passed": true,
+      "detail": null
+    },
+    {
+      "probe": "identity-receipt-big-equivalent",
+      "passed": true,
+      "detail": null
+    },
+    {
+      "probe": "identity-first-big-int-equivalent",
+      "passed": true,
+      "detail": null
+    },
+    {
+      "probe": "identity-repeat-big-int-equivalent",
+      "passed": true,
+      "detail": null
+    },
+    {
+      "probe": "identity-receipt-big-int-equivalent",
+      "passed": true,
+      "detail": null
+    },
+    {
+      "probe": "identity-first-big-string",
+      "passed": true,
+      "detail": null
+    },
+    {
+      "probe": "identity-repeat-big-string",
+      "passed": true,
+      "detail": null
+    },
+    {
+      "probe": "identity-first-tiny-equivalent",
+      "passed": true,
+      "detail": null
+    },
+    {
+      "probe": "identity-repeat-tiny-equivalent",
+      "passed": true,
+      "detail": null
+    },
+    {
+      "probe": "identity-receipt-tiny-equivalent",
+      "passed": true,
+      "detail": null
+    },
+    {
+      "probe": "identity-first-huge-equivalent",
+      "passed": true,
+      "detail": null
+    },
+    {
+      "probe": "identity-repeat-huge-equivalent",
+      "passed": true,
+      "detail": null
+    },
+    {
+      "probe": "identity-receipt-huge-equivalent",
+      "passed": true,
+      "detail": null
+    },
+    {
+      "probe": "identity-first-negative-zero",
+      "passed": true,
+      "detail": null
+    },
+    {
+      "probe": "identity-repeat-negative-zero",
+      "passed": true,
+      "detail": null
+    },
+    {
+      "probe": "identity-receipt-negative-zero",
+      "passed": true,
+      "detail": null
+    },
+    {
+      "probe": "identity-first-nested-types",
+      "passed": true,
+      "detail": null
+    },
+    {
+      "probe": "identity-repeat-nested-types",
+      "passed": true,
+      "detail": null
+    },
+    {
+      "probe": "identity-first-nested-equality",
+      "passed": true,
+      "detail": null
+    },
+    {
+      "probe": "identity-repeat-nested-equality",
+      "passed": true,
+      "detail": null
+    },
+    {
+      "probe": "identity-receipt-nested-equality",
+      "passed": true,
+      "detail": null
+    },
+    {
+      "probe": "exact-range-/payments-999999999999999999999999999999",
+      "passed": true,
+      "detail": null
+    },
+    {
+      "probe": "exact-range-/payments-1e400",
+      "passed": true,
+      "detail": null
+    },
+    {
+      "probe": "exact-range-/payments-1e-400",
+      "passed": true,
+      "detail": null
+    },
+    {
+      "probe": "exact-range-/payments-1.0000000000000000000000000000",
+      "passed": true,
+      "detail": null
+    },
+    {
+      "probe": "exact-range-/requests-999999999999999999999999999999",
+      "passed": true,
+      "detail": null
+    },
+    {
+      "probe": "exact-range-/requests-1e400",
+      "passed": true,
+      "detail": null
+    },
+    {
+      "probe": "exact-range-/requests-1e-400",
+      "passed": true,
+      "detail": null
+    },
+    {
+      "probe": "exact-range-/requests-1.0000000000000000000000000000",
+      "passed": true,
+      "detail": null
+    },
+    {
+      "probe": "exact-range-/splits-999999999999999999999999999999",
+      "passed": true,
+      "detail": null
+    },
+    {
+      "probe": "exact-range-/splits-1e400",
+      "passed": true,
+      "detail": null
+    },
+    {
+      "probe": "exact-range-/splits-1e-400",
+      "passed": true,
+      "detail": null
+    },
+    {
+      "probe": "exact-range-/splits-1.0000000000000000000000000000",
+      "passed": true,
+      "detail": null
+    },
+    {
+      "probe": "exact-range-/settlements-999999999999999999999999999999",
+      "passed": true,
+      "detail": null
+    },
+    {
+      "probe": "exact-range-/settlements-1e400",
+      "passed": true,
+      "detail": null
+    },
+    {
+      "probe": "exact-range-/settlements-1e-400",
+      "passed": true,
+      "detail": null
+    },
+    {
+      "probe": "exact-range-/settlements-1.0000000000000000000000000000",
+      "passed": true,
+      "detail": null
+    },
+    {
+      "probe": "unknown-huge-integer",
+      "passed": true,
+      "detail": null
+    },
+    {
+      "probe": "reset",
+      "passed": true,
+      "detail": null
+    },
+    {
+      "probe": "zero-split-create",
+      "passed": true,
+      "detail": null
+    },
+    {
+      "probe": "zero-share-pay-b",
+      "passed": true,
+      "detail": null
+    },
+    {
+      "probe": "zero-receipt-amount",
+      "passed": true,
+      "detail": null
+    },
+    {
+      "probe": "zero-share-pay-c",
+      "passed": true,
+      "detail": null
+    },
+    {
+      "probe": "zero-receipt-amount",
+      "passed": true,
+      "detail": null
+    },
+    {
+      "probe": "zero-import-0",
+      "passed": true,
+      "detail": null
+    },
+    {
+      "probe": "zero-import-exact-0",
+      "passed": true,
+      "detail": null
+    },
+    {
+      "probe": "zero-split-replay",
+      "passed": true,
+      "detail": null
+    },
+    {
+      "probe": "zero-split-original-replay",
+      "passed": true,
+      "detail": null
+    },
+    {
+      "probe": "zero-pay-replay",
+      "passed": true,
+      "detail": null
+    },
+    {
+      "probe": "zero-pay-original-replay",
+      "passed": true,
+      "detail": null
+    },
+    {
+      "probe": "zero-pay-replay",
+      "passed": true,
+      "detail": null
+    },
+    {
+      "probe": "zero-pay-original-replay",
+      "passed": true,
+      "detail": null
+    },
+    {
+      "probe": "zero-import-conservation",
+      "passed": true,
+      "detail": null
+    },
+    {
+      "probe": "zero-import-1",
+      "passed": true,
+      "detail": null
+    },
+    {
+      "probe": "zero-import-exact-1",
+      "passed": true,
+      "detail": null
+    },
+    {
+      "probe": "zero-split-replay",
+      "passed": true,
+      "detail": null
+    },
+    {
+      "probe": "zero-split-original-replay",
+      "passed": true,
+      "detail": null
+    },
+    {
+      "probe": "zero-pay-replay",
+      "passed": true,
+      "detail": null
+    },
+    {
+      "probe": "zero-pay-original-replay",
+      "passed": true,
+      "detail": null
+    },
+    {
+      "probe": "zero-pay-replay",
+      "passed": true,
+      "detail": null
+    },
+    {
+      "probe": "zero-pay-original-replay",
+      "passed": true,
+      "detail": null
+    },
+    {
+      "probe": "zero-import-conservation",
+      "passed": true,
+      "detail": null
+    },
+    {
+      "probe": "reset",
+      "passed": true,
+      "detail": null
+    },
+    {
+      "probe": "seed-pending-import",
+      "passed": true,
+      "detail": null
+    },
+    {
+      "probe": "seed-pending-exact",
+      "passed": true,
+      "detail": null
+    },
+    {
+      "probe": "reset",
+      "passed": true,
+      "detail": null
+    },
+    {
+      "probe": "seed-paid-import",
+      "passed": true,
+      "detail": null
+    },
+    {
+      "probe": "seed-paid-exact",
+      "passed": true,
+      "detail": null
+    },
+    {
+      "probe": "reset",
+      "passed": true,
+      "detail": null
+    },
+    {
+      "probe": "seed-declined-import",
+      "passed": true,
+      "detail": null
+    },
+    {
+      "probe": "seed-declined-exact",
+      "passed": true,
+      "detail": null
+    },
+    {
+      "probe": "reset",
+      "passed": true,
+      "detail": null
+    },
+    {
+      "probe": "seed-cancelled-import",
+      "passed": true,
+      "detail": null
+    },
+    {
+      "probe": "seed-cancelled-exact",
+      "passed": true,
+      "detail": null
+    },
+    {
+      "probe": "reset",
+      "passed": true,
+      "detail": null
+    },
+    {
+      "probe": "strict-import-timestamp-2026-10-04T12:00:00",
+      "passed": true,
+      "detail": null
+    },
+    {
+      "probe": "strict-import-atomic-timestamp-2026-10-04T12:00:00",
+      "passed": true,
+      "detail": null
+    },
+    {
+      "probe": "strict-import-timestamp-2026-02-30T00:00:00+00:00",
+      "passed": true,
+      "detail": null
+    },
+    {
+      "probe": "strict-import-atomic-timestamp-2026-02-30T00:00:00+00:00",
+      "passed": true,
+      "detail": null
+    },
+    {
+      "probe": "strict-import-timestamp-2026-10-04 12:00:00+00:00",
+      "passed": true,
+      "detail": null
+    },
+    {
+      "probe": "strict-import-atomic-timestamp-2026-10-04 12:00:00+00:00",
+      "passed": true,
+      "detail": null
+    },
+    {
+      "probe": "strict-import-balance--1",
+      "passed": true,
+      "detail": null
+    },
+    {
+      "probe": "strict-import-atomic-balance--1",
+      "passed": true,
+      "detail": null
+    },
+    {
+      "probe": "strict-import-balance-9007199254740993",
+      "passed": true,
+      "detail": null
+    },
+    {
+      "probe": "strict-import-atomic-balance-9007199254740993",
+      "passed": true,
+      "detail": null
+    },
+    {
+      "probe": "strict-import-balance-True",
+      "passed": true,
+      "detail": null
+    },
+    {
+      "probe": "strict-import-atomic-balance-True",
+      "passed": true,
+      "detail": null
+    },
+    {
+      "probe": "strict-import-balance-0.1",
+      "passed": true,
+      "detail": null
+    },
+    {
+      "probe": "strict-import-atomic-balance-0.1",
+      "passed": true,
+      "detail": null
+    },
+    {
+      "probe": "strict-import-duplicate-handle",
+      "passed": true,
+      "detail": null
+    },
+    {
+      "probe": "strict-import-atomic-duplicate-handle",
+      "passed": true,
+      "detail": null
+    },
+    {
+      "probe": "strict-import-request-link",
+      "passed": true,
+      "detail": null
+    },
+    {
+      "probe": "strict-import-atomic-request-link",
+      "passed": true,
+      "detail": null
+    },
+    {
+      "probe": "strict-import-settlement-link",
+      "passed": true,
+      "detail": null
+    },
+    {
+      "probe": "strict-import-atomic-settlement-link",
+      "passed": true,
+      "detail": null
+    },
+    {
+      "probe": "strict-import-changed-original-receipt",
+      "passed": true,
+      "detail": null
+    },
+    {
+      "probe": "strict-import-atomic-changed-original-receipt",
+      "passed": true,
+      "detail": null
+    },
+    {
+      "probe": "large-reset",
+      "passed": true,
+      "detail": null
+    },
+    {
+      "probe": "large-reset-under-10s",
+      "passed": true,
+      "detail": 1.259353542001918
+    },
+    {
+      "probe": "large-seed-login-0",
+      "passed": true,
+      "detail": null
+    },
+    {
+      "probe": "large-seed-login-499",
+      "passed": true,
+      "detail": null
+    },
+    {
+      "probe": "large-seed-login-999",
+      "passed": true,
+      "detail": null
+    }
+  ]
+}

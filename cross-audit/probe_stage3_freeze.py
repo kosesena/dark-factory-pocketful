@@ -3,6 +3,7 @@ from probe_stage3 import *
 def run():
     reset(histfixture());saved=[]
     queries=[{}, {'known_at':D0},{'known_at':D1},{'known_at':'2090-01-01T00:00:00Z'}, {'from':D1,'to':D2}, {'from':D2,'to':D2}, {'from':D3,'to':D4}, {'from':'2020-01-02T02:00:00+02:00','known_at':'2090-01-01T00:00:00Z'}, {'to':D1}, {'from':D1,'to':D4,'limit':1,'offset':1}]
+    queries += [{'from':D0,'to':'2090-01-01T00:00:00Z'}, {'from':'2080-01-01T00:00:00Z','to':'2090-01-01T00:00:00Z'}, {'from':'2080-01-01T00:00:00Z','to':'2090-01-01T00:00:00Z','known_at':'2090-01-01T00:00:00Z'}, {'to':'2090-01-01T00:00:00Z','known_at':'2090-01-01T00:00:00Z'}]
     for q in queries:
         r=expect('freeze-create',statement(**q),200);saved.append((q,r,statement(snapshot=r['snapshot'],limit=200)[1]))
     # Same-second new payments and later corrections must never enter existing frozen views.
@@ -20,7 +21,7 @@ def run():
         got=call('GET','/statement?'+urlencode(params),user='a',base=DEST);check('genuine-frozen-page',got[0]==200 and got[1]==first,{'q':q,'actual':got[1],'expected':first} if got[1]!=first else None)
         got=call('GET','/statement?'+urlencode({'snapshot':first['snapshot'],'limit':200}),user='a',base=DEST);check('genuine-frozen-full',got[0]==200 and got[1]==full)
     # Corrupt existing opaque bookkeeping fields by impossible types/ranges, never source code.
-    for name,value in [('taken_seq',-1),('taken_seq',True),('taken_seq','bad'),('taken_ts','bad'),('taken_ts',True)]:
+    for name,value in [('taken_seq',-1),('taken_seq',True),('taken_seq','bad'),('taken_seq',export['state']['seq']+1),('taken_ts','bad'),('taken_ts',True),('taken_ts',time.time()+172800)]:
         bad=copy.deepcopy(export)
         if name not in bad['state']['snapshots'][0]:continue
         bad['state']['snapshots'][0][name]=value;before=state();expect('bad-frozen-metadata-'+name+'-'+str(value),call('POST','/_test/import',bad),422,'validation_failed');check('bad-frozen-metadata-atomic',state()==before)
