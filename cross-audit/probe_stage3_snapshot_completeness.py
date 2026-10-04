@@ -7,6 +7,7 @@ def run():
             bad=copy.deepcopy(original);sn=bad['state']['snapshots'][0]
             if legacy:
                 sn.pop('taken_ts',None);sn.pop('taken_seq',None)
+                sn.pop('view',None)  # A pre-stage4 snapshot has no view marker either.
             if mode=='drop-last':sn['entries'].pop();sn['closing_balance']=sn['entries'][-1][3]
             elif mode=='empty':sn['entries']=[];sn['closing_balance']=sn['opening_balance']
             else:

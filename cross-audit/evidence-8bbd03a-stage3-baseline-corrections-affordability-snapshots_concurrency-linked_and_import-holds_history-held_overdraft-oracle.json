@@ -1,0 +1,2856 @@
+{
+  "probes": 374,
+  "passed": 374,
+  "failed": [],
+  "results": [
+    {
+      "probe": "reset",
+      "passed": true,
+      "detail": null
+    },
+    {
+      "probe": "seed-net-not-replayed",
+      "passed": true,
+      "detail": null
+    },
+    {
+      "probe": "asof-inclusive-2020-01-01T00:00:00+00:00",
+      "passed": true,
+      "detail": {
+        "user_id": "u_a",
+        "display_name": "A",
+        "handle": "a",
+        "balance": 1000,
+        "total": 1000,
+        "available": 1000,
+        "held": 0,
+        "currency": "EUR",
+        "minor_units": 2,
+        "as_of": "2020-01-01T00:00:00+00:00"
+      }
+    },
+    {
+      "probe": "asof-inclusive-2020-01-02T00:00:00+00:00",
+      "passed": true,
+      "detail": {
+        "user_id": "u_a",
+        "display_name": "A",
+        "handle": "a",
+        "balance": 930,
+        "total": 930,
+        "available": 930,
+        "held": 0,
+        "currency": "EUR",
+        "minor_units": 2,
+        "as_of": "2020-01-02T00:00:00+00:00"
+      }
+    },
+    {
+      "probe": "asof-inclusive-2020-01-03T00:00:00+00:00",
+      "passed": true,
+      "detail": {
+        "user_id": "u_a",
+        "display_name": "A",
+        "handle": "a",
+        "balance": 730,
+        "total": 730,
+        "available": 730,
+        "held": 0,
+        "currency": "EUR",
+        "minor_units": 2,
+        "as_of": "2020-01-03T00:00:00+00:00"
+      }
+    },
+    {
+      "probe": "asof-inclusive-2020-01-05T00:00:00+00:00",
+      "passed": true,
+      "detail": {
+        "user_id": "u_a",
+        "display_name": "A",
+        "handle": "a",
+        "balance": 730,
+        "total": 730,
+        "available": 730,
+        "held": 0,
+        "currency": "EUR",
+        "minor_units": 2,
+        "as_of": "2020-01-05T00:00:00+00:00"
+      }
+    },
+    {
+      "probe": "asof-inclusive-2090-01-01T00:00:00Z",
+      "passed": true,
+      "detail": {
+        "user_id": "u_a",
+        "display_name": "A",
+        "handle": "a",
+        "balance": 730,
+        "total": 730,
+        "available": 730,
+        "held": 0,
+        "currency": "EUR",
+        "minor_units": 2,
+        "as_of": "2090-01-01T00:00:00Z"
+      }
+    },
+    {
+      "probe": "exact-query-echo",
+      "passed": true,
+      "detail": {
+        "user_id": "u_a",
+        "display_name": "A",
+        "handle": "a",
+        "balance": 930,
+        "total": 930,
+        "available": 930,
+        "held": 0,
+        "currency": "EUR",
+        "minor_units": 2,
+        "as_of": "2020-01-02T02:00:00+02:00",
+        "known_at": "2090-01-01T01:00:00+01:00"
+      }
+    },
+    {
+      "probe": "seed-revisions",
+      "passed": true,
+      "detail": null
+    },
+    {
+      "probe": "revision-one",
+      "passed": true,
+      "detail": [
+        {
+          "payment_id": "p_b",
+          "revision": 1,
+          "amount": 100,
+          "effective_at": "2020-01-02T00:00:00+00:00",
+          "recorded_at": "2020-01-02T00:00:00+00:00",
+          "reason": "",
+          "correction_batch_id": null
+        }
+      ]
+    },
+    {
+      "probe": "seed-revisions",
+      "passed": true,
+      "detail": null
+    },
+    {
+      "probe": "revision-one",
+      "passed": true,
+      "detail": [
+        {
+          "payment_id": "p_a",
+          "revision": 1,
+          "amount": 30,
+          "effective_at": "2020-01-02T00:00:00+00:00",
+          "recorded_at": "2020-01-02T00:00:00+00:00",
+          "reason": "",
+          "correction_batch_id": null
+        }
+      ]
+    },
+    {
+      "probe": "seed-revisions",
+      "passed": true,
+      "detail": null
+    },
+    {
+      "probe": "revision-one",
+      "passed": true,
+      "detail": [
+        {
+          "payment_id": "p_c",
+          "revision": 1,
+          "amount": 200,
+          "effective_at": "2020-01-03T00:00:00+00:00",
+          "recorded_at": "2020-01-03T00:00:00+00:00",
+          "reason": "",
+          "correction_batch_id": null
+        }
+      ]
+    },
+    {
+      "probe": "seed-revisions",
+      "passed": true,
+      "detail": null
+    },
+    {
+      "probe": "revision-one",
+      "passed": true,
+      "detail": [
+        {
+          "payment_id": "p_pub",
+          "revision": 1,
+          "amount": 20,
+          "effective_at": "2020-01-04T00:00:00+00:00",
+          "recorded_at": "2020-01-04T00:00:00+00:00",
+          "reason": "",
+          "correction_batch_id": null
+        }
+      ]
+    },
+    {
+      "probe": "statement-default",
+      "passed": true,
+      "detail": null
+    },
+    {
+      "probe": "default-full-statement",
+      "passed": true,
+      "detail": {
+        "opening_balance": 1000,
+        "entries": [
+          {
+            "payment": {
+              "payment_id": "p_a",
+              "from_user_id": "u_b",
+              "from_handle": "b",
+              "to_user_id": "u_a",
+              "to_handle": "a",
+              "amount": 30,
+              "currency": "EUR",
+              "note": "two",
+              "visibility": "public",
+              "request_id": null,
+              "settlement_id": null,
+              "authorization_id": null,
+              "refund_of": null,
+              "created_at": "2020-01-02T00:00:00+00:00"
+            },
+            "delta": 30,
+            "balance_after": 1030,
+            "revision": 1,
+            "effective_at": "2020-01-02T00:00:00+00:00",
+            "recorded_at": "2020-01-02T00:00:00+00:00"
+          },
+          {
+            "payment": {
+              "payment_id": "p_b",
+              "from_user_id": "u_a",
+              "from_handle": "a",
+              "to_user_id": "u_b",
+              "to_handle": "b",
+              "amount": 100,
+              "currency": "EUR",
+              "note": "one",
+              "visibility": "private",
+              "request_id": null,
+              "settlement_id": null,
+              "authorization_id": null,
+              "refund_of": null,
+              "created_at": "2020-01-02T00:00:00+00:00"
+            },
+            "delta": -100,
+            "balance_after": 930,
+            "revision": 1,
+            "effective_at": "2020-01-02T00:00:00+00:00",
+            "recorded_at": "2020-01-02T00:00:00+00:00"
+          },
+          {
+            "payment": {
+              "payment_id": "p_c",
+              "from_user_id": "u_a",
+              "from_handle": "a",
+              "to_user_id": "u_c",
+              "to_handle": "c",
+              "amount": 200,
+              "currency": "EUR",
+              "note": "three",
+              "visibility": "public",
+              "request_id": null,
+              "settlement_id": null,
+              "authorization_id": null,
+              "refund_of": null,
+              "created_at": "2020-01-03T00:00:00+00:00"
+            },
+            "delta": -200,
+            "balance_after": 730,
+            "revision": 1,
+            "effective_at": "2020-01-03T00:00:00+00:00",
+            "recorded_at": "2020-01-03T00:00:00+00:00"
+          }
+        ],
+        "closing_balance": 730,
+        "has_more": false,
+        "snapshot": "T-eSovRWGmfAT65pmpLa6VFOGVLLBcMx"
+      }
+    },
+    {
+      "probe": "snapshot-present",
+      "passed": true,
+      "detail": null
+    },
+    {
+      "probe": "original-statement-metadata",
+      "passed": true,
+      "detail": {
+        "payment": {
+          "payment_id": "p_a",
+          "from_user_id": "u_b",
+          "from_handle": "b",
+          "to_user_id": "u_a",
+          "to_handle": "a",
+          "amount": 30,
+          "currency": "EUR",
+          "note": "two",
+          "visibility": "public",
+          "request_id": null,
+          "settlement_id": null,
+          "authorization_id": null,
+          "refund_of": null,
+          "created_at": "2020-01-02T00:00:00+00:00"
+        },
+        "delta": 30,
+        "balance_after": 1030,
+        "revision": 1,
+        "effective_at": "2020-01-02T00:00:00+00:00",
+        "recorded_at": "2020-01-02T00:00:00+00:00"
+      }
+    },
+    {
+      "probe": "original-statement-metadata",
+      "passed": true,
+      "detail": {
+        "payment": {
+          "payment_id": "p_b",
+          "from_user_id": "u_a",
+          "from_handle": "a",
+          "to_user_id": "u_b",
+          "to_handle": "b",
+          "amount": 100,
+          "currency": "EUR",
+          "note": "one",
+          "visibility": "private",
+          "request_id": null,
+          "settlement_id": null,
+          "authorization_id": null,
+          "refund_of": null,
+          "created_at": "2020-01-02T00:00:00+00:00"
+        },
+        "delta": -100,
+        "balance_after": 930,
+        "revision": 1,
+        "effective_at": "2020-01-02T00:00:00+00:00",
+        "recorded_at": "2020-01-02T00:00:00+00:00"
+      }
+    },
+    {
+      "probe": "original-statement-metadata",
+      "passed": true,
+      "detail": {
+        "payment": {
+          "payment_id": "p_c",
+          "from_user_id": "u_a",
+          "from_handle": "a",
+          "to_user_id": "u_c",
+          "to_handle": "c",
+          "amount": 200,
+          "currency": "EUR",
+          "note": "three",
+          "visibility": "public",
+          "request_id": null,
+          "settlement_id": null,
+          "authorization_id": null,
+          "refund_of": null,
+          "created_at": "2020-01-03T00:00:00+00:00"
+        },
+        "delta": -200,
+        "balance_after": 730,
+        "revision": 1,
+        "effective_at": "2020-01-03T00:00:00+00:00",
+        "recorded_at": "2020-01-03T00:00:00+00:00"
+      }
+    },
+    {
+      "probe": "half-open",
+      "passed": true,
+      "detail": {
+        "opening_balance": 1000,
+        "entries": [
+          {
+            "payment": {
+              "payment_id": "p_a",
+              "from_user_id": "u_b",
+              "from_handle": "b",
+              "to_user_id": "u_a",
+              "to_handle": "a",
+              "amount": 30,
+              "currency": "EUR",
+              "note": "two",
+              "visibility": "public",
+              "request_id": null,
+              "settlement_id": null,
+              "authorization_id": null,
+              "refund_of": null,
+              "created_at": "2020-01-02T00:00:00+00:00"
+            },
+            "delta": 30,
+            "balance_after": 1030,
+            "revision": 1,
+            "effective_at": "2020-01-02T00:00:00+00:00",
+            "recorded_at": "2020-01-02T00:00:00+00:00"
+          },
+          {
+            "payment": {
+              "payment_id": "p_b",
+              "from_user_id": "u_a",
+              "from_handle": "a",
+              "to_user_id": "u_b",
+              "to_handle": "b",
+              "amount": 100,
+              "currency": "EUR",
+              "note": "one",
+              "visibility": "private",
+              "request_id": null,
+              "settlement_id": null,
+              "authorization_id": null,
+              "refund_of": null,
+              "created_at": "2020-01-02T00:00:00+00:00"
+            },
+            "delta": -100,
+            "balance_after": 930,
+            "revision": 1,
+            "effective_at": "2020-01-02T00:00:00+00:00",
+            "recorded_at": "2020-01-02T00:00:00+00:00"
+          }
+        ],
+        "closing_balance": 930,
+        "has_more": false,
+        "snapshot": "S22qYfdC6ji0uLt2WPF7ZojhoO0cCYB0",
+        "from": "2020-01-02T00:00:00+00:00",
+        "to": "2020-01-03T00:00:00+00:00"
+      }
+    },
+    {
+      "probe": "page-balances-0",
+      "passed": true,
+      "detail": {
+        "opening_balance": 1000,
+        "entries": [
+          {
+            "payment": {
+              "payment_id": "p_a",
+              "from_user_id": "u_b",
+              "from_handle": "b",
+              "to_user_id": "u_a",
+              "to_handle": "a",
+              "amount": 30,
+              "currency": "EUR",
+              "note": "two",
+              "visibility": "public",
+              "request_id": null,
+              "settlement_id": null,
+              "authorization_id": null,
+              "refund_of": null,
+              "created_at": "2020-01-02T00:00:00+00:00"
+            },
+            "delta": 30,
+            "balance_after": 1030,
+            "revision": 1,
+            "effective_at": "2020-01-02T00:00:00+00:00",
+            "recorded_at": "2020-01-02T00:00:00+00:00"
+          }
+        ],
+        "closing_balance": 730,
+        "has_more": true,
+        "snapshot": "niY4ZC5S6NSbmN1dARgUoYsQJtb9VWI8",
+        "from": "2020-01-01T00:00:00+00:00",
+        "to": "2020-01-05T00:00:00+00:00"
+      }
+    },
+    {
+      "probe": "page-balances-1",
+      "passed": true,
+      "detail": {
+        "opening_balance": 1000,
+        "entries": [
+          {
+            "payment": {
+              "payment_id": "p_b",
+              "from_user_id": "u_a",
+              "from_handle": "a",
+              "to_user_id": "u_b",
+              "to_handle": "b",
+              "amount": 100,
+              "currency": "EUR",
+              "note": "one",
+              "visibility": "private",
+              "request_id": null,
+              "settlement_id": null,
+              "authorization_id": null,
+              "refund_of": null,
+              "created_at": "2020-01-02T00:00:00+00:00"
+            },
+            "delta": -100,
+            "balance_after": 930,
+            "revision": 1,
+            "effective_at": "2020-01-02T00:00:00+00:00",
+            "recorded_at": "2020-01-02T00:00:00+00:00"
+          }
+        ],
+        "closing_balance": 730,
+        "has_more": true,
+        "snapshot": "X8tAvgeFq-gVEJ7cPyUn4ztyIVicL2nS",
+        "from": "2020-01-01T00:00:00+00:00",
+        "to": "2020-01-05T00:00:00+00:00"
+      }
+    },
+    {
+      "probe": "page-balances-2",
+      "passed": true,
+      "detail": {
+        "opening_balance": 1000,
+        "entries": [
+          {
+            "payment": {
+              "payment_id": "p_c",
+              "from_user_id": "u_a",
+              "from_handle": "a",
+              "to_user_id": "u_c",
+              "to_handle": "c",
+              "amount": 200,
+              "currency": "EUR",
+              "note": "three",
+              "visibility": "public",
+              "request_id": null,
+              "settlement_id": null,
+              "authorization_id": null,
+              "refund_of": null,
+              "created_at": "2020-01-03T00:00:00+00:00"
+            },
+            "delta": -200,
+            "balance_after": 730,
+            "revision": 1,
+            "effective_at": "2020-01-03T00:00:00+00:00",
+            "recorded_at": "2020-01-03T00:00:00+00:00"
+          }
+        ],
+        "closing_balance": 730,
+        "has_more": false,
+        "snapshot": "Z4U1hknF2NgTnEJ0Yqpqdg2xKqiqfGN7",
+        "from": "2020-01-01T00:00:00+00:00",
+        "to": "2020-01-05T00:00:00+00:00"
+      }
+    },
+    {
+      "probe": "page-balances-3",
+      "passed": true,
+      "detail": {
+        "opening_balance": 1000,
+        "entries": [],
+        "closing_balance": 730,
+        "has_more": false,
+        "snapshot": "A8NGdIWLpUb6bHjL_YGwLirC1qouEBnv",
+        "from": "2020-01-01T00:00:00+00:00",
+        "to": "2020-01-05T00:00:00+00:00"
+      }
+    },
+    {
+      "probe": "page-balances-99",
+      "passed": true,
+      "detail": {
+        "opening_balance": 1000,
+        "entries": [],
+        "closing_balance": 730,
+        "has_more": false,
+        "snapshot": "LyR6Wt1RX1OjkVNckgE1Lr-tPvXYgaxv",
+        "from": "2020-01-01T00:00:00+00:00",
+        "to": "2020-01-05T00:00:00+00:00"
+      }
+    },
+    {
+      "probe": "statement-public-not-mine",
+      "passed": true,
+      "detail": null
+    },
+    {
+      "probe": "statement-auth",
+      "passed": true,
+      "detail": null
+    },
+    {
+      "probe": "revisions-auth",
+      "passed": true,
+      "detail": null
+    },
+    {
+      "probe": "revisions-receiver",
+      "passed": true,
+      "detail": null
+    },
+    {
+      "probe": "revisions-hidden-public",
+      "passed": true,
+      "detail": null
+    },
+    {
+      "probe": "revisions-unknown",
+      "passed": true,
+      "detail": null
+    },
+    {
+      "probe": "bad-instant-as_of-",
+      "passed": true,
+      "detail": null
+    },
+    {
+      "probe": "bad-instant-known_at-",
+      "passed": true,
+      "detail": null
+    },
+    {
+      "probe": "bad-instant-from-",
+      "passed": true,
+      "detail": null
+    },
+    {
+      "probe": "bad-instant-to-",
+      "passed": true,
+      "detail": null
+    },
+    {
+      "probe": "bad-instant-known_at-",
+      "passed": true,
+      "detail": null
+    },
+    {
+      "probe": "bad-instant-as_of-2020-01-01",
+      "passed": true,
+      "detail": null
+    },
+    {
+      "probe": "bad-instant-known_at-2020-01-01",
+      "passed": true,
+      "detail": null
+    },
+    {
+      "probe": "bad-instant-from-2020-01-01",
+      "passed": true,
+      "detail": null
+    },
+    {
+      "probe": "bad-instant-to-2020-01-01",
+      "passed": true,
+      "detail": null
+    },
+    {
+      "probe": "bad-instant-known_at-2020-01-01",
+      "passed": true,
+      "detail": null
+    },
+    {
+      "probe": "bad-instant-as_of-2020-01-01T00:00:00",
+      "passed": true,
+      "detail": null
+    },
+    {
+      "probe": "bad-instant-known_at-2020-01-01T00:00:00",
+      "passed": true,
+      "detail": null
+    },
+    {
+      "probe": "bad-instant-from-2020-01-01T00:00:00",
+      "passed": true,
+      "detail": null
+    },
+    {
+      "probe": "bad-instant-to-2020-01-01T00:00:00",
+      "passed": true,
+      "detail": null
+    },
+    {
+      "probe": "bad-instant-known_at-2020-01-01T00:00:00",
+      "passed": true,
+      "detail": null
+    },
+    {
+      "probe": "bad-instant-as_of-no",
+      "passed": true,
+      "detail": null
+    },
+    {
+      "probe": "bad-instant-known_at-no",
+      "passed": true,
+      "detail": null
+    },
+    {
+      "probe": "bad-instant-from-no",
+      "passed": true,
+      "detail": null
+    },
+    {
+      "probe": "bad-instant-to-no",
+      "passed": true,
+      "detail": null
+    },
+    {
+      "probe": "bad-instant-known_at-no",
+      "passed": true,
+      "detail": null
+    },
+    {
+      "probe": "bad-instant-as_of-2020-02-30T00:00:00Z",
+      "passed": true,
+      "detail": null
+    },
+    {
+      "probe": "bad-instant-known_at-2020-02-30T00:00:00Z",
+      "passed": true,
+      "detail": null
+    },
+    {
+      "probe": "bad-instant-from-2020-02-30T00:00:00Z",
+      "passed": true,
+      "detail": null
+    },
+    {
+      "probe": "bad-instant-to-2020-02-30T00:00:00Z",
+      "passed": true,
+      "detail": null
+    },
+    {
+      "probe": "bad-instant-known_at-2020-02-30T00:00:00Z",
+      "passed": true,
+      "detail": null
+    },
+    {
+      "probe": "bad-instant-as_of-2020-01-01T24:00:00Z",
+      "passed": true,
+      "detail": null
+    },
+    {
+      "probe": "bad-instant-known_at-2020-01-01T24:00:00Z",
+      "passed": true,
+      "detail": null
+    },
+    {
+      "probe": "bad-instant-from-2020-01-01T24:00:00Z",
+      "passed": true,
+      "detail": null
+    },
+    {
+      "probe": "bad-instant-to-2020-01-01T24:00:00Z",
+      "passed": true,
+      "detail": null
+    },
+    {
+      "probe": "bad-instant-known_at-2020-01-01T24:00:00Z",
+      "passed": true,
+      "detail": null
+    },
+    {
+      "probe": "bad-instant-as_of-2020-01-01T00:00:00+25:00",
+      "passed": true,
+      "detail": null
+    },
+    {
+      "probe": "bad-instant-known_at-2020-01-01T00:00:00+25:00",
+      "passed": true,
+      "detail": null
+    },
+    {
+      "probe": "bad-instant-from-2020-01-01T00:00:00+25:00",
+      "passed": true,
+      "detail": null
+    },
+    {
+      "probe": "bad-instant-to-2020-01-01T00:00:00+25:00",
+      "passed": true,
+      "detail": null
+    },
+    {
+      "probe": "bad-instant-known_at-2020-01-01T00:00:00+25:00",
+      "passed": true,
+      "detail": null
+    },
+    {
+      "probe": "bad-pagination-limit",
+      "passed": true,
+      "detail": null
+    },
+    {
+      "probe": "bad-pagination-limit",
+      "passed": true,
+      "detail": null
+    },
+    {
+      "probe": "bad-pagination-limit",
+      "passed": true,
+      "detail": null
+    },
+    {
+      "probe": "bad-pagination-limit",
+      "passed": true,
+      "detail": null
+    },
+    {
+      "probe": "bad-pagination-limit",
+      "passed": true,
+      "detail": null
+    },
+    {
+      "probe": "bad-pagination-limit",
+      "passed": true,
+      "detail": null
+    },
+    {
+      "probe": "bad-pagination-offset",
+      "passed": true,
+      "detail": null
+    },
+    {
+      "probe": "bad-pagination-offset",
+      "passed": true,
+      "detail": null
+    },
+    {
+      "probe": "bad-pagination-offset",
+      "passed": true,
+      "detail": null
+    },
+    {
+      "probe": "bad-pagination-offset",
+      "passed": true,
+      "detail": null
+    },
+    {
+      "probe": "huge-offset",
+      "passed": true,
+      "detail": {
+        "opening_balance": 1000,
+        "entries": [],
+        "closing_balance": 730,
+        "has_more": false,
+        "snapshot": "DMhU49M-5lbh7J1qn8IW6_7XU5B9wOSw"
+      }
+    },
+    {
+      "probe": "unknown-query-ignored",
+      "passed": true,
+      "detail": null
+    },
+    {
+      "probe": "new-user",
+      "passed": true,
+      "detail": null
+    },
+    {
+      "probe": "new-opening-zero",
+      "passed": true,
+      "detail": null
+    },
+    {
+      "probe": "future-seed",
+      "passed": true,
+      "detail": null
+    },
+    {
+      "probe": "future-seed-atomic",
+      "passed": true,
+      "detail": null
+    },
+    {
+      "probe": "reset",
+      "passed": true,
+      "detail": null
+    },
+    {
+      "probe": "reset",
+      "passed": true,
+      "detail": null
+    },
+    {
+      "probe": "reset-time-before-write",
+      "passed": true,
+      "detail": null
+    },
+    {
+      "probe": "omitted-seed-revisions",
+      "passed": true,
+      "detail": null
+    },
+    {
+      "probe": "reset",
+      "passed": true,
+      "detail": null
+    },
+    {
+      "probe": "correction-forbidden",
+      "passed": true,
+      "detail": null
+    },
+    {
+      "probe": "correction-forbidden",
+      "passed": true,
+      "detail": null
+    },
+    {
+      "probe": "correction-forbidden",
+      "passed": true,
+      "detail": null
+    },
+    {
+      "probe": "correction-no-token",
+      "passed": true,
+      "detail": null
+    },
+    {
+      "probe": "correction-unknown",
+      "passed": true,
+      "detail": null
+    },
+    {
+      "probe": "correction-key-required",
+      "passed": true,
+      "detail": null
+    },
+    {
+      "probe": "correction-key-required",
+      "passed": true,
+      "detail": null
+    },
+    {
+      "probe": "correction-key-long",
+      "passed": true,
+      "detail": null
+    },
+    {
+      "probe": "correction-required-expected_revision",
+      "passed": true,
+      "detail": null
+    },
+    {
+      "probe": "correction-required-amount",
+      "passed": true,
+      "detail": null
+    },
+    {
+      "probe": "correction-required-effective_at",
+      "passed": true,
+      "detail": null
+    },
+    {
+      "probe": "correction-required-reason",
+      "passed": true,
+      "detail": null
+    },
+    {
+      "probe": "correction-invalid-expected_revision-0",
+      "passed": true,
+      "detail": null
+    },
+    {
+      "probe": "correction-invalid-expected_revision--1",
+      "passed": true,
+      "detail": null
+    },
+    {
+      "probe": "correction-invalid-expected_revision-1.5",
+      "passed": true,
+      "detail": null
+    },
+    {
+      "probe": "correction-invalid-expected_revision-True",
+      "passed": true,
+      "detail": null
+    },
+    {
+      "probe": "correction-invalid-expected_revision-1",
+      "passed": true,
+      "detail": null
+    },
+    {
+      "probe": "correction-invalid-expected_revision-None",
+      "passed": true,
+      "detail": null
+    },
+    {
+      "probe": "correction-invalid-expected_revision-[]",
+      "passed": true,
+      "detail": null
+    },
+    {
+      "probe": "correction-invalid-expected_revision-{}",
+      "passed": true,
+      "detail": null
+    },
+    {
+      "probe": "correction-invalid-amount--1",
+      "passed": true,
+      "detail": null
+    },
+    {
+      "probe": "correction-invalid-amount-1000000001",
+      "passed": true,
+      "detail": null
+    },
+    {
+      "probe": "correction-invalid-amount-1.5",
+      "passed": true,
+      "detail": null
+    },
+    {
+      "probe": "correction-invalid-amount-True",
+      "passed": true,
+      "detail": null
+    },
+    {
+      "probe": "correction-invalid-amount-1",
+      "passed": true,
+      "detail": null
+    },
+    {
+      "probe": "correction-invalid-amount-None",
+      "passed": true,
+      "detail": null
+    },
+    {
+      "probe": "correction-invalid-amount-[]",
+      "passed": true,
+      "detail": null
+    },
+    {
+      "probe": "correction-invalid-reason-",
+      "passed": true,
+      "detail": null
+    },
+    {
+      "probe": "correction-invalid-reason-xxxxxxxxxxxxxxxxxxxxxxxxx",
+      "passed": true,
+      "detail": null
+    },
+    {
+      "probe": "correction-invalid-reason-None",
+      "passed": true,
+      "detail": null
+    },
+    {
+      "probe": "correction-invalid-reason-True",
+      "passed": true,
+      "detail": null
+    },
+    {
+      "probe": "correction-invalid-reason-1",
+      "passed": true,
+      "detail": null
+    },
+    {
+      "probe": "correction-invalid-reason-[]",
+      "passed": true,
+      "detail": null
+    },
+    {
+      "probe": "correction-invalid-effective_at-",
+      "passed": true,
+      "detail": null
+    },
+    {
+      "probe": "correction-invalid-effective_at-2020-01-01",
+      "passed": true,
+      "detail": null
+    },
+    {
+      "probe": "correction-invalid-effective_at-2020-01-01T00:00:00",
+      "passed": true,
+      "detail": null
+    },
+    {
+      "probe": "correction-invalid-effective_at-2090-01-01T00:00:00Z",
+      "passed": true,
+      "detail": null
+    },
+    {
+      "probe": "correction-invalid-effective_at-1",
+      "passed": true,
+      "detail": null
+    },
+    {
+      "probe": "correction-invalid-effective_at-None",
+      "passed": true,
+      "detail": null
+    },
+    {
+      "probe": "correction-invalid-effective_at-[]",
+      "passed": true,
+      "detail": null
+    },
+    {
+      "probe": "exact-correction-amount",
+      "passed": true,
+      "detail": null
+    },
+    {
+      "probe": "exact-correction-amount",
+      "passed": true,
+      "detail": null
+    },
+    {
+      "probe": "exact-correction-amount",
+      "passed": true,
+      "detail": null
+    },
+    {
+      "probe": "exact-correction-amount",
+      "passed": true,
+      "detail": null
+    },
+    {
+      "probe": "failed-corrections-atomic",
+      "passed": true,
+      "detail": null
+    },
+    {
+      "probe": "correction-create",
+      "passed": true,
+      "detail": null
+    },
+    {
+      "probe": "revision-receipt",
+      "passed": true,
+      "detail": {
+        "payment_id": "p_b",
+        "revision": 2,
+        "amount": 150,
+        "effective_at": "2020-01-01T00:00:00+00:00",
+        "recorded_at": "2026-10-04T11:33:08.206780+00:00",
+        "reason": "fix",
+        "correction_batch_id": null
+      }
+    },
+    {
+      "probe": "increase-delta",
+      "passed": true,
+      "detail": null
+    },
+    {
+      "probe": "original-feed-immutable",
+      "passed": true,
+      "detail": null
+    },
+    {
+      "probe": "old-knowledge-original",
+      "passed": true,
+      "detail": {
+        "user_id": "u_a",
+        "display_name": "A",
+        "handle": "a",
+        "balance": 730,
+        "total": 730,
+        "available": 730,
+        "held": 0,
+        "currency": "EUR",
+        "minor_units": 2,
+        "as_of": "2020-01-05T00:00:00+00:00",
+        "known_at": "2020-01-05T00:00:00+00:00"
+      }
+    },
+    {
+      "probe": "knowledge-inclusive-backdate",
+      "passed": true,
+      "detail": {
+        "user_id": "u_a",
+        "display_name": "A",
+        "handle": "a",
+        "balance": 850,
+        "total": 850,
+        "available": 850,
+        "held": 0,
+        "currency": "EUR",
+        "minor_units": 2,
+        "as_of": "2020-01-01T00:00:00+00:00",
+        "known_at": "2026-10-04T11:33:08.206780+00:00"
+      }
+    },
+    {
+      "probe": "knowledge-before-revision",
+      "passed": true,
+      "detail": {
+        "user_id": "u_a",
+        "display_name": "A",
+        "handle": "a",
+        "balance": 1000,
+        "total": 1000,
+        "available": 1000,
+        "held": 0,
+        "currency": "EUR",
+        "minor_units": 2,
+        "as_of": "2020-01-01T00:00:00+00:00",
+        "known_at": "2026-10-04T11:33:08.206779+00:00"
+      }
+    },
+    {
+      "probe": "unknown-payments-contribute-nothing",
+      "passed": true,
+      "detail": {
+        "user_id": "u_a",
+        "display_name": "A",
+        "handle": "a",
+        "balance": 1000,
+        "total": 1000,
+        "available": 1000,
+        "held": 0,
+        "currency": "EUR",
+        "minor_units": 2,
+        "as_of": "2020-01-05T00:00:00+00:00",
+        "known_at": "2020-01-01T00:00:00+00:00"
+      }
+    },
+    {
+      "probe": "correction-moves-into-window",
+      "passed": true,
+      "detail": {
+        "opening_balance": 1000,
+        "entries": [
+          {
+            "payment": {
+              "payment_id": "p_b",
+              "from_user_id": "u_a",
+              "from_handle": "a",
+              "to_user_id": "u_b",
+              "to_handle": "b",
+              "amount": 150,
+              "currency": "EUR",
+              "note": "one",
+              "visibility": "private",
+              "request_id": null,
+              "settlement_id": null,
+              "authorization_id": null,
+              "refund_of": null,
+              "created_at": "2020-01-02T00:00:00+00:00"
+            },
+            "delta": -150,
+            "balance_after": 850,
+            "revision": 2,
+            "effective_at": "2020-01-01T00:00:00+00:00",
+            "recorded_at": "2026-10-04T11:33:08.206780+00:00"
+          }
+        ],
+        "closing_balance": 850,
+        "has_more": false,
+        "snapshot": "jbvlUJ1qywByEcWhzNvaL6B-uO7HtEuB",
+        "from": "2020-01-01T00:00:00+00:00",
+        "to": "2020-01-02T00:00:00+00:00"
+      }
+    },
+    {
+      "probe": "stale",
+      "passed": true,
+      "detail": null
+    },
+    {
+      "probe": "reverse-zero",
+      "passed": true,
+      "detail": null
+    },
+    {
+      "probe": "decrease-delta",
+      "passed": true,
+      "detail": null
+    },
+    {
+      "probe": "recorded-strict",
+      "passed": true,
+      "detail": null
+    },
+    {
+      "probe": "zero-entry-and-order",
+      "passed": true,
+      "detail": [
+        {
+          "payment": {
+            "payment_id": "p_a",
+            "from_user_id": "u_b",
+            "from_handle": "b",
+            "to_user_id": "u_a",
+            "to_handle": "a",
+            "amount": 30,
+            "currency": "EUR",
+            "note": "two",
+            "visibility": "public",
+            "request_id": null,
+            "settlement_id": null,
+            "authorization_id": null,
+            "refund_of": null,
+            "created_at": "2020-01-02T00:00:00+00:00"
+          },
+          "delta": 30,
+          "balance_after": 1030,
+          "revision": 1,
+          "effective_at": "2020-01-02T00:00:00+00:00",
+          "recorded_at": "2020-01-02T00:00:00+00:00"
+        },
+        {
+          "payment": {
+            "payment_id": "p_b",
+            "from_user_id": "u_a",
+            "from_handle": "a",
+            "to_user_id": "u_b",
+            "to_handle": "b",
+            "amount": 0,
+            "currency": "EUR",
+            "note": "one",
+            "visibility": "private",
+            "request_id": null,
+            "settlement_id": null,
+            "authorization_id": null,
+            "refund_of": null,
+            "created_at": "2020-01-02T00:00:00+00:00"
+          },
+          "delta": 0,
+          "balance_after": 1030,
+          "revision": 3,
+          "effective_at": "2020-01-03T00:00:00+00:00",
+          "recorded_at": "2026-10-04T11:33:08.222509+00:00"
+        },
+        {
+          "payment": {
+            "payment_id": "p_c",
+            "from_user_id": "u_a",
+            "from_handle": "a",
+            "to_user_id": "u_c",
+            "to_handle": "c",
+            "amount": 200,
+            "currency": "EUR",
+            "note": "three",
+            "visibility": "public",
+            "request_id": null,
+            "settlement_id": null,
+            "authorization_id": null,
+            "refund_of": null,
+            "created_at": "2020-01-03T00:00:00+00:00"
+          },
+          "delta": -200,
+          "balance_after": 830,
+          "revision": 1,
+          "effective_at": "2020-01-03T00:00:00+00:00",
+          "recorded_at": "2020-01-03T00:00:00+00:00"
+        }
+      ]
+    },
+    {
+      "probe": "correction-moves-out-window",
+      "passed": true,
+      "detail": null
+    },
+    {
+      "probe": "correction-old-replay",
+      "passed": true,
+      "detail": null
+    },
+    {
+      "probe": "correction-original-response",
+      "passed": true,
+      "detail": null
+    },
+    {
+      "probe": "replay-before-validation",
+      "passed": true,
+      "detail": null
+    },
+    {
+      "probe": "revision-list",
+      "passed": true,
+      "detail": [
+        {
+          "payment_id": "p_b",
+          "revision": 1,
+          "amount": 100,
+          "effective_at": "2020-01-02T00:00:00+00:00",
+          "recorded_at": "2020-01-02T00:00:00+00:00",
+          "reason": "",
+          "correction_batch_id": null
+        },
+        {
+          "payment_id": "p_b",
+          "revision": 2,
+          "amount": 150,
+          "effective_at": "2020-01-01T00:00:00+00:00",
+          "recorded_at": "2026-10-04T11:33:08.206780+00:00",
+          "reason": "fix",
+          "correction_batch_id": null
+        },
+        {
+          "payment_id": "p_b",
+          "revision": 3,
+          "amount": 0,
+          "effective_at": "2020-01-03T00:00:00+00:00",
+          "recorded_at": "2026-10-04T11:33:08.222509+00:00",
+          "reason": "reversal",
+          "correction_batch_id": null
+        }
+      ]
+    },
+    {
+      "probe": "original-unchanged-after-reversal",
+      "passed": true,
+      "detail": null
+    },
+    {
+      "probe": "historical-conservation",
+      "passed": true,
+      "detail": null
+    },
+    {
+      "probe": "historical-conservation",
+      "passed": true,
+      "detail": null
+    },
+    {
+      "probe": "historical-conservation",
+      "passed": true,
+      "detail": null
+    },
+    {
+      "probe": "historical-conservation",
+      "passed": true,
+      "detail": null
+    },
+    {
+      "probe": "historical-conservation",
+      "passed": true,
+      "detail": null
+    },
+    {
+      "probe": "historical-conservation",
+      "passed": true,
+      "detail": null
+    },
+    {
+      "probe": "historical-conservation",
+      "passed": true,
+      "detail": null
+    },
+    {
+      "probe": "historical-conservation",
+      "passed": true,
+      "detail": null
+    },
+    {
+      "probe": "historical-conservation",
+      "passed": true,
+      "detail": null
+    },
+    {
+      "probe": "historical-conservation",
+      "passed": true,
+      "detail": null
+    },
+    {
+      "probe": "historical-conservation",
+      "passed": true,
+      "detail": null
+    },
+    {
+      "probe": "historical-conservation",
+      "passed": true,
+      "detail": null
+    },
+    {
+      "probe": "historical-conservation",
+      "passed": true,
+      "detail": null
+    },
+    {
+      "probe": "historical-conservation",
+      "passed": true,
+      "detail": null
+    },
+    {
+      "probe": "historical-conservation",
+      "passed": true,
+      "detail": null
+    },
+    {
+      "probe": "historical-conservation",
+      "passed": true,
+      "detail": null
+    },
+    {
+      "probe": "historical-conservation",
+      "passed": true,
+      "detail": null
+    },
+    {
+      "probe": "historical-conservation",
+      "passed": true,
+      "detail": null
+    },
+    {
+      "probe": "historical-conservation",
+      "passed": true,
+      "detail": null
+    },
+    {
+      "probe": "historical-conservation",
+      "passed": true,
+      "detail": null
+    },
+    {
+      "probe": "historical-conservation",
+      "passed": true,
+      "detail": null
+    },
+    {
+      "probe": "historical-conservation",
+      "passed": true,
+      "detail": null
+    },
+    {
+      "probe": "historical-conservation",
+      "passed": true,
+      "detail": null
+    },
+    {
+      "probe": "historical-conservation",
+      "passed": true,
+      "detail": null
+    },
+    {
+      "probe": "historical-conservation",
+      "passed": true,
+      "detail": null
+    },
+    {
+      "probe": "correct-live",
+      "passed": true,
+      "detail": null
+    },
+    {
+      "probe": "payment-replay-original",
+      "passed": true,
+      "detail": null
+    },
+    {
+      "probe": "reset",
+      "passed": true,
+      "detail": null
+    },
+    {
+      "probe": "current-insufficient-precedence",
+      "passed": true,
+      "detail": null
+    },
+    {
+      "probe": "insufficient-atomic",
+      "passed": true,
+      "detail": null
+    },
+    {
+      "probe": "fund-receiver",
+      "passed": true,
+      "detail": null
+    },
+    {
+      "probe": "historical-overdraft-refund",
+      "passed": true,
+      "detail": null
+    },
+    {
+      "probe": "historical-failure-atomic",
+      "passed": true,
+      "detail": null
+    },
+    {
+      "probe": "failed-correction-key-reusable",
+      "passed": true,
+      "detail": null
+    },
+    {
+      "probe": "reset",
+      "passed": true,
+      "detail": null
+    },
+    {
+      "probe": "move-credit-after-spend",
+      "passed": true,
+      "detail": null
+    },
+    {
+      "probe": "moving-time-failure-atomic",
+      "passed": true,
+      "detail": null
+    },
+    {
+      "probe": "reset",
+      "passed": true,
+      "detail": null
+    },
+    {
+      "probe": "combined-boundary-valid",
+      "passed": true,
+      "detail": null
+    },
+    {
+      "probe": "reset",
+      "passed": true,
+      "detail": null
+    },
+    {
+      "probe": "snapshot-query-exclusion-from",
+      "passed": true,
+      "detail": null
+    },
+    {
+      "probe": "snapshot-query-exclusion-to",
+      "passed": true,
+      "detail": null
+    },
+    {
+      "probe": "snapshot-query-exclusion-known_at",
+      "passed": true,
+      "detail": null
+    },
+    {
+      "probe": "snapshot-other-user",
+      "passed": true,
+      "detail": null
+    },
+    {
+      "probe": "snapshot-unknown",
+      "passed": true,
+      "detail": null
+    },
+    {
+      "probe": "snapshot-unknown-query-ignored",
+      "passed": true,
+      "detail": null
+    },
+    {
+      "probe": "identical-corrections-status",
+      "passed": true,
+      "detail": [
+        201,
+        200,
+        200,
+        200,
+        200,
+        200,
+        200,
+        200,
+        200,
+        200,
+        200,
+        200,
+        200,
+        200,
+        200,
+        200,
+        200,
+        200,
+        200,
+        200,
+        200,
+        200,
+        200,
+        200,
+        200,
+        200,
+        200,
+        200,
+        200,
+        200,
+        200,
+        200,
+        200,
+        200,
+        200,
+        200,
+        200,
+        200,
+        200,
+        200,
+        200,
+        200,
+        200,
+        200,
+        200,
+        200,
+        200,
+        200,
+        200,
+        200
+      ]
+    },
+    {
+      "probe": "identical-corrections-body",
+      "passed": true,
+      "detail": null
+    },
+    {
+      "probe": "competing-corrections-one-success",
+      "passed": true,
+      "detail": [
+        201,
+        409,
+        409,
+        409,
+        409,
+        409,
+        409,
+        409,
+        409,
+        409,
+        409,
+        409,
+        409,
+        409,
+        409,
+        409,
+        409,
+        409,
+        409,
+        409
+      ]
+    },
+    {
+      "probe": "snapshot-frozen-after-concurrent-corrections",
+      "passed": true,
+      "detail": null
+    },
+    {
+      "probe": "snapshot-page-0",
+      "passed": true,
+      "detail": null
+    },
+    {
+      "probe": "snapshot-page-1",
+      "passed": true,
+      "detail": null
+    },
+    {
+      "probe": "snapshot-page-2",
+      "passed": true,
+      "detail": null
+    },
+    {
+      "probe": "snapshot-page-3",
+      "passed": true,
+      "detail": null
+    },
+    {
+      "probe": "snapshot-page-100",
+      "passed": true,
+      "detail": null
+    },
+    {
+      "probe": "reset",
+      "passed": true,
+      "detail": null
+    },
+    {
+      "probe": "snapshot-invalid-after-reset",
+      "passed": true,
+      "detail": null
+    },
+    {
+      "probe": "reset",
+      "passed": true,
+      "detail": null
+    },
+    {
+      "probe": "settlement-original-times",
+      "passed": true,
+      "detail": null
+    },
+    {
+      "probe": "settlement-immutable",
+      "passed": true,
+      "detail": null
+    },
+    {
+      "probe": "settlement-original-times",
+      "passed": true,
+      "detail": null
+    },
+    {
+      "probe": "settlement-immutable",
+      "passed": true,
+      "detail": null
+    },
+    {
+      "probe": "capture-immutable",
+      "passed": true,
+      "detail": null
+    },
+    {
+      "probe": "stage3-import",
+      "passed": true,
+      "detail": null
+    },
+    {
+      "probe": "stage3-export-identical",
+      "passed": true,
+      "detail": null
+    },
+    {
+      "probe": "imported-snapshot",
+      "passed": true,
+      "detail": {
+        "actual": {
+          "opening_balance": 10000,
+          "entries": [
+            {
+              "payment": {
+                "payment_id": "p_~000000000001",
+                "from_user_id": "u_a",
+                "from_handle": "a",
+                "to_user_id": "u_b",
+                "to_handle": "b",
+                "amount": 100,
+                "currency": "EUR",
+                "note": "",
+                "visibility": "public",
+                "request_id": null,
+                "settlement_id": "st_51aa4433b0b94a17",
+                "authorization_id": null,
+                "refund_of": null,
+                "created_at": "2026-10-04T11:33:08+00:00"
+              },
+              "delta": -100,
+              "balance_after": 9900,
+              "revision": 1,
+              "effective_at": "2026-10-04T11:33:08+00:00",
+              "recorded_at": "2026-10-04T11:33:08+00:00"
+            },
+            {
+              "payment": {
+                "payment_id": "p_~000000000004",
+                "from_user_id": "u_a",
+                "from_handle": "a",
+                "to_user_id": "u_b",
+                "to_handle": "b",
+                "amount": 30,
+                "currency": "EUR",
+                "note": "",
+                "visibility": "public",
+                "request_id": null,
+                "settlement_id": null,
+                "authorization_id": "a_2cb22ffc4b8a4bd3",
+                "refund_of": null,
+                "created_at": "2026-10-04T11:33:08+00:00"
+              },
+              "delta": -30,
+              "balance_after": 9870,
+              "revision": 1,
+              "effective_at": "2026-10-04T11:33:08+00:00",
+              "recorded_at": "2026-10-04T11:33:08+00:00"
+            },
+            {
+              "payment": {
+                "payment_id": "p_~000000000005",
+                "from_user_id": "u_a",
+                "from_handle": "a",
+                "to_user_id": "u_b",
+                "to_handle": "b",
+                "amount": 5,
+                "currency": "EUR",
+                "note": "",
+                "visibility": "public",
+                "request_id": null,
+                "settlement_id": null,
+                "authorization_id": null,
+                "refund_of": null,
+                "created_at": "2026-10-04T11:33:08+00:00"
+              },
+              "delta": -5,
+              "balance_after": 9865,
+              "revision": 2,
+              "effective_at": "2026-10-04T11:33:08+00:00",
+              "recorded_at": "2026-10-04T11:33:08.916144+00:00"
+            }
+          ],
+          "closing_balance": 9865,
+          "has_more": false,
+          "snapshot": "CsvHI4q2uEsqPCFFxjqczHKEJbSY3qif"
+        },
+        "expected": {
+          "opening_balance": 10000,
+          "entries": [
+            {
+              "payment": {
+                "payment_id": "p_~000000000001",
+                "from_user_id": "u_a",
+                "from_handle": "a",
+                "to_user_id": "u_b",
+                "to_handle": "b",
+                "amount": 100,
+                "currency": "EUR",
+                "note": "",
+                "visibility": "public",
+                "request_id": null,
+                "settlement_id": "st_51aa4433b0b94a17",
+                "authorization_id": null,
+                "refund_of": null,
+                "created_at": "2026-10-04T11:33:08+00:00"
+              },
+              "delta": -100,
+              "balance_after": 9900,
+              "revision": 1,
+              "effective_at": "2026-10-04T11:33:08+00:00",
+              "recorded_at": "2026-10-04T11:33:08+00:00"
+            },
+            {
+              "payment": {
+                "payment_id": "p_~000000000004",
+                "from_user_id": "u_a",
+                "from_handle": "a",
+                "to_user_id": "u_b",
+                "to_handle": "b",
+                "amount": 30,
+                "currency": "EUR",
+                "note": "",
+                "visibility": "public",
+                "request_id": null,
+                "settlement_id": null,
+                "authorization_id": "a_2cb22ffc4b8a4bd3",
+                "refund_of": null,
+                "created_at": "2026-10-04T11:33:08+00:00"
+              },
+              "delta": -30,
+              "balance_after": 9870,
+              "revision": 1,
+              "effective_at": "2026-10-04T11:33:08+00:00",
+              "recorded_at": "2026-10-04T11:33:08+00:00"
+            },
+            {
+              "payment": {
+                "payment_id": "p_~000000000005",
+                "from_user_id": "u_a",
+                "from_handle": "a",
+                "to_user_id": "u_b",
+                "to_handle": "b",
+                "amount": 5,
+                "currency": "EUR",
+                "note": "",
+                "visibility": "public",
+                "request_id": null,
+                "settlement_id": null,
+                "authorization_id": null,
+                "refund_of": null,
+                "created_at": "2026-10-04T11:33:08+00:00"
+              },
+              "delta": -5,
+              "balance_after": 9865,
+              "revision": 2,
+              "effective_at": "2026-10-04T11:33:08+00:00",
+              "recorded_at": "2026-10-04T11:33:08.916144+00:00"
+            }
+          ],
+          "closing_balance": 9865,
+          "has_more": false,
+          "snapshot": "CsvHI4q2uEsqPCFFxjqczHKEJbSY3qif"
+        }
+      }
+    },
+    {
+      "probe": "imported-correction-replay",
+      "passed": true,
+      "detail": null
+    },
+    {
+      "probe": "imported-balances",
+      "passed": true,
+      "detail": null
+    },
+    {
+      "probe": "reset",
+      "passed": true,
+      "detail": null
+    },
+    {
+      "probe": "hold-open-closed-at",
+      "passed": true,
+      "detail": {
+        "authorization_id": "a_3c3824770bb24266",
+        "from_user_id": "u_a",
+        "from_handle": "a",
+        "to_user_id": "u_b",
+        "to_handle": "b",
+        "amount": 2000,
+        "captured_amount": 0,
+        "remaining_amount": 2000,
+        "currency": "EUR",
+        "note": "",
+        "visibility": "public",
+        "status": "open",
+        "expires_at": "2026-10-04T11:43:08+00:00",
+        "payment_id": null,
+        "payment_ids": [],
+        "created_at": "2026-10-04T11:33:08+00:00",
+        "closed_at": null
+      }
+    },
+    {
+      "probe": "void-closed-at",
+      "passed": true,
+      "detail": {
+        "authorization_id": "a_3c3824770bb24266",
+        "from_user_id": "u_a",
+        "from_handle": "a",
+        "to_user_id": "u_b",
+        "to_handle": "b",
+        "amount": 2000,
+        "captured_amount": 700,
+        "remaining_amount": 0,
+        "currency": "EUR",
+        "note": "",
+        "visibility": "public",
+        "status": "voided",
+        "expires_at": "2026-10-04T11:43:08+00:00",
+        "payment_id": "p_~000000000002",
+        "payment_ids": [
+          "p_~000000000002"
+        ],
+        "created_at": "2026-10-04T11:33:08+00:00",
+        "closed_at": "2026-10-04T11:33:11+00:00"
+      }
+    },
+    {
+      "probe": "hold-history-2026-10-04T11:33:06.966338+00:00",
+      "passed": true,
+      "detail": {
+        "user_id": "u_a",
+        "display_name": "A",
+        "handle": "a",
+        "balance": 10000,
+        "total": 10000,
+        "available": 10000,
+        "held": 0,
+        "currency": "EUR",
+        "minor_units": 2,
+        "as_of": "2026-10-04T11:33:06.966338+00:00"
+      }
+    },
+    {
+      "probe": "hold-history-2026-10-04T11:33:08+00:00",
+      "passed": true,
+      "detail": {
+        "user_id": "u_a",
+        "display_name": "A",
+        "handle": "a",
+        "balance": 10000,
+        "total": 10000,
+        "available": 8000,
+        "held": 2000,
+        "currency": "EUR",
+        "minor_units": 2,
+        "as_of": "2026-10-04T11:33:08+00:00"
+      }
+    },
+    {
+      "probe": "hold-history-2026-10-04T11:33:10+00:00",
+      "passed": true,
+      "detail": {
+        "user_id": "u_a",
+        "display_name": "A",
+        "handle": "a",
+        "balance": 9300,
+        "total": 9300,
+        "available": 8000,
+        "held": 1300,
+        "currency": "EUR",
+        "minor_units": 2,
+        "as_of": "2026-10-04T11:33:10+00:00"
+      }
+    },
+    {
+      "probe": "hold-history-2026-10-04T11:33:11+00:00",
+      "passed": true,
+      "detail": {
+        "user_id": "u_a",
+        "display_name": "A",
+        "handle": "a",
+        "balance": 9300,
+        "total": 9300,
+        "available": 9300,
+        "held": 0,
+        "currency": "EUR",
+        "minor_units": 2,
+        "as_of": "2026-10-04T11:33:11+00:00"
+      }
+    },
+    {
+      "probe": "hold-before-capture-known",
+      "passed": true,
+      "detail": {
+        "user_id": "u_a",
+        "display_name": "A",
+        "handle": "a",
+        "balance": 10000,
+        "total": 10000,
+        "available": 8000,
+        "held": 2000,
+        "currency": "EUR",
+        "minor_units": 2,
+        "as_of": "2026-10-04T11:33:11+00:00",
+        "known_at": "2026-10-04T11:33:08+00:00"
+      }
+    },
+    {
+      "probe": "hold-after-capture-before-void-known",
+      "passed": true,
+      "detail": {
+        "user_id": "u_a",
+        "display_name": "A",
+        "handle": "a",
+        "balance": 9300,
+        "total": 9300,
+        "available": 8000,
+        "held": 1300,
+        "currency": "EUR",
+        "minor_units": 2,
+        "as_of": "2026-10-04T11:33:11+00:00",
+        "known_at": "2026-10-04T11:33:10+00:00"
+      }
+    },
+    {
+      "probe": "hold-unknown-before-creation",
+      "passed": true,
+      "detail": null
+    },
+    {
+      "probe": "statement-only-capture",
+      "passed": true,
+      "detail": null
+    },
+    {
+      "probe": "final-close-time",
+      "passed": true,
+      "detail": {
+        "authorization_id": "a_7f5895c6bbcf4177",
+        "from_user_id": "u_a",
+        "from_handle": "a",
+        "to_user_id": "u_b",
+        "to_handle": "b",
+        "amount": 1000,
+        "captured_amount": 400,
+        "remaining_amount": 0,
+        "currency": "EUR",
+        "note": "",
+        "visibility": "public",
+        "status": "captured",
+        "expires_at": "2026-10-04T11:43:11+00:00",
+        "payment_id": "p_~000000000004",
+        "payment_ids": [
+          "p_~000000000004"
+        ],
+        "created_at": "2026-10-04T11:33:11+00:00",
+        "closed_at": "2026-10-04T11:33:12+00:00"
+      }
+    },
+    {
+      "probe": "final-releases-historical",
+      "passed": true,
+      "detail": null
+    },
+    {
+      "probe": "reset",
+      "passed": true,
+      "detail": null
+    },
+    {
+      "probe": "future-expiry",
+      "passed": true,
+      "detail": null
+    },
+    {
+      "probe": "just-before-expiry",
+      "passed": true,
+      "detail": null
+    },
+    {
+      "probe": "expiry-closed-at-deadline",
+      "passed": true,
+      "detail": {
+        "authorization_id": "a_6b9c71dae4144ec3",
+        "from_user_id": "u_a",
+        "from_handle": "a",
+        "to_user_id": "u_b",
+        "to_handle": "b",
+        "amount": 1000,
+        "captured_amount": 0,
+        "remaining_amount": 0,
+        "currency": "EUR",
+        "note": "",
+        "visibility": "public",
+        "status": "expired",
+        "expires_at": "2026-10-04T11:33:13+00:00",
+        "payment_id": null,
+        "payment_ids": [],
+        "created_at": "2026-10-04T11:33:12+00:00",
+        "closed_at": "2026-10-04T11:33:13+00:00"
+      }
+    },
+    {
+      "probe": "expiry-snapshot-unchanged",
+      "passed": true,
+      "detail": null
+    },
+    {
+      "probe": "reset",
+      "passed": true,
+      "detail": null
+    },
+    {
+      "probe": "seed-hold-before",
+      "passed": true,
+      "detail": null
+    },
+    {
+      "probe": "seed-hold-at",
+      "passed": true,
+      "detail": null
+    },
+    {
+      "probe": "seed-known-before",
+      "passed": true,
+      "detail": null
+    },
+    {
+      "probe": "reset",
+      "passed": true,
+      "detail": null
+    },
+    {
+      "probe": "seed-default-created-at-reset",
+      "passed": true,
+      "detail": null
+    },
+    {
+      "probe": "reset",
+      "passed": true,
+      "detail": null
+    },
+    {
+      "probe": "historical-available-overdraft",
+      "passed": true,
+      "detail": null
+    },
+    {
+      "probe": "held-history-failure-atomic",
+      "passed": true,
+      "detail": null
+    },
+    {
+      "probe": "release-boundary-valid",
+      "passed": true,
+      "detail": null
+    },
+    {
+      "probe": "current-available-precedence",
+      "passed": true,
+      "detail": null
+    },
+    {
+      "probe": "reset",
+      "passed": true,
+      "detail": null
+    },
+    {
+      "probe": "oracle-correction",
+      "passed": true,
+      "detail": null
+    },
+    {
+      "probe": "oracle-correction",
+      "passed": true,
+      "detail": null
+    },
+    {
+      "probe": "oracle-correction",
+      "passed": true,
+      "detail": null
+    },
+    {
+      "probe": "oracle-correction",
+      "passed": true,
+      "detail": null
+    },
+    {
+      "probe": "oracle-correction",
+      "passed": true,
+      "detail": null
+    },
+    {
+      "probe": "oracle-correction",
+      "passed": true,
+      "detail": null
+    },
+    {
+      "probe": "oracle-correction",
+      "passed": true,
+      "detail": null
+    },
+    {
+      "probe": "oracle-correction",
+      "passed": true,
+      "detail": null
+    },
+    {
+      "probe": "oracle-correction",
+      "passed": true,
+      "detail": null
+    },
+    {
+      "probe": "oracle-correction",
+      "passed": true,
+      "detail": null
+    },
+    {
+      "probe": "oracle-correction",
+      "passed": true,
+      "detail": null
+    },
+    {
+      "probe": "oracle-correction",
+      "passed": true,
+      "detail": null
+    },
+    {
+      "probe": "oracle-correction",
+      "passed": true,
+      "detail": null
+    },
+    {
+      "probe": "oracle-correction",
+      "passed": true,
+      "detail": null
+    },
+    {
+      "probe": "oracle-correction",
+      "passed": true,
+      "detail": null
+    },
+    {
+      "probe": "oracle-correction",
+      "passed": true,
+      "detail": null
+    },
+    {
+      "probe": "oracle-correction",
+      "passed": true,
+      "detail": null
+    },
+    {
+      "probe": "oracle-correction",
+      "passed": true,
+      "detail": null
+    },
+    {
+      "probe": "oracle-correction",
+      "passed": true,
+      "detail": null
+    },
+    {
+      "probe": "oracle-correction",
+      "passed": true,
+      "detail": null
+    },
+    {
+      "probe": "oracle-correction",
+      "passed": true,
+      "detail": null
+    },
+    {
+      "probe": "oracle-correction",
+      "passed": true,
+      "detail": null
+    },
+    {
+      "probe": "oracle-correction",
+      "passed": true,
+      "detail": null
+    },
+    {
+      "probe": "oracle-correction",
+      "passed": true,
+      "detail": null
+    },
+    {
+      "probe": "oracle-correction",
+      "passed": true,
+      "detail": null
+    },
+    {
+      "probe": "oracle-balance",
+      "passed": true,
+      "detail": null
+    },
+    {
+      "probe": "oracle-balance",
+      "passed": true,
+      "detail": null
+    },
+    {
+      "probe": "oracle-balance",
+      "passed": true,
+      "detail": null
+    },
+    {
+      "probe": "oracle-statement",
+      "passed": true,
+      "detail": null
+    },
+    {
+      "probe": "oracle-balance",
+      "passed": true,
+      "detail": null
+    },
+    {
+      "probe": "oracle-balance",
+      "passed": true,
+      "detail": null
+    },
+    {
+      "probe": "oracle-balance",
+      "passed": true,
+      "detail": null
+    },
+    {
+      "probe": "oracle-statement",
+      "passed": true,
+      "detail": null
+    },
+    {
+      "probe": "oracle-balance",
+      "passed": true,
+      "detail": null
+    },
+    {
+      "probe": "oracle-balance",
+      "passed": true,
+      "detail": null
+    },
+    {
+      "probe": "oracle-balance",
+      "passed": true,
+      "detail": null
+    },
+    {
+      "probe": "oracle-statement",
+      "passed": true,
+      "detail": null
+    },
+    {
+      "probe": "oracle-balance",
+      "passed": true,
+      "detail": null
+    },
+    {
+      "probe": "oracle-balance",
+      "passed": true,
+      "detail": null
+    },
+    {
+      "probe": "oracle-balance",
+      "passed": true,
+      "detail": null
+    },
+    {
+      "probe": "oracle-statement",
+      "passed": true,
+      "detail": null
+    },
+    {
+      "probe": "oracle-balance",
+      "passed": true,
+      "detail": null
+    },
+    {
+      "probe": "oracle-balance",
+      "passed": true,
+      "detail": null
+    },
+    {
+      "probe": "oracle-balance",
+      "passed": true,
+      "detail": null
+    },
+    {
+      "probe": "oracle-statement",
+      "passed": true,
+      "detail": null
+    },
+    {
+      "probe": "oracle-balance",
+      "passed": true,
+      "detail": null
+    },
+    {
+      "probe": "oracle-balance",
+      "passed": true,
+      "detail": null
+    },
+    {
+      "probe": "oracle-balance",
+      "passed": true,
+      "detail": null
+    },
+    {
+      "probe": "oracle-statement",
+      "passed": true,
+      "detail": null
+    },
+    {
+      "probe": "oracle-balance",
+      "passed": true,
+      "detail": null
+    },
+    {
+      "probe": "oracle-balance",
+      "passed": true,
+      "detail": null
+    },
+    {
+      "probe": "oracle-balance",
+      "passed": true,
+      "detail": null
+    },
+    {
+      "probe": "oracle-statement",
+      "passed": true,
+      "detail": null
+    },
+    {
+      "probe": "oracle-balance",
+      "passed": true,
+      "detail": null
+    },
+    {
+      "probe": "oracle-balance",
+      "passed": true,
+      "detail": null
+    },
+    {
+      "probe": "oracle-balance",
+      "passed": true,
+      "detail": null
+    },
+    {
+      "probe": "oracle-statement",
+      "passed": true,
+      "detail": null
+    },
+    {
+      "probe": "oracle-balance",
+      "passed": true,
+      "detail": null
+    },
+    {
+      "probe": "oracle-balance",
+      "passed": true,
+      "detail": null
+    },
+    {
+      "probe": "oracle-balance",
+      "passed": true,
+      "detail": null
+    },
+    {
+      "probe": "oracle-statement",
+      "passed": true,
+      "detail": null
+    },
+    {
+      "probe": "oracle-balance",
+      "passed": true,
+      "detail": null
+    },
+    {
+      "probe": "oracle-balance",
+      "passed": true,
+      "detail": null
+    },
+    {
+      "probe": "oracle-balance",
+      "passed": true,
+      "detail": null
+    },
+    {
+      "probe": "oracle-statement",
+      "passed": true,
+      "detail": null
+    },
+    {
+      "probe": "oracle-balance",
+      "passed": true,
+      "detail": null
+    },
+    {
+      "probe": "oracle-balance",
+      "passed": true,
+      "detail": null
+    },
+    {
+      "probe": "oracle-balance",
+      "passed": true,
+      "detail": null
+    },
+    {
+      "probe": "oracle-statement",
+      "passed": true,
+      "detail": null
+    },
+    {
+      "probe": "oracle-balance",
+      "passed": true,
+      "detail": null
+    },
+    {
+      "probe": "oracle-balance",
+      "passed": true,
+      "detail": null
+    },
+    {
+      "probe": "oracle-balance",
+      "passed": true,
+      "detail": null
+    },
+    {
+      "probe": "oracle-statement",
+      "passed": true,
+      "detail": null
+    },
+    {
+      "probe": "oracle-balance",
+      "passed": true,
+      "detail": null
+    },
+    {
+      "probe": "oracle-balance",
+      "passed": true,
+      "detail": null
+    },
+    {
+      "probe": "oracle-balance",
+      "passed": true,
+      "detail": null
+    },
+    {
+      "probe": "oracle-statement",
+      "passed": true,
+      "detail": null
+    },
+    {
+      "probe": "oracle-balance",
+      "passed": true,
+      "detail": null
+    },
+    {
+      "probe": "oracle-balance",
+      "passed": true,
+      "detail": null
+    },
+    {
+      "probe": "oracle-balance",
+      "passed": true,
+      "detail": null
+    },
+    {
+      "probe": "oracle-statement",
+      "passed": true,
+      "detail": null
+    },
+    {
+      "probe": "oracle-balance",
+      "passed": true,
+      "detail": null
+    },
+    {
+      "probe": "oracle-balance",
+      "passed": true,
+      "detail": null
+    },
+    {
+      "probe": "oracle-balance",
+      "passed": true,
+      "detail": null
+    },
+    {
+      "probe": "oracle-statement",
+      "passed": true,
+      "detail": null
+    },
+    {
+      "probe": "oracle-balance",
+      "passed": true,
+      "detail": null
+    },
+    {
+      "probe": "oracle-balance",
+      "passed": true,
+      "detail": null
+    },
+    {
+      "probe": "oracle-balance",
+      "passed": true,
+      "detail": null
+    },
+    {
+      "probe": "oracle-statement",
+      "passed": true,
+      "detail": null
+    },
+    {
+      "probe": "oracle-balance",
+      "passed": true,
+      "detail": null
+    },
+    {
+      "probe": "oracle-balance",
+      "passed": true,
+      "detail": null
+    },
+    {
+      "probe": "oracle-balance",
+      "passed": true,
+      "detail": null
+    },
+    {
+      "probe": "oracle-statement",
+      "passed": true,
+      "detail": null
+    },
+    {
+      "probe": "oracle-balance",
+      "passed": true,
+      "detail": null
+    },
+    {
+      "probe": "oracle-balance",
+      "passed": true,
+      "detail": null
+    },
+    {
+      "probe": "oracle-balance",
+      "passed": true,
+      "detail": null
+    },
+    {
+      "probe": "oracle-statement",
+      "passed": true,
+      "detail": null
+    },
+    {
+      "probe": "oracle-balance",
+      "passed": true,
+      "detail": null
+    },
+    {
+      "probe": "oracle-balance",
+      "passed": true,
+      "detail": null
+    },
+    {
+      "probe": "oracle-balance",
+      "passed": true,
+      "detail": null
+    },
+    {
+      "probe": "oracle-statement",
+      "passed": true,
+      "detail": null
+    },
+    {
+      "probe": "oracle-balance",
+      "passed": true,
+      "detail": null
+    },
+    {
+      "probe": "oracle-balance",
+      "passed": true,
+      "detail": null
+    },
+    {
+      "probe": "oracle-balance",
+      "passed": true,
+      "detail": null
+    },
+    {
+      "probe": "oracle-statement",
+      "passed": true,
+      "detail": null
+    },
+    {
+      "probe": "oracle-balance",
+      "passed": true,
+      "detail": null
+    },
+    {
+      "probe": "oracle-balance",
+      "passed": true,
+      "detail": null
+    },
+    {
+      "probe": "oracle-balance",
+      "passed": true,
+      "detail": null
+    },
+    {
+      "probe": "oracle-statement",
+      "passed": true,
+      "detail": null
+    },
+    {
+      "probe": "oracle-balance",
+      "passed": true,
+      "detail": null
+    },
+    {
+      "probe": "oracle-balance",
+      "passed": true,
+      "detail": null
+    },
+    {
+      "probe": "oracle-balance",
+      "passed": true,
+      "detail": null
+    },
+    {
+      "probe": "oracle-statement",
+      "passed": true,
+      "detail": null
+    },
+    {
+      "probe": "oracle-balance",
+      "passed": true,
+      "detail": null
+    },
+    {
+      "probe": "oracle-balance",
+      "passed": true,
+      "detail": null
+    },
+    {
+      "probe": "oracle-balance",
+      "passed": true,
+      "detail": null
+    },
+    {
+      "probe": "oracle-statement",
+      "passed": true,
+      "detail": null
+    },
+    {
+      "probe": "oracle-balance",
+      "passed": true,
+      "detail": null
+    },
+    {
+      "probe": "oracle-balance",
+      "passed": true,
+      "detail": null
+    },
+    {
+      "probe": "oracle-balance",
+      "passed": true,
+      "detail": null
+    },
+    {
+      "probe": "oracle-statement",
+      "passed": true,
+      "detail": null
+    }
+  ]
+}
