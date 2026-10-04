@@ -1,10 +1,11 @@
 import asyncio,os,json,copy,time
-os.environ['AUDIT_BASE']='http://127.0.0.1:18083'
-os.environ['AUDIT_REV']='94e856c'
+os.environ.setdefault('AUDIT_BASE','http://127.0.0.1:18083')
+os.environ.setdefault('AUDIT_REV','94e856c')
 from probe_stage1 import *
 from playwright.async_api import async_playwright,expect as pwexpect
 
-ROOT=os.path.dirname(__file__)
+ROOT=os.environ.get('AUDIT_OUTPUT',os.path.dirname(__file__))
+os.makedirs(ROOT,exist_ok=True)
 async def textid(page,id):return await page.get_by_test_id(id).text_content()
 async def login(browser,user='a',width=1280):
     context=await browser.new_context(viewport={'width':width,'height':900})
@@ -132,7 +133,7 @@ async def visuals(browser):
     call('POST','/requests',{'payer_handle':'b','amount':700,'note':'Coffee'},'a','outgoing')
     call('POST','/authorizations',{'to_handle':'b','amount':2000,'note':'Weekend reservation','visibility':'private'},'a','open')
     call('POST','/authorizations',{'to_handle':'a','amount':500,'note':'Incoming reservation'},'b','incoming')
-    for width in [375,1280]:
+    for width in [375,900,1280]:
         ctx,p=await login(browser,width=width)
         for path,label in [('/','wallet'),('/requests','requests'),('/authorizations','holds'),('/split','split')]:
             await nav(p,path)
@@ -253,6 +254,6 @@ async def main():
         await b.close()
     out={'probes':len(RESULTS),'passed':sum(r['passed'] for r in RESULTS),'failed':[r for r in RESULTS if not r['passed']],'results':RESULTS}
     suffix='-'+os.environ['UI_GROUPS'] if os.environ.get('UI_GROUPS') else ''
-    with open(ROOT+'/evidence-94e856c-stage2-browser'+suffix+'.json','w') as f:json.dump(out,f,indent=2)
+    with open(ROOT+'/evidence-'+REV+'-stage2-browser'+suffix+'.json','w') as f:json.dump(out,f,indent=2)
     print('TOTAL',out['probes'],'PASS',out['passed'],'FAIL',len(out['failed']))
 asyncio.run(main())

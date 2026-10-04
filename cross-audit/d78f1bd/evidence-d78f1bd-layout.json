@@ -1,0 +1,741 @@
+{
+  "probes": 26,
+  "passed": 26,
+  "failed": [],
+  "results": [
+    {
+      "probe": "reset",
+      "passed": true,
+      "detail": null
+    },
+    {
+      "probe": "refresh-symmetric-375",
+      "passed": true,
+      "detail": {
+        "left": "12px",
+        "right": "12px",
+        "top": "4px",
+        "bottom": "4px",
+        "width": 77.4375
+      }
+    },
+    {
+      "probe": "single-column-activity-list-375",
+      "passed": true,
+      "detail": {
+        "outer": {
+          "x": 33,
+          "y": 1692.328125,
+          "width": 309,
+          "height": 356.953125,
+          "top": 1692.328125,
+          "right": 342,
+          "bottom": 2049.28125,
+          "left": 33
+        },
+        "items": [
+          {
+            "x": 33,
+            "y": 1692.328125,
+            "width": 309,
+            "height": 110.984375,
+            "top": 1692.328125,
+            "right": 342,
+            "bottom": 1803.3125,
+            "left": 33
+          },
+          {
+            "x": 33,
+            "y": 1815.3125,
+            "width": 309,
+            "height": 110.984375,
+            "top": 1815.3125,
+            "right": 342,
+            "bottom": 1926.296875,
+            "left": 33
+          },
+          {
+            "x": 33,
+            "y": 1938.296875,
+            "width": 309,
+            "height": 110.984375,
+            "top": 1938.296875,
+            "right": 342,
+            "bottom": 2049.28125,
+            "left": 33
+          }
+        ]
+      }
+    },
+    {
+      "probe": "layout-no-overflow-activity-list-375",
+      "passed": true,
+      "detail": {
+        "width": 375,
+        "scroll": 375
+      }
+    },
+    {
+      "probe": "single-column-incoming-list-375",
+      "passed": true,
+      "detail": {
+        "outer": {
+          "x": 33,
+          "y": 398.171875,
+          "width": 309,
+          "height": 585.84375,
+          "top": 398.171875,
+          "right": 342,
+          "bottom": 984.015625,
+          "left": 33
+        },
+        "items": [
+          {
+            "x": 33,
+            "y": 398.171875,
+            "width": 309,
+            "height": 187.28125,
+            "top": 398.171875,
+            "right": 342,
+            "bottom": 585.453125,
+            "left": 33
+          },
+          {
+            "x": 33,
+            "y": 597.453125,
+            "width": 309,
+            "height": 187.28125,
+            "top": 597.453125,
+            "right": 342,
+            "bottom": 784.734375,
+            "left": 33
+          },
+          {
+            "x": 33,
+            "y": 796.734375,
+            "width": 309,
+            "height": 187.28125,
+            "top": 796.734375,
+            "right": 342,
+            "bottom": 984.015625,
+            "left": 33
+          }
+        ]
+      }
+    },
+    {
+      "probe": "layout-no-overflow-incoming-list-375",
+      "passed": true,
+      "detail": {
+        "width": 375,
+        "scroll": 375
+      }
+    },
+    {
+      "probe": "single-column-authorization-list-375",
+      "passed": true,
+      "detail": {
+        "outer": {
+          "x": 33,
+          "y": 846.953125,
+          "width": 309,
+          "height": 658.734375,
+          "top": 846.953125,
+          "right": 342,
+          "bottom": 1505.6875,
+          "left": 33
+        },
+        "items": [
+          {
+            "x": 33,
+            "y": 846.953125,
+            "width": 309,
+            "height": 211.578125,
+            "top": 846.953125,
+            "right": 342,
+            "bottom": 1058.53125,
+            "left": 33
+          },
+          {
+            "x": 33,
+            "y": 1070.53125,
+            "width": 309,
+            "height": 211.578125,
+            "top": 1070.53125,
+            "right": 342,
+            "bottom": 1282.109375,
+            "left": 33
+          },
+          {
+            "x": 33,
+            "y": 1294.109375,
+            "width": 309,
+            "height": 211.578125,
+            "top": 1294.109375,
+            "right": 342,
+            "bottom": 1505.6875,
+            "left": 33
+          }
+        ]
+      }
+    },
+    {
+      "probe": "layout-no-overflow-authorization-list-375",
+      "passed": true,
+      "detail": {
+        "width": 375,
+        "scroll": 375
+      }
+    },
+    {
+      "probe": "refresh-symmetric-900",
+      "passed": true,
+      "detail": {
+        "left": "12px",
+        "right": "12px",
+        "top": "4px",
+        "bottom": "4px",
+        "width": 77.4375
+      }
+    },
+    {
+      "probe": "two-column-activity-list-900",
+      "passed": true,
+      "detail": {
+        "outer": {
+          "x": 33,
+          "y": 906.046875,
+          "width": 834,
+          "height": 237.96875,
+          "top": 906.046875,
+          "right": 867,
+          "bottom": 1144.015625,
+          "left": 33
+        },
+        "items": [
+          {
+            "x": 33,
+            "y": 906.046875,
+            "width": 409,
+            "height": 110.984375,
+            "top": 906.046875,
+            "right": 442,
+            "bottom": 1017.03125,
+            "left": 33
+          },
+          {
+            "x": 458,
+            "y": 906.046875,
+            "width": 409,
+            "height": 110.984375,
+            "top": 906.046875,
+            "right": 867,
+            "bottom": 1017.03125,
+            "left": 458
+          },
+          {
+            "x": 33,
+            "y": 1033.03125,
+            "width": 834,
+            "height": 110.984375,
+            "top": 1033.03125,
+            "right": 867,
+            "bottom": 1144.015625,
+            "left": 33
+          }
+        ]
+      }
+    },
+    {
+      "probe": "odd-card-spans-activity-list-900",
+      "passed": true,
+      "detail": {
+        "outer": {
+          "x": 33,
+          "y": 906.046875,
+          "width": 834,
+          "height": 237.96875,
+          "top": 906.046875,
+          "right": 867,
+          "bottom": 1144.015625,
+          "left": 33
+        },
+        "items": [
+          {
+            "x": 33,
+            "y": 906.046875,
+            "width": 409,
+            "height": 110.984375,
+            "top": 906.046875,
+            "right": 442,
+            "bottom": 1017.03125,
+            "left": 33
+          },
+          {
+            "x": 458,
+            "y": 906.046875,
+            "width": 409,
+            "height": 110.984375,
+            "top": 906.046875,
+            "right": 867,
+            "bottom": 1017.03125,
+            "left": 458
+          },
+          {
+            "x": 33,
+            "y": 1033.03125,
+            "width": 834,
+            "height": 110.984375,
+            "top": 1033.03125,
+            "right": 867,
+            "bottom": 1144.015625,
+            "left": 33
+          }
+        ]
+      }
+    },
+    {
+      "probe": "layout-no-overflow-activity-list-900",
+      "passed": true,
+      "detail": {
+        "width": 900,
+        "scroll": 900
+      }
+    },
+    {
+      "probe": "single-column-incoming-list-900",
+      "passed": true,
+      "detail": {
+        "outer": {
+          "x": 33,
+          "y": 326.5625,
+          "width": 405,
+          "height": 585.84375,
+          "top": 326.5625,
+          "right": 438,
+          "bottom": 912.40625,
+          "left": 33
+        },
+        "items": [
+          {
+            "x": 33,
+            "y": 326.5625,
+            "width": 405,
+            "height": 187.28125,
+            "top": 326.5625,
+            "right": 438,
+            "bottom": 513.84375,
+            "left": 33
+          },
+          {
+            "x": 33,
+            "y": 525.84375,
+            "width": 405,
+            "height": 187.28125,
+            "top": 525.84375,
+            "right": 438,
+            "bottom": 713.125,
+            "left": 33
+          },
+          {
+            "x": 33,
+            "y": 725.125,
+            "width": 405,
+            "height": 187.28125,
+            "top": 725.125,
+            "right": 438,
+            "bottom": 912.40625,
+            "left": 33
+          }
+        ]
+      }
+    },
+    {
+      "probe": "layout-no-overflow-incoming-list-900",
+      "passed": true,
+      "detail": {
+        "width": 900,
+        "scroll": 900
+      }
+    },
+    {
+      "probe": "two-column-authorization-list-900",
+      "passed": true,
+      "detail": {
+        "outer": {
+          "x": 33,
+          "y": 518.15625,
+          "width": 834,
+          "height": 382.5625,
+          "top": 518.15625,
+          "right": 867,
+          "bottom": 900.71875,
+          "left": 33
+        },
+        "items": [
+          {
+            "x": 33,
+            "y": 518.15625,
+            "width": 409,
+            "height": 183.28125,
+            "top": 518.15625,
+            "right": 442,
+            "bottom": 701.4375,
+            "left": 33
+          },
+          {
+            "x": 458,
+            "y": 518.15625,
+            "width": 409,
+            "height": 183.28125,
+            "top": 518.15625,
+            "right": 867,
+            "bottom": 701.4375,
+            "left": 458
+          },
+          {
+            "x": 33,
+            "y": 717.4375,
+            "width": 834,
+            "height": 183.28125,
+            "top": 717.4375,
+            "right": 867,
+            "bottom": 900.71875,
+            "left": 33
+          }
+        ]
+      }
+    },
+    {
+      "probe": "odd-card-spans-authorization-list-900",
+      "passed": true,
+      "detail": {
+        "outer": {
+          "x": 33,
+          "y": 518.15625,
+          "width": 834,
+          "height": 382.5625,
+          "top": 518.15625,
+          "right": 867,
+          "bottom": 900.71875,
+          "left": 33
+        },
+        "items": [
+          {
+            "x": 33,
+            "y": 518.15625,
+            "width": 409,
+            "height": 183.28125,
+            "top": 518.15625,
+            "right": 442,
+            "bottom": 701.4375,
+            "left": 33
+          },
+          {
+            "x": 458,
+            "y": 518.15625,
+            "width": 409,
+            "height": 183.28125,
+            "top": 518.15625,
+            "right": 867,
+            "bottom": 701.4375,
+            "left": 458
+          },
+          {
+            "x": 33,
+            "y": 717.4375,
+            "width": 834,
+            "height": 183.28125,
+            "top": 717.4375,
+            "right": 867,
+            "bottom": 900.71875,
+            "left": 33
+          }
+        ]
+      }
+    },
+    {
+      "probe": "layout-no-overflow-authorization-list-900",
+      "passed": true,
+      "detail": {
+        "width": 900,
+        "scroll": 900
+      }
+    },
+    {
+      "probe": "refresh-symmetric-1280",
+      "passed": true,
+      "detail": {
+        "left": "12px",
+        "right": "12px",
+        "top": "4px",
+        "bottom": "4px",
+        "width": 77.4375
+      }
+    },
+    {
+      "probe": "two-column-activity-list-1280",
+      "passed": true,
+      "detail": {
+        "outer": {
+          "x": 133,
+          "y": 730.75,
+          "width": 1014,
+          "height": 237.96875,
+          "top": 730.75,
+          "right": 1147,
+          "bottom": 968.71875,
+          "left": 133
+        },
+        "items": [
+          {
+            "x": 133,
+            "y": 730.75,
+            "width": 499,
+            "height": 110.984375,
+            "top": 730.75,
+            "right": 632,
+            "bottom": 841.734375,
+            "left": 133
+          },
+          {
+            "x": 648,
+            "y": 730.75,
+            "width": 499,
+            "height": 110.984375,
+            "top": 730.75,
+            "right": 1147,
+            "bottom": 841.734375,
+            "left": 648
+          },
+          {
+            "x": 133,
+            "y": 857.734375,
+            "width": 1014,
+            "height": 110.984375,
+            "top": 857.734375,
+            "right": 1147,
+            "bottom": 968.71875,
+            "left": 133
+          }
+        ]
+      }
+    },
+    {
+      "probe": "odd-card-spans-activity-list-1280",
+      "passed": true,
+      "detail": {
+        "outer": {
+          "x": 133,
+          "y": 730.75,
+          "width": 1014,
+          "height": 237.96875,
+          "top": 730.75,
+          "right": 1147,
+          "bottom": 968.71875,
+          "left": 133
+        },
+        "items": [
+          {
+            "x": 133,
+            "y": 730.75,
+            "width": 499,
+            "height": 110.984375,
+            "top": 730.75,
+            "right": 632,
+            "bottom": 841.734375,
+            "left": 133
+          },
+          {
+            "x": 648,
+            "y": 730.75,
+            "width": 499,
+            "height": 110.984375,
+            "top": 730.75,
+            "right": 1147,
+            "bottom": 841.734375,
+            "left": 648
+          },
+          {
+            "x": 133,
+            "y": 857.734375,
+            "width": 1014,
+            "height": 110.984375,
+            "top": 857.734375,
+            "right": 1147,
+            "bottom": 968.71875,
+            "left": 133
+          }
+        ]
+      }
+    },
+    {
+      "probe": "layout-no-overflow-activity-list-1280",
+      "passed": true,
+      "detail": {
+        "width": 1280,
+        "scroll": 1280
+      }
+    },
+    {
+      "probe": "single-column-incoming-list-1280",
+      "passed": true,
+      "detail": {
+        "outer": {
+          "x": 133,
+          "y": 326.5625,
+          "width": 495,
+          "height": 585.84375,
+          "top": 326.5625,
+          "right": 628,
+          "bottom": 912.40625,
+          "left": 133
+        },
+        "items": [
+          {
+            "x": 133,
+            "y": 326.5625,
+            "width": 495,
+            "height": 187.28125,
+            "top": 326.5625,
+            "right": 628,
+            "bottom": 513.84375,
+            "left": 133
+          },
+          {
+            "x": 133,
+            "y": 525.84375,
+            "width": 495,
+            "height": 187.28125,
+            "top": 525.84375,
+            "right": 628,
+            "bottom": 713.125,
+            "left": 133
+          },
+          {
+            "x": 133,
+            "y": 725.125,
+            "width": 495,
+            "height": 187.28125,
+            "top": 725.125,
+            "right": 628,
+            "bottom": 912.40625,
+            "left": 133
+          }
+        ]
+      }
+    },
+    {
+      "probe": "layout-no-overflow-incoming-list-1280",
+      "passed": true,
+      "detail": {
+        "width": 1280,
+        "scroll": 1280
+      }
+    },
+    {
+      "probe": "two-column-authorization-list-1280",
+      "passed": true,
+      "detail": {
+        "outer": {
+          "x": 133,
+          "y": 518.15625,
+          "width": 1014,
+          "height": 382.5625,
+          "top": 518.15625,
+          "right": 1147,
+          "bottom": 900.71875,
+          "left": 133
+        },
+        "items": [
+          {
+            "x": 133,
+            "y": 518.15625,
+            "width": 499,
+            "height": 183.28125,
+            "top": 518.15625,
+            "right": 632,
+            "bottom": 701.4375,
+            "left": 133
+          },
+          {
+            "x": 648,
+            "y": 518.15625,
+            "width": 499,
+            "height": 183.28125,
+            "top": 518.15625,
+            "right": 1147,
+            "bottom": 701.4375,
+            "left": 648
+          },
+          {
+            "x": 133,
+            "y": 717.4375,
+            "width": 1014,
+            "height": 183.28125,
+            "top": 717.4375,
+            "right": 1147,
+            "bottom": 900.71875,
+            "left": 133
+          }
+        ]
+      }
+    },
+    {
+      "probe": "odd-card-spans-authorization-list-1280",
+      "passed": true,
+      "detail": {
+        "outer": {
+          "x": 133,
+          "y": 518.15625,
+          "width": 1014,
+          "height": 382.5625,
+          "top": 518.15625,
+          "right": 1147,
+          "bottom": 900.71875,
+          "left": 133
+        },
+        "items": [
+          {
+            "x": 133,
+            "y": 518.15625,
+            "width": 499,
+            "height": 183.28125,
+            "top": 518.15625,
+            "right": 632,
+            "bottom": 701.4375,
+            "left": 133
+          },
+          {
+            "x": 648,
+            "y": 518.15625,
+            "width": 499,
+            "height": 183.28125,
+            "top": 518.15625,
+            "right": 1147,
+            "bottom": 701.4375,
+            "left": 648
+          },
+          {
+            "x": 133,
+            "y": 717.4375,
+            "width": 1014,
+            "height": 183.28125,
+            "top": 717.4375,
+            "right": 1147,
+            "bottom": 900.71875,
+            "left": 133
+          }
+        ]
+      }
+    },
+    {
+      "probe": "layout-no-overflow-authorization-list-1280",
+      "passed": true,
+      "detail": {
+        "width": 1280,
+        "scroll": 1280
+      }
+    }
+  ]
+}
