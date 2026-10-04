@@ -1,9 +1,11 @@
 """GET /_test/export and POST /_test/import."""
 import json
 import math
+import time
 import re
 
-from common import (MAX_AMOUNT, parse_ts, HANDLE_RE, held_of, STATUSES, State, parse_json, store, validation)
+from invariants import check_state_invariants
+from common import (sweep, MAX_AMOUNT, parse_ts, HANDLE_RE, held_of, STATUSES, State, parse_json, store, validation)
 
 
 def export(req):
@@ -52,6 +54,11 @@ def _amount(v, lo=0):
     return _int(v) and lo <= v <= MAX_AMOUNT
 
 
+def _ts_match(text, ts):
+    """The stored epoch must be the instant the stored RFC 3339 text names (to the second)."""
+    _need(math.floor(ts) == math.floor(parse_ts(text)[0]))
+
+
 def _id(v):
     return _str(v) and 1 <= len(v) <= 64
 
@@ -89,10 +96,12 @@ def load_state(st):
         rec["authorization_id"] = p.get("authorization_id")  # absent in stage-1 exports
         _need(_id(rec["id"]) and rec["id"] not in s.payments_by_id)
         _need(rec["from_user_id"] in s.users and rec["to_user_id"] in s.users)
-        _need(_amount(rec["amount"]) and _str(rec["note"]))
+        _need(_amount(rec["amount"]) and _str(rec["note"]) and len(rec["note"]) <= 200)
+        _need(rec["from_user_id"] != rec["to_user_id"])
         _need(rec["visibility"] in ("public", "private") and _str(rec["visibility"]))
         _ts_str(rec["created_at"])
         _need(_num(rec["ts"]) and _seq(rec["seq"]))
+        _ts_match(rec["created_at"], rec["ts"])
         s.payments.append(rec)
         s.payments_by_id[rec["id"]] = rec
     for r in st["requests"]:
@@ -100,10 +109,12 @@ def load_state(st):
                                  "payment_id", "created_at", "ts", "seq")}
         _need(_id(rec["id"]) and rec["id"] not in s.requests_by_id)
         _need(rec["requester_id"] in s.users and rec["payer_id"] in s.users)
-        _need(_amount(rec["amount"]) and _str(rec["note"]))
+        _need(_amount(rec["amount"]) and _str(rec["note"]) and len(rec["note"]) <= 200)
+        _need(rec["requester_id"] != rec["payer_id"])
         _need(rec["status"] in STATUSES and _str(rec["status"]))
         _ts_str(rec["created_at"])
         _need(_num(rec["ts"]) and _seq(rec["seq"]))
+        _ts_match(rec["created_at"], rec["ts"])
         s.requests.append(rec)
         s.requests_by_id[rec["id"]] = rec
     _need(isinstance(st["splits"], dict) and all(isinstance(v, dict) for v in st["splits"].values()))
@@ -113,6 +124,10 @@ def load_state(st):
         _need(isinstance(v, dict) and _str(k) and v["id"] == k and isinstance(v["payment_ids"], list)
               and all(pid in s.payments_by_id for pid in v["payment_ids"]))
         _ts_str(v["committed_at"])
+        _need(1 <= len(v["payment_ids"]) <= 32 and len(set(v["payment_ids"])) == len(v["payment_ids"]))
+        for pid in v["payment_ids"]:  # members: linked to this settlement, no request, committed together
+            m = s.payments_by_id[pid]
+            _need(m["settlement_id"] == k and m["request_id"] is None and m["created_at"] == v["committed_at"])
         s.settlements[k] = {"id": v["id"], "committed_at": v["committed_at"],
                             "payment_ids": list(v["payment_ids"])}
     for item in st["idempotency"]:
@@ -132,14 +147,17 @@ def load_state(st):
         _need(_id(rec["id"]) and rec["id"] not in s.auths_by_id)
         _need(rec["from_user_id"] in s.users and rec["to_user_id"] in s.users)
         _need(_amount(rec["amount"], 1) and _int(rec["captured_amount"])
-              and 0 <= rec["captured_amount"] <= rec["amount"] and _str(rec["note"]))
+              and 0 <= rec["captured_amount"] <= rec["amount"] and _str(rec["note"])
+              and len(rec["note"]) <= 200 and rec["from_user_id"] != rec["to_user_id"])
         _need(rec["visibility"] in ("public", "private")
               and rec["status"] in ("open", "captured", "voided", "expired"))
         _ts_str(rec["expires_at"])
         _need(_num(rec["expires_ts"]))
+        _ts_match(rec["expires_at"], rec["expires_ts"])
         _need(isinstance(rec["payment_ids"], list) and all(_str(x) for x in rec["payment_ids"]))
         _ts_str(rec["created_at"])
         _need(_num(rec["ts"]) and _seq(rec["seq"]))
+        _ts_match(rec["created_at"], rec["ts"])
         s.auths.append(rec)
         s.auths_by_id[rec["id"]] = rec
         if rec["status"] == "open":
@@ -153,11 +171,17 @@ def load_state(st):
     for p in s.payments:
         _need(p["request_id"] is None or p["request_id"] in s.requests_by_id)
         _need(p["settlement_id"] is None or p["settlement_id"] in s.settlements)
+        _need(p["settlement_id"] is None or p["id"] in s.settlements[p["settlement_id"]]["payment_ids"])
+    seqs = [x["seq"] for x in s.payments] + [x["seq"] for x in s.requests]
+    _need(len(set(seqs)) == len(seqs))
     for r in s.requests:
         _need(r["payment_id"] is None or r["payment_id"] in s.payments_by_id)
     _need(_int(st["seq"]))
     s.seq = max(st["seq"], max([p["seq"] for p in s.payments] + [r["seq"] for r in s.requests]
                          + [a["seq"] for a in s.auths] + [0]))
+    if hasattr(s, "open_auths"):
+        sweep(s, time.time())
+    check_state_invariants(s)
     check_receipts(s)
     return s
 
@@ -203,7 +227,8 @@ def _request_receipt(s, resp):
 def _split_receipt(s, resp):
     _need(isinstance(resp, dict) and set(resp) == {"split_id", "amount", "currency", "note", "shares",
                                                     "requests", "created_at"})
-    _need(_amount(resp["amount"], 1) and resp["currency"] == s.currency and _str(resp["note"]))
+    _need(_amount(resp["amount"], 1) and resp["currency"] == s.currency and _str(resp["note"])
+          and len(resp["note"]) <= 200)
     _ts_str(resp["created_at"])
     shares = resp["shares"]
     _need(isinstance(shares, list) and shares)
@@ -211,6 +236,7 @@ def _split_receipt(s, resp):
         _need(isinstance(sh, dict) and set(sh) == {"handle", "amount"} and sh["handle"] in s.by_handle
               and _amount(sh["amount"]))
     _need(sum(sh["amount"] for sh in shares) == resp["amount"])
+    _need(len({sh["handle"] for sh in shares}) == len(shares))
     amounts = [sh["amount"] for sh in shares]
     _need(max(amounts) - min(amounts) <= 1 and amounts == sorted(amounts, reverse=True))
     _need(isinstance(resp["requests"], list))
