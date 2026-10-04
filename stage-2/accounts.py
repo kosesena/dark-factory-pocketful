@@ -151,7 +151,7 @@ def build_state(fx):
 
 
 def reset(req):
-    fx = parse_json(req.raw)
+    fx = parse_json(req.raw, decimal=False)
     store.state = build_state(fx)
     return 204, None
 

@@ -171,6 +171,10 @@ class Payments(Base):
         self.assertEqual(self.pay(self.bob, {"to_handle": "ada", "amount": 99999}, "c")[1]["error"]["code"], "insufficient_funds")
         for amt in (0, -1, 1000000001, "5", True, None, 1.5):
             self.assertEqual(self.pay(self.ada, {"to_handle": "bob", "amount": amt}, "d")[0], 422, amt)
+        for amt in ("1.0000000000000001", "1e400", "1e-400", "1000.0000000000000001", "1.5"):
+            s, b, _ = call("POST", "/payments", raw='{"to_handle":"bob","amount":%s}' % amt, token=self.ada, key="frac" + amt)
+            self.assertEqual(s, 422, amt)
+        self.assertEqual(self.bal(self.ada), 8500)  # none of the fractional amounts moved money
         for i, amt in enumerate((1000.0, 1e3)):
             s, b, _ = self.pay(self.ada, {"to_handle": "bob", "amount": amt}, "e%d" % i)
             self.assertEqual((s, b["amount"]), (201, 1000))

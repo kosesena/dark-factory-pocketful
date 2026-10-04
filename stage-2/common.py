@@ -8,6 +8,7 @@ import threading
 import time
 import types
 import uuid
+from decimal import Decimal
 from datetime import datetime, timezone
 
 LOCK = threading.RLock()  # every handler runs under this lock: money moves serially
@@ -125,13 +126,15 @@ def _no_const(name):
     raise ValueError(name)
 
 
-def parse_json(raw, allow_empty=False):
+def parse_json(raw, allow_empty=False, decimal=True):
+    """decimal=True parses JSON fractions exactly (API bodies); test endpoints keep floats."""
     if not raw.strip():
         if allow_empty:
             return {}
         raise ApiError(400, "malformed_request", "request body is required")
     try:
-        value = json.loads(raw.decode("utf-8"), parse_constant=_no_const)
+        value = json.loads(raw.decode("utf-8"), parse_constant=_no_const,
+                           parse_float=Decimal if decimal else float)
     except (ValueError, RecursionError):
         raise ApiError(400, "malformed_request", "body is not valid JSON")
     if not isinstance(value, dict):
@@ -158,15 +161,14 @@ def parse_amount(body, field="amount"):
     if field not in body:
         raise validation(field + " is required")
     v = body[field]
-    if isinstance(v, bool) or not isinstance(v, (int, float)):
+    if isinstance(v, bool) or not isinstance(v, (int, Decimal)):
         raise validation(field + " must be an integer")
-    if isinstance(v, float):
-        if not v.is_integer():
+    if isinstance(v, Decimal):  # exact decimal value: 1000.0 and 1e3 are fine, 1.0000000000000001 is not
+        if v != v.to_integral_value():
             raise validation(field + " must be an integer")
-        v = int(v)
     if v < 1 or v > MAX_AMOUNT:
         raise validation(field + " out of range")
-    return v
+    return int(v)
 
 
 def parse_note(body):
@@ -224,8 +226,8 @@ def authenticate(req):
 # --- idempotency -----------------------------------------------------------
 
 def _norm(v):
-    if isinstance(v, float) and v.is_integer():
-        return int(v)
+    if isinstance(v, Decimal):
+        return int(v) if v == v.to_integral_value() and abs(v) < 10 ** 30 else str(v)
     if isinstance(v, dict):
         return {k: _norm(x) for k, x in v.items()}
     if isinstance(v, list):
