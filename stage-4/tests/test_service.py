@@ -364,7 +364,7 @@ class Strictness(Base):
 
     def test_property_every_state_reimports_unchanged(self):
         import random
-        corrected, corr_codes = [0], set()
+        corrected, corr_codes, refunded, batched = [0], set(), [0], [0]
         for seed in (1, 2, 3):
             rnd = random.Random(seed)
             call("POST", "/_test/reset", fixture())
@@ -379,15 +379,29 @@ class Strictness(Base):
             def op():
                 who = rnd.choice(names)
                 other = rnd.choice([x for x in names if x != who])
-                kind = rnd.choice(["pay", "pay", "req", "reqpay", "decline", "cancel", "split", "settle", "auth", "cap", "void", "signup", "correct", "correct"] if True
-                                  else ["pay", "pay", "req", "reqpay", "decline", "cancel", "split", "settle", "signup", "correct"])
+                kind = rnd.choice(["pay", "pay", "req", "reqpay", "decline", "cancel", "split", "settle", "auth", "cap", "void", "signup", "correct", "correct", "refund", "batch"] if True
+                                  else ["pay", "pay", "req", "reqpay", "decline", "cancel", "split", "settle", "signup", "correct", "refund", "batch"])
                 amt = rnd.choice([0, 1, 7, 100, 250, 999])
                 if kind == "pay" and amt:
                     s, b, _ = call("POST", "/payments", {"to_handle": other, "amount": amt, "note": rnd.choice(["", "n", "é🍕"]), "visibility": rnd.choice(["public", "private"])}, token=toks[who], key=key())
                     if s == 201:
-                        pids.append((b["payment_id"], who))
+                        pids.append((b["payment_id"], who, other))
+                elif kind == "refund" and pids:
+                    pid, owner, receiver = rnd.choice(pids)
+                    rs, rb, _ = call("POST", "/payments/%s/refunds" % pid, {"amount": rnd.choice([1, 5, 50, 300])}, token=toks[receiver], key=key())
+                    refunded[0] += rs == 201
+                elif kind == "batch" and pids:
+                    chosen = rnd.sample(pids, min(len(pids), rnd.choice([1, 2])))
+                    from datetime import datetime, timedelta, timezone
+                    eff = (datetime.now(timezone.utc) - timedelta(seconds=rnd.choice([0, 2, 90]))).isoformat(timespec="seconds")
+                    items = []
+                    for pid, owner, _ in chosen:
+                        cur = call("GET", "/payments/%s/revisions" % pid, token=toks[owner])[1]["revisions"][-1]["revision"]
+                        items.append({"payment_id": pid, "expected_revision": cur, "amount": rnd.choice([0, 1, 40, 250]), "effective_at": eff, "reason": "batch"})
+                    bs, bb, _ = call("POST", "/correction-batches", {"corrections": items}, token=toks["ada"], key=key())
+                    batched[0] += bs == 201
                 elif kind == "correct" and pids:
-                    pid, owner = rnd.choice(pids)
+                    pid, owner, _ = rnd.choice(pids)
                     cur = call("GET", "/payments/%s/revisions" % pid, token=toks[owner])[1]["revisions"][-1]["revision"]
                     from datetime import datetime, timedelta, timezone
                     eff = (datetime.now(timezone.utc) - timedelta(seconds=rnd.choice([0, 1, 30, 4000]))).isoformat(timespec="seconds")
@@ -437,6 +451,8 @@ class Strictness(Base):
                     self.assertGreaterEqual(min([st["opening_balance"]] + [x["balance_after"] for x in st["entries"]]), 0)
                 self.assertEqual(total, 12500)
         self.assertGreater(corrected[0], 3, corr_codes)
+        self.assertGreater(refunded[0], 1)
+        self.assertGreater(batched[0], 1)
 
     def test_import_applies_every_api_field_rule(self):
         call("POST", "/payments", {"to_handle": "bob", "amount": 100, "note": "n"}, token=self.ada, key="sw1")
@@ -1647,6 +1663,166 @@ class Refunds(unittest.TestCase):
             m = json.loads(json.dumps(snap))
             f(m["state"])
             self.assertEqual(call("POST", "/_test/import", m)[0], 422)
+
+
+class Batches(unittest.TestCase):
+    EFF = "2026-09-22T12:00:00+00:00"
+
+    def setUp(self):
+        self.assertEqual(call("POST", "/_test/reset", hist_fixture())[0], 204)
+        self.ada, self.bob, self.cy = login("ada"), login("bob"), login("cy")
+
+    def item(self, pid, rev=1, amount=0, eff=None, reason="reversal"):
+        return {"payment_id": pid, "expected_revision": rev, "amount": amount, "effective_at": eff or self.EFF, "reason": reason}
+
+    def batch(self, tok, items, key="b1", extra=None):
+        return call("POST", "/correction-batches", {"corrections": items, **(extra or {})}, token=tok, key=key)
+
+    def total(self):
+        return sum(call("GET", "/me", token=t)[1]["balance"] for t in (self.ada, self.bob, self.cy))
+
+    def test_access_and_shape(self):
+        it = [self.item("p_a")]
+        self.assertEqual(call("POST", "/correction-batches", {"corrections": it}, key="k")[0], 401)
+        self.assertEqual(self.batch(self.bob, it)[1]["error"]["code"], "forbidden")
+        self.assertEqual(call("POST", "/correction-batches", {"corrections": it}, token=self.ada)[1]["error"]["code"], "missing_idempotency_key")
+        for bad in ([], [self.item("p_a")] * 2, [5], [{"expected_revision": 1}], "x"):
+            self.assertEqual(call("POST", "/correction-batches", {"corrections": bad}, token=self.ada, key="bad")[0], 422, bad)
+        self.assertEqual(call("POST", "/correction-batches", {}, token=self.ada, key="bad2")[0], 422)
+        many = [self.item("n%d" % i) for i in range(33)]
+        self.assertEqual(self.batch(self.ada, many, "many")[0], 422)
+
+    def test_item_error_order(self):
+        s, b, _ = self.batch(self.ada, [self.item("nope"), self.item("p_a", amount=-1)], "o1")
+        self.assertEqual((s, b["error"]["code"]), (404, "not_found"))
+        s, b, _ = self.batch(self.ada, [self.item("p_a", amount=-1), self.item("nope")], "o2")
+        self.assertEqual((s, b["error"]["code"]), (422, "validation_failed"))
+        s, b, _ = self.batch(self.ada, [self.item("p_a", rev=2)], "o3")
+        self.assertEqual((s, b["error"]["code"]), (409, "stale_revision"))
+        a = call("POST", "/authorizations", {"to_handle": "cy", "amount": 10}, token=self.ada, key="oa")[1]["authorization_id"]
+        cap = call("POST", "/authorizations/%s/capture" % a, {}, token=self.cy, key="oc")[1]["payment_id"]
+        s, b, _ = self.batch(self.ada, [self.item("p_a"), self.item(cap)], "o4")
+        self.assertEqual((s, b["error"]["code"]), (422, "linked_payment_immutable"))
+        ref = call("POST", "/payments/p_b/refunds", {"amount": 5}, token=self.ada, key="or")[1]["payment_id"]
+        s, b, _ = self.batch(self.ada, [self.item(ref)], "o5")
+        self.assertEqual((s, b["error"]["code"]), (422, "linked_payment_immutable"))
+        s, b, _ = self.batch(self.ada, [self.item("p_b", amount=4)], "o6")
+        self.assertEqual((s, b["error"]["code"]), (422, "refund_exceeds_payment"))
+        self.assertEqual(self.total(), 10000 + 2500 + 600)
+
+    def test_success_replay_statements_snapshots(self):
+        _, st0, _ = call("GET", "/statement?limit=2", token=self.bob)
+        tok = st0["snapshot"]
+        prev = {r["revision"]: r for r in call("GET", "/payments/p_a/revisions", token=self.ada)[1]["revisions"]}
+        s, r, _ = self.batch(self.ada, [self.item("p_a", amount=0), self.item("p_c", amount=100, eff="2026-09-22T14:00:00+02:00")], extra={"junk": 1})
+        self.assertEqual(s, 201)
+        self.assertTrue(r["correction_batch_id"])
+        self.assertEqual([x["payment_id"] for x in r["revisions"]], ["p_a", "p_c"])
+        self.assertEqual({x["recorded_at"] for x in r["revisions"]}, {r["recorded_at"]})
+        self.assertEqual({x["correction_batch_id"] for x in r["revisions"]}, {r["correction_batch_id"]})
+        self.assertEqual([x["revision"] for x in r["revisions"]], [2, 2])
+        self.assertGreater(r["recorded_at"], prev[1]["recorded_at"])
+        self.assertEqual(self.batch(self.ada, [self.item("p_a", amount=0), self.item("p_c", amount=100, eff="2026-09-22T14:00:00+02:00")], extra={"junk": 1})[1], r)
+        self.assertEqual(self.batch(self.ada, [self.item("p_a", amount=1)])[1]["error"]["code"], "idempotency_key_reuse")
+        # balances: ada +500, bob -500 (p_a reversed), then p_c 300 -> 100: bob +200, cy -200
+        self.assertEqual([call("GET", "/me", token=t)[1]["balance"] for t in (self.ada, self.bob, self.cy)], [10500, 2200, 400])
+        self.assertEqual(self.total(), 13100)
+        # activity shows originals; the revisions endpoint shows the batch id; the old snapshot is frozen
+        act = {x["payment_id"]: x for x in call("GET", "/activity", token=self.ada)[1]["payments"]}
+        self.assertEqual(act["p_a"]["amount"], 500)
+        rv = call("GET", "/payments/p_a/revisions", token=self.bob)[1]["revisions"]
+        self.assertEqual((rv[0]["correction_batch_id"], rv[1]["correction_batch_id"]), (None, r["correction_batch_id"]))
+        s, pg, _ = call("GET", "/statement?snapshot=%s&limit=10" % tok, token=self.bob)
+        self.assertEqual([x["payment"]["amount"] for x in pg["entries"]], [500, 1200, 300, 100])
+        _, st1, _ = call("GET", "/statement", token=self.bob)
+        self.assertEqual([x["payment"]["amount"] for x in st1["entries"] if x["payment"]["payment_id"] in ("p_a", "p_c")], [0, 100])
+        self.assertEqual(st1["opening_balance"] + sum(x["delta"] for x in st1["entries"]), st1["closing_balance"])
+        s, snap, _ = call("GET", "/_test/export")
+        self.assertEqual(call("POST", "/_test/import", snap)[0], 204)
+        self.assertEqual(self.batch(self.ada, [self.item("p_a", amount=0), self.item("p_c", amount=100, eff="2026-09-22T14:00:00+02:00")], extra={"junk": 1})[1], r)
+
+    def test_settlement_members(self):
+        s, st, _ = call("POST", "/settlements", {"transfers": [{"from_handle": "ada", "to_handle": "bob", "amount": 30},
+                                                               {"from_handle": "bob", "to_handle": "cy", "amount": 20, "visibility": "private"}]}, token=self.ada, key="st")
+        m1, m2 = [x["payment_id"] for x in st["payments"]]
+        s, b, _ = self.batch(self.ada, [self.item(m1)], "s1")
+        self.assertEqual((s, b["error"]["code"]), (422, "incomplete_settlement"))
+        s, b, _ = self.batch(self.ada, [self.item(m1), self.item(m2, eff="2026-09-22T12:00:01+00:00")], "s2")
+        self.assertEqual((s, b["error"]["code"]), (422, "validation_failed"))
+        # the single-payment endpoint still refuses members
+        body = {k: v for k, v in self.item(m1).items() if k != "payment_id"}
+        self.assertEqual(call("POST", "/payments/%s/corrections" % m1, body, token=self.ada, key="sc")[1]["error"]["code"], "linked_payment_immutable")
+        # same instant in different offset spellings is fine, with an ordinary payment alongside
+        s, r, _ = self.batch(self.ada, [self.item(m1, amount=10), self.item(m2, amount=5, eff="2026-09-22T14:00:00+02:00"), self.item("p_a", amount=450)], "s3")
+        self.assertEqual(s, 201)
+        # original settlement receipt, retries and membership are untouched; a member refund obeys the new amount
+        again = call("POST", "/settlements", {"transfers": [{"from_handle": "ada", "to_handle": "bob", "amount": 30},
+                                                            {"from_handle": "bob", "to_handle": "cy", "amount": 20, "visibility": "private"}]}, token=self.ada, key="st")
+        self.assertEqual((again[0], again[1]), (200, st))
+        self.assertEqual(call("POST", "/payments/%s/refunds" % m1, {"amount": 11}, token=self.bob, key="sr")[1]["error"]["code"], "refund_exceeds_payment")
+        self.assertEqual(call("POST", "/payments/%s/refunds" % m1, {"amount": 10}, token=self.bob, key="sr2")[0], 201)
+        # a batch cannot go below a settlement member's refund
+        s, b, _ = self.batch(self.ada, [self.item(m1, rev=2, amount=9), self.item(m2, rev=2, amount=5)], "s4")
+        self.assertEqual((s, b["error"]["code"]), (422, "refund_exceeds_payment"))
+        self.assertEqual(self.total(), 10000 + 2500 + 600)
+
+    def test_combined_funds_and_history(self):
+        # bob locks all his money in a hold: reversing p_a alone (bob owes 500) is unaffordable, with p_b it is not
+        call("POST", "/authorizations", {"to_handle": "ada", "amount": 2500}, token=self.bob, key="lock")
+        eff = "2026-09-20T12:00:00+00:00"
+        s, b, _ = self.batch(self.ada, [self.item("p_a", eff=eff)], "f1")
+        self.assertEqual((s, b["error"]["code"]), (409, "insufficient_funds"))
+        s, r, _ = self.batch(self.ada, [self.item("p_a", eff=eff), self.item("p_b", eff=eff)], "f2")
+        self.assertEqual(s, 201)
+        self.assertEqual(self.total(), 10000 + 2500 + 600)
+
+    def test_history_failure_changes_nothing(self):
+        fx = hist_fixture()
+        fx["payments"] = [{"id": "q1", "from_user_id": "u_ada", "to_user_id": "u_bob", "amount": 500, "created_at": "2026-09-20T10:00:00+00:00"},
+                          {"id": "q2", "from_user_id": "u_bob", "to_user_id": "u_cy", "amount": 500, "created_at": "2026-09-21T10:00:00+00:00"},
+                          {"id": "q3", "from_user_id": "u_cy", "to_user_id": "u_bob", "amount": 600, "created_at": "2026-09-22T10:00:00+00:00"}]
+        fx["users"][0]["balance"], fx["users"][1]["balance"], fx["users"][2]["balance"] = 5000, 600, 1000
+        self.assertEqual(call("POST", "/_test/reset", fx)[0], 204)
+        ada = login("ada")
+        before = call("GET", "/statement", token=ada)[1]
+        s, b, _ = self.batch(ada, [{"payment_id": "q1", "expected_revision": 1, "amount": 400, "effective_at": "2026-09-20T10:00:00+00:00", "reason": "r"}], "h1")
+        self.assertEqual((s, b["error"]["code"]), (409, "historical_overdraft"))
+        self.assertEqual(call("GET", "/payments/q1/revisions", token=ada)[1]["revisions"][0]["amount"], 500)
+        after = call("GET", "/statement", token=ada)[1]
+        self.assertEqual(before["entries"], after["entries"])
+        # the failed key is reusable
+        s, r, _ = self.batch(ada, [{"payment_id": "q1", "expected_revision": 1, "amount": 500, "effective_at": "2026-09-20T10:00:00+00:00", "reason": "r"}], "h1")
+        self.assertEqual(s, 201)
+
+    def test_import_checks_batches(self):
+        s, st, _ = call("POST", "/settlements", {"transfers": [{"from_handle": "ada", "to_handle": "bob", "amount": 30},
+                                                               {"from_handle": "bob", "to_handle": "cy", "amount": 20}]}, token=self.ada, key="ist")
+        m1, m2 = [x["payment_id"] for x in st["payments"]]
+        self.assertEqual(self.batch(self.ada, [self.item(m1, amount=1), self.item(m2, amount=2), self.item("p_a", amount=3)], "ib")[0], 201)
+        s, snap, _ = call("GET", "/_test/export")
+        self.assertEqual(call("POST", "/_test/import", snap)[0], 204)
+        def rev(st_, pid):
+            return [p for p in st_["payments"] if p["id"] == pid][0]["revisions"][1]
+        snap["state"]["idempotency"] = []
+        muts = [lambda st_: rev(st_, m1).__setitem__("correction_batch_id", None),
+                lambda st_: rev(st_, m2).__setitem__("effective_at", "2026-09-22T12:00:00+00:00") or rev(st_, m2).__setitem__("effective_ts", 1.0),
+                lambda st_: rev(st_, m2).__setitem__("recorded_ts", rev(st_, m2)["recorded_ts"] + 1)]
+        for i, f in enumerate(muts):
+            m = json.loads(json.dumps(snap))
+            f(m["state"])
+            self.assertEqual(call("POST", "/_test/import", m)[0], 422, i)
+        self.assertEqual(call("POST", "/_test/import", snap)[0], 204)
+
+    def test_concurrent_batches_sharing_a_revision(self):
+        def go(i):
+            items = [self.item("p_a", amount=100 + i), self.item("p_c", amount=50 + i)] if i % 2 else [self.item("p_c", amount=60 + i), self.item("p_b", amount=70 + i)]
+            return self.batch(self.ada, items, "cb%d" % i)
+        with ThreadPoolExecutor(12) as ex:
+            res = list(ex.map(go, range(12)))
+        ok = [r for r in res if r[0] == 201]
+        self.assertEqual(len(ok), 1)  # every batch touches p_c at revision 1
+        self.assertTrue(all(r[0] in (201, 409) for r in res))
+        self.assertEqual(self.total(), 10000 + 2500 + 600)
 
 
 if __name__ == "__main__":

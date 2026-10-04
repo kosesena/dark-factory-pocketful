@@ -1,11 +1,11 @@
-# Pocketful stage 3 — run
+# Pocketful stage 4 — run
 
 Python 3.12 standard library only; the browser UI is static HTML/CSS/JS served by the same process
 (no web fonts, no CDN, no network at run time).
 
 ```sh
-docker build -t pocketful-stage3 .
-docker run --rm -e PORT=8080 -p 8080:8080 pocketful-stage3
+docker build -t pocketful-stage4 .
+docker run --rm -e PORT=8080 -p 8080:8080 pocketful-stage4
 ```
 
 - Listens on `0.0.0.0:$PORT` (default 8080); `GET /health` answers immediately.
@@ -27,3 +27,12 @@ Browser check (Playwright, kickoff venv): `python tests/ui_check.py [screenshot-
   accept `as_of`, `known_at` (effective vs recorded time); statements return a `snapshot` token for stable paging.
 - Payment ids sort in creation order (`p_~` + counter) so same-second payments keep their order in statements.
 - Exports of stage-1 and stage-2 services import: revision 1, opening balances and hold closing times are derived.
+
+## Stage 4 additions
+
+- `POST /payments/{id}/refunds` (receiver only): a new payment in the opposite direction with `refund_of`; cumulative
+  refunds cannot exceed the payment's current corrected amount; refund payments and captures cannot be corrected or refunded.
+- `POST /correction-batches` (settlement operator): up to 32 corrections applied atomically, settlement members only
+  together with the whole settlement and one effective instant; all revisions share `recorded_at` and a `correction_batch_id`.
+- Exports now carry statement snapshots; imports of stage-1..3 exports derive missing ledger fields.
+- Reset and import share one invariant checker (instants at full precision, historical non-negativity, receipts).

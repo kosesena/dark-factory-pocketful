@@ -11,13 +11,14 @@ import accounts
 import authorizations
 import history
 import refunds
+import batches
 import ui
 import settlements
 import snapshot
 import wallet
 from common import LOCK, ApiError, store, sweep
 
-MODULES = [accounts, wallet, snapshot, settlements, authorizations, history, refunds]
+MODULES = [accounts, wallet, snapshot, settlements, authorizations, history, refunds, batches]
 
 ROUTES = [(m, re.compile(p), fn) for mod in MODULES for (m, p, fn) in mod.ROUTES]
 

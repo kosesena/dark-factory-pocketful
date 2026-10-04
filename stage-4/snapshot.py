@@ -271,6 +271,7 @@ PATH_SPLITS = re.compile(r"/splits")
 PATH_SETTLEMENTS = re.compile(r"/settlements")
 PATH_CORRECTION = re.compile(r"/payments/([^/]+)/corrections")
 PATH_REFUND = re.compile(r"/payments/([^/]+)/refunds")
+PATH_BATCH = re.compile(r"/correction-batches")
 PATH_AUTHS = re.compile(r"/authorizations")
 PATH_CAPTURE = re.compile(r"/authorizations/([^/]+)/capture")
 
@@ -353,6 +354,22 @@ def _auth_receipt(s, resp):
           and resp["payment_id"] == (resp["payment_ids"][-1] if resp["payment_ids"] else None))
 
 
+def _batch_receipt(s, resp):
+    """A batch receipt lists immutable revisions that share one recorded time and one batch id."""
+    _need(isinstance(resp, dict) and set(resp) == {"correction_batch_id", "recorded_at", "revisions"})
+    _need(isinstance(resp["revisions"], list) and 1 <= len(resp["revisions"]) <= 32 and _str(resp["recorded_at"]))
+    seen = set()
+    for it in resp["revisions"]:
+        _need(isinstance(it, dict) and set(it) == {"payment_id", "revision", "amount", "effective_at",
+                                                   "recorded_at", "reason", "correction_batch_id"})
+        p = s.payments_by_id.get(it["payment_id"])
+        _need(p is not None and it["payment_id"] not in seen and _int(it["revision"]) and 2 <= it["revision"] <= len(p["revisions"]))
+        seen.add(it["payment_id"])
+        r = p["revisions"][it["revision"] - 1]
+        _need(all(it[k] == r[k] for k in ("amount", "effective_at", "recorded_at", "reason", "correction_batch_id")))
+        _need(it["correction_batch_id"] == resp["correction_batch_id"] and it["recorded_at"] == resp["recorded_at"])
+
+
 def _correction_receipt(s, uid, pid, resp):
     """A correction receipt is an immutable revision: it must equal the stored revision it names."""
     p = s.payments_by_id.get(pid)
@@ -393,6 +410,8 @@ def check_receipts(s):
         elif PATH_REFUND.fullmatch(path):
             p = _payment_receipt(s, resp)
             _need(p.get("refund_of") == PATH_REFUND.fullmatch(path).group(1) and p["from_user_id"] == uid)
+        elif PATH_BATCH.fullmatch(path):
+            _batch_receipt(s, resp)
         elif PATH_CORRECTION.fullmatch(path):
             _correction_receipt(s, uid, PATH_CORRECTION.fullmatch(path).group(1), resp)
         else:

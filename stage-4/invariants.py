@@ -54,6 +54,7 @@ def check_state_invariants(s):
         _need(isinstance(tok, str) and tok and uid in s.users)
 
     refunded = {}
+    batches = {}
     auths = getattr(s, "auths", [])
     auths_by_id = getattr(s, "auths_by_id", {})
     seqs = []
@@ -68,7 +69,10 @@ def check_state_invariants(s):
         for i, r in enumerate(revs, 1):
             _need(r["revision"] == i and _amount(r["amount"]) and isinstance(r["reason"], str) and len(r["reason"]) <= 200)
             _need(i == 1 or (r["reason"] and r["recorded_ts"] > revs[i - 2]["recorded_ts"]
-                             and p["settlement_id"] is None and p.get("authorization_id") is None))
+                             and p.get("authorization_id") is None and p.get("refund_of") is None
+                             and (p["settlement_id"] is None or r.get("correction_batch_id"))))
+            if r.get("correction_batch_id"):
+                batches.setdefault(r["correction_batch_id"], []).append((p, r))
             _ts_ok(r["effective_at"], r["effective_ts"])
             _ts_ok(r["recorded_at"], r["recorded_ts"])
             _need(instants_agree(r["effective_at"], r["effective_ts"]) and instants_agree(r["recorded_at"], r["recorded_ts"]))
@@ -98,6 +102,14 @@ def check_state_invariants(s):
             _need(a is not None and p["id"] in a["payment_ids"] and rid is None and sid is None)
             _need(p["from_user_id"] == a["from_user_id"] and p["to_user_id"] == a["to_user_id"]
                   and p["visibility"] == a["visibility"] and p["note"] == a["note"])
+    for bid, group in batches.items():  # a batch: distinct payments, one recorded time, whole settlements together
+        pids = [p["id"] for p, _ in group]
+        _need(1 <= len(group) <= 32 and len(set(pids)) == len(pids))
+        _need(len({r["recorded_ts"] for _, r in group}) == 1)
+        for sid in {p["settlement_id"] for p, _ in group if p["settlement_id"] is not None}:
+            members = s.settlements[sid]["payment_ids"]
+            _need(set(members) <= set(pids))
+            _need(len({r["effective_ts"] for p, r in group if p["settlement_id"] == sid}) == 1)
     for tid, total in refunded.items():  # refunds never exceed the payment's current corrected amount
         if tid is not None:
             _need(total <= s.payments_by_id[tid]["revisions"][-1]["amount"])
