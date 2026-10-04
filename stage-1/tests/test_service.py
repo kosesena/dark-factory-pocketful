@@ -158,11 +158,17 @@ class Basics(Base):
         bad(lambda fx: fx["users"][0].__setitem__("balance", 2 ** 53 + 1))
         bad(lambda fx: fx["users"][0].__setitem__("balance", 10 ** 30))
         bad(lambda fx: fx["payments"][0].__setitem__("request_id", "ghost"))
+        bad(lambda fx: fx["payments"][0].__setitem__("note", "x" * 201))
+        bad(lambda fx: fx["requests"][0].__setitem__("note", "x" * 201))
+        bad(lambda fx: fx["payments"][0].__setitem__("to_user_id", "u_ada"))
         bad(lambda fx: fx["requests"][0].__setitem__("payment_id", "ghost"))
         fx = fixture()
         fx["users"][0]["balance"] = 2 ** 53
-        fx["requests"][0]["payment_id"] = "p_1"
-        fx["requests"][0]["status"] = "paid"
+        fx["requests"][0].update({"payment_id": "p_1", "status": "paid", "requester_id": "u_bob", "payer_id": "u_ada", "amount": 500})
+        self.assertEqual(call("POST", "/_test/reset", fx)[0], 204)
+        fx["requests"][0]["amount"] = 501  # the linked payment disagrees
+        self.assertEqual(call("POST", "/_test/reset", fx)[0], 422)
+        fx["requests"][0].update({"amount": 500, "status": "paid", "payment_id": None})  # paid without a link is tolerated
         self.assertEqual(call("POST", "/_test/reset", fx)[0], 204)
         # a huge number in an unknown field is ignored, never a 400/5xx
         fx = fixture(whatever="x")
@@ -308,6 +314,106 @@ class Strictness(Base):
             m = json.loads(json.dumps(snap)); f(m["state"])
             self.assertEqual(call("POST", "/_test/import", m)[0], 422)
         self.assertEqual(self.bal(self.ada), call("GET", "/me", token=self.ada)[1]["balance"])
+        self.assertEqual(call("POST", "/_test/import", snap)[0], 204)
+
+    def test_property_every_state_reimports_unchanged(self):
+        import random
+        for seed in (1, 2, 3):
+            rnd = random.Random(seed)
+            call("POST", "/_test/reset", fixture())
+            toks = {"ada": login("ada"), "bob": login("bob"), "cy": login("cy")}
+            names = list(toks)
+            reqs, auths, n = [], [], [0]
+
+            def key():
+                n[0] += 1
+                return "k%d-%d" % (seed, n[0])
+
+            def op():
+                who = rnd.choice(names)
+                other = rnd.choice([x for x in names if x != who])
+                kind = rnd.choice(["pay", "req", "reqpay", "decline", "cancel", "split", "settle", "auth", "cap", "void", "signup"] if False
+                                  else ["pay", "req", "reqpay", "decline", "cancel", "split", "settle", "signup"])
+                amt = rnd.choice([0, 1, 7, 100, 250, 999])
+                if kind == "pay" and amt:
+                    call("POST", "/payments", {"to_handle": other, "amount": amt, "note": rnd.choice(["", "n", "é🍕"]), "visibility": rnd.choice(["public", "private"])}, token=toks[who], key=key())
+                elif kind == "req" and amt:
+                    s, b, _ = call("POST", "/requests", {"payer_handle": other, "amount": amt}, token=toks[who], key=key())
+                    if s == 201:
+                        reqs.append(b["request_id"])
+                elif kind == "reqpay" and reqs:
+                    call("POST", "/requests/%s/pay" % rnd.choice(reqs), {"visibility": rnd.choice(["public", "private"])}, token=toks[who], key=key())
+                elif kind in ("decline", "cancel") and reqs:
+                    call("POST", "/requests/%s/%s" % (rnd.choice(reqs), kind), token=toks[who])
+                elif kind == "split":
+                    hs = rnd.sample(names, rnd.randint(1, 3))
+                    s, b, _ = call("POST", "/splits", {"amount": rnd.choice([1, 10, 1000]), "participant_handles": hs, "note": "s"}, token=toks[who], key=key())
+                    if s == 201:
+                        reqs.extend(r["request_id"] for r in b["requests"])
+                elif kind == "settle":
+                    call("POST", "/settlements", {"transfers": [{"from_handle": "ada", "to_handle": other if other != "ada" else "bob", "amount": amt or 1}, {"from_handle": "bob", "to_handle": "cy", "amount": 1, "visibility": "private"}]}, token=toks["ada"], key=key())
+                elif kind == "signup":
+                    call("POST", "/auth/signup", {"email": "u%d@x.io" % n[0], "password": "12345678", "display_name": "U"})
+                elif kind == "auth" and amt:
+                    s, b, _ = call("POST", "/authorizations", {"to_handle": other, "amount": amt, "note": "a"}, token=toks[who], key=key())
+                    if s == 201:
+                        auths.append(b["authorization_id"])
+                elif kind == "cap" and auths:
+                    call("POST", "/authorizations/%s/capture" % rnd.choice(auths), rnd.choice([{}, {"amount": 1, "final": False}, {"amount": 5}]), token=toks[who], key=key())
+                elif kind == "void" and auths:
+                    call("POST", "/authorizations/%s/void" % rnd.choice(auths), token=toks[who])
+
+            for step in range(45):
+                op()
+                s, a, _ = call("GET", "/_test/export")
+                self.assertEqual(call("POST", "/_test/import", a)[0], 204, (seed, step))
+                s, b, _ = call("GET", "/_test/export")
+                self.assertEqual(json.dumps(a, sort_keys=True), json.dumps(b, sort_keys=True), (seed, step))
+
+    def test_import_applies_every_api_field_rule(self):
+        call("POST", "/payments", {"to_handle": "bob", "amount": 100, "note": "n"}, token=self.ada, key="sw1")
+        call("POST", "/requests", {"payer_handle": "ada", "amount": 100}, token=self.bob, key="sw2")
+        call("POST", "/settlements", {"transfers": [{"from_handle": "ada", "to_handle": "bob", "amount": 5}]}, token=self.ada, key="sw3")
+        rq = call("POST", "/requests", {"payer_handle": "ada", "amount": 40}, token=self.bob, key="sw5")[1]["request_id"]
+        call("POST", "/requests/%s/pay" % rq, {}, token=self.ada, key="sw6")
+        call("POST", "/splits", {"amount": 30, "participant_handles": ["bob", "cy"], "note": "s"}, token=self.ada, key="sw7")
+        if False:
+            call("POST", "/authorizations", {"to_handle": "bob", "amount": 100}, token=self.ada, key="sw4")
+        s, snap, _ = call("GET", "/_test/export")
+        snap["state"]["idempotency"] = []
+        self.assertEqual(call("POST", "/_test/import", snap)[0], 204)
+        bad2 = [lambda st: [p for p in st["payments"] if p["note"] == "n"][0].__setitem__("note", "x" * 201),
+                lambda st: st["requests"][-1].__setitem__("note", "x" * 201),
+                lambda st: [p for p in st["payments"] if p["note"] == "n"][0].__setitem__("note", None),
+                lambda st: [p for p in st["payments"] if p["note"] == "n"][0].__setitem__("to_user_id", [p for p in st["payments"] if p["note"] == "n"][0]["from_user_id"]),
+                lambda st: st["requests"][-1].__setitem__("payer_id", st["requests"][-1]["requester_id"]),
+                lambda st: [p for p in st["payments"] if p["note"] == "n"][0].__setitem__("ts", [p for p in st["payments"] if p["note"] == "n"][0]["ts"] + 5000),
+                lambda st: st["requests"][-1].__setitem__("ts", st["requests"][-1]["ts"] - 5000),
+                lambda st: [p for p in st["payments"] if p["settlement_id"]][0].__setitem__("settlement_id", None),
+                lambda st: list(st["settlements"].values())[0].__setitem__("committed_at", "2001-01-01T00:00:00+00:00"),
+                lambda st: list(st["settlements"].values())[0]["payment_ids"].append(list(st["settlements"].values())[0]["payment_ids"][0]),
+                lambda st: st["payments"][0].__setitem__("seq", st["requests"][0]["seq"])]
+
+        if False:
+            bad2.append(lambda st: st["authorizations"][0].__setitem__("note", "x" * 201))
+            bad2.append(lambda st: st["authorizations"][0].__setitem__("to_user_id", st["authorizations"][0]["from_user_id"]))
+            bad2.append(lambda st: st["authorizations"][0].__setitem__("expires_ts", st["authorizations"][0]["expires_ts"] + 5000))
+
+        bad2 += [lambda st: st["requests"][-1].__setitem__("payment_id", st["payments"][0]["id"]),
+                 lambda st: [r for r in st["requests"] if r["status"] == "paid"][0].__setitem__("amount", 99),
+                 lambda st: [r for r in st["requests"] if r["status"] == "paid"][0].__setitem__("status", "pending"),
+                 lambda st: [p for p in st["payments"] if p["request_id"]][0].__setitem__("amount", 77),
+                 lambda st: [p for p in st["payments"] if p["request_id"]][0].__setitem__("to_user_id", st["users"][2]["id"]),
+                 lambda st: [p for p in st["payments"] if p["settlement_id"]][0].__setitem__("created_at", "2001-01-01T00:00:00+00:00"),
+                 lambda st: list(st["settlements"].values())[0]["payment_ids"].clear(),
+                 lambda st: list(st["splits"].values())[0].__setitem__("note", "x" * 201),
+                 lambda st: list(st["splits"].values())[0]["shares"][0].__setitem__("amount", 12345),
+                 lambda st: st["tokens"].__setitem__("t", "ghost-user"),
+                 lambda st: st["users"][0].__setitem__("handle", "NOT valid")]
+        for i, f in enumerate(bad2):
+            m = json.loads(json.dumps(snap))
+            f(m["state"])
+            self.assertEqual(call("POST", "/_test/import", m)[0], 422, i)
         self.assertEqual(call("POST", "/_test/import", snap)[0], 204)
 
     def test_zero_share_state_roundtrips(self):

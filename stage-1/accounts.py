@@ -2,6 +2,7 @@
 import re
 from concurrent.futures import ThreadPoolExecutor
 
+from invariants import check_state_invariants
 from common import (MAX_AMOUNT, ApiError, State, store, STATUSES, HANDLE_RE, EMAIL_RE, authenticate,
                     check_password, get_str, hash_password, new_id, next_seq, now_ts,
                     parse_json, parse_ts, validation)
@@ -88,7 +89,8 @@ def build_state(fx):
         vis = p.get("visibility", "public")
         if (not isinstance(pid, str) or not pid or len(pid) > 64 or pid in s.payments_by_id
                 or p.get("from_user_id") not in s.users or p.get("to_user_id") not in s.users
-                or amt is None or not isinstance(note, str) or vis not in ("public", "private")
+                or amt is None or not isinstance(note, str) or len(note) > 200 or vis not in ("public", "private")
+                or p.get("from_user_id") == p.get("to_user_id")
                 or not isinstance(vis, str)):
             raise validation("bad payment")
         rec = {"id": pid, "from_user_id": p["from_user_id"], "to_user_id": p["to_user_id"],
@@ -105,7 +107,8 @@ def build_state(fx):
         status = r.get("status", "pending")
         if (not isinstance(rid, str) or not rid or len(rid) > 64 or rid in s.requests_by_id
                 or r.get("requester_id") not in s.users or r.get("payer_id") not in s.users
-                or amt is None or not isinstance(note, str) or status not in STATUSES
+                or amt is None or not isinstance(note, str) or len(note) > 200 or status not in STATUSES
+                or r.get("requester_id") == r.get("payer_id")
                 or not isinstance(status, str)):
             raise validation("bad request")
         rec = {"id": rid, "requester_id": r["requester_id"], "payer_id": r["payer_id"],
@@ -115,6 +118,10 @@ def build_state(fx):
         s.requests.append(rec)
         s.requests_by_id[rid] = rec
 
+    for r in s.requests:  # a seeded paid request's payment points back at it
+        p = s.payments_by_id.get(r["payment_id"]) if r["payment_id"] is not None else None
+        if p is not None and p["request_id"] is None:
+            p["request_id"] = r["id"]
     for p in s.payments:
         if p["request_id"] is not None and p["request_id"] not in s.requests_by_id:
             raise validation("payment refers to an unknown request")
@@ -126,6 +133,10 @@ def build_state(fx):
     if not isinstance(ops, list) or not all(isinstance(x, str) for x in ops):
         raise validation("settlement_operator_ids must be an array of strings")
     s.operators = set(ops)
+    try:
+        check_state_invariants(s)
+    except (ValueError, KeyError, TypeError):
+        raise validation("fixture is inconsistent")
     return s
 
 
