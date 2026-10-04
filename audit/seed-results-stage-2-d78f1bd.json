@@ -1,0 +1,635 @@
+[
+ {
+  "id": "G00",
+  "requirement": "baseline: unmodified copy (must be caught by nothing)",
+  "file": "common.py",
+  "old": "def sweep(s, now):",
+  "new": "def sweep(s, now):",
+  "fails": {
+   "impl-api": [],
+   "impl-ui": [],
+   "reviewer-api": [],
+   "reviewer-ui": [],
+   "customer-api": [],
+   "customer-ui": [],
+   "auditor-api": [],
+   "auditor-ui": [],
+   "shipped": []
+  },
+  "caught_by": []
+ },
+ {
+  "id": "G01",
+  "requirement": "S2-49 payments are checked against available, not total",
+  "file": "wallet.py",
+  "old": "if check_funds and available_of(s, frm) < amount:",
+  "new": "if check_funds and frm[\"balance\"] < amount:",
+  "fails": {
+   "impl-api": [
+    "(failures=2, errors=1)",
+    "exit",
+    "test_hold_capture_release"
+   ],
+   "impl-ui": [],
+   "reviewer-api": [],
+   "reviewer-ui": [
+    "exit"
+   ],
+   "customer-api": [
+    "balances after partial {'user_id'",
+    "concurrent payments vs hold never dip below available {'user_id'",
+    "pay request vs available",
+    "payment blocked by hold",
+    "released {'user_id'",
+    "void released"
+   ],
+   "customer-ui": [
+    "d authorize created, shows new item 3",
+    "d available updated on auth page",
+    "d double refresh consistent 7.50 EUR",
+    "d insufficient vs available -> pay-error, inputs kept 0",
+    "d newest first authorization-item-a_3",
+    "d refresh updates, keeps form 8.50 EUR"
+   ],
+   "auditor-api": [
+    "S2-49/50 funds checks against available; captures spend held money"
+   ],
+   "auditor-ui": [],
+   "shipped": []
+  },
+  "caught_by": [
+   "auditor",
+   "customer",
+   "impl",
+   "reviewer"
+  ]
+ },
+ {
+  "id": "G02",
+  "requirement": "S2-49 settlement net debits cannot use held funds",
+  "file": "settlements.py",
+  "old": "< held_of(s, uid) for uid, d in net.items()",
+  "new": "< 0 for uid, d in net.items()",
+  "fails": {
+   "impl-api": [
+    "(failures=1)",
+    "exit"
+   ],
+   "impl-ui": [],
+   "reviewer-api": [],
+   "reviewer-ui": [],
+   "customer-api": [
+    "balances after partial {'user_id'",
+    "hold can't fund settlement",
+    "released {'user_id'",
+    "void released"
+   ],
+   "customer-ui": [],
+   "auditor-api": [
+    "S2-49/50 funds checks against available; captures spend held money"
+   ],
+   "auditor-ui": [],
+   "shipped": []
+  },
+  "caught_by": [
+   "auditor",
+   "customer",
+   "impl"
+  ]
+ },
+ {
+  "id": "G03",
+  "requirement": "S2-50 captures may spend the money reserved for them",
+  "file": "authorizations.py",
+  "old": "check_funds=False, authorization_id=a[\"id\"])",
+  "new": "check_funds=True, authorization_id=a[\"id\"])",
+  "fails": {
+   "impl-api": [
+    "(errors=1)",
+    "exit",
+    "test_gap_funds_and_capture_rules"
+   ],
+   "impl-ui": [],
+   "reviewer-api": [],
+   "reviewer-ui": [],
+   "customer-api": [],
+   "customer-ui": [],
+   "auditor-api": [
+    "S2-49/50 funds checks against available; captures spend held money"
+   ],
+   "auditor-ui": [],
+   "shipped": []
+  },
+  "caught_by": [
+   "auditor",
+   "impl"
+  ]
+ },
+ {
+  "id": "G04",
+  "requirement": "S2-61 expiry is reflected by reads with no request at the deadline",
+  "file": "server.py",
+  "old": "                    sweep(store.state, time.time())",
+  "new": "                    if req.method != 'GET': sweep(store.state, time.time())",
+  "fails": {
+   "impl-api": [
+    "(failures=2)",
+    "exit"
+   ],
+   "impl-ui": [],
+   "reviewer-api": [
+    "ttl 1",
+    "ttl 2"
+   ],
+   "reviewer-ui": [],
+   "customer-api": [
+    "expiry releases remainder {'user_id'",
+    "open filter excludes",
+    "status expired, captures kept {'authorization_id'"
+   ],
+   "customer-ui": [],
+   "auditor-api": [
+    "S2-61/62/74 clock expiry without a triggering request"
+   ],
+   "auditor-ui": [],
+   "shipped": []
+  },
+  "caught_by": [
+   "auditor",
+   "customer",
+   "impl",
+   "reviewer"
+  ]
+ },
+ {
+  "id": "G05",
+  "requirement": "S2-68 a default (final) capture releases the remainder",
+  "file": "authorizations.py",
+  "old": "if final or a[\"captured_amount\"] == a[\"amount\"]:",
+  "new": "if a[\"captured_amount\"] == a[\"amount\"]:",
+  "fails": {
+   "impl-api": [
+    "(failures=2)",
+    "exit"
+   ],
+   "impl-ui": [],
+   "reviewer-api": [
+    "captured status, remaining 0  -> {'authorization_id'",
+    "final capture releases remainder in same step  ->",
+    "second capture after final  -> got 201 {'payment_id'"
+   ],
+   "reviewer-ui": [
+    "exit"
+   ],
+   "customer-api": [
+    "capture closed 409",
+    "closed",
+    "released {'user_id'"
+   ],
+   "customer-ui": [
+    "d capture 15 of 20 -> captured open",
+    "d capture buttons gone",
+    "m capture 15 of 20 -> captured open",
+    "m capture buttons gone"
+   ],
+   "auditor-api": [
+    "S2-68/69/72/73 default final capture releases the remainder"
+   ],
+   "auditor-ui": [
+    "S2-83/85-88 authorization screens and wallet numbers"
+   ],
+   "shipped": []
+  },
+  "caught_by": [
+   "auditor",
+   "customer",
+   "impl",
+   "reviewer"
+  ]
+ },
+ {
+  "id": "G06",
+  "requirement": "S2-71 capturing the whole remainder closes it even with final:false",
+  "file": "authorizations.py",
+  "old": "if final or a[\"captured_amount\"] == a[\"amount\"]:",
+  "new": "if final:",
+  "fails": {
+   "impl-api": [
+    "(failures=2, errors=1)",
+    "exit",
+    "test_extended_capture_void_and_validation"
+   ],
+   "impl-ui": [],
+   "reviewer-api": [
+    "capture after closed  -> got 422 {'error'",
+    "captured cumulative + ids  -> {'authorization_id'",
+    "void captured  -> got 200 {'authorization_id'"
+   ],
+   "reviewer-ui": [],
+   "customer-api": [],
+   "customer-ui": [],
+   "auditor-api": [
+    "S2-71/75/77 extended capture, partial then void, final type",
+    "S2-80/48/51 concurrent captures, capture vs void, parallel authorisations"
+   ],
+   "auditor-ui": [],
+   "shipped": []
+  },
+  "caught_by": [
+   "auditor",
+   "impl",
+   "reviewer"
+  ]
+ },
+ {
+  "id": "G07",
+  "requirement": "S2-72 capture_exceeds compares with the remaining amount",
+  "file": "authorizations.py",
+  "old": "if amount > remaining:",
+  "new": "if amount > a[\"amount\"]:",
+  "fails": {
+   "impl-api": [
+    "(failures=1)",
+    "exit"
+   ],
+   "impl-ui": [],
+   "reviewer-api": [
+    "capture exceeds remaining  -> got 201 {'payment_id'",
+    "captured cumulative + ids  -> {'authorization_id'",
+    "captures in receiver feed  -> 4",
+    "omitted amount = remainder; closes even with final false  -> {'payment_id'"
+   ],
+   "reviewer-ui": [],
+   "customer-api": [
+    "20 concurrent captures of 300/1000",
+    "closed",
+    "exceeds remaining 422",
+    "final capture 500 releases 1500",
+    "released {'user_id'"
+   ],
+   "customer-ui": [],
+   "auditor-api": [
+    "S2-71/75/77 extended capture, partial then void, final type"
+   ],
+   "auditor-ui": [],
+   "shipped": []
+  },
+  "caught_by": [
+   "auditor",
+   "customer",
+   "impl",
+   "reviewer"
+  ]
+ },
+ {
+  "id": "G08",
+  "requirement": "S2-75 remaining_amount is zero when closed",
+  "file": "authorizations.py",
+  "old": "\"remaining_amount\": a[\"amount\"] - a[\"captured_amount\"] if a[\"status\"] == \"open\" else 0,",
+  "new": "\"remaining_amount\": a[\"amount\"] - a[\"captured_amount\"],",
+  "fails": {
+   "impl-api": [
+    "(failures=2)",
+    "exit"
+   ],
+   "impl-ui": [],
+   "reviewer-api": [
+    "captured status, remaining 0  -> {'authorization_id'",
+    "void partial"
+   ],
+   "reviewer-ui": [],
+   "customer-api": [
+    "closed",
+    "status expired, captures kept {'authorization_id'"
+   ],
+   "customer-ui": [],
+   "auditor-api": [
+    "S2-61/62/74 clock expiry without a triggering request",
+    "S2-71/75/77 extended capture, partial then void, final type"
+   ],
+   "auditor-ui": [],
+   "shipped": []
+  },
+  "caught_by": [
+   "auditor",
+   "customer",
+   "impl",
+   "reviewer"
+  ]
+ },
+ {
+  "id": "G09",
+  "requirement": "S2-74 capture after expiry is authorization_expired",
+  "file": "authorizations.py",
+  "old": "raise ApiError(409, \"authorization_expired\", \"authorization has expired\")",
+  "new": "raise ApiError(409, \"authorization_not_open\", \"authorization has expired\")",
+  "fails": {
+   "impl-api": [
+    "(failures=2)",
+    "exit"
+   ],
+   "impl-ui": [],
+   "reviewer-api": [
+    "capture seeded expired  -> got 409 {'error'",
+    "ttl 1",
+    "ttl 2"
+   ],
+   "reviewer-ui": [],
+   "customer-api": [
+    "capture past deadline authorization_expired"
+   ],
+   "customer-ui": [],
+   "auditor-api": [
+    "S2-61/62/74 clock expiry without a triggering request",
+    "S2-80 a capture racing the deadline never moves money after expiry"
+   ],
+   "auditor-ui": [],
+   "shipped": []
+  },
+  "caught_by": [
+   "auditor",
+   "customer",
+   "impl",
+   "reviewer"
+  ]
+ },
+ {
+  "id": "G10",
+  "requirement": "S2-76 only the payer may void",
+  "file": "authorizations.py",
+  "old": "if a[\"from_user_id\"] != user[\"id\"]:\n        raise ApiError(403, \"forbidden\", \"only the payer may void\")",
+  "new": "if a[\"from_user_id\"] != user[\"id\"] and a[\"to_user_id\"] != user[\"id\"]:\n        raise ApiError(403, \"forbidden\", \"only the payer may void\")",
+  "fails": {
+   "impl-api": [
+    "(failures=1)",
+    "exit"
+   ],
+   "impl-ui": [],
+   "reviewer-api": [
+    "capture exceeds remaining  -> got 409 {'error'",
+    "capture key different body  -> got 409 {'error'",
+    "capture replay 200 identical, money once  -> 409",
+    "capture spends held money  -> {'user_id'",
+    "captured cumulative + ids  -> {'authorization_id'",
+    "captures in receiver feed  -> 0",
+    "nonfinal capture 201 payment shape  -> {'error'",
+    "omitted amount = remainder; closes even with final false  -> {'error'",
+    "receiver cannot void  -> got 200 {'authorization_id'",
+    "receiver credited  -> {'user_id'",
+    "still open after nonfinal  -> {'authorization_id'",
+    "void captured  -> got 200 {'authorization_id'"
+   ],
+   "reviewer-ui": [],
+   "customer-api": [
+    "balances after partial {'user_id'",
+    "closed",
+    "exceeds 422",
+    "exceeds remaining 422",
+    "final capture 500 releases 1500",
+    "partial",
+    "partial capture",
+    "receiver void 403",
+    "released {'user_id'",
+    "replay capture 200",
+    "replay diff body 409",
+    "void captured 409"
+   ],
+   "customer-ui": [],
+   "auditor-api": [
+    "S2-65/76 permissions"
+   ],
+   "auditor-ui": [],
+   "shipped": []
+  },
+  "caught_by": [
+   "auditor",
+   "customer",
+   "impl",
+   "reviewer"
+  ]
+ },
+ {
+  "id": "G11",
+  "requirement": "S2-2 API clients without Accept: text/html get JSON on /requests",
+  "file": "ui.py",
+  "old": "\"text/html\" not in req.headers.get(\"Accept\", \"\")",
+  "new": "\"json\" in req.headers.get(\"Accept\", \"\")",
+  "fails": {
+   "impl-api": [
+    "(failures=3, errors=13)",
+    "exit",
+    "test_deadline_is_the_shown_expires_at",
+    "test_expiry_and_ttl",
+    "test_extended_capture_void_and_validation",
+    "test_gap_partial_capture_then_release",
+    "test_gap_races",
+    "test_gap_seeding_and_ttl",
+    "test_hold_capture_release",
+    "test_huge_offset_is_an_empty_page",
+    "test_list_filters_and_order",
+    "test_pay_races_cancel",
+    "test_seeded_holds",
+    "test_split",
+    "test_zero_share_state_roundtrips"
+   ],
+   "impl-ui": [],
+   "reviewer-api": [],
+   "reviewer-ui": [
+    "exit"
+   ],
+   "customer-api": [],
+   "customer-ui": [
+    "exit"
+   ],
+   "auditor-api": [
+    "S2-2 /requests and /authorizations",
+    "S2-55/57/58/59 seeded authorisations, ttl validation, reset errors change nothing",
+    "S2-61/62/74 clock expiry without a triggering request",
+    "S2-65/76 permissions",
+    "S2-71/75/77 extended capture, partial then void, final type",
+    "S2-78 GET /authorizations scoping, order, filters, paging",
+    "S2-81 export/import carries holds, ttl, capture records and new-path receipts"
+   ],
+   "auditor-ui": [
+    "S2-83/85-88 authorization screens and wallet numbers"
+   ],
+   "shipped": [
+    "stage 2 not pass"
+   ]
+  },
+  "caught_by": [
+   "auditor",
+   "customer",
+   "impl",
+   "reviewer",
+   "shipped"
+  ]
+ },
+ {
+  "id": "G12",
+  "requirement": "S2-37 latest refresh wins",
+  "file": "static/app.js",
+  "old": "if (my !== seq) return;",
+  "new": "/* no ordering guard */",
+  "fails": {
+   "impl-api": [],
+   "impl-ui": [],
+   "reviewer-api": [],
+   "reviewer-ui": [],
+   "customer-api": [],
+   "customer-ui": [],
+   "auditor-api": [],
+   "auditor-ui": [
+    "S2-37 latest refresh wins when an earlier read arrives last"
+   ],
+   "shipped": []
+  },
+  "caught_by": [
+   "auditor"
+  ]
+ },
+ {
+  "id": "G13",
+  "requirement": "S2-40 a lost response is uncertain, not a refusal",
+  "file": "static/app.js",
+  "old": "return { status: 0, ok: false, network: true, uncertain: true };",
+  "new": "return { status: 0, ok: false, network: true, uncertain: false };",
+  "fails": {
+   "impl-api": [],
+   "impl-ui": [
+    "exit"
+   ],
+   "reviewer-api": [],
+   "reviewer-ui": [
+    "exit"
+   ],
+   "customer-api": [],
+   "customer-ui": [
+    "d retry clears both, moves once -200",
+    "d uncertain shown, not pay-error",
+    "m retry clears both, moves once -200",
+    "m uncertain shown, not pay-error"
+   ],
+   "auditor-api": [],
+   "auditor-ui": [
+    "S2-40 lost response after commit -> pay-uncertain; retry same key+body moves money once",
+    "S2-43/44/45 browser stays signed in across import; lost payment before export replays afte"
+   ],
+   "shipped": []
+  },
+  "caught_by": [
+   "auditor",
+   "customer",
+   "impl",
+   "reviewer"
+  ]
+ },
+ {
+  "id": "G14",
+  "requirement": "S2-17 too many decimal places is refused, not rounded",
+  "file": "static/app.js",
+  "old": "if (frac.length > CFG.mu) {",
+  "new": "if (frac.length > CFG.mu + 1) {",
+  "fails": {
+   "impl-api": [],
+   "impl-ui": [
+    "exit"
+   ],
+   "reviewer-api": [],
+   "reviewer-ui": [
+    "pay '15.005' rejected without request  ->",
+    "split 1.234 rejected without request  ->"
+   ],
+   "customer-api": [],
+   "customer-ui": [
+    "JPY pay works 1085 JPY",
+    "JPY too many decimals rejected"
+   ],
+   "auditor-api": [],
+   "auditor-ui": [
+    "S2-17/34/84 bad decimal input shows the form error and sends nothing"
+   ],
+   "shipped": []
+  },
+  "caught_by": [
+   "auditor",
+   "customer",
+   "impl",
+   "reviewer"
+  ]
+ },
+ {
+  "id": "G15",
+  "requirement": "S2-83 wallet-held is absent when held is zero",
+  "file": "static/app.js",
+  "old": "me.held > 0 && h('div', { class: 'held' }",
+  "new": "me.held >= 0 && h('div', { class: 'held' }",
+  "fails": {
+   "impl-api": [],
+   "impl-ui": [
+    "exit"
+   ],
+   "reviewer-api": [],
+   "reviewer-ui": [
+    "JPY formatting  -> 1200 JPY"
+   ],
+   "customer-api": [],
+   "customer-ui": [
+    "d zero balance no held element",
+    "m zero balance no held element"
+   ],
+   "auditor-api": [],
+   "auditor-ui": [
+    "S2-83/85-88 authorization screens and wallet numbers"
+   ],
+   "shipped": []
+  },
+  "caught_by": [
+   "auditor",
+   "customer",
+   "impl",
+   "reviewer"
+  ]
+ },
+ {
+  "id": "G16",
+  "requirement": "S2-56 expires_at is created_at + ttl",
+  "file": "authorizations.py",
+  "old": "\"expires_at\": fmt_ts(int(ts) + s.auth_ttl)",
+  "new": "\"expires_at\": fmt_ts(int(ts) + s.auth_ttl + 60)",
+  "fails": {
+   "impl-api": [
+    "(failures=4)",
+    "exit"
+   ],
+   "impl-ui": [],
+   "reviewer-api": [
+    "auth replay after import  -> 401",
+    "expires_at = created_at + 600  -> {'authorization_id'",
+    "import keeps holds and tokens  -> {'error'",
+    "ttl 1",
+    "ttl 2"
+   ],
+   "reviewer-ui": [],
+   "customer-api": [
+    "import w/ holds",
+    "ttl applied"
+   ],
+   "customer-ui": [],
+   "auditor-api": [
+    "S2-42/43/46 a stage-1 export imports into stage 2 with tokens, replays and requests",
+    "S2-55/57/58/59 seeded authorisations, ttl validation, reset errors change nothing",
+    "S2-61/62/74 clock expiry without a triggering request",
+    "S2-81 export/import carries holds, ttl, capture records and new-path receipts"
+   ],
+   "auditor-ui": [],
+   "shipped": []
+  },
+  "caught_by": [
+   "auditor",
+   "customer",
+   "impl",
+   "reviewer"
+  ]
+ }
+]
