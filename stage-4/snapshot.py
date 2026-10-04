@@ -270,9 +270,10 @@ def load_state(st):
             _need(rev_no <= len(p["revisions"]))
             r = p["revisions"][rev_no - 1]  # the entry is a frozen copy of exactly this revision
             _need(amount == r["amount"] and eff_at == r["effective_at"] and rec_at == r["recorded_at"])
-            if known is not None:  # the revision selected for known_at: latest recorded at or before it
-                _need(r["recorded_ts"] <= known and (rev_no == len(p["revisions"])
-                                                     or p["revisions"][rev_no]["recorded_ts"] > known))
+            if known is not None:  # the revision selected when taken: latest recorded by min(known_at, taken_ts)
+                k = min(known, sn["taken_ts"]) if "taken_ts" in sn else known
+                _need(r["recorded_ts"] <= k and (rev_no == len(p["revisions"])
+                                                 or p["revisions"][rev_no]["recorded_ts"] > k))
             _need((lo is None or r["effective_ts"] >= lo) and (hi is None or r["effective_ts"] < hi))
             _need(prev is None or prev <= (r["effective_ts"], pid))
             prev = (r["effective_ts"], pid)
