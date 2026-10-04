@@ -3,7 +3,7 @@ import re
 from concurrent.futures import ThreadPoolExecutor
 import time
 
-from common import (ApiError, State, available_of, held_of, store, sweep, STATUSES, HANDLE_RE, EMAIL_RE, authenticate,
+from common import (MAX_AMOUNT, ApiError, State, available_of, held_of, store, sweep, STATUSES, HANDLE_RE, EMAIL_RE, authenticate,
                     check_password, get_str, hash_password, new_id, next_seq, now_ts,
                     parse_json, parse_ts, validation)
 
@@ -15,12 +15,12 @@ def health(req):
     return 200, {"status": "ok"}
 
 
-def _int(v, lo=0):
+def _int(v, lo=0, hi=None):
     if isinstance(v, bool):
         return None
     if isinstance(v, float) and v.is_integer():
         v = int(v)
-    if isinstance(v, int) and v >= lo:
+    if isinstance(v, int) and v >= lo and (hi is None or v <= hi):
         return v
     return None
 
@@ -56,7 +56,7 @@ def build_state(fx):
         name = u.get("display_name", handle)
         if not isinstance(name, str):
             raise validation("display_name must be a string")
-        bal = _int(u.get("balance", 0))
+        bal = _int(u.get("balance", 0), 0, 2 ** 53)
         if bal is None:
             raise validation("balance must be a non-negative integer")
         rec = {"id": uid, "email": email, "display_name": name, "handle": handle,
@@ -84,7 +84,7 @@ def build_state(fx):
 
     for p in lst("payments"):
         pid = p.get("id") if p.get("id") is not None else new_id("p_")
-        amt = _int(p.get("amount"))
+        amt = _int(p.get("amount"), 0, MAX_AMOUNT)
         note = p.get("note", "")
         vis = p.get("visibility", "public")
         if (not isinstance(pid, str) or not pid or len(pid) > 64 or pid in s.payments_by_id
@@ -101,7 +101,7 @@ def build_state(fx):
 
     for r in lst("requests"):
         rid = r.get("id") if r.get("id") is not None else new_id("rq_")
-        amt = _int(r.get("amount"))
+        amt = _int(r.get("amount"), 0, MAX_AMOUNT)
         note = r.get("note", "")
         status = r.get("status", "pending")
         if (not isinstance(rid, str) or not rid or len(rid) > 64 or rid in s.requests_by_id
@@ -116,6 +116,13 @@ def build_state(fx):
         s.requests.append(rec)
         s.requests_by_id[rid] = rec
 
+    for p in s.payments:
+        if p["request_id"] is not None and p["request_id"] not in s.requests_by_id:
+            raise validation("payment refers to an unknown request")
+    for r in s.requests:
+        if r["payment_id"] is not None and r["payment_id"] not in s.payments_by_id:
+            raise validation("request refers to an unknown payment")
+
     ttl = fx.get("authorization_ttl_seconds", 600)
     if isinstance(ttl, bool) or not isinstance(ttl, int) or ttl < 1:
         raise validation("authorization_ttl_seconds must be a positive integer")
@@ -123,7 +130,7 @@ def build_state(fx):
     now = time.time()
     for a in lst("authorizations"):
         aid = a.get("id") if a.get("id") is not None else new_id("a_")
-        amt = _int(a.get("amount"), 1)
+        amt = _int(a.get("amount"), 1, MAX_AMOUNT)
         cap = _int(a.get("captured_amount", 0 if a.get("status", "open") != "captured" else a.get("amount")))
         note = a.get("note", "")
         vis = a.get("visibility", "public")
@@ -149,6 +156,9 @@ def build_state(fx):
         s.auths_by_id[aid] = rec
         if status == "open":
             s.open_auths[aid] = rec
+    for au in s.auths:
+        if any(pid not in s.payments_by_id for pid in au["payment_ids"]):
+            raise validation("authorization refers to an unknown payment")
     sweep(s, now)
     for uid, u in s.users.items():
         if held_of(s, uid) > u["balance"]:
