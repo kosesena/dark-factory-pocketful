@@ -22,9 +22,9 @@ def req_view(s, r):
 
 
 def move_money(s, frm, to, amount, note, visibility, request_id=None, settlement_id=None,
-               stamp=None):
-    """Caller holds the lock and has checked affordability."""
-    if frm["balance"] < amount:
+               stamp=None, check_funds=True):
+    """Caller holds the lock."""
+    if check_funds and frm["balance"] < amount:
         raise ApiError(409, "insufficient_funds", "insufficient funds")
     frm["balance"] -= amount
     to["balance"] += amount

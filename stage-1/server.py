@@ -7,11 +7,12 @@ from http.server import BaseHTTPRequestHandler, ThreadingHTTPServer
 from urllib.parse import parse_qs, unquote, urlsplit
 
 import accounts
+import settlements
 import snapshot
 import wallet
 from common import LOCK, ApiError
 
-MODULES = [accounts, wallet, snapshot]
+MODULES = [accounts, wallet, snapshot, settlements]
 
 ROUTES = [(m, re.compile(p), fn) for mod in MODULES for (m, p, fn) in mod.ROUTES]
 
