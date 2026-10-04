@@ -9,7 +9,7 @@ returned when the statement was taken (stage 4 adds refund_of, which a pre-stage
 
 Each seed drives a real older stage-3 service (495d5d6, metadata-free snapshots) with a random sequence: payments
 between three users, corrections by the sender with back-dated effective times (some rejected by the source, which is
-fine), and statements taken by random users with random from/to/known_at (past, present and future instants).
+fine), (half of them keeping the amount), and statements taken by random users with random from/to/known_at (past, present and future instants).
 Afterwards: export -> import into stage 4 -> 204, every token pages its original page, the import is inside 5 s.
 Then one random snapshot is corrupted in a way the ruling says must be refused (balances shifted, owner swapped,
 entry duplicated, entries reversed when distinct) -> 422 with the destination unchanged.
@@ -88,6 +88,7 @@ for seed in range(a.seeds):
     tok = {h: call(SRC, "POST", "/auth/login", {"email": h + "@x.io", "password": "password"})[1]["token"] for h in "abc"}
     payments = [(p["id"], p["from_user_id"][2:]) for p in pays]
     revs = {p["id"]: 1 for p in pays}
+    amt = {p["id"]: p["amount"] for p in pays}
     saved = {}
     ncorr = 0
     instants = lambda: rnd.choice([t0 - timedelta(days=1), t0 + timedelta(hours=rnd.randint(0, 140)),
@@ -101,15 +102,19 @@ for seed in range(a.seeds):
             if st == 201:
                 payments.append((b["payment_id"], f))
                 revs[b["payment_id"]] = 1
+                amt[b["payment_id"]] = b["amount"]
         elif op < 0.6 and payments:
             pid, sender = rnd.choice(payments)
             eff = t0 + timedelta(hours=rnd.randint(0, 140))
             eff = min(eff, datetime.now(timezone.utc) - timedelta(seconds=1))
+            # half the corrections keep the amount (same balances at many moments defeat a balance-based screen)
+            new_amt = amt[pid] if rnd.random() < 0.5 else rnd.randint(0, 900)
             st, b = call(SRC, "POST", "/payments/%s/corrections" % pid,
-                         {"expected_revision": revs[pid], "amount": rnd.randint(0, 900), "effective_at": eff.isoformat(),
+                         {"expected_revision": revs[pid], "amount": new_amt, "effective_at": eff.isoformat(),
                           "reason": "r"}, tok[sender], "s%dc%d" % (seed, step))
             if st == 201:
                 revs[pid] = b["revision"]
+                amt[pid] = new_amt
                 ncorr += 1
         else:
             h = rnd.choice("abc")
