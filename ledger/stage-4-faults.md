@@ -50,3 +50,13 @@ Evidence now also includes `audit/probes/legacy_snapshot_probes.py`.
 K03 is caught only by the spec-auditor's probe: reorder two same-instant entries and recompute balance_after, so
 opening, closing and every per-entry check still hold. Suggested test for the implementer: the snapshot fuzzer should
 include this mutation. K02 was first caught only by the implementer; the empty-window balance shift probe now catches it too.
+
+## Revision 2bd67ec: fix-revision seeding (changed code: view-less snapshot refund check)
+
+| # | Requirement broken | Change | Caught by |
+|---|---|---|---|
+| J00 | baseline: unmodified copy (must be caught by nothing) | refunds.py: `def refunded_total(s, pid):` → `def refunded_total(s, pid):` | — (control) |
+| K03 | §10/S3-42 imported snapshot entries must equal the rebuild | snapshot.py: `and rebuilt == entries)` → `and len(rebuilt) == len(entries))` | auditor |
+| L01 | §10/S4-37 a view-less (pre-stage-4) snapshot cannot hold a refund entry | snapshot.py: `_need("view" in sn or all(` → `_need(True or all(` | auditor, impl |
+
+Earlier results stand for the unchanged code: J01–J15 (8bbd03a) and K01–K04 (b6afe75). K03 is still caught only by the spec-auditor's same-instant swap probe.

@@ -1,0 +1,105 @@
+[
+ {
+  "id": "J00",
+  "requirement": "baseline: unmodified copy (must be caught by nothing)",
+  "file": "refunds.py",
+  "old": "def refunded_total(s, pid):",
+  "new": "def refunded_total(s, pid):",
+  "fails": {
+   "impl": [],
+   "reviewer:probes_s4.py": [],
+   "reviewer:model": [],
+   "customer:journey_stage4_api.py": [],
+   "customer:journey_stage4_import.py": [],
+   "customer:journey_stage4_receipts.py": [],
+   "cross:probe_stage4.py": [
+    "{\"probe\": \"migration_import-uncaught\", \"passed\": false, \"detail\": \"'token'\"}",
+    "{\"probe\": \"reset\", \"passed\": false, \"detail\": {\"status\": 0, \"body\": {\"transport_"
+   ],
+   "cross:probe_stage4_import.py": [],
+   "cross:probe_stage4_receipt_links.py": [],
+   "auditor": [],
+   "shipped": []
+  },
+  "caught_by": [],
+  "new_fails": {}
+ },
+ {
+  "id": "K03",
+  "requirement": "\u00a710/S3-42 imported snapshot entries must equal the rebuild",
+  "file": "snapshot.py",
+  "old": "and rebuilt == entries)",
+  "new": "and len(rebuilt) == len(entries))",
+  "fails": {
+   "impl": [],
+   "reviewer:probes_s4.py": [],
+   "reviewer:model": [],
+   "customer:journey_stage4_api.py": [],
+   "customer:journey_stage4_import.py": [],
+   "customer:journey_stage4_receipts.py": [],
+   "cross:probe_stage4.py": [
+    "{\"probe\": \"migration_import-uncaught\", \"passed\": false, \"detail\": \"'token'\"}",
+    "{\"probe\": \"reset\", \"passed\": false, \"detail\": {\"status\": 0, \"body\": {\"transport_"
+   ],
+   "cross:probe_stage4_import.py": [],
+   "cross:probe_stage4_receipt_links.py": [],
+   "auditor": [
+    "legacy:snapshot 1 current + swap same-instant entries, balances recomputed -> 422",
+    "legacy:snapshot 2 current + swap same-instant entries, balances recomputed -> 422",
+    "legacy:snapshot 3 current + swap same-instant entries, balances recomputed -> 422"
+   ],
+   "shipped": []
+  },
+  "caught_by": [
+   "auditor"
+  ],
+  "new_fails": {
+   "auditor": [
+    "legacy:snapshot 1 current + swap same-instant entries, balances recomputed -> 422",
+    "legacy:snapshot 2 current + swap same-instant entries, balances recomputed -> 422",
+    "legacy:snapshot 3 current + swap same-instant entries, balances recomputed -> 422"
+   ]
+  }
+ },
+ {
+  "id": "L01",
+  "requirement": "\u00a710/S4-37 a view-less (pre-stage-4) snapshot cannot hold a refund entry",
+  "file": "snapshot.py",
+  "old": "_need(\"view\" in sn or all(",
+  "new": "_need(True or all(",
+  "fails": {
+   "impl": [
+    "(failures=1)",
+    "exit"
+   ],
+   "reviewer:probes_s4.py": [],
+   "reviewer:model": [],
+   "customer:journey_stage4_api.py": [],
+   "customer:journey_stage4_import.py": [],
+   "customer:journey_stage4_receipts.py": [],
+   "cross:probe_stage4.py": [
+    "{\"probe\": \"migration_import-uncaught\", \"passed\": false, \"detail\": \"'token'\"}",
+    "{\"probe\": \"reset\", \"passed\": false, \"detail\": {\"status\": 0, \"body\": {\"transport_"
+   ],
+   "cross:probe_stage4_import.py": [],
+   "cross:probe_stage4_receipt_links.py": [],
+   "auditor": [
+    "legacy:del view on a snapshot that holds a refund entry -> 422"
+   ],
+   "shipped": []
+  },
+  "caught_by": [
+   "auditor",
+   "impl"
+  ],
+  "new_fails": {
+   "impl": [
+    "(failures=1)",
+    "exit"
+   ],
+   "auditor": [
+    "legacy:del view on a snapshot that holds a refund entry -> 422"
+   ]
+  }
+ }
+]

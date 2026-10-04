@@ -66,8 +66,10 @@ def main():
              for n, t in snaps.items()}
     # positive control: metadata stripped, content untouched
     e2 = copy.deepcopy(exp)
+    refunds = {q["id"] for q in exp["state"]["payments"] if q.get("refund_of")}
     for sn in e2["state"]["snapshots"]:
-        strip(sn)
+        if not any(e[0] in refunds for e in sn["entries"]):  # a view-less snapshot cannot hold a refund (stage 4)
+            strip(sn)
     r = call("POST", "/_test/import", e2)
     check("legacy shape, untampered, imports (snapshots taken after the last write)", r[0] == 204, r)
     if r[0] == 204:

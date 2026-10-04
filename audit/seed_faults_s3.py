@@ -108,6 +108,8 @@ S4_FAULTS = [
      '"reason": reason, "correction_batch_id": bid}', '"reason": reason, "correction_batch_id": None}'),
     ("J15", "S4-37 pre-stage-4 snapshots page in their original form", "history.py",
      '    if legacy:  # a snapshot taken before stage 4', '    if False:  # a snapshot taken before stage 4'),
+    ("L01", "§10/S4-37 a view-less (pre-stage-4) snapshot cannot hold a refund entry", "snapshot.py",
+     '_need("view" in sn or all(', '_need(True or all('),
 ]
 
 K_FAULTS = [
