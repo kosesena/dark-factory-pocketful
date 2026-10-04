@@ -155,3 +155,55 @@ input[type="checkbox"] { width: 20px; min-height: 20px; height: 20px; accent-col
 .preview .share .amount { font-weight: 700; }
 .preview .hint { color: var(--text2); font-size: var(--t-sm); }
 .switch { text-align: center; font-size: var(--t-sm); color: var(--text2); margin-top: var(--s3); }
+
+/* ---- page layouts: one column on phones; balanced multi-column bands on desktop ---- */
+.stack { display: grid; gap: var(--s4); min-width: 0; }
+.balance { display: block; }
+.balance .bal-body { display: grid; gap: var(--s3); }
+.hero-main { min-width: 0; }
+@media (min-width: 760px) {
+  .balance { padding: var(--s5); display: flex; align-items: center; gap: var(--s5); }
+  .balance .bal-body { flex: 1; min-width: 0; }
+  .balance .bal-body { grid-template-columns: minmax(0, 1fr) auto; align-items: end; gap: var(--s5); }
+  .balance .headline { margin-bottom: 0; }
+  .balance .secondary { flex-direction: column; gap: var(--s2); text-align: right; padding-right: 0; }
+  .balance .actions { margin: 0; flex: none; }
+}
+.forms3 { display: grid; gap: var(--s4); grid-template-columns: minmax(0, 1fr); align-items: stretch; }
+.forms3 > .card { display: flex; flex-direction: column; }
+.forms3 > .card form { flex: 1; align-content: start; }
+@media (min-width: 700px) {
+  .forms3 { grid-template-columns: repeat(2, minmax(0, 1fr)); }
+  .forms3 > :nth-child(3) { grid-column: 1 / -1; }
+}
+@media (min-width: 1000px) {
+  .forms3 { grid-template-columns: repeat(3, minmax(0, 1fr)); gap: var(--s5); }
+  .forms3 > :nth-child(3) { grid-column: auto; }
+}
+.list.two { grid-template-columns: minmax(0, 1fr); align-items: start; }
+@media (min-width: 900px) { .list.two { grid-template-columns: repeat(2, minmax(0, 1fr)); gap: var(--s4); } }
+.cols2 { display: grid; gap: var(--s4); grid-template-columns: minmax(0, 1fr); }
+@media (min-width: 900px) { .cols2 { grid-template-columns: repeat(2, minmax(0, 1fr)); gap: var(--s5); align-items: start; } }
+.split-card { width: 100%; }
+@media (min-width: 900px) {
+  .splitform { grid-template-columns: minmax(0, 1fr) minmax(0, 1fr); column-gap: var(--s6); align-items: start; }
+  .splitform .f-fields { grid-column: 1; display: grid; gap: var(--s3); }
+  .splitform .f-preview { grid-column: 2; grid-row: 1 / span 2; display: flex; flex-direction: column; height: 100%; }
+  .splitform .f-preview .preview { flex: 1; align-content: start; min-height: 220px; }
+  .splitform .f-actions { grid-column: 1; display: grid; gap: var(--s3); }
+}
+.f-fields, .f-actions { display: grid; gap: var(--s3); }
+.f-preview .sect-title { margin-top: 0; }
+/* the reserve form as a single row of fields on wide screens */
+@media (min-width: 900px) {
+  .card.wide form { grid-template-columns: minmax(0, 1.4fr) minmax(0, 1fr) minmax(0, 1fr) minmax(0, 1.6fr) auto; align-items: end; column-gap: var(--s3); }
+  .card.wide .row2 { display: contents; }
+  .card.wide form > .slot { grid-column: 1 / -1; order: 10; }
+  .card.wide form > .btn { order: 9; }
+}
+@media (min-width: 700px) and (max-width: 999px) {
+  .card.wide-md form { grid-template-columns: minmax(0, 1.2fr) minmax(0, 1fr) minmax(0, 1fr) minmax(0, 1.4fr) auto; align-items: end; column-gap: var(--s3); }
+  .card.wide-md .row2 { display: contents; }
+  .card.wide-md form > .slot { grid-column: 1 / -1; order: 10; }
+  .card.wide-md form > .btn { order: 9; }
+}

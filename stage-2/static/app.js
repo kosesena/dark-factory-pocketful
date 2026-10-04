@@ -184,8 +184,9 @@
       el,
       update(me) {
         body.replaceChildren(
-          h('div', { class: 'label' }, 'Available to spend'),
-          h('div', { class: 'headline', t: 'wallet-available', 'data-amount': me.available }, fmt(me.available, me.currency)),
+          h('div', { class: 'hero-main' },
+            h('div', { class: 'label' }, 'Available to spend'),
+            h('div', { class: 'headline', t: 'wallet-available', 'data-amount': me.available }, fmt(me.available, me.currency))),
           h('div', { class: 'secondary' },
             h('div', null, h('span', { class: 'k' }, 'Total balance'), h('b', { t: 'wallet-balance', 'data-amount': me.total }, fmt(me.total, me.currency))),
             me.held > 0 && h('div', { class: 'held' }, h('span', { class: 'k' }, 'Held for others'), h('b', { t: 'wallet-held', 'data-amount': me.held }, fmt(me.held, me.currency)))));
@@ -245,16 +246,16 @@
         cfg.onDone && cfg.onDone(false);
       }
     }
-    return h('section', { class: 'card', 'aria-label': cfg.title },
+    return h('section', { class: 'card' + (cfg.wide ? ' wide' : '') + (cfg.wideMd ? ' wide-md' : ''), 'aria-label': cfg.title },
       h('h2', null, cfg.title), cfg.sub && h('p', { class: 'sub' }, cfg.sub), form);
   }
 
-  function authorizeCard(onDone) {
-    return moneyForm({
+  function authorizeCard(onDone, layout) {
+    return moneyForm(Object.assign({ wide: layout === 'wide', wideMd: layout === 'md' }, {
       name: 'authorize', title: 'Reserve money for someone', sub: 'Holds the amount so it can be collected later. Nothing moves until it is captured.',
       testPrefix: 'authorize', handleLabel: 'Recipient handle', handleField: 'to_handle', button: 'Place hold', endpoint: '/authorizations',
       withVisibility: true, keepValues: false, reuseOnSuccess: false, errTest: 'authorize-error', uncertainTest: 'authorize-uncertain',
-      successTest: 'authorize-success', verbDone: d => 'Holding ' + fmt(d.amount, d.currency) + ' for @' + d.to_handle + '.', onDone });
+      successTest: 'authorize-success', verbDone: d => 'Holding ' + fmt(d.amount, d.currency) + ' for @' + d.to_handle + '.', onDone }));
   }
 
   /* ---------- pages ---------- */
@@ -282,11 +283,11 @@
       handleField: 'payer_handle', button: 'Send request', endpoint: '/requests', withVisibility: false, keepValues: false, reuseOnSuccess: false,
       errTest: 'request-error', uncertainTest: 'request-uncertain', successTest: 'request-success',
       verbDone: d => 'Requested ' + fmt(d.amount, d.currency) + ' from @' + d.payer_handle + '.' });
-    const auth = authorizeCard(() => refresh());
-    shell(h('div', { class: 'grid two' },
-      h('div', { class: 'col' }, bal.el, pay, reqf, auth),
-      h('div', { class: 'col' }, h('section', { class: 'card', 'aria-label': 'Activity' },
-        h('div', { class: 'head-row' }, h('h2', null, 'Activity')), feed))));
+    const auth = authorizeCard(() => refresh(), 'md');
+    shell(h('div', { class: 'stack' }, bal.el,
+      h('div', { class: 'forms3' }, pay, reqf, auth),
+      h('section', { class: 'card', 'aria-label': 'Activity' },
+        h('div', { class: 'head-row' }, h('h2', null, 'Activity')), feed)));
     refresh();
   }
 
@@ -295,7 +296,7 @@
       el.replaceChildren(h('div', { class: 'empty', t: 'empty-activity' }, h('strong', null, 'Nothing here yet'), 'Payments you send, receive or that are public will show up here.'));
       return;
     }
-    el.replaceChildren(h('ul', { class: 'list', t: 'activity-list' }, payments.map(p => {
+    el.replaceChildren(h('ul', { class: 'list two', t: 'activity-list' }, payments.map(p => {
       const sent = p.from_user_id === me.user_id, got = p.to_user_id === me.user_id;
       const tags = [];
       if (p.settlement_id) tags.push(h('span', { class: 'pill info' }, 'Settlement'));
@@ -336,7 +337,7 @@
       () => Promise.all([api('GET', '/me'), api('GET', '/requests?limit=200')]).then(([m, q]) => [need(m), need(q)]),
       ([me, q]) => { applyMe(me); bal.update(me); renderRequests(body, q.requests, me, act, visPick); },
       () => { bal.fail(refresh); body.replaceChildren(errorBlock(refresh, 'your requests')); });
-    shell(h('div', { class: 'grid' }, bal.el,
+    shell(h('div', { class: 'stack' }, bal.el,
       h('section', { class: 'card', 'aria-label': 'Requests' }, h('h2', null, 'Requests'), err, body)));
     refresh();
   }
@@ -370,7 +371,7 @@
       !items.length && !none ? h('p', { class: 'sub' }, 'Nothing here.') : null);
     el.replaceChildren(...[
       none ? h('div', { class: 'empty', t: 'empty-requests' }, h('strong', null, 'No requests yet'), 'Requests you send or receive will appear here.') : null,
-      section('Asking you to pay', inc, 'incoming-list', true), section('You asked', out, 'outgoing-list', false)].filter(Boolean));
+      h('div', { class: 'cols2' }, section('Asking you to pay', inc, 'incoming-list', true), section('You asked', out, 'outgoing-list', false))].filter(Boolean));
   }
   async function lock(ev, fn) {
     const b = ev.currentTarget; b.disabled = true;
@@ -429,15 +430,16 @@
       const d = r.data;
       setAlert(msg, 'success', 'split-success', d.requests.length ? 'Requested ' + d.requests.length + (d.requests.length === 1 ? ' share' : ' shares') + ' of ' + fmt(d.amount, d.currency) + '. Follow them under Requests.' : 'Nothing to request: you are the only participant.');
     }
-    shell(h('div', { class: 'grid two' }, h('div', { class: 'col' }, bal.el),
-      h('section', { class: 'card', 'aria-label': 'Split a bill' }, h('h2', null, 'Split a bill'),
+    shell(h('div', { class: 'stack' }, bal.el,
+      h('section', { class: 'card split-card', 'aria-label': 'Split a bill' }, h('h2', null, 'Split a bill'),
         h('p', { class: 'sub' }, 'You already paid. Ask everyone else for their equal share.'),
-        h('form', { novalidate: true, onsubmit: onSubmit },
-          field('split-amount-in', 'Total you paid (' + CFG.currency + ')', amount),
-          field('split-handles-in', 'People to split with', handles, 'Handles separated by commas, in order. Include yourself to keep a share.'),
-          field('split-note-in', 'Note', note),
-          h('div', null, h('div', { class: 'sect-title' }, 'Preview'), preview),
-          msg, btn))));
+        h('form', { class: 'splitform', novalidate: true, onsubmit: onSubmit },
+          h('div', { class: 'f-fields' },
+            field('split-amount-in', 'Total you paid (' + CFG.currency + ')', amount),
+            field('split-handles-in', 'People to split with', handles, 'Handles separated by commas, in order. Include yourself to keep a share.'),
+            field('split-note-in', 'Note', note)),
+          h('div', { class: 'f-preview' }, h('div', { class: 'sect-title' }, 'Preview'), preview),
+          h('div', { class: 'f-actions' }, msg, btn)))));
     const refresh = makeRefresher(() => api('GET', '/me').then(need), me => { applyMe(me); bal.update(me); drawPreview(); }, () => bal.fail(refresh));
     drawPreview();
     refresh();
@@ -447,7 +449,7 @@
     const bal = balanceCard({ compact: true });
     const err = slot();
     const body = h('div', null, loadingBlock());
-    const form = authorizeCard(() => refresh());
+    const form = authorizeCard(() => refresh(), 'wide');
     async function act(kind, a, inputs) {
       const url = '/authorizations/' + encodeURIComponent(a.authorization_id) + '/' + kind;
       let res;
@@ -470,7 +472,7 @@
       () => Promise.all([api('GET', '/me'), api('GET', '/authorizations?limit=200')]).then(([m, q]) => [need(m), need(q)]),
       ([me, q]) => { applyMe(me); bal.update(me); renderAuths(body, q.authorizations, me, act); },
       () => { bal.fail(refresh); body.replaceChildren(errorBlock(refresh, 'your holds')); });
-    shell(h('div', { class: 'grid two' }, h('div', { class: 'col' }, bal.el, form),
+    shell(h('div', { class: 'stack' }, bal.el, form,
       h('section', { class: 'card', 'aria-label': 'Holds' }, h('h2', null, 'Holds'),
         h('p', { class: 'sub' }, 'Money reserved now and collected later. Held money cannot be spent elsewhere.'), err, body)));
     refresh();
@@ -481,7 +483,7 @@
       el.replaceChildren(h('div', { class: 'empty', t: 'empty-authorizations' }, h('strong', null, 'No holds yet'), 'When you reserve money for someone, or they reserve it for you, it appears here.'));
       return;
     }
-    el.replaceChildren(h('ul', { class: 'list', t: 'authorization-list' }, list.map(a => {
+    el.replaceChildren(h('ul', { class: 'list two', t: 'authorization-list' }, list.map(a => {
       const id = a.authorization_id, incoming = a.to_user_id === me.user_id, open = a.status === 'open';
       const inputs = {};
       const actions = [];
@@ -507,7 +509,8 @@
           a.status === 'captured' ? h('span', null, 'Collected: ', h('b', { t: 'authorization-captured-' + id }, fmt(a.captured_amount, a.currency))) : null,
           a.status !== 'captured' && a.captured_amount > 0 ? h('span', null, 'Collected so far: ', h('b', null, fmt(a.captured_amount, a.currency))) : null),
         h('div', { class: 'item-meta' },
-          h('span', null, open ? 'Expires ' + until(a.expires_at) : a.status === 'expired' ? 'Expired ' + until(a.expires_at) : 'Was due ' + until(a.expires_at)),
+          h('span', null, open ? 'Expires ' + until(a.expires_at) : a.status === 'expired' ? 'Expired ' + until(a.expires_at)
+            : a.status === 'captured' ? 'Closed: fully collected' : 'Closed: released by the payer'),
           h('time', { t: 'authorization-expires-' + id, datetime: a.expires_at, title: fmtTime(a.expires_at) }, a.expires_at)),
         actions.length ? h('div', { class: 'item-actions' }, actions) : null);
     })));
