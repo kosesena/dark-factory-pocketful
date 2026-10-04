@@ -1451,6 +1451,24 @@ class Ledger(unittest.TestCase):
         bad = json.loads(json.dumps(snap))
         bad["state"]["snapshots"][0]["entries"][0][0] = "ghost"
         self.assertEqual(call("POST", "/_test/import", bad)[0], 422)
+        for f in (lambda sn: sn["entries"][0].__setitem__(1, 99),
+                  lambda sn: sn["entries"][0].__setitem__(4, "2020-01-01T00:00:00+00:00"),
+                  lambda sn: sn["entries"][0].__setitem__(5, "2020-01-01T00:00:00+00:00"),
+                  lambda sn: sn["entries"][0].__setitem__(6, sn["entries"][0][6] + 1),
+                  lambda sn: sn["echo"].__setitem__("known_at", "bad-time"),
+                  lambda sn: sn["echo"].__setitem__("from", "2026-09-22T10:00:00+00:00"),
+                  lambda sn: sn["echo"].__setitem__("to", "2026-09-20T10:00:01+00:00"),
+                  lambda sn: sn["entries"].reverse(),
+                  lambda sn: sn["entries"].pop(),
+                  lambda sn: sn.__setitem__("opening_balance", sn["opening_balance"] + 1),
+                  lambda sn: sn.__setitem__("closing_balance", sn["closing_balance"] + 1),
+                  lambda sn: sn.__setitem__("taken_seq", 0),
+                  lambda sn: sn.__setitem__("taken_ts", sn["taken_ts"] - 1e9),
+                  lambda sn: sn.pop("taken_ts"),
+                  lambda sn: sn["echo"].__setitem__("known_at", "2000-01-01T00:00:00+00:00")):
+            bad = json.loads(json.dumps(snap))
+            f(bad["state"]["snapshots"][0])
+            self.assertEqual(call("POST", "/_test/import", bad)[0], 422)
         call("POST", "/_test/reset", hist_fixture())
         self.assertEqual(call("GET", "/statement?snapshot=" + tok, token=login("bob"))[0], 404)
 

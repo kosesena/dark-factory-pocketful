@@ -27,6 +27,29 @@ def _page(s, snap, limit, offset):
     return body
 
 
+def build_statement(s, uid, lo, hi, known, taken_ts, taken_seq):
+    """(opening balance, entries, closing balance) for the window [lo, hi) as the ledger stood when the
+    statement was taken: only payments up to taken_seq, only revisions recorded by min(known_at, taken_ts)."""
+    k = taken_ts if known is None else min(known, taken_ts)
+    eff = sorted(effects(s, uid, k, max_seq=taken_seq), key=lambda e: (e[0], e[1]))
+    running = s.users[uid]["opening"]
+    entries = []
+    opening = running if lo is None else None
+    for t, pid, rev, delta in eff:
+        if lo is not None and t < lo:
+            running += delta
+            continue
+        if opening is None:
+            opening = running
+        if hi is not None and t >= hi:
+            break
+        running += delta
+        entries.append((pid, rev["revision"], delta, running, rev["effective_at"], rev["recorded_at"], rev["amount"]))
+    if opening is None:  # nothing at or after `from`
+        opening = running
+    return opening, entries, running
+
+
 def statement(req):
     user = authenticate(req)
     s = store.state
@@ -45,28 +68,15 @@ def statement(req):
     if lo is not None and hi is not None and hi < lo:
         hi = lo  # an inverted window is empty: opening == closing
     uid = user["id"]
-    eff = sorted(effects(s, uid, known[0] if known else None), key=lambda e: (e[0], e[1]))
-    running = user["opening"]
-    entries = []
-    opening = running if lo is None else None
-    for t, pid, rev, delta in eff:
-        if lo is not None and t < lo:
-            running += delta
-            continue
-        if opening is None:
-            opening = running
-        if hi is not None and t >= hi:
-            break
-        running += delta
-        entries.append((pid, rev["revision"], delta, running, rev["effective_at"], rev["recorded_at"], rev["amount"]))
-    if opening is None:  # nothing at or after `from`
-        opening = running
+    taken_ts, taken_seq = time.time(), s.seq
+    opening, entries, running = build_statement(s, uid, lo, hi, known[0] if known else None, taken_ts, taken_seq)
     echo = {}
     for name, v in (("from", frm), ("to", to), ("known_at", known)):
         if v:
             echo[name] = v[1]
     snap = {"token": secrets.token_urlsafe(24), "user_id": uid, "opening_balance": opening,
-            "entries": entries, "closing_balance": running, "echo": echo}
+            "entries": entries, "closing_balance": running, "echo": echo,
+            "taken_ts": taken_ts, "taken_seq": taken_seq}
     s.snapshots[snap["token"]] = snap
     return 200, _page(s, snap, limit, offset)
 
