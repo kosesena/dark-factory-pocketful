@@ -1,14 +1,31 @@
 # The Felt Five — a very dark factory that tests its own tests
 
-> **Shipped checks: 9 of 37 seeded faults caught. Our band's evidence: 36.** Six seats, two model
-> families, one dispatch, no human in the loop. (Practice-run figure; the submitted run's numbers
-> replace it.)
+> **The spec-auditor seeded 81 faults across four stages, one at a time. The shipped checks caught
+> 8; our band's own evidence caught 75** (the other 6 changed nothing observable). Six seats, two
+> model families, one dispatch, no human message after it. On five revisions three Claude
+> verifiers accepted and only the Codex seat said no.
 
-Entry for the WeAreDevelopers x BAND "Dark Factory" hackathon (lablab.ai), track **pocketful**.
-Team: Sena Köse (solo). Submission deadline: **6 Oct 2026, 09:59 Türkiye time** (5 Oct 23:59 PDT).
+Entry for the WeAreDevelopers x BAND "Dark Factory" hackathon (lablab.ai).
+**Track:** pocketful. **Team:** Sena Köse (solo). **Stages delivered:** 1–4.
 
-> This README is a working brief until submission. At submission it is rewritten to say:
-> team, track, and how to read this repository.
+## The submitted run at a glance
+
+| | |
+|---|---|
+| Human input | one dispatch message for all four stages (`room.json`: 6,783 messages, 1 from a human) |
+| Duration | 10:53 → 16:00 on 4 Oct 2026; 57 min of that was a plan usage-limit pause |
+| Stages closed (all four verifiers accepted the same revision) | 1 at 12:17 · 2 at 13:14 · 3 at 15:04 · 4 at 15:59 |
+| Reject verdicts before those accepts | 27 (cross-auditor 13, reviewer 8, spec-auditor 4, customer 2) |
+| Isolated harness on the final repository | stages 1–4 pass, **claimed stage: 4** |
+| Shipped checks untouched | `shasum -c` on all 11 check files: OK |
+| Model spend | 131.29 USD at Anthropic list prices for the five Claude seats, plus the Codex seat on a ChatGPT plan |
+
+Every figure is derived, with its source, in [FACTORY.md](FACTORY.md) section 7.
+
+![The delivered wallet at desktop width, from the customer seat's final screenshots](customer/screens-stage4-final/d-home-held.png)
+
+*The delivered wallet (stage 4), as the customer seat saw it at 1280 px. Every screen at desktop
+and phone width is in `customer/screens-stage4-final/`.*
 
 ## Meet the crew
 
@@ -96,82 +113,37 @@ verifiers' findings. Fault seeding remains the spec-auditor's responsibility.
 
 <br clear="all">
 
-## What is being built
+## How to read this repository
 
-A software factory in BAND Desktop: at least three coding-agent seats (each a separate
-Claude Code or Codex session on the participant's machine) that plan work, implement it, hand off
-evidence and independently check results. The factory builds a wallet/payments service
-(the `pocketful` track) one stage at a time.
-
-Authoritative rules: https://github.com/band-ai/dark-factory-wearedevs/blob/main/docs/participant-guide.md
-
-## Scoring (what to optimise)
-
-| Weight | Criterion | Read from |
+| Path | What it is | Written by |
 |---|---|---|
-| 50% | **Factory** — mandates are generic (another team could point them at a different problem); `FACTORY.md` is enough to stand it up: seat setup, design rationale, measured time and model spend, how bad work is caught and recovered | this repo |
-| 25% | **Agent teamwork** — seats shared the work, review changed something, handoffs carried the whole task; the only human input per stage is the dispatch message | `room.json` + git history |
-| 25% | **App** — what the factory built; UI quality matters from stage 2 | harness suites |
+| [FACTORY.md](FACTORY.md) | how to stand the factory up, why it is built this way, measured time and cost, how it catches bad work, what failed | operator |
+| `mandates/` | one generic mandate per seat; the first lines name its harness and model | operator |
+| [docs/decisions/](docs/decisions/) | ADR-001 (keep the expensive spec-auditor), ADR-002 (a second model family) | operator |
+| `tools/` | measurement script, list prices, seat watchdog, usage-window kicker | operator |
+| `room.json` | the BAND room of the submitted run, downloaded unchanged | BAND |
+| `stage-1/` … `stage-4/` | the service, one complete copy per stage, each with `Dockerfile` and `RUN.md` | implementer |
+| `ledger/` | requirements ledgers and fault-seeding tables per stage | spec-auditor |
+| `audit/` | the auditor's verdicts, probes and seeding results | spec-auditor |
+| `reviewer/`, `verification/` | the reviewer's verdicts, reference models, probes | reviewer |
+| `customer/` | journeys and screenshots at desktop and phone width | customer |
+| `cross-audit/` | the Codex seat's atomized requirements, probes, evidence and verdicts | cross-auditor |
+| `coordinator/final-report.md` | the coordinator's closing report: accepts per stage, rejects and fixes, rulings, open limitation | coordinator |
+| `docs/crew/` | the mascot images on this page | operator |
 
-A complete `stage-1/` alone makes the entry eligible. Goal: strong mandates + clean stage-1
-(stage-2 if time allows) + honest `FACTORY.md` + a video that shows the room working.
+The Git history shows the same split: each seat commits under its own name. Two commits after
+the run are the operator's and are explained in FACTORY.md section 8.
 
-## Disqualifiers (never break these)
-
-- A mandate that names track-specific detail: endpoint paths, field names, error codes,
-  fixture ids. `python -m harness check` scans `mandates/` against the organisers' vocabulary
-  list. Track detail goes only into the task message pasted into the room.
-- Hand-written code. Only code produced through the BAND room counts.
-- Code written to the shipped tests (only 79% of stage-1 checks are shipped; judges run the full set).
-- A video without the BAND Desktop room recording.
-- A `stage-1/` that does not build and serve from a clean container (no outbound network at run time,
-  2 vCPU, 2 GiB, healthy within 60 s, `PORT` env, `GET /health`, `POST /_test/reset`).
-- Any human steering in the submitted run: no "looks good, continue", no reruns, no approvals.
-
-## Repository layout required at submission
-
-```
-README.md          team, track, how to read this repository
-FACTORY.md         seats, design choices, measured costs, failure handling
-mandates/          one .md per seat, named after the seat as BAND shows it (>= 3);
-                   first lines:  Harness: Claude Code  /  Model: <exact model id>
-room.json          the room export downloaded from BAND
-stage-1/           Dockerfile, RUN.md, source  (no .git inside)
-stage-2/ ...       each a complete service = previous stage carried forward + extended
-```
-
-## Workspace on the participant's Mac (local only)
-
-```
-~/Desktop/dark-factory/dark-factory-wearedevs   kickoff package: specs, shipped tests, harness (.venv ready)
-~/Desktop/dark-factory/band-work/result         this repository
-~/Desktop/dark-factory/band-work/checks         harness run outputs
-```
-
-Check a stage (host mode while iterating, isolated mode for the final check):
+## Reproduce the checks
 
 ```sh
-cd ~/Desktop/dark-factory/dark-factory-wearedevs && . .venv/bin/activate
-python -m harness run --track pocketful --repo ../band-work/result --stage 1 --out ../band-work/checks/s1-01
-python -m harness run --track pocketful --repo ../band-work/result --stage 1 --mode isolated --out ../band-work/checks/s1-final
-python -m harness check --repo ../band-work/result --track pocketful
+git clone <this repository> result
+git clone https://github.com/band-ai/dark-factory-wearedevs && cd dark-factory-wearedevs
+python3 -m venv .venv && . .venv/bin/activate && python -m pip install -r harness/requirements.txt
+python -m harness check ../result --track pocketful
+python -m harness run --track pocketful --repo ../result --stage 4 --mode isolated --out ../checks/final
+python3 ../result/tools/factory_numbers.py --help   # the spend, time and verdict tables
 ```
 
-## Plan
-
-1. **Setup (local):** Docker Desktop, BAND account + BAND Desktop + Claude Code plugin, lablab enrol, BAND Discord.
-2. **Factory design (this repo, can be done in a cloud session):** write `mandates/` for a
-   coordinator, an implementer, an independent reviewer that runs the checks itself, and a
-   spec auditor that lists what the shipped checks never asked for; write the `FACTORY.md`
-   skeleton with placeholders for measured costs.
-3. **Practice (local):** run the factory on the unscored `toy` track in a scratch room and a scratch
-   repo; fix mandates until the seats hand off and reject correctly without a human.
-4. **Final dark run (local):** fresh room + this repo; dispatch stage 1 (then 2) with the full spec
-   pasted in; do not intervene. Export `room.json`. Run the isolated harness check.
-5. **Submission:** rewrite this README, finish `FACTORY.md` with real numbers, record the video
-   (room recording + walkthrough), make the repo public, submit on lablab.
-
-## Division of labour
-
-- Cloud session: everything that is a file in this repository (mandates, FACTORY.md, README, notes).
-- Local session: BAND Desktop, seats, Docker, harness runs, the final run, the video.
+The video of the room working is attached to the lablab submission. Authoritative rules:
+https://github.com/band-ai/dark-factory-wearedevs/blob/main/docs/participant-guide.md
