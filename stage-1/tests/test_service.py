@@ -186,6 +186,13 @@ class Strictness(Base):
         self.assertEqual(call("POST", "/payments", raw=b % "1.0", token=self.ada, key="K2")[0], 201)
         self.assertEqual(call("POST", "/payments", raw=b % "1", token=self.ada, key="K2")[0], 200)
 
+    def test_trailing_zeros_are_the_same_value(self):
+        b = '{"to_handle":"bob","amount":1,"x":%s}'
+        self.assertEqual(call("POST", "/payments", raw=b % "1.5", token=self.ada, key="TZ")[0], 201)
+        self.assertEqual(call("POST", "/payments", raw=b % "1.50", token=self.ada, key="TZ")[0], 200)
+        self.assertEqual(call("POST", "/payments", raw=b % "15e-1", token=self.ada, key="TZ")[0], 200)
+        self.assertEqual(call("POST", "/payments", raw=b % "1.51", token=self.ada, key="TZ")[0], 409)
+
     def test_huge_integers(self):
         big = "9" * 5000
         for path, body in (("/payments", '{"to_handle":"bob","amount":%s}'), ("/requests", '{"payer_handle":"bob","amount":%s}'),

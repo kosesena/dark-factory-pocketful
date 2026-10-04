@@ -209,7 +209,9 @@ def authenticate(req):
 
 def _norm(v):
     if isinstance(v, Decimal):
-        return int(v) if v == v.to_integral_value() and abs(v) < 10 ** 30 else str(v)
+        if v == v.to_integral_value() and abs(v) < 10 ** 30:
+            return int(v)
+        return format(v.normalize(), "f")  # 1.5 and 1.50 are the same JSON value
     if isinstance(v, dict):
         return {k: _norm(x) for k, x in v.items()}
     if isinstance(v, list):
