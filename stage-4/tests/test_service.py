@@ -1502,6 +1502,8 @@ class Ledger(unittest.TestCase):
                   lambda sn: sn.__setitem__("opening_balance", sn["opening_balance"] + 1),
                   lambda sn: sn.__setitem__("closing_balance", sn["closing_balance"] + 1),
                   lambda sn: sn.__setitem__("taken_seq", 0),
+                  lambda sn: sn.__setitem__("taken_seq", 10 ** 9),
+                  lambda sn: sn.__setitem__("taken_ts", sn["taken_ts"] + 10 ** 7),
                   lambda sn: sn.__setitem__("taken_ts", sn["taken_ts"] - 1e9),
                   lambda sn: sn.pop("taken_ts"),
                   lambda sn: sn["echo"].__setitem__("known_at", "2000-01-01T00:00:00+00:00")):
