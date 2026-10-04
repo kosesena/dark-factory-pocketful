@@ -1,0 +1,1055 @@
+[
+ {
+  "id": "J00",
+  "requirement": "baseline: unmodified copy (must be caught by nothing)",
+  "file": "refunds.py",
+  "old": "def refunded_total(s, pid):",
+  "new": "def refunded_total(s, pid):",
+  "fails": {
+   "impl": [],
+   "reviewer:probes_s4.py": [],
+   "reviewer:model": [],
+   "customer:journey_stage4_api.py": [],
+   "customer:journey_stage4_import.py": [],
+   "customer:journey_stage4_receipts.py": [],
+   "cross:probe_stage4.py": [
+    "{\"probe\": \"migration_import-uncaught\", \"passed\": false, \"detail\": \"'token'\"}",
+    "{\"probe\": \"reset\", \"passed\": false, \"detail\": {\"status\": 0, \"body\": {\"transport_"
+   ],
+   "cross:probe_stage4_import.py": [],
+   "cross:probe_stage4_receipt_links.py": [],
+   "auditor": [],
+   "shipped": []
+  },
+  "caught_by": [],
+  "new_fails": {}
+ },
+ {
+  "id": "J01",
+  "requirement": "S4-2 only the original receiver may refund",
+  "file": "refunds.py",
+  "old": "if p[\"to_user_id\"] != user[\"id\"]:",
+  "new": "if user[\"id\"] not in (p[\"to_user_id\"], p[\"from_user_id\"]):",
+  "fails": {
+   "impl": [
+    "(failures=1)",
+    "exit"
+   ],
+   "reviewer:probes_s4.py": [
+    "other payments carry refund_of null  ->",
+    "refund exactly remaining corrected amount  -> 422",
+    "sender cannot refund -> 403  -> got 201 {'payment_id'"
+   ],
+   "reviewer:model": [],
+   "customer:journey_stage4_api.py": [
+    "cumulative exact ok",
+    "fully refunded further 422",
+    "sender can't refund 403"
+   ],
+   "customer:journey_stage4_import.py": [
+    "exit"
+   ],
+   "customer:journey_stage4_receipts.py": [],
+   "cross:probe_stage4.py": [
+    "{\"probe\": \"correct-increase-capacity\", \"passed\": false, \"detail\": {\"status\": 409",
+    "{\"probe\": \"correct-to-refunded\", \"passed\": false, \"detail\": {\"status\": 422, \"bod",
+    "{\"probe\": \"migration_import-uncaught\", \"passed\": false, \"detail\": \"'token'\"}",
+    "{\"probe\": \"refund-auth-a\", \"passed\": false, \"detail\": {\"status\": 201, \"body\": {\"",
+    "{\"probe\": \"refund-cumulative-exceeds\", \"passed\": false, \"detail\": {\"status\": 201",
+    "{\"probe\": \"refund-current-corrected-cap\", \"passed\": false, \"detail\": {\"status\": ",
+    "{\"probe\": \"refund-new-capacity\", \"passed\": false, \"detail\": {\"status\": 409, \"bod",
+    "{\"probe\": \"reset\", \"passed\": false, \"detail\": {\"status\": 0, \"body\": {\"transport_"
+   ],
+   "cross:probe_stage4_import.py": [],
+   "cross:probe_stage4_receipt_links.py": [],
+   "auditor": [
+    "S4-1/2/4 refund auth, key and amount validation"
+   ],
+   "shipped": []
+  },
+  "caught_by": [
+   "auditor",
+   "cross",
+   "customer",
+   "impl",
+   "reviewer"
+  ],
+  "new_fails": {
+   "impl": [
+    "(failures=1)",
+    "exit"
+   ],
+   "reviewer:probes_s4.py": [
+    "other payments carry refund_of null  ->",
+    "refund exactly remaining corrected amount  -> 422",
+    "sender cannot refund -> 403  -> got 201 {'payment_id'"
+   ],
+   "customer:journey_stage4_api.py": [
+    "cumulative exact ok",
+    "fully refunded further 422",
+    "sender can't refund 403"
+   ],
+   "customer:journey_stage4_import.py": [
+    "exit"
+   ],
+   "cross:probe_stage4.py": [
+    "{\"probe\": \"correct-increase-capacity\", \"passed\": false, \"detail\": {\"status\": 409",
+    "{\"probe\": \"correct-to-refunded\", \"passed\": false, \"detail\": {\"status\": 422, \"bod",
+    "{\"probe\": \"refund-auth-a\", \"passed\": false, \"detail\": {\"status\": 201, \"body\": {\"",
+    "{\"probe\": \"refund-cumulative-exceeds\", \"passed\": false, \"detail\": {\"status\": 201",
+    "{\"probe\": \"refund-current-corrected-cap\", \"passed\": false, \"detail\": {\"status\": ",
+    "{\"probe\": \"refund-new-capacity\", \"passed\": false, \"detail\": {\"status\": 409, \"bod"
+   ],
+   "auditor": [
+    "S4-1/2/4 refund auth, key and amount validation"
+   ]
+  }
+ },
+ {
+  "id": "J02",
+  "requirement": "S4-3 refunds of refunds give invalid_refund_target",
+  "file": "refunds.py",
+  "old": "if p.get(\"refund_of\") is not None:\n            raise ApiError(422, \"invalid_refund_target\"",
+  "new": "if False:\n            raise ApiError(422, \"invalid_refund_target\"",
+  "fails": {
+   "impl": [
+    "(errors=1)",
+    "exit",
+    "test_refund_rules"
+   ],
+   "reviewer:probes_s4.py": [
+    "other payments carry refund_of null  ->",
+    "refund exactly remaining corrected amount  -> 422",
+    "sender cannot refund -> 403  -> got 201 {'payment_id'"
+   ],
+   "reviewer:model": [],
+   "customer:journey_stage4_api.py": [
+    "cumulative exact ok",
+    "fully refunded further 422",
+    "sender can't refund 403"
+   ],
+   "customer:journey_stage4_import.py": [],
+   "customer:journey_stage4_receipts.py": [],
+   "cross:probe_stage4.py": [
+    "{\"probe\": \"correct-increase-capacity\", \"passed\": false, \"detail\": {\"status\": 409",
+    "{\"probe\": \"correct-to-refunded\", \"passed\": false, \"detail\": {\"status\": 422, \"bod",
+    "{\"probe\": \"migration_import-uncaught\", \"passed\": false, \"detail\": \"'token'\"}",
+    "{\"probe\": \"refund-auth-a\", \"passed\": false, \"detail\": {\"status\": 201, \"body\": {\"",
+    "{\"probe\": \"refund-cumulative-exceeds\", \"passed\": false, \"detail\": {\"status\": 201",
+    "{\"probe\": \"refund-current-corrected-cap\", \"passed\": false, \"detail\": {\"status\": ",
+    "{\"probe\": \"refund-new-capacity\", \"passed\": false, \"detail\": {\"status\": 409, \"bod",
+    "{\"probe\": \"reset\", \"passed\": false, \"detail\": {\"status\": 0, \"body\": {\"transport_"
+   ],
+   "cross:probe_stage4_import.py": [],
+   "cross:probe_stage4_receipt_links.py": [],
+   "auditor": [
+    "S4-1/2/4 refund auth, key and amount validation"
+   ],
+   "shipped": []
+  },
+  "caught_by": [
+   "auditor",
+   "cross",
+   "customer",
+   "impl",
+   "reviewer"
+  ],
+  "new_fails": {
+   "impl": [
+    "(errors=1)",
+    "exit",
+    "test_refund_rules"
+   ],
+   "reviewer:probes_s4.py": [
+    "other payments carry refund_of null  ->",
+    "refund exactly remaining corrected amount  -> 422",
+    "sender cannot refund -> 403  -> got 201 {'payment_id'"
+   ],
+   "customer:journey_stage4_api.py": [
+    "cumulative exact ok",
+    "fully refunded further 422",
+    "sender can't refund 403"
+   ],
+   "cross:probe_stage4.py": [
+    "{\"probe\": \"correct-increase-capacity\", \"passed\": false, \"detail\": {\"status\": 409",
+    "{\"probe\": \"correct-to-refunded\", \"passed\": false, \"detail\": {\"status\": 422, \"bod",
+    "{\"probe\": \"refund-auth-a\", \"passed\": false, \"detail\": {\"status\": 201, \"body\": {\"",
+    "{\"probe\": \"refund-cumulative-exceeds\", \"passed\": false, \"detail\": {\"status\": 201",
+    "{\"probe\": \"refund-current-corrected-cap\", \"passed\": false, \"detail\": {\"status\": ",
+    "{\"probe\": \"refund-new-capacity\", \"passed\": false, \"detail\": {\"status\": 409, \"bod"
+   ],
+   "auditor": [
+    "S4-1/2/4 refund auth, key and amount validation"
+   ]
+  }
+ },
+ {
+  "id": "J03",
+  "requirement": "S4-5 refunds are capped cumulatively",
+  "file": "refunds.py",
+  "old": "if refunded_total(s, pid) + v > p[\"revisions\"][-1][\"amount\"]:",
+  "new": "if v > p[\"revisions\"][-1][\"amount\"]:",
+  "fails": {
+   "impl": [
+    "(failures=1, errors=2)",
+    "exit",
+    "test_correction_cannot_go_below_refunded",
+    "test_refund_rules"
+   ],
+   "reviewer:probes_s4.py": [
+    "cumulative refunds over amount -> 422  -> got 409 {'error'",
+    "refund over corrected amount -> 422  -> got 409 {'error'"
+   ],
+   "reviewer:model": [
+    "exit"
+   ],
+   "customer:journey_stage4_api.py": [
+    "25 concurrent refunds of 100/1000",
+    "cumulative exceed 422",
+    "fully refunded further 422",
+    "refund limited by corrected amount"
+   ],
+   "customer:journey_stage4_import.py": [
+    "refund cumulative retained"
+   ],
+   "customer:journey_stage4_receipts.py": [],
+   "cross:probe_stage4.py": [
+    "{\"probe\": \"migration_import-uncaught\", \"passed\": false, \"detail\": \"'token'\"}",
+    "{\"probe\": \"refund-capacity-concurrent\", \"passed\": false, \"detail\": null}",
+    "{\"probe\": \"refund-cumulative-exceeds\", \"passed\": false, \"detail\": {\"status\": 201",
+    "{\"probe\": \"refund-current-corrected-cap\", \"passed\": false, \"detail\": {\"status\": ",
+    "{\"probe\": \"refund-new-capacity\", \"passed\": false, \"detail\": {\"status\": 409, \"bod",
+    "{\"probe\": \"reset\", \"passed\": false, \"detail\": {\"status\": 0, \"body\": {\"transport_"
+   ],
+   "cross:probe_stage4_import.py": [],
+   "cross:probe_stage4_receipt_links.py": [],
+   "auditor": [
+    "S4-5/15/13 cap follows corrections; correction below refunded total refused",
+    "S4-5/6/10/11 refund shape, cumulative cap, refund_of null elsewhere, activity and statemen",
+    "S4-7/12 refund idempotency"
+   ],
+   "shipped": []
+  },
+  "caught_by": [
+   "auditor",
+   "cross",
+   "customer",
+   "impl",
+   "reviewer"
+  ],
+  "new_fails": {
+   "impl": [
+    "(failures=1, errors=2)",
+    "exit",
+    "test_correction_cannot_go_below_refunded",
+    "test_refund_rules"
+   ],
+   "reviewer:probes_s4.py": [
+    "cumulative refunds over amount -> 422  -> got 409 {'error'",
+    "refund over corrected amount -> 422  -> got 409 {'error'"
+   ],
+   "reviewer:model": [
+    "exit"
+   ],
+   "customer:journey_stage4_api.py": [
+    "25 concurrent refunds of 100/1000",
+    "cumulative exceed 422",
+    "fully refunded further 422",
+    "refund limited by corrected amount"
+   ],
+   "customer:journey_stage4_import.py": [
+    "refund cumulative retained"
+   ],
+   "cross:probe_stage4.py": [
+    "{\"probe\": \"refund-capacity-concurrent\", \"passed\": false, \"detail\": null}",
+    "{\"probe\": \"refund-cumulative-exceeds\", \"passed\": false, \"detail\": {\"status\": 201",
+    "{\"probe\": \"refund-current-corrected-cap\", \"passed\": false, \"detail\": {\"status\": ",
+    "{\"probe\": \"refund-new-capacity\", \"passed\": false, \"detail\": {\"status\": 409, \"bod"
+   ],
+   "auditor": [
+    "S4-5/15/13 cap follows corrections; correction below refunded total refused",
+    "S4-5/6/10/11 refund shape, cumulative cap, refund_of null elsewhere, activity and statemen",
+    "S4-7/12 refund idempotency"
+   ]
+  }
+ },
+ {
+  "id": "J04",
+  "requirement": "S4-5 the cap is the current corrected amount",
+  "file": "refunds.py",
+  "old": "+ v > p[\"revisions\"][-1][\"amount\"]:",
+  "new": "+ v > p[\"revisions\"][0][\"amount\"]:",
+  "fails": {
+   "impl": [
+    "(errors=2)",
+    "exit",
+    "test_correction_cannot_go_below_refunded",
+    "test_settlement_members"
+   ],
+   "reviewer:probes_s4.py": [
+    "refund of settlement member allowed  -> got 201 {'payment_id'",
+    "refund over corrected amount -> 422  -> got 409 {'error'"
+   ],
+   "reviewer:model": [
+    "exit"
+   ],
+   "customer:journey_stage4_api.py": [
+    "refund limited by corrected amount",
+    "refund up to corrected amount ok"
+   ],
+   "customer:journey_stage4_import.py": [
+    "exit"
+   ],
+   "customer:journey_stage4_receipts.py": [],
+   "cross:probe_stage4.py": [
+    "{\"probe\": \"migration_import-uncaught\", \"passed\": false, \"detail\": \"'token'\"}",
+    "{\"probe\": \"refund-cumulative-exceeds\", \"passed\": false, \"detail\": {\"status\": 201",
+    "{\"probe\": \"refund-current-corrected-cap\", \"passed\": false, \"detail\": {\"status\": ",
+    "{\"probe\": \"refund-new-capacity\", \"passed\": false, \"detail\": {\"status\": 409, \"bod",
+    "{\"probe\": \"reset\", \"passed\": false, \"detail\": {\"status\": 0, \"body\": {\"transport_"
+   ],
+   "cross:probe_stage4_import.py": [],
+   "cross:probe_stage4_receipt_links.py": [],
+   "auditor": [
+    "S4-5/15/13 cap follows corrections; correction below refunded total refused"
+   ],
+   "shipped": []
+  },
+  "caught_by": [
+   "auditor",
+   "cross",
+   "customer",
+   "impl",
+   "reviewer"
+  ],
+  "new_fails": {
+   "impl": [
+    "(errors=2)",
+    "exit",
+    "test_correction_cannot_go_below_refunded",
+    "test_settlement_members"
+   ],
+   "reviewer:probes_s4.py": [
+    "refund of settlement member allowed  -> got 201 {'payment_id'",
+    "refund over corrected amount -> 422  -> got 409 {'error'"
+   ],
+   "reviewer:model": [
+    "exit"
+   ],
+   "customer:journey_stage4_api.py": [
+    "refund limited by corrected amount",
+    "refund up to corrected amount ok"
+   ],
+   "customer:journey_stage4_import.py": [
+    "exit"
+   ],
+   "cross:probe_stage4.py": [
+    "{\"probe\": \"refund-cumulative-exceeds\", \"passed\": false, \"detail\": {\"status\": 201",
+    "{\"probe\": \"refund-current-corrected-cap\", \"passed\": false, \"detail\": {\"status\": ",
+    "{\"probe\": \"refund-new-capacity\", \"passed\": false, \"detail\": {\"status\": 409, \"bod"
+   ],
+   "auditor": [
+    "S4-5/15/13 cap follows corrections; correction below refunded total refused"
+   ]
+  }
+ },
+ {
+  "id": "J05",
+  "requirement": "S4-8 a refund is funded from available money, not held",
+  "file": "refunds.py",
+  "old": "        return pay_view(s, move_money(s, user, s.users[p[\"from_user_id\"]], v, p[\"note\"], p[\"visibility\"],\n                                      refund_of=pid))",
+  "new": "        if user[\"balance\"] < v:\n            raise ApiError(409, \"insufficient_funds\", \"insufficient funds\")\n        return pay_view(s, move_money(s, user, s.users[p[\"from_user_id\"]], v, p[\"note\"], p[\"visibility\"],\n                                      refund_of=pid, check_funds=False))",
+  "fails": {
+   "impl": [
+    "(errors=1)",
+    "exit",
+    "test_available_funds_and_non_effects"
+   ],
+   "reviewer:probes_s4.py": [
+    "refund beyond available -> insufficient_funds  -> got 201 {'payment_id'",
+    "refused refund changes nothing  -> {'user_id'"
+   ],
+   "reviewer:model": [],
+   "customer:journey_stage4_api.py": [
+    "correction debit checked against available",
+    "refund 500 ok",
+    "refund can't use held funds"
+   ],
+   "customer:journey_stage4_import.py": [],
+   "customer:journey_stage4_receipts.py": [],
+   "cross:probe_stage4.py": [
+    "{\"probe\": \"failed-refund-key-reusable\", \"passed\": false, \"detail\": {\"status\": 20",
+    "{\"probe\": \"migration_import-uncaught\", \"passed\": false, \"detail\": \"'token'\"}",
+    "{\"probe\": \"refund-insufficient-atomic\", \"passed\": false, \"detail\": null}",
+    "{\"probe\": \"refund-uses-available\", \"passed\": false, \"detail\": {\"status\": 201, \"b",
+    "{\"probe\": \"reset\", \"passed\": false, \"detail\": {\"status\": 0, \"body\": {\"transport_"
+   ],
+   "cross:probe_stage4_import.py": [],
+   "cross:probe_stage4_receipt_links.py": [],
+   "auditor": [
+    "S4-8/16 refunds and correction debits use available funds, not held"
+   ],
+   "shipped": []
+  },
+  "caught_by": [
+   "auditor",
+   "cross",
+   "customer",
+   "impl",
+   "reviewer"
+  ],
+  "new_fails": {
+   "impl": [
+    "(errors=1)",
+    "exit",
+    "test_available_funds_and_non_effects"
+   ],
+   "reviewer:probes_s4.py": [
+    "refund beyond available -> insufficient_funds  -> got 201 {'payment_id'",
+    "refused refund changes nothing  -> {'user_id'"
+   ],
+   "customer:journey_stage4_api.py": [
+    "correction debit checked against available",
+    "refund 500 ok",
+    "refund can't use held funds"
+   ],
+   "cross:probe_stage4.py": [
+    "{\"probe\": \"failed-refund-key-reusable\", \"passed\": false, \"detail\": {\"status\": 20",
+    "{\"probe\": \"refund-insufficient-atomic\", \"passed\": false, \"detail\": null}",
+    "{\"probe\": \"refund-uses-available\", \"passed\": false, \"detail\": {\"status\": 201, \"b"
+   ],
+   "auditor": [
+    "S4-8/16 refunds and correction debits use available funds, not held"
+   ]
+  }
+ },
+ {
+  "id": "J06",
+  "requirement": "S4-15 a single correction cannot go below the refunded total",
+  "file": "history.py",
+  "old": "if amount < refunded_total(s, pid):",
+  "new": "if amount < 0:",
+  "fails": {
+   "impl": [
+    "(failures=1, errors=1)",
+    "exit",
+    "test_correction_cannot_go_below_refunded"
+   ],
+   "reviewer:probes_s4.py": [
+    "correction below refunded -> 422  -> got 409 {'error'"
+   ],
+   "reviewer:model": [],
+   "customer:journey_stage4_api.py": [
+    "correct below refunded 422 refund_exceeds_payment",
+    "correct to exactly refunded ok"
+   ],
+   "customer:journey_stage4_import.py": [],
+   "customer:journey_stage4_receipts.py": [],
+   "cross:probe_stage4.py": [
+    "{\"probe\": \"correct-below-refunded\", \"passed\": false, \"detail\": {\"status\": 201, \"",
+    "{\"probe\": \"correct-to-refunded\", \"passed\": false, \"detail\": {\"status\": 409, \"bod",
+    "{\"probe\": \"migration_import-uncaught\", \"passed\": false, \"detail\": \"'token'\"}",
+    "{\"probe\": \"reset\", \"passed\": false, \"detail\": {\"status\": 0, \"body\": {\"transport_"
+   ],
+   "cross:probe_stage4_import.py": [],
+   "cross:probe_stage4_receipt_links.py": [],
+   "auditor": [
+    "S4-5/15/13 cap follows corrections; correction below refunded total refused"
+   ],
+   "shipped": []
+  },
+  "caught_by": [
+   "auditor",
+   "cross",
+   "customer",
+   "impl",
+   "reviewer"
+  ],
+  "new_fails": {
+   "impl": [
+    "(failures=1, errors=1)",
+    "exit",
+    "test_correction_cannot_go_below_refunded"
+   ],
+   "reviewer:probes_s4.py": [
+    "correction below refunded -> 422  -> got 409 {'error'"
+   ],
+   "customer:journey_stage4_api.py": [
+    "correct below refunded 422 refund_exceeds_payment",
+    "correct to exactly refunded ok"
+   ],
+   "cross:probe_stage4.py": [
+    "{\"probe\": \"correct-below-refunded\", \"passed\": false, \"detail\": {\"status\": 201, \"",
+    "{\"probe\": \"correct-to-refunded\", \"passed\": false, \"detail\": {\"status\": 409, \"bod"
+   ],
+   "auditor": [
+    "S4-5/15/13 cap follows corrections; correction below refunded total refused"
+   ]
+  }
+ },
+ {
+  "id": "J07",
+  "requirement": "S4-14 a refund payment cannot be corrected (single)",
+  "file": "history.py",
+  "old": "or p.get(\"refund_of\") is not None):",
+  "new": "):",
+  "fails": {
+   "impl": [
+    "(errors=1)",
+    "exit",
+    "test_refund_rules"
+   ],
+   "reviewer:probes_s4.py": [
+    "refund payment cannot be corrected  -> got 201 {'payment_id'"
+   ],
+   "reviewer:model": [
+    "exit"
+   ],
+   "customer:journey_stage4_api.py": [
+    "correct refund payment 422 linked_payment_immutable"
+   ],
+   "customer:journey_stage4_import.py": [
+    "refund payment still immutable after import"
+   ],
+   "customer:journey_stage4_receipts.py": [],
+   "cross:probe_stage4.py": [
+    "{\"probe\": \"correct-refund-immutable\", \"passed\": false, \"detail\": {\"status\": 201,",
+    "{\"probe\": \"migration_import-uncaught\", \"passed\": false, \"detail\": \"'token'\"}",
+    "{\"probe\": \"refund-statement-opposite\", \"passed\": false, \"detail\": null}",
+    "{\"probe\": \"reset\", \"passed\": false, \"detail\": {\"status\": 0, \"body\": {\"transport_"
+   ],
+   "cross:probe_stage4_import.py": [],
+   "cross:probe_stage4_receipt_links.py": [],
+   "auditor": [
+    "S4-3/14/21 refund targets"
+   ],
+   "shipped": []
+  },
+  "caught_by": [
+   "auditor",
+   "cross",
+   "customer",
+   "impl",
+   "reviewer"
+  ],
+  "new_fails": {
+   "impl": [
+    "(errors=1)",
+    "exit",
+    "test_refund_rules"
+   ],
+   "reviewer:probes_s4.py": [
+    "refund payment cannot be corrected  -> got 201 {'payment_id'"
+   ],
+   "reviewer:model": [
+    "exit"
+   ],
+   "customer:journey_stage4_api.py": [
+    "correct refund payment 422 linked_payment_immutable"
+   ],
+   "customer:journey_stage4_import.py": [
+    "refund payment still immutable after import"
+   ],
+   "cross:probe_stage4.py": [
+    "{\"probe\": \"correct-refund-immutable\", \"passed\": false, \"detail\": {\"status\": 201,",
+    "{\"probe\": \"refund-statement-opposite\", \"passed\": false, \"detail\": null}"
+   ],
+   "auditor": [
+    "S4-3/14/21 refund targets"
+   ]
+  }
+ },
+ {
+  "id": "J08",
+  "requirement": "S4-21 batches cannot correct refunds",
+  "file": "batches.py",
+  "old": "if p.get(\"authorization_id\") is not None or p.get(\"refund_of\") is not None:",
+  "new": "if p.get(\"authorization_id\") is not None:",
+  "fails": {
+   "impl": [
+    "(errors=1)",
+    "exit",
+    "test_item_error_order"
+   ],
+   "reviewer:probes_s4.py": [
+    "batch refund -> 422  -> got 201 {'correction_batch_id'",
+    "rejected batches changed nothing  -> {'a'"
+   ],
+   "reviewer:model": [],
+   "customer:journey_stage4_api.py": [
+    "batch refund immutable"
+   ],
+   "customer:journey_stage4_import.py": [],
+   "customer:journey_stage4_receipts.py": [],
+   "cross:probe_stage4.py": [
+    "{\"probe\": \"migration_import-uncaught\", \"passed\": false, \"detail\": \"'token'\"}",
+    "{\"probe\": \"reset\", \"passed\": false, \"detail\": {\"status\": 0, \"body\": {\"transport_"
+   ],
+   "cross:probe_stage4_import.py": [
+    "{\"probe\": \"batch-refund-immutable\", \"passed\": false, \"detail\": {\"status\": 201, \""
+   ],
+   "cross:probe_stage4_receipt_links.py": [],
+   "auditor": [
+    "S4-3/14/21 refund targets"
+   ],
+   "shipped": []
+  },
+  "caught_by": [
+   "auditor",
+   "cross",
+   "customer",
+   "impl",
+   "reviewer"
+  ],
+  "new_fails": {
+   "impl": [
+    "(errors=1)",
+    "exit",
+    "test_item_error_order"
+   ],
+   "reviewer:probes_s4.py": [
+    "batch refund -> 422  -> got 201 {'correction_batch_id'",
+    "rejected batches changed nothing  -> {'a'"
+   ],
+   "customer:journey_stage4_api.py": [
+    "batch refund immutable"
+   ],
+   "cross:probe_stage4_import.py": [
+    "{\"probe\": \"batch-refund-immutable\", \"passed\": false, \"detail\": {\"status\": 201, \""
+   ],
+   "auditor": [
+    "S4-3/14/21 refund targets"
+   ]
+  }
+ },
+ {
+  "id": "J09",
+  "requirement": "S4-22 correcting a settlement member needs every member",
+  "file": "batches.py",
+  "old": "if set(s.settlements[sid][\"payment_ids\"]) != {m[0] for m in members}:",
+  "new": "if False:",
+  "fails": {
+   "impl": [
+    "(errors=1)",
+    "exit",
+    "test_settlement_members"
+   ],
+   "reviewer:probes_s4.py": [
+    "exit"
+   ],
+   "reviewer:model": [],
+   "customer:journey_stage4_api.py": [
+    "incomplete_settlement 422",
+    "members different effective -> validation_failed",
+    "partial members incomplete",
+    "whole settlement w/ differing offset spelling -> 201"
+   ],
+   "customer:journey_stage4_import.py": [
+    "stage1",
+    "stage2",
+    "stage3"
+   ],
+   "customer:journey_stage4_receipts.py": [],
+   "cross:probe_stage4.py": [
+    "{\"probe\": \"incomplete-settlement\", \"passed\": false, \"detail\": {\"status\": 409, \"b",
+    "{\"probe\": \"migration_import-uncaught\", \"passed\": false, \"detail\": \"'token'\"}",
+    "{\"probe\": \"reset\", \"passed\": false, \"detail\": {\"status\": 0, \"body\": {\"transport_"
+   ],
+   "cross:probe_stage4_import.py": [],
+   "cross:probe_stage4_receipt_links.py": [],
+   "auditor": [
+    "S4-22/23/27/29/34 settlement members in batches; shared recorded_at; receipts unchanged",
+    "S4-24/25/26 combined affordability, precedence, rejected batch changes nothing",
+    "S4-3/14/21 refund targets",
+    "S4-36/37 stage-3 export imports"
+   ],
+   "shipped": []
+  },
+  "caught_by": [
+   "auditor",
+   "cross",
+   "customer",
+   "impl",
+   "reviewer"
+  ],
+  "new_fails": {
+   "impl": [
+    "(errors=1)",
+    "exit",
+    "test_settlement_members"
+   ],
+   "reviewer:probes_s4.py": [
+    "exit"
+   ],
+   "customer:journey_stage4_api.py": [
+    "incomplete_settlement 422",
+    "members different effective -> validation_failed",
+    "partial members incomplete",
+    "whole settlement w/ differing offset spelling -> 201"
+   ],
+   "customer:journey_stage4_import.py": [
+    "stage1",
+    "stage2",
+    "stage3"
+   ],
+   "cross:probe_stage4.py": [
+    "{\"probe\": \"incomplete-settlement\", \"passed\": false, \"detail\": {\"status\": 409, \"b"
+   ],
+   "auditor": [
+    "S4-22/23/27/29/34 settlement members in batches; shared recorded_at; receipts unchanged",
+    "S4-24/25/26 combined affordability, precedence, rejected batch changes nothing",
+    "S4-3/14/21 refund targets",
+    "S4-36/37 stage-3 export imports"
+   ]
+  }
+ },
+ {
+  "id": "J10",
+  "requirement": "S4-23 settlement members share one effective instant",
+  "file": "batches.py",
+  "old": "if len({m[1] for m in members}) != 1:",
+  "new": "if False:",
+  "fails": {
+   "impl": [
+    "(errors=1)",
+    "exit",
+    "test_settlement_members"
+   ],
+   "reviewer:probes_s4.py": [
+    "exit"
+   ],
+   "reviewer:model": [],
+   "customer:journey_stage4_api.py": [
+    "members different effective -> validation_failed",
+    "whole settlement w/ differing offset spelling -> 201"
+   ],
+   "customer:journey_stage4_import.py": [],
+   "customer:journey_stage4_receipts.py": [],
+   "cross:probe_stage4.py": [
+    "{\"probe\": \"combined-affordable-reversal\", \"passed\": false, \"detail\": {\"status\": ",
+    "{\"probe\": \"migration_import-uncaught\", \"passed\": false, \"detail\": \"'token'\"}",
+    "{\"probe\": \"reset\", \"passed\": false, \"detail\": {\"status\": 0, \"body\": {\"transport_",
+    "{\"probe\": \"settlement-different-effective\", \"passed\": false, \"detail\": {\"status\"",
+    "{\"probe\": \"settlements_and_net-uncaught\", \"passed\": false, \"detail\": \"'revisions"
+   ],
+   "cross:probe_stage4_import.py": [],
+   "cross:probe_stage4_receipt_links.py": [],
+   "auditor": [
+    "S4-22/23/27/29/34 settlement members in batches; shared recorded_at; receipts unchanged"
+   ],
+   "shipped": []
+  },
+  "caught_by": [
+   "auditor",
+   "cross",
+   "customer",
+   "impl",
+   "reviewer"
+  ],
+  "new_fails": {
+   "impl": [
+    "(errors=1)",
+    "exit",
+    "test_settlement_members"
+   ],
+   "reviewer:probes_s4.py": [
+    "exit"
+   ],
+   "customer:journey_stage4_api.py": [
+    "members different effective -> validation_failed",
+    "whole settlement w/ differing offset spelling -> 201"
+   ],
+   "cross:probe_stage4.py": [
+    "{\"probe\": \"combined-affordable-reversal\", \"passed\": false, \"detail\": {\"status\": ",
+    "{\"probe\": \"settlement-different-effective\", \"passed\": false, \"detail\": {\"status\"",
+    "{\"probe\": \"settlements_and_net-uncaught\", \"passed\": false, \"detail\": \"'revisions"
+   ],
+   "auditor": [
+    "S4-22/23/27/29/34 settlement members in batches; shared recorded_at; receipts unchanged"
+   ]
+  }
+ },
+ {
+  "id": "J11",
+  "requirement": "S4-16/25 batch debits are checked against available funds",
+  "file": "batches.py",
+  "old": "if d < 0 and available_of(s, s.users[uid]) + d < 0:",
+  "new": "if d < 0 and s.users[uid][\"balance\"] + d < 0:",
+  "fails": {
+   "impl": [
+    "(failures=2)",
+    "exit"
+   ],
+   "reviewer:probes_s4.py": [],
+   "reviewer:model": [],
+   "customer:journey_stage4_api.py": [],
+   "customer:journey_stage4_import.py": [],
+   "customer:journey_stage4_receipts.py": [],
+   "cross:probe_stage4.py": [
+    "{\"probe\": \"batch-current-before-historical\", \"passed\": false, \"detail\": {\"status",
+    "{\"probe\": \"migration_import-uncaught\", \"passed\": false, \"detail\": \"'token'\"}",
+    "{\"probe\": \"reset\", \"passed\": false, \"detail\": {\"status\": 0, \"body\": {\"transport_"
+   ],
+   "cross:probe_stage4_import.py": [],
+   "cross:probe_stage4_receipt_links.py": [],
+   "auditor": [],
+   "shipped": []
+  },
+  "caught_by": [
+   "cross",
+   "impl"
+  ],
+  "new_fails": {
+   "impl": [
+    "(failures=2)",
+    "exit"
+   ],
+   "cross:probe_stage4.py": [
+    "{\"probe\": \"batch-current-before-historical\", \"passed\": false, \"detail\": {\"status"
+   ]
+  }
+ },
+ {
+  "id": "J12",
+  "requirement": "S4-27 batch recorded_at strictly later than every member's previous",
+  "file": "batches.py",
+  "old": "rec_ts = max(now, last + 1e-6)",
+  "new": "rec_ts = now",
+  "fails": {
+   "impl": [],
+   "reviewer:probes_s4.py": [],
+   "reviewer:model": [],
+   "customer:journey_stage4_api.py": [],
+   "customer:journey_stage4_import.py": [],
+   "customer:journey_stage4_receipts.py": [],
+   "cross:probe_stage4.py": [
+    "{\"probe\": \"migration_import-uncaught\", \"passed\": false, \"detail\": \"'token'\"}",
+    "{\"probe\": \"reset\", \"passed\": false, \"detail\": {\"status\": 0, \"body\": {\"transport_"
+   ],
+   "cross:probe_stage4_import.py": [],
+   "cross:probe_stage4_receipt_links.py": [],
+   "auditor": [],
+   "shipped": []
+  },
+  "caught_by": [],
+  "new_fails": {}
+ },
+ {
+  "id": "J13",
+  "requirement": "S4-24 batches are checked for historical total/available",
+  "file": "batches.py",
+  "old": "if not history_ok(s, sorted(parties), override, now):",
+  "new": "if False:",
+  "fails": {
+   "impl": [
+    "(errors=1)",
+    "exit",
+    "test_history_failure_changes_nothing"
+   ],
+   "reviewer:probes_s4.py": [
+    "moving b's debit before its credit -> historical_overdraft  ->"
+   ],
+   "reviewer:model": [
+    "exit"
+   ],
+   "customer:journey_stage4_api.py": [
+    "batch historical_overdraft 409",
+    "same key retried w/ valid body is first use",
+    "state preserved + key reusable"
+   ],
+   "customer:journey_stage4_import.py": [
+    "exit"
+   ],
+   "customer:journey_stage4_receipts.py": [],
+   "cross:probe_stage4.py": [
+    "{\"probe\": \"batch-current-before-historical\", \"passed\": false, \"detail\": {\"status",
+    "{\"probe\": \"batch-held-atomic\", \"passed\": false, \"detail\": null}",
+    "{\"probe\": \"batch-historical-available\", \"passed\": false, \"detail\": {\"status\": 20",
+    "{\"probe\": \"batch-historical-net-valid\", \"passed\": false, \"detail\": {\"status\": 40",
+    "{\"probe\": \"batch-historical-overdraft\", \"passed\": false, \"detail\": {\"status\": 20",
+    "{\"probe\": \"batch-history-atomic\", \"passed\": false, \"detail\": null}",
+    "{\"probe\": \"migration_import-uncaught\", \"passed\": false, \"detail\": \"'token'\"}",
+    "{\"probe\": \"reset\", \"passed\": false, \"detail\": {\"status\": 0, \"body\": {\"transport_"
+   ],
+   "cross:probe_stage4_import.py": [],
+   "cross:probe_stage4_receipt_links.py": [],
+   "auditor": [
+    "S4-24/25/26 combined affordability, precedence, rejected batch changes nothing"
+   ],
+   "shipped": []
+  },
+  "caught_by": [
+   "auditor",
+   "cross",
+   "customer",
+   "impl",
+   "reviewer"
+  ],
+  "new_fails": {
+   "impl": [
+    "(errors=1)",
+    "exit",
+    "test_history_failure_changes_nothing"
+   ],
+   "reviewer:probes_s4.py": [
+    "moving b's debit before its credit -> historical_overdraft  ->"
+   ],
+   "reviewer:model": [
+    "exit"
+   ],
+   "customer:journey_stage4_api.py": [
+    "batch historical_overdraft 409",
+    "same key retried w/ valid body is first use",
+    "state preserved + key reusable"
+   ],
+   "customer:journey_stage4_import.py": [
+    "exit"
+   ],
+   "cross:probe_stage4.py": [
+    "{\"probe\": \"batch-current-before-historical\", \"passed\": false, \"detail\": {\"status",
+    "{\"probe\": \"batch-held-atomic\", \"passed\": false, \"detail\": null}",
+    "{\"probe\": \"batch-historical-available\", \"passed\": false, \"detail\": {\"status\": 20",
+    "{\"probe\": \"batch-historical-net-valid\", \"passed\": false, \"detail\": {\"status\": 40",
+    "{\"probe\": \"batch-historical-overdraft\", \"passed\": false, \"detail\": {\"status\": 20",
+    "{\"probe\": \"batch-history-atomic\", \"passed\": false, \"detail\": null}"
+   ],
+   "auditor": [
+    "S4-24/25/26 combined affordability, precedence, rejected batch changes nothing"
+   ]
+  }
+ },
+ {
+  "id": "J14",
+  "requirement": "S4-27 each batch revision exposes correction_batch_id",
+  "file": "batches.py",
+  "old": "\"reason\": reason, \"correction_batch_id\": bid}",
+  "new": "\"reason\": reason, \"correction_batch_id\": None}",
+  "fails": {
+   "impl": [
+    "(failures=4)",
+    "exit"
+   ],
+   "reviewer:probes_s4.py": [
+    "batch 201 shape  ->",
+    "member revisions expose batch id  -> {'revisions'"
+   ],
+   "reviewer:model": [],
+   "customer:journey_stage4_api.py": [
+    "batch 201 shape",
+    "revisions expose correction_batch_id"
+   ],
+   "customer:journey_stage4_import.py": [
+    "batch replay after import",
+    "refund cumulative retained",
+    "refund payment still immutable after import",
+    "refund replay after import",
+    "self import 204"
+   ],
+   "customer:journey_stage4_receipts.py": [
+    "genuine export imports",
+    "state still working"
+   ],
+   "cross:probe_stage4.py": [
+    "{\"probe\": \"batch-response\", \"passed\": false, \"detail\": {\"correction_batch_id\": \"",
+    "{\"probe\": \"migration_import-uncaught\", \"passed\": false, \"detail\": \"'token'\"}",
+    "{\"probe\": \"reset\", \"passed\": false, \"detail\": {\"status\": 0, \"body\": {\"transport_"
+   ],
+   "cross:probe_stage4_import.py": [],
+   "cross:probe_stage4_receipt_links.py": [
+    "{\"probe\": \"genuine-all-receipts-import\", \"passed\": false, \"detail\": {\"status\": 4"
+   ],
+   "auditor": [
+    "S4-22/23/27/29/34 settlement members in batches; shared recorded_at; receipts unchanged"
+   ],
+   "shipped": []
+  },
+  "caught_by": [
+   "auditor",
+   "cross",
+   "customer",
+   "impl",
+   "reviewer"
+  ],
+  "new_fails": {
+   "impl": [
+    "(failures=4)",
+    "exit"
+   ],
+   "reviewer:probes_s4.py": [
+    "batch 201 shape  ->",
+    "member revisions expose batch id  -> {'revisions'"
+   ],
+   "customer:journey_stage4_api.py": [
+    "batch 201 shape",
+    "revisions expose correction_batch_id"
+   ],
+   "customer:journey_stage4_import.py": [
+    "batch replay after import",
+    "refund cumulative retained",
+    "refund payment still immutable after import",
+    "refund replay after import",
+    "self import 204"
+   ],
+   "customer:journey_stage4_receipts.py": [
+    "genuine export imports",
+    "state still working"
+   ],
+   "cross:probe_stage4.py": [
+    "{\"probe\": \"batch-response\", \"passed\": false, \"detail\": {\"correction_batch_id\": \""
+   ],
+   "cross:probe_stage4_receipt_links.py": [
+    "{\"probe\": \"genuine-all-receipts-import\", \"passed\": false, \"detail\": {\"status\": 4"
+   ],
+   "auditor": [
+    "S4-22/23/27/29/34 settlement members in batches; shared recorded_at; receipts unchanged"
+   ]
+  }
+ },
+ {
+  "id": "J15",
+  "requirement": "S4-37 pre-stage-4 snapshots page in their original form",
+  "file": "history.py",
+  "old": "    if legacy:  # a snapshot taken before stage 4",
+  "new": "    if False:  # a snapshot taken before stage 4",
+  "fails": {
+   "impl": [
+    "(failures=1)",
+    "exit"
+   ],
+   "reviewer:probes_s4.py": [],
+   "reviewer:model": [],
+   "customer:journey_stage4_api.py": [],
+   "customer:journey_stage4_import.py": [
+    "stage3"
+   ],
+   "customer:journey_stage4_receipts.py": [],
+   "cross:probe_stage4.py": [
+    "{\"probe\": \"migration_import-uncaught\", \"passed\": false, \"detail\": \"'token'\"}",
+    "{\"probe\": \"reset\", \"passed\": false, \"detail\": {\"status\": 0, \"body\": {\"transport_"
+   ],
+   "cross:probe_stage4_import.py": [],
+   "cross:probe_stage4_receipt_links.py": [],
+   "auditor": [
+    "S4-36/37 stage-3 export imports"
+   ],
+   "shipped": []
+  },
+  "caught_by": [
+   "auditor",
+   "customer",
+   "impl"
+  ],
+  "new_fails": {
+   "impl": [
+    "(failures=1)",
+    "exit"
+   ],
+   "customer:journey_stage4_import.py": [
+    "stage3"
+   ],
+   "auditor": [
+    "S4-36/37 stage-3 export imports"
+   ]
+  }
+ }
+]

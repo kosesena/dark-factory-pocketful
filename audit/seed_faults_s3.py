@@ -171,7 +171,7 @@ def evidence(d, url, prev, tag):
     rc, out = run([VPY, mine, url, prev], ROOT)
     res["auditor"] = fails(out)
     rc, out = run(["/bin/sh", "-c", f". .venv/bin/activate && python -m harness run --track pocketful --base-url {url} "
-                   f"--previous-base-url {prev} --stages {STAGE} --out {CHECKS}/spec-auditor-seed{STAGE}-{tag}"], HARNESS)
+                   f"--previous-base-url {prev} --stages {STAGE} --out {CHECKS}/spec-auditor-seed{STAGE}-{tag}-{int(time.time())}"], HARNESS)
     res["shipped"] = set() if f"stage {STAGE}: pass" in out else {f"stage {STAGE} not pass"}
     return {k: sorted(v) for k, v in res.items()}
 
@@ -203,7 +203,7 @@ def main():
         subprocess.run(f"/Library/Developer/CommandLineTools/usr/bin/git -C {ROOT} archive {REV} | tar -x -C {SRCROOT}", shell=True, check=True)
     shutil.rmtree(EV, ignore_errors=True)
     os.makedirs(EV)
-    for f in glob.glob(os.path.join(ROOT, "customer", f"journey_stage{STAGE}_*.py")):
+    for f in glob.glob(os.path.join(ROOT, "customer", "journey_stage*.py")):
         shutil.copy(f, EV)
     for f in glob.glob(os.path.join(ROOT, "cross-audit", "probe_stage*.py")):
         shutil.copy(f, EV)
