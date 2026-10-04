@@ -1,0 +1,47 @@
+{
+  "probes": 3,
+  "passed": 1,
+  "failed": [
+    {
+      "probe": "same-amount-5000-import",
+      "passed": false,
+      "detail": {
+        "status": 0,
+        "body": {
+          "transport_error": "timed out"
+        }
+      }
+    },
+    {
+      "probe": "same-amount-5000-time",
+      "passed": false,
+      "detail": {
+        "seconds": 10.025664296998002
+      }
+    }
+  ],
+  "results": [
+    {
+      "probe": "reset",
+      "passed": true,
+      "detail": null
+    },
+    {
+      "probe": "same-amount-5000-import",
+      "passed": false,
+      "detail": {
+        "status": 0,
+        "body": {
+          "transport_error": "timed out"
+        }
+      }
+    },
+    {
+      "probe": "same-amount-5000-time",
+      "passed": false,
+      "detail": {
+        "seconds": 10.025664296998002
+      }
+    }
+  ]
+}

@@ -1,0 +1,667 @@
+{
+  "probes": 119,
+  "passed": 119,
+  "failed": [],
+  "results": [
+    {
+      "probe": "reset",
+      "passed": true,
+      "detail": null
+    },
+    {
+      "probe": "identity",
+      "passed": true,
+      "detail": null
+    },
+    {
+      "probe": "empty-feed",
+      "passed": true,
+      "detail": null
+    },
+    {
+      "probe": "no-held-ui",
+      "passed": true,
+      "detail": null
+    },
+    {
+      "probe": "excess-decimals-no-post",
+      "passed": true,
+      "detail": null
+    },
+    {
+      "probe": "ui-wallet-8450",
+      "passed": true,
+      "detail": null
+    },
+    {
+      "probe": "pay-preserves-values",
+      "passed": true,
+      "detail": null
+    },
+    {
+      "probe": "activity-visibility",
+      "passed": true,
+      "detail": null
+    },
+    {
+      "probe": "activity-parties",
+      "passed": true,
+      "detail": null
+    },
+    {
+      "probe": "activity-amount",
+      "passed": true,
+      "detail": null
+    },
+    {
+      "probe": "activity-note",
+      "passed": true,
+      "detail": null
+    },
+    {
+      "probe": "ui-wallet-8450",
+      "passed": true,
+      "detail": null
+    },
+    {
+      "probe": "repeat-pay-once",
+      "passed": true,
+      "detail": null
+    },
+    {
+      "probe": "ui-wallet-6900",
+      "passed": true,
+      "detail": null
+    },
+    {
+      "probe": "changed-field-new-payment",
+      "passed": true,
+      "detail": null
+    },
+    {
+      "probe": "request-ui-created",
+      "passed": true,
+      "detail": null
+    },
+    {
+      "probe": "outgoing-controls",
+      "passed": true,
+      "detail": null
+    },
+    {
+      "probe": "request-amount",
+      "passed": true,
+      "detail": null
+    },
+    {
+      "probe": "ui-request-pay",
+      "passed": true,
+      "detail": null
+    },
+    {
+      "probe": "ui-request-decline",
+      "passed": true,
+      "detail": null
+    },
+    {
+      "probe": "preview-exact",
+      "passed": true,
+      "detail": null
+    },
+    {
+      "probe": "split-created",
+      "passed": true,
+      "detail": null
+    },
+    {
+      "probe": "identity-every-route-/",
+      "passed": true,
+      "detail": null
+    },
+    {
+      "probe": "identity-every-route-/requests",
+      "passed": true,
+      "detail": null
+    },
+    {
+      "probe": "identity-every-route-/split",
+      "passed": true,
+      "detail": null
+    },
+    {
+      "probe": "identity-every-route-/authorizations",
+      "passed": true,
+      "detail": null
+    },
+    {
+      "probe": "identity-every-route-/login",
+      "passed": true,
+      "detail": null
+    },
+    {
+      "probe": "identity-every-route-/signup",
+      "passed": true,
+      "detail": null
+    },
+    {
+      "probe": "logout",
+      "passed": true,
+      "detail": null
+    },
+    {
+      "probe": "login-error",
+      "passed": true,
+      "detail": null
+    },
+    {
+      "probe": "ui-wallet-0",
+      "passed": true,
+      "detail": null
+    },
+    {
+      "probe": "signup-derived",
+      "passed": true,
+      "detail": null
+    },
+    {
+      "probe": "reset",
+      "passed": true,
+      "detail": null
+    },
+    {
+      "probe": "format-JPY",
+      "passed": true,
+      "detail": null
+    },
+    {
+      "probe": "precision-JPY",
+      "passed": true,
+      "detail": null
+    },
+    {
+      "probe": "reset",
+      "passed": true,
+      "detail": null
+    },
+    {
+      "probe": "format-BHD",
+      "passed": true,
+      "detail": null
+    },
+    {
+      "probe": "precision-BHD",
+      "passed": true,
+      "detail": null
+    },
+    {
+      "probe": "reset",
+      "passed": true,
+      "detail": null
+    },
+    {
+      "probe": "held-wallet-ui",
+      "passed": true,
+      "detail": null
+    },
+    {
+      "probe": "outgoing-auth-controls",
+      "passed": true,
+      "detail": null
+    },
+    {
+      "probe": "auth-time-exact",
+      "passed": true,
+      "detail": null
+    },
+    {
+      "probe": "capture-input-default",
+      "passed": true,
+      "detail": null
+    },
+    {
+      "probe": "captured-formatted",
+      "passed": true,
+      "detail": null
+    },
+    {
+      "probe": "released-held-ui",
+      "passed": true,
+      "detail": null
+    },
+    {
+      "probe": "ui-wallet-8500",
+      "passed": true,
+      "detail": null
+    },
+    {
+      "probe": "void-ui",
+      "passed": true,
+      "detail": null
+    },
+    {
+      "probe": "reset",
+      "passed": true,
+      "detail": null
+    },
+    {
+      "probe": "ui-wallet-1000",
+      "passed": true,
+      "detail": null
+    },
+    {
+      "probe": "refused-preserves",
+      "passed": true,
+      "detail": null
+    },
+    {
+      "probe": "stale-button-removed",
+      "passed": true,
+      "detail": null
+    },
+    {
+      "probe": "reset",
+      "passed": true,
+      "detail": null
+    },
+    {
+      "probe": "lost-not-refused",
+      "passed": true,
+      "detail": null
+    },
+    {
+      "probe": "ui-wallet-9900",
+      "passed": true,
+      "detail": null
+    },
+    {
+      "probe": "retry-same-identity",
+      "passed": true,
+      "detail": null
+    },
+    {
+      "probe": "retry-once",
+      "passed": true,
+      "detail": {
+        "payment_count": 1
+      }
+    },
+    {
+      "probe": "ui-wallet-9800",
+      "passed": true,
+      "detail": null
+    },
+    {
+      "probe": "latest-refresh-wins",
+      "passed": true,
+      "detail": null
+    },
+    {
+      "probe": "refresh-preserves-form",
+      "passed": true,
+      "detail": null
+    },
+    {
+      "probe": "reset",
+      "passed": true,
+      "detail": null
+    },
+    {
+      "probe": "no-overflow-wallet-375",
+      "passed": true,
+      "detail": {
+        "vw": 375,
+        "sw": 375
+      }
+    },
+    {
+      "probe": "visible-labels-wallet-375",
+      "passed": true,
+      "detail": []
+    },
+    {
+      "probe": "no-overflow-requests-375",
+      "passed": true,
+      "detail": {
+        "vw": 375,
+        "sw": 375
+      }
+    },
+    {
+      "probe": "visible-labels-requests-375",
+      "passed": true,
+      "detail": []
+    },
+    {
+      "probe": "no-overflow-holds-375",
+      "passed": true,
+      "detail": {
+        "vw": 375,
+        "sw": 375
+      }
+    },
+    {
+      "probe": "visible-labels-holds-375",
+      "passed": true,
+      "detail": []
+    },
+    {
+      "probe": "no-overflow-split-375",
+      "passed": true,
+      "detail": {
+        "vw": 375,
+        "sw": 375
+      }
+    },
+    {
+      "probe": "visible-labels-split-375",
+      "passed": true,
+      "detail": []
+    },
+    {
+      "probe": "available-headline-375",
+      "passed": true,
+      "detail": {
+        "wallet-available": 44,
+        "wallet-balance": 16,
+        "wallet-held": 16,
+        "wallet-refresh": 14
+      }
+    },
+    {
+      "probe": "focus-visible-375",
+      "passed": true,
+      "detail": {
+        "outline": "solid",
+        "width": "3px",
+        "shadow": "none"
+      }
+    },
+    {
+      "probe": "no-overflow-wallet-900",
+      "passed": true,
+      "detail": {
+        "vw": 900,
+        "sw": 900
+      }
+    },
+    {
+      "probe": "visible-labels-wallet-900",
+      "passed": true,
+      "detail": []
+    },
+    {
+      "probe": "no-overflow-requests-900",
+      "passed": true,
+      "detail": {
+        "vw": 900,
+        "sw": 900
+      }
+    },
+    {
+      "probe": "visible-labels-requests-900",
+      "passed": true,
+      "detail": []
+    },
+    {
+      "probe": "no-overflow-holds-900",
+      "passed": true,
+      "detail": {
+        "vw": 900,
+        "sw": 900
+      }
+    },
+    {
+      "probe": "visible-labels-holds-900",
+      "passed": true,
+      "detail": []
+    },
+    {
+      "probe": "no-overflow-split-900",
+      "passed": true,
+      "detail": {
+        "vw": 900,
+        "sw": 900
+      }
+    },
+    {
+      "probe": "visible-labels-split-900",
+      "passed": true,
+      "detail": []
+    },
+    {
+      "probe": "available-headline-900",
+      "passed": true,
+      "detail": {
+        "wallet-available": 44,
+        "wallet-balance": 16,
+        "wallet-held": 16,
+        "wallet-refresh": 14
+      }
+    },
+    {
+      "probe": "focus-visible-900",
+      "passed": true,
+      "detail": {
+        "outline": "solid",
+        "width": "3px",
+        "shadow": "none"
+      }
+    },
+    {
+      "probe": "no-overflow-wallet-1280",
+      "passed": true,
+      "detail": {
+        "vw": 1280,
+        "sw": 1280
+      }
+    },
+    {
+      "probe": "visible-labels-wallet-1280",
+      "passed": true,
+      "detail": []
+    },
+    {
+      "probe": "no-overflow-requests-1280",
+      "passed": true,
+      "detail": {
+        "vw": 1280,
+        "sw": 1280
+      }
+    },
+    {
+      "probe": "visible-labels-requests-1280",
+      "passed": true,
+      "detail": []
+    },
+    {
+      "probe": "no-overflow-holds-1280",
+      "passed": true,
+      "detail": {
+        "vw": 1280,
+        "sw": 1280
+      }
+    },
+    {
+      "probe": "visible-labels-holds-1280",
+      "passed": true,
+      "detail": []
+    },
+    {
+      "probe": "no-overflow-split-1280",
+      "passed": true,
+      "detail": {
+        "vw": 1280,
+        "sw": 1280
+      }
+    },
+    {
+      "probe": "visible-labels-split-1280",
+      "passed": true,
+      "detail": []
+    },
+    {
+      "probe": "available-headline-1280",
+      "passed": true,
+      "detail": {
+        "wallet-available": 44,
+        "wallet-balance": 16,
+        "wallet-held": 16,
+        "wallet-refresh": 14
+      }
+    },
+    {
+      "probe": "focus-visible-1280",
+      "passed": true,
+      "detail": {
+        "outline": "solid",
+        "width": "3px",
+        "shadow": "none"
+      }
+    },
+    {
+      "probe": "reset",
+      "passed": true,
+      "detail": null
+    },
+    {
+      "probe": "stage1-upgrade-import",
+      "passed": true,
+      "detail": null
+    },
+    {
+      "probe": "ui-wallet-9900",
+      "passed": true,
+      "detail": null
+    },
+    {
+      "probe": "upgrade-same-key-body",
+      "passed": true,
+      "detail": null
+    },
+    {
+      "probe": "upgrade-form-survives",
+      "passed": true,
+      "detail": null
+    },
+    {
+      "probe": "upgrade-uncertainty-cleared",
+      "passed": true,
+      "detail": null
+    },
+    {
+      "probe": "upgrade-pending-request-payable",
+      "passed": true,
+      "detail": null
+    },
+    {
+      "probe": "reset",
+      "passed": true,
+      "detail": null
+    },
+    {
+      "probe": "nonnumeric-local",
+      "passed": true,
+      "detail": null
+    },
+    {
+      "probe": "request-precision-local",
+      "passed": true,
+      "detail": null
+    },
+    {
+      "probe": "authorize-precision-local",
+      "passed": true,
+      "detail": null
+    },
+    {
+      "probe": "decimal-conversion-15.00",
+      "passed": true,
+      "detail": null
+    },
+    {
+      "probe": "decimal-conversion-15",
+      "passed": true,
+      "detail": null
+    },
+    {
+      "probe": "authorize-refusal-visible",
+      "passed": true,
+      "detail": null
+    },
+    {
+      "probe": "reset",
+      "passed": true,
+      "detail": null
+    },
+    {
+      "probe": "empty-requests",
+      "passed": true,
+      "detail": null
+    },
+    {
+      "probe": "empty-authorizations",
+      "passed": true,
+      "detail": null
+    },
+    {
+      "probe": "reset",
+      "passed": true,
+      "detail": null
+    },
+    {
+      "probe": "seeded-held-ui",
+      "passed": true,
+      "detail": null
+    },
+    {
+      "probe": "rendered-text-contrast",
+      "passed": true,
+      "detail": []
+    },
+    {
+      "probe": "reset",
+      "passed": true,
+      "detail": null
+    },
+    {
+      "probe": "latest-feed-refresh-wins",
+      "passed": true,
+      "detail": null
+    },
+    {
+      "probe": "empty-note-present",
+      "passed": true,
+      "detail": null
+    },
+    {
+      "probe": "refresh-waits-for-write",
+      "passed": true,
+      "detail": null
+    },
+    {
+      "probe": "ui-wallet-9890",
+      "passed": true,
+      "detail": null
+    },
+    {
+      "probe": "reset",
+      "passed": true,
+      "detail": null
+    },
+    {
+      "probe": "ui-wallet-9900",
+      "passed": true,
+      "detail": null
+    },
+    {
+      "probe": "loading-state-visible",
+      "passed": true,
+      "detail": null
+    },
+    {
+      "probe": "all-browser-assets-local",
+      "passed": true,
+      "detail": []
+    }
+  ]
+}

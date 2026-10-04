@@ -1,0 +1,63 @@
+{
+  "probes": 10,
+  "passed": 10,
+  "failed": [],
+  "results": [
+    {
+      "probe": "reset",
+      "passed": true,
+      "detail": null
+    },
+    {
+      "probe": "same-amount-1000-import",
+      "passed": true,
+      "detail": null
+    },
+    {
+      "probe": "same-amount-1000-time",
+      "passed": true,
+      "detail": {
+        "seconds": 0.7555969590030145
+      }
+    },
+    {
+      "probe": "same-amount-1000-frozen",
+      "passed": true,
+      "detail": null
+    },
+    {
+      "probe": "same-amount-3000-import",
+      "passed": true,
+      "detail": null
+    },
+    {
+      "probe": "same-amount-3000-time",
+      "passed": true,
+      "detail": {
+        "seconds": 1.7806730830052402
+      }
+    },
+    {
+      "probe": "same-amount-3000-frozen",
+      "passed": true,
+      "detail": null
+    },
+    {
+      "probe": "same-amount-5000-import",
+      "passed": true,
+      "detail": null
+    },
+    {
+      "probe": "same-amount-5000-time",
+      "passed": true,
+      "detail": {
+        "seconds": 2.967067710000265
+      }
+    },
+    {
+      "probe": "same-amount-5000-frozen",
+      "passed": true,
+      "detail": null
+    }
+  ]
+}

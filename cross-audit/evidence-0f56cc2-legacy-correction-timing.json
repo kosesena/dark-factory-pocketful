@@ -1,0 +1,56 @@
+{
+  "probes": 6,
+  "passed": 4,
+  "failed": [
+    {
+      "probe": "diagnostic-correction20-genuine-time",
+      "passed": false,
+      "detail": {
+        "seconds": 57.84570361000078
+      }
+    },
+    {
+      "probe": "diagnostic-correction20-reordered-time",
+      "passed": false,
+      "detail": {
+        "seconds": 53.60626298299758
+      }
+    }
+  ],
+  "results": [
+    {
+      "probe": "source-shape",
+      "passed": true,
+      "detail": null
+    },
+    {
+      "probe": "diagnostic-correction20-genuine",
+      "passed": true,
+      "detail": null
+    },
+    {
+      "probe": "diagnostic-correction20-genuine-time",
+      "passed": false,
+      "detail": {
+        "seconds": 57.84570361000078
+      }
+    },
+    {
+      "probe": "diagnostic-correction20-reordered",
+      "passed": true,
+      "detail": null
+    },
+    {
+      "probe": "diagnostic-correction20-reordered-time",
+      "passed": false,
+      "detail": {
+        "seconds": 53.60626298299758
+      }
+    },
+    {
+      "probe": "diagnostic-correction20-reordered-atomic",
+      "passed": true,
+      "detail": null
+    }
+  ]
+}

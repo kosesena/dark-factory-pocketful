@@ -1,0 +1,77 @@
+{
+  "probes": 14,
+  "passed": 14,
+  "failed": [],
+  "results": [
+    {
+      "probe": "reset",
+      "passed": true,
+      "detail": null
+    },
+    {
+      "probe": "genuine-moment-False",
+      "passed": true,
+      "detail": null
+    },
+    {
+      "probe": "timestamp-prefix-not-sequence-prefix",
+      "passed": true,
+      "detail": null
+    },
+    {
+      "probe": "timestamp-prefix-not-sequence-prefix-atomic",
+      "passed": true,
+      "detail": null
+    },
+    {
+      "probe": "reset",
+      "passed": true,
+      "detail": null
+    },
+    {
+      "probe": "genuine-moment-True",
+      "passed": true,
+      "detail": null
+    },
+    {
+      "probe": "same-instant-swap-recomputed",
+      "passed": true,
+      "detail": null
+    },
+    {
+      "probe": "same-instant-swap-recomputed-atomic",
+      "passed": true,
+      "detail": null
+    },
+    {
+      "probe": "reset",
+      "passed": true,
+      "detail": null
+    },
+    {
+      "probe": "correction-before-revert",
+      "passed": true,
+      "detail": null
+    },
+    {
+      "probe": "explicit-metadata-reverted-correction",
+      "passed": true,
+      "detail": null
+    },
+    {
+      "probe": "explicit-metadata-reverted-correction-atomic",
+      "passed": true,
+      "detail": null
+    },
+    {
+      "probe": "legacy-earlier-revision-alternative",
+      "passed": true,
+      "detail": null
+    },
+    {
+      "probe": "legacy-earlier-revision-exact-page",
+      "passed": true,
+      "detail": null
+    }
+  ]
+}
