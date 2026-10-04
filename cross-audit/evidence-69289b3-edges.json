@@ -1,0 +1,672 @@
+{
+  "probes": 46,
+  "passed": 27,
+  "failed": [
+    {
+      "probe": "fractional-/payments",
+      "passed": false,
+      "detail": {
+        "status": 201,
+        "body": {
+          "payment_id": "p_f2ed45b760814182",
+          "from_user_id": "u_a",
+          "from_handle": "a",
+          "to_user_id": "u_b",
+          "to_handle": "b",
+          "amount": 1,
+          "currency": "EUR",
+          "note": "",
+          "visibility": "public",
+          "request_id": null,
+          "settlement_id": null,
+          "created_at": "2026-10-04T08:17:57+00:00"
+        }
+      }
+    },
+    {
+      "probe": "fractional-nochange-/payments",
+      "passed": false,
+      "detail": null
+    },
+    {
+      "probe": "fractional-/requests",
+      "passed": false,
+      "detail": {
+        "status": 201,
+        "body": {
+          "request_id": "rq_a5e7129a6a3c46e5",
+          "requester_id": "u_b",
+          "requester_handle": "b",
+          "payer_id": "u_a",
+          "payer_handle": "a",
+          "amount": 1,
+          "currency": "EUR",
+          "note": "",
+          "status": "pending",
+          "payment_id": null,
+          "created_at": "2026-10-04T08:17:57+00:00"
+        }
+      }
+    },
+    {
+      "probe": "fractional-nochange-/requests",
+      "passed": false,
+      "detail": null
+    },
+    {
+      "probe": "fractional-/splits",
+      "passed": false,
+      "detail": {
+        "status": 201,
+        "body": {
+          "split_id": "sp_b705aeed3cdf4d85",
+          "amount": 1,
+          "currency": "EUR",
+          "note": "",
+          "shares": [
+            {
+              "handle": "a",
+              "amount": 1
+            },
+            {
+              "handle": "b",
+              "amount": 0
+            }
+          ],
+          "requests": [
+            {
+              "request_id": "rq_83441dcb818a436c",
+              "requester_id": "u_a",
+              "requester_handle": "a",
+              "payer_id": "u_b",
+              "payer_handle": "b",
+              "amount": 0,
+              "currency": "EUR",
+              "note": "",
+              "status": "pending",
+              "payment_id": null,
+              "created_at": "2026-10-04T08:17:57+00:00"
+            }
+          ],
+          "created_at": "2026-10-04T08:17:57+00:00"
+        }
+      }
+    },
+    {
+      "probe": "fractional-nochange-/splits",
+      "passed": false,
+      "detail": null
+    },
+    {
+      "probe": "fractional-/settlements",
+      "passed": false,
+      "detail": {
+        "status": 201,
+        "body": {
+          "settlement_id": "st_dcbe592c6cbc4fa4",
+          "committed_at": "2026-10-04T08:17:57+00:00",
+          "payments": [
+            {
+              "payment_id": "p_2a51993d586a450c",
+              "from_user_id": "u_a",
+              "from_handle": "a",
+              "to_user_id": "u_b",
+              "to_handle": "b",
+              "amount": 1,
+              "currency": "EUR",
+              "note": "",
+              "visibility": "public",
+              "request_id": null,
+              "settlement_id": "st_dcbe592c6cbc4fa4",
+              "created_at": "2026-10-04T08:17:57+00:00"
+            }
+          ]
+        }
+      }
+    },
+    {
+      "probe": "fractional-nochange-/settlements",
+      "passed": false,
+      "detail": null
+    },
+    {
+      "probe": "exact-idem-1",
+      "passed": false,
+      "detail": {
+        "status": 200,
+        "body": {
+          "payment_id": "p_b57e230362214015",
+          "from_user_id": "u_a",
+          "from_handle": "a",
+          "to_user_id": "u_b",
+          "to_handle": "b",
+          "amount": 1,
+          "currency": "EUR",
+          "note": "",
+          "visibility": "public",
+          "request_id": null,
+          "settlement_id": null,
+          "created_at": "2026-10-04T08:17:57+00:00"
+        }
+      }
+    },
+    {
+      "probe": "huge-offset-/activity",
+      "passed": false,
+      "detail": {
+        "status": 500,
+        "body": {
+          "error": {
+            "code": "internal_error",
+            "message": "ValueError"
+          }
+        }
+      }
+    },
+    {
+      "probe": "huge-limit-/activity",
+      "passed": false,
+      "detail": {
+        "status": 500,
+        "body": {
+          "error": {
+            "code": "internal_error",
+            "message": "ValueError"
+          }
+        }
+      }
+    },
+    {
+      "probe": "huge-offset-/requests",
+      "passed": false,
+      "detail": {
+        "status": 500,
+        "body": {
+          "error": {
+            "code": "internal_error",
+            "message": "ValueError"
+          }
+        }
+      }
+    },
+    {
+      "probe": "huge-limit-/requests",
+      "passed": false,
+      "detail": {
+        "status": 500,
+        "body": {
+          "error": {
+            "code": "internal_error",
+            "message": "ValueError"
+          }
+        }
+      }
+    },
+    {
+      "probe": "invalid-state-orphan-operator",
+      "passed": false,
+      "detail": {
+        "status": 204,
+        "body": null
+      }
+    },
+    {
+      "probe": "invalid-state-nochange-orphan-operator",
+      "passed": false,
+      "detail": null
+    },
+    {
+      "probe": "invalid-state-bad-payment-timestamp",
+      "passed": false,
+      "detail": {
+        "status": 204,
+        "body": null
+      }
+    },
+    {
+      "probe": "invalid-state-nochange-bad-payment-timestamp",
+      "passed": false,
+      "detail": null
+    },
+    {
+      "probe": "invalid-state-overlimit-payment",
+      "passed": false,
+      "detail": {
+        "status": 204,
+        "body": null
+      }
+    },
+    {
+      "probe": "invalid-state-nochange-overlimit-payment",
+      "passed": false,
+      "detail": null
+    }
+  ],
+  "results": [
+    {
+      "probe": "reset",
+      "passed": true,
+      "detail": null
+    },
+    {
+      "probe": "fractional-/payments",
+      "passed": false,
+      "detail": {
+        "status": 201,
+        "body": {
+          "payment_id": "p_f2ed45b760814182",
+          "from_user_id": "u_a",
+          "from_handle": "a",
+          "to_user_id": "u_b",
+          "to_handle": "b",
+          "amount": 1,
+          "currency": "EUR",
+          "note": "",
+          "visibility": "public",
+          "request_id": null,
+          "settlement_id": null,
+          "created_at": "2026-10-04T08:17:57+00:00"
+        }
+      }
+    },
+    {
+      "probe": "fractional-nochange-/payments",
+      "passed": false,
+      "detail": null
+    },
+    {
+      "probe": "fractional-/requests",
+      "passed": false,
+      "detail": {
+        "status": 201,
+        "body": {
+          "request_id": "rq_a5e7129a6a3c46e5",
+          "requester_id": "u_b",
+          "requester_handle": "b",
+          "payer_id": "u_a",
+          "payer_handle": "a",
+          "amount": 1,
+          "currency": "EUR",
+          "note": "",
+          "status": "pending",
+          "payment_id": null,
+          "created_at": "2026-10-04T08:17:57+00:00"
+        }
+      }
+    },
+    {
+      "probe": "fractional-nochange-/requests",
+      "passed": false,
+      "detail": null
+    },
+    {
+      "probe": "fractional-/splits",
+      "passed": false,
+      "detail": {
+        "status": 201,
+        "body": {
+          "split_id": "sp_b705aeed3cdf4d85",
+          "amount": 1,
+          "currency": "EUR",
+          "note": "",
+          "shares": [
+            {
+              "handle": "a",
+              "amount": 1
+            },
+            {
+              "handle": "b",
+              "amount": 0
+            }
+          ],
+          "requests": [
+            {
+              "request_id": "rq_83441dcb818a436c",
+              "requester_id": "u_a",
+              "requester_handle": "a",
+              "payer_id": "u_b",
+              "payer_handle": "b",
+              "amount": 0,
+              "currency": "EUR",
+              "note": "",
+              "status": "pending",
+              "payment_id": null,
+              "created_at": "2026-10-04T08:17:57+00:00"
+            }
+          ],
+          "created_at": "2026-10-04T08:17:57+00:00"
+        }
+      }
+    },
+    {
+      "probe": "fractional-nochange-/splits",
+      "passed": false,
+      "detail": null
+    },
+    {
+      "probe": "fractional-/settlements",
+      "passed": false,
+      "detail": {
+        "status": 201,
+        "body": {
+          "settlement_id": "st_dcbe592c6cbc4fa4",
+          "committed_at": "2026-10-04T08:17:57+00:00",
+          "payments": [
+            {
+              "payment_id": "p_2a51993d586a450c",
+              "from_user_id": "u_a",
+              "from_handle": "a",
+              "to_user_id": "u_b",
+              "to_handle": "b",
+              "amount": 1,
+              "currency": "EUR",
+              "note": "",
+              "visibility": "public",
+              "request_id": null,
+              "settlement_id": "st_dcbe592c6cbc4fa4",
+              "created_at": "2026-10-04T08:17:57+00:00"
+            }
+          ]
+        }
+      }
+    },
+    {
+      "probe": "fractional-nochange-/settlements",
+      "passed": false,
+      "detail": null
+    },
+    {
+      "probe": "exact-idem-0",
+      "passed": true,
+      "detail": null
+    },
+    {
+      "probe": "exact-idem-1",
+      "passed": false,
+      "detail": {
+        "status": 200,
+        "body": {
+          "payment_id": "p_b57e230362214015",
+          "from_user_id": "u_a",
+          "from_handle": "a",
+          "to_user_id": "u_b",
+          "to_handle": "b",
+          "amount": 1,
+          "currency": "EUR",
+          "note": "",
+          "visibility": "public",
+          "request_id": null,
+          "settlement_id": null,
+          "created_at": "2026-10-04T08:17:57+00:00"
+        }
+      }
+    },
+    {
+      "probe": "huge-offset-/activity",
+      "passed": false,
+      "detail": {
+        "status": 500,
+        "body": {
+          "error": {
+            "code": "internal_error",
+            "message": "ValueError"
+          }
+        }
+      }
+    },
+    {
+      "probe": "huge-limit-/activity",
+      "passed": false,
+      "detail": {
+        "status": 500,
+        "body": {
+          "error": {
+            "code": "internal_error",
+            "message": "ValueError"
+          }
+        }
+      }
+    },
+    {
+      "probe": "unicode-query-/activity",
+      "passed": true,
+      "detail": null
+    },
+    {
+      "probe": "huge-offset-/requests",
+      "passed": false,
+      "detail": {
+        "status": 500,
+        "body": {
+          "error": {
+            "code": "internal_error",
+            "message": "ValueError"
+          }
+        }
+      }
+    },
+    {
+      "probe": "huge-limit-/requests",
+      "passed": false,
+      "detail": {
+        "status": 500,
+        "body": {
+          "error": {
+            "code": "internal_error",
+            "message": "ValueError"
+          }
+        }
+      }
+    },
+    {
+      "probe": "unicode-query-/requests",
+      "passed": true,
+      "detail": null
+    },
+    {
+      "probe": "reset",
+      "passed": true,
+      "detail": null
+    },
+    {
+      "probe": "invalid-state-negative-balance",
+      "passed": true,
+      "detail": null
+    },
+    {
+      "probe": "invalid-state-nochange-negative-balance",
+      "passed": true,
+      "detail": null
+    },
+    {
+      "probe": "invalid-state-boolean-balance",
+      "passed": true,
+      "detail": null
+    },
+    {
+      "probe": "invalid-state-nochange-boolean-balance",
+      "passed": true,
+      "detail": null
+    },
+    {
+      "probe": "invalid-state-bad-handle",
+      "passed": true,
+      "detail": null
+    },
+    {
+      "probe": "invalid-state-nochange-bad-handle",
+      "passed": true,
+      "detail": null
+    },
+    {
+      "probe": "invalid-state-bad-password-hash",
+      "passed": true,
+      "detail": null
+    },
+    {
+      "probe": "invalid-state-nochange-bad-password-hash",
+      "passed": true,
+      "detail": null
+    },
+    {
+      "probe": "invalid-state-orphan-token",
+      "passed": true,
+      "detail": null
+    },
+    {
+      "probe": "invalid-state-nochange-orphan-token",
+      "passed": true,
+      "detail": null
+    },
+    {
+      "probe": "invalid-state-orphan-operator",
+      "passed": false,
+      "detail": {
+        "status": 204,
+        "body": null
+      }
+    },
+    {
+      "probe": "invalid-state-nochange-orphan-operator",
+      "passed": false,
+      "detail": null
+    },
+    {
+      "probe": "invalid-state-orphan-payment",
+      "passed": true,
+      "detail": null
+    },
+    {
+      "probe": "invalid-state-nochange-orphan-payment",
+      "passed": true,
+      "detail": null
+    },
+    {
+      "probe": "invalid-state-bad-request-status",
+      "passed": true,
+      "detail": null
+    },
+    {
+      "probe": "invalid-state-nochange-bad-request-status",
+      "passed": true,
+      "detail": null
+    },
+    {
+      "probe": "invalid-state-bad-payment-timestamp",
+      "passed": false,
+      "detail": {
+        "status": 204,
+        "body": null
+      }
+    },
+    {
+      "probe": "invalid-state-nochange-bad-payment-timestamp",
+      "passed": false,
+      "detail": null
+    },
+    {
+      "probe": "invalid-state-overlimit-payment",
+      "passed": false,
+      "detail": {
+        "status": 204,
+        "body": null
+      }
+    },
+    {
+      "probe": "invalid-state-nochange-overlimit-payment",
+      "passed": false,
+      "detail": null
+    },
+    {
+      "probe": "invalid-envelope-boolean-version",
+      "passed": true,
+      "detail": null
+    },
+    {
+      "probe": "invalid-envelope-fractional-version",
+      "passed": true,
+      "detail": null
+    },
+    {
+      "probe": "reset",
+      "passed": true,
+      "detail": null
+    },
+    {
+      "probe": "snapshot-concurrency-noerrors",
+      "passed": true,
+      "detail": null
+    },
+    {
+      "probe": "snapshot-conservation",
+      "passed": true,
+      "detail": null
+    },
+    {
+      "probe": "snapshot-complete-transfers",
+      "passed": true,
+      "detail": null
+    },
+    {
+      "probe": "50-login-success",
+      "passed": true,
+      "detail": [
+        200,
+        200,
+        200,
+        200,
+        200,
+        200,
+        200,
+        200,
+        200,
+        200,
+        200,
+        200,
+        200,
+        200,
+        200,
+        200,
+        200,
+        200,
+        200,
+        200,
+        200,
+        200,
+        200,
+        200,
+        200,
+        200,
+        200,
+        200,
+        200,
+        200,
+        200,
+        200,
+        200,
+        200,
+        200,
+        200,
+        200,
+        200,
+        200,
+        200,
+        200,
+        200,
+        200,
+        200,
+        200,
+        200,
+        200,
+        200,
+        200,
+        200
+      ]
+    },
+    {
+      "probe": "50-login-under-5s",
+      "passed": true,
+      "detail": 0.5693555420002667
+    }
+  ]
+}
