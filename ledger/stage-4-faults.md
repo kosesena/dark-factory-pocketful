@@ -86,3 +86,16 @@ swap on a refund-free legacy snapshot. The seeding runner now runs the legacy pr
 | M06 | S4-36 the legacy search is complete | only the latest passing moment is rebuilt | impl |
 
 The implementer's new tests now catch M01 and M03 (LegacyMomentMustBeReal).
+
+## Revision 000d7ac: fix-revision seeding (changed code: exact content-hash screen and dedup)
+
+| # | Requirement broken | Change | Caught by |
+|---|---|---|---|
+| J00 | control | none | — (control) |
+| Q01 | run contract: content screen | hash removed from the screen only | none — equivalent: rebuilds are still deduplicated by window hash, so the cost stays one rebuild per distinct content (worst case 0.16 s at N=6000) |
+| Q02 | S4-36 the content hash covers (payment, revision) | hash over (payment, 1) | auditor, customer, impl |
+| Q03 | run contract: bounded search | hash screen and hash dedup both removed (back to 0f56cc2) | customer, impl, reviewer (my host worst-case probe sees 2.17 s at N=6000, under its 5 s limit) |
+| N01 | S4-36 screen opening | `prefix(hi_i)` for opening | auditor, customer, impl |
+| N02 | S4-36/§10 real moments only | prefix test → True | auditor, impl |
+| M05 | §10 legacy entries must equal the rebuild | match ignores entries | auditor, impl |
+| M06 | S4-36 complete search | only the latest passing moment rebuilt | none — equivalent now: every passing moment shares the stored content hash, so one rebuild decides |
