@@ -147,6 +147,34 @@ class Basics(Base):
         ada = login("ada")
         self.assertEqual(call("POST", "/payments", {"to_handle": "bob", "amount": 1}, token=ada, key="k")[0], 201)
 
+    def test_reset_validates_like_import(self):
+        def bad(f):
+            fx = fixture()
+            f(fx)
+            self.assertEqual(call("POST", "/_test/reset", fx)[0], 422)
+            self.assertEqual(self.bal(self.ada), 10000)  # unchanged
+        bad(lambda fx: fx["payments"][0].__setitem__("amount", 1000000001))
+        bad(lambda fx: fx["requests"][0].__setitem__("amount", 1000000001))
+        bad(lambda fx: fx["users"][0].__setitem__("balance", 2 ** 53 + 1))
+        bad(lambda fx: fx["users"][0].__setitem__("balance", 10 ** 30))
+        bad(lambda fx: fx["payments"][0].__setitem__("request_id", "ghost"))
+        bad(lambda fx: fx["requests"][0].__setitem__("payment_id", "ghost"))
+        fx = fixture()
+        fx["users"][0]["balance"] = 2 ** 53
+        fx["requests"][0]["payment_id"] = "p_1"
+        fx["requests"][0]["status"] = "paid"
+        self.assertEqual(call("POST", "/_test/reset", fx)[0], 204)
+        # a huge number in an unknown field is ignored, never a 400/5xx
+        fx = fixture(whatever="x")
+        raw = json.dumps(fx)[:-1] + ', "junk": ' + "9" * 5000 + "}"
+        self.assertEqual(call("POST", "/_test/reset", raw=raw)[0], 204)
+        self.assertEqual(self.bal(login("ada")), 10000)
+
+    def test_huge_offset_is_an_empty_page(self):
+        for p in ("/activity", "/requests"):
+            s, b, _ = call("GET", p + "?offset=" + "9" * 5000, token=self.ada)
+            self.assertEqual((s, b.get("payments", b.get("requests")), b["has_more"]), (200, [], False))
+
     def test_reset_negative_balance(self):
         fx = fixture()
         fx["users"][0]["balance"] = -1

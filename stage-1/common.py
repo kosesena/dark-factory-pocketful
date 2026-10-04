@@ -131,7 +131,7 @@ def parse_json(raw, allow_empty=False, decimal=True):
     try:
         value = json.loads(raw.decode("utf-8"), parse_constant=_no_const,
                            parse_float=_parse_float if decimal else float,
-                           parse_int=_big_int if decimal else int)
+                           parse_int=_big_int)
     except (ValueError, RecursionError):
         raise ApiError(400, "malformed_request", "body is not valid JSON")
     if not isinstance(value, dict):

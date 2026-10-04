@@ -2,7 +2,7 @@
 import re
 from concurrent.futures import ThreadPoolExecutor
 
-from common import (ApiError, State, store, STATUSES, HANDLE_RE, EMAIL_RE, authenticate,
+from common import (MAX_AMOUNT, ApiError, State, store, STATUSES, HANDLE_RE, EMAIL_RE, authenticate,
                     check_password, get_str, hash_password, new_id, next_seq, now_ts,
                     parse_json, parse_ts, validation)
 
@@ -14,12 +14,12 @@ def health(req):
     return 200, {"status": "ok"}
 
 
-def _int(v, lo=0):
+def _int(v, lo=0, hi=None):
     if isinstance(v, bool):
         return None
     if isinstance(v, float) and v.is_integer():
         v = int(v)
-    if isinstance(v, int) and v >= lo:
+    if isinstance(v, int) and v >= lo and (hi is None or v <= hi):
         return v
     return None
 
@@ -55,7 +55,7 @@ def build_state(fx):
         name = u.get("display_name", handle)
         if not isinstance(name, str):
             raise validation("display_name must be a string")
-        bal = _int(u.get("balance", 0))
+        bal = _int(u.get("balance", 0), 0, 2 ** 53)
         if bal is None:
             raise validation("balance must be a non-negative integer")
         rec = {"id": uid, "email": email, "display_name": name, "handle": handle,
@@ -83,7 +83,7 @@ def build_state(fx):
 
     for p in lst("payments"):
         pid = p.get("id") if p.get("id") is not None else new_id("p_")
-        amt = _int(p.get("amount"))
+        amt = _int(p.get("amount"), 0, MAX_AMOUNT)
         note = p.get("note", "")
         vis = p.get("visibility", "public")
         if (not isinstance(pid, str) or not pid or len(pid) > 64 or pid in s.payments_by_id
@@ -100,7 +100,7 @@ def build_state(fx):
 
     for r in lst("requests"):
         rid = r.get("id") if r.get("id") is not None else new_id("rq_")
-        amt = _int(r.get("amount"))
+        amt = _int(r.get("amount"), 0, MAX_AMOUNT)
         note = r.get("note", "")
         status = r.get("status", "pending")
         if (not isinstance(rid, str) or not rid or len(rid) > 64 or rid in s.requests_by_id
@@ -114,6 +114,13 @@ def build_state(fx):
         stamp(r, rec)
         s.requests.append(rec)
         s.requests_by_id[rid] = rec
+
+    for p in s.payments:
+        if p["request_id"] is not None and p["request_id"] not in s.requests_by_id:
+            raise validation("payment refers to an unknown request")
+    for r in s.requests:
+        if r["payment_id"] is not None and r["payment_id"] not in s.payments_by_id:
+            raise validation("request refers to an unknown payment")
 
     ops = fx.get("settlement_operator_ids", [])
     if not isinstance(ops, list) or not all(isinstance(x, str) for x in ops):
