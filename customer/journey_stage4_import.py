@@ -43,7 +43,7 @@ for img, port, nm in (("cust-s1d", 8061, "stage1"), ("cust-s2c", 8062, "stage2")
     r = call("POST", f"/payments/{p1['payment_id']}/refunds", {"amount": 10}, tok=login("bob"), key="obr2"); chk(f"{nm}: refund imported payment", r[0] == 201 or code(r) == "insufficient_funds", r)
     if nm == "stage3":
         chk("stage3: correction retained, replay 200", call("POST", f"/payments/{p1['payment_id']}/corrections", {"expected_revision": 1, "amount": 80, "effective_at": corr["effective_at"], "reason": "old"}, tok=a, key="oldc") == (200, corr))
-        pg = call("GET", "/statement" + q(snapshot=snap["snapshot"]), tok=a); chk("stage3: snapshot token pages same entries after import", pg[0] == 200 and strip(pg[1]["entries"]) == strip(snap["entries"]) and pg[1]["closing_balance"] == snap["closing_balance"], pg[0])
+        pg = call("GET", "/statement" + q(snapshot=snap["snapshot"]), tok=a); chk("stage3: snapshot token pages same entries after import", pg[0] == 200 and pg[1]["entries"] == snap["entries"] and pg[1]["closing_balance"] == snap["closing_balance"], pg[0])
         chk("stage3: revisions retained", len(call("GET", f"/payments/{p1['payment_id']}/revisions", tok=a)[1]["revisions"]) == 2)
     chk(f"{nm}: sum conserved", sum(me(login(e))[1]["balance"] for e in ("ada", "bob", "cy", "op")) == 17000)
     stop(port)

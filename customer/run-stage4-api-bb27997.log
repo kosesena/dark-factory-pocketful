@@ -1,0 +1,97 @@
+ok   refund 201 shape
+ok   balances after refund
+ok   refund replay 200 same
+ok   refund key reuse diff body 409
+ok   original payment has refund_of null
+ok   sender can't refund 403
+ok   unknown 404
+ok   refund 401/400
+ok   refund invalid zero
+ok   refund invalid neg
+ok   refund invalid frac
+ok   refund invalid str
+ok   refund invalid null
+ok   refund invalid missing
+ok   refund invalid huge
+ok   refund invalid bool
+ok   cumulative exceed 422
+ok   cumulative exact ok
+ok   fully refunded further 422
+ok   refund of refund 422 invalid_refund_target
+ok   correct refund payment 422 linked_payment_immutable
+ok   activity: refund is payment w/ refund_of, others null
+ok   private refund hidden from third party
+ok   sum conserved
+ok   refunds in statement
+ok   correct below refunded 422 refund_exceeds_payment
+ok   correct to exactly refunded ok
+ok   refund limited by corrected amount
+ok   increase ok
+ok   refund up to corrected amount ok
+ok   refund > available 409 insufficient_funds, nothing changes
+ok   refund exactly available ok
+ok   bob available 500
+ok   refund can't use held funds
+ok   correction debit checked against available
+ok   refund 500 ok
+ok   refund request payment ok, request_id null
+ok   request stays paid
+ok   refund capture ok, authorization_id null
+ok   authorization stays captured; hold not restored
+ok   refund settlement member ok
+ok   settlement replay unchanged
+ok   batch non-operator 403
+ok   batch 401
+ok   batch no key 400
+ok   batch invalid empty
+ok   batch invalid 33
+ok   batch invalid dup ids
+ok   batch invalid not list
+ok   batch missing corrections 422
+ok   item invalid amount 422
+ok   unknown payment 404
+ok   stale 409
+ok   precedence: first failing item (404) wins
+ok   precedence: first failing item (422) wins
+ok   future effective 422
+ok   rejected batches left no revisions
+ok   batch 201 shape
+ok   recorded_at later than previous for each member
+ok   batch replay 200 same
+ok   batch key reuse diff body 409
+ok   balances moved (a: -100 for ada refund, b: -50)
+ok   revisions expose correction_batch_id
+ok   activity original amounts
+ok   statement reflects batch revision
+ok   stale after batch for single correction
+ok   batch idempotency independent of other paths (same key)
+ok   snapshot frozen across batch
+ok   alone unaffordable
+ok   combined effect affordable -> 201
+ok   combined: balances unchanged
+ok   batch historical_overdraft 409
+ok   state preserved + key reusable
+ok   same key retried w/ valid body is first use
+ok   insufficient_funds precedes historical
+ok   batch refund immutable
+ok   batch capture immutable
+ok   batch below refunded 422
+ok   batch to exactly refunded ok
+ok   incomplete_settlement 422
+ok   partial members incomplete
+ok   item error precedes completeness
+ok   members different effective -> validation_failed
+ok   single correction of member still 422 linked
+ok   whole settlement w/ differing offset spelling -> 201
+ok   settlement replay original body
+ok   membership unchanged: payments keep settlement_id
+ok   settlement members original revision effective==recorded==committed
+ok   sum conserved after batch
+ok   settlement + ordinary together
+ok   concurrent overlapping batches: exactly one 201
+ok   batch vs single concurrent: exactly one 201
+ok   sum conserved after concurrency
+ok   25 concurrent refunds of 100/1000: exactly 10 succeed
+ok   same-key concurrent refunds: one 201, rest 200
+
+STAGE4 API 95 checks, 0 failed: []

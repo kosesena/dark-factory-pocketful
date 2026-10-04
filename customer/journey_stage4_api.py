@@ -173,9 +173,10 @@ def go(i):
 th = [threading.Thread(target=go, args=(i,)) for i in range(16)]; [t.start() for t in th]; [t.join() for t in th]
 chk("concurrent overlapping batches: exactly one 201", res.count(201) == 1 and res.count(409) == 15 and not [x for x in res if x >= 500], sorted(res))
 res = []
+rv_pb = len(revs(A, pb["payment_id"])[1]["revisions"])
 def go2(i):
-    if i % 2: res.append(batch(O, [item(pb["payment_id"], amount=5)], f"mb{i}")[0])
-    else: res.append(cr(A, pb["payment_id"], {"expected_revision": 1, "amount": 6 + i, "effective_at": iso(N - timedelta(minutes=1)), "reason": "r"}, f"mc{i}")[0])
+    if i % 2: res.append(batch(O, [item(pb["payment_id"], rev=rv_pb, amount=5)], f"mb{i}")[0])
+    else: res.append(cr(A, pb["payment_id"], {"expected_revision": rv_pb, "amount": 6 + i, "effective_at": iso(N - timedelta(minutes=1)), "reason": "r"}, f"mc{i}")[0])
 th = [threading.Thread(target=go2, args=(i,)) for i in range(12)]; [t.start() for t in th]; [t.join() for t in th]
 chk("batch vs single concurrent: exactly one 201", res.count(201) == 1 and not [x for x in res if x >= 500], sorted(res))
 chk("sum conserved after concurrency", total() == 17000)
