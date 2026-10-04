@@ -1467,6 +1467,8 @@ class Ledger(unittest.TestCase):
                   lambda sn: sn.__setitem__("taken_ts", sn["taken_ts"] + 10 ** 7),
                   lambda sn: sn.__setitem__("taken_ts", sn["taken_ts"] - 1e9),
                   lambda sn: sn.pop("taken_ts"),
+                  lambda sn: (sn.pop("taken_ts"), sn.pop("taken_seq"), sn["entries"].pop(), sn.__setitem__("closing_balance", sn["closing_balance"] - sn["entries"][-1][2] if False else sn["closing_balance"])),
+                  lambda sn: (sn.pop("taken_ts"), sn.pop("taken_seq"), sn.__setitem__("entries", []), sn.__setitem__("closing_balance", sn["opening_balance"])),
                   lambda sn: sn["echo"].__setitem__("known_at", "2000-01-01T00:00:00+00:00")):
             bad = json.loads(json.dumps(snap))
             f(bad["state"]["snapshots"][0])
@@ -1686,6 +1688,143 @@ class Stage3GapList(unittest.TestCase):
         rows = [pay, paid, st["payments"][0], cap] + call("GET", "/activity", token=self.ada)[1]["payments"]
         rows += [e["payment"] for e in call("GET", "/statement", token=self.ada)[1]["entries"]]
         self.assertTrue(all(isinstance(r.get("created_at"), str) and r["created_at"][-6:] in ("+00:00",) for r in rows))
+
+
+class SnapshotFuzz(unittest.TestCase):
+    """Every mutation of an exported statement snapshot must be refused (422) or leave exactly the same page."""
+
+    def mutations(self, sn, other_user):
+        out = []
+        def add(name, fn):
+            out.append((name, fn))
+        for k in list(sn):
+            add("del " + k, lambda x, k=k: x.pop(k))
+        for k in ("opening_balance", "closing_balance", "taken_ts", "taken_seq"):
+            if k in sn:
+                for label, f in (("+1", lambda v: v + 1), ("-1", lambda v: v - 1), ("none", lambda v: None), ("str", lambda v: "x"),
+                                 ("true", lambda v: True), ("huge", lambda v: v + 10 ** 9)):
+                    add("%s %s" % (k, label), lambda x, k=k, f=f: x.__setitem__(k, f(x[k])))
+        add("user", lambda x: x.__setitem__("user_id", other_user))
+        add("user none", lambda x: x.__setitem__("user_id", None))
+        add("echo none", lambda x: x.__setitem__("echo", None))
+        add("echo empty", lambda x: x.__setitem__("echo", {}))
+        add("echo extra", lambda x: x["echo"].__setitem__("to", "2090-01-01T00:00:00+00:00"))
+        add("echo bogus", lambda x: x["echo"].__setitem__("zzz", "2090-01-01T00:00:00+00:00"))
+        for k in list(sn["echo"]):
+            add("echo del " + k, lambda x, k=k: x["echo"].pop(k))
+            add("echo bad " + k, lambda x, k=k: x["echo"].__setitem__(k, "bad-time"))
+            add("echo shift " + k, lambda x, k=k: x["echo"].__setitem__(k, "2001-01-01T00:00:00+00:00"))
+        add("entries none", lambda x: x.__setitem__("entries", None))
+        add("entries empty", lambda x: x.__setitem__("entries", []))
+        add("entries reversed", lambda x: x["entries"].reverse())
+        add("entries bogus", lambda x: x["entries"].append(["ghost", 1, 1, 1, "2020-01-01T00:00:00+00:00", "2020-01-01T00:00:00+00:00", 1]))
+        def shift(x):
+            x["opening_balance"] += 1
+            for e in x["entries"]:
+                e[3] += 1
+            x["closing_balance"] += 1
+        add("shift all balances", shift)
+        for i in range(len(sn["entries"])):
+            add("pop %d" % i, lambda x, i=i: x["entries"].pop(i))
+            add("dup %d" % i, lambda x, i=i: x["entries"].insert(i, list(x["entries"][i])))
+            add("swap %d" % i, lambda x, i=i: x["entries"].insert(i, x["entries"].pop(i + 1)))
+            add("drop last keep sums %d" % i, lambda x, i=i: (x["entries"].pop(i), x.__setitem__("closing_balance", x["entries"][-1][3] if x["entries"] else x["opening_balance"])))
+            for j in range(7):
+                v = sn["entries"][i][j]
+                muts = [("none", lambda v: None)]
+                if isinstance(v, int) and not isinstance(v, bool):
+                    muts += [("+1", lambda v: v + 1), ("-1", lambda v: v - 1)]
+                if isinstance(v, str):
+                    muts += [("chg", lambda v: v[:-1] + ("0" if v[-1:] != "0" else "1")), ("empty", lambda v: "")]
+                for label, f in muts:
+                    add("entry %d.%d %s" % (i, j, label), lambda x, i=i, j=j, f=f: x["entries"][i].__setitem__(j, f(x["entries"][i][j])))
+            add("entry %d short" % i, lambda x, i=i: x["entries"][i].pop())
+        return out
+
+    def run_kind(self, export, tok, pages, other_user):
+        snap_index = [i for i, s in enumerate(export["state"]["snapshots"]) if s["token"] == tok][0]
+        base = export["state"]["snapshots"][snap_index]
+        refused = accepted = 0
+        for name, fn in self.mutations(base, other_user):
+            m = json.loads(json.dumps(export))
+            try:
+                fn(m["state"]["snapshots"][snap_index])
+            except (KeyError, IndexError, TypeError):
+                continue
+            s, _, _ = call("POST", "/_test/import", m)
+            if s == 422:
+                refused += 1
+                continue
+            self.assertEqual(s, 204, name)
+            s2, page, _ = call("GET", "/statement?snapshot=%s&limit=200" % tok, token=pages["token"])
+            drop = set()
+            if name.startswith("echo "):
+                # equivalence: opening, entries and closing rebuild exactly and the user is unchanged; only the echoed
+                # query keys (flattened onto the page top level) differ: a re-labelled, self-consistent statement
+                drop |= {"from", "to", "known_at"}
+            if name == "del view":
+                drop.add("refund_of")  # equivalence: a view-less snapshot is the stage-3 shape; same facts, older field set without refund_of
+            nested = name == "del view"  # refund_of lives inside the payment objects; echo keys only at the top
+            def strip(o, top=True):
+                if isinstance(o, dict):
+                    return {k: strip(v, False) for k, v in o.items() if not (k in drop and (top or nested))}
+                return [strip(v, False) for v in o] if isinstance(o, list) else o
+            self.assertEqual((s2, strip(page)), (200, strip(pages["page"])), "accepted mutation changed the page: " + name)
+            accepted += 1
+            self.assertEqual(call("POST", "/_test/import", export)[0], 204)
+        self.assertGreater(refused, 25)
+        return refused, accepted
+
+    def test_fuzz(self):
+        e = lambda ts: ts.replace("+", "%2B")
+        self.assertEqual(call("POST", "/_test/reset", hist_fixture())[0], 204)
+        bob, ada = login("bob"), login("ada")
+        call("POST", "/payments/p_a/corrections", {"expected_revision": 1, "amount": 400, "effective_at": "2026-09-20T12:00:00+00:00", "reason": "early"}, token=ada, key="z1")
+        time.sleep(1.1)
+        kinds = ["/statement", "/statement?from=2026-09-20T00:00:00%2B00:00&to=2026-09-23T00:00:00%2B00:00&known_at=" + e(datetime_now_iso()),
+                 "/statement?known_at=2090-01-01T00:00:00%2B00:00", "/statement?from=2090-01-01T00:00:00%2B00:00"]
+        toks = [call("GET", k, token=bob)[1]["snapshot"] for k in kinds]
+        legacy = call("GET", "/_test/export")[1]       # nothing happened since: legacy (metadata-free) form must be equivalent
+        # later facts: a payment and a correction after the snapshots were taken
+        call("POST", "/payments", {"to_handle": "cy", "amount": 7}, token=bob, key="z2")
+        call("POST", "/payments/p_c/corrections", {"expected_revision": 1, "amount": 250, "effective_at": "2026-09-22T10:00:00+00:00", "reason": "late"}, token=bob, key="z3")
+        full = call("GET", "/_test/export")[1]
+        total_refused = 0
+        for variant, export in (("full", full), ("legacy", None)):
+            if export is None:
+                export = json.loads(json.dumps(legacy))
+                for sn in export["state"]["snapshots"]:
+                    sn.pop("taken_ts", None)
+                    sn.pop("taken_seq", None)
+                    sn.pop("view", None)
+            self.assertEqual(call("POST", "/_test/import", export)[0], 204, variant)
+            for tok in toks:
+                s, page, _ = call("GET", "/statement?snapshot=%s&limit=200" % tok, token=bob)
+                self.assertEqual(s, 200)
+                r, a = self.run_kind(export, tok, {"token": bob, "page": page}, "u_ada")
+                total_refused += r
+        self.assertGreater(total_refused, 400)
+
+    def test_removing_metadata_does_not_skip_validation(self):
+        self.assertEqual(call("POST", "/_test/reset", hist_fixture())[0], 204)
+        bob = login("bob")
+        tok = call("GET", "/statement?from=2026-09-20T00:00:00%2B00:00&to=2026-09-23T00:00:00%2B00:00", token=bob)[1]["snapshot"]
+        s, snap, _ = call("GET", "/_test/export")
+        def legacy(fn):
+            m = json.loads(json.dumps(snap))
+            sn = [x for x in m["state"]["snapshots"] if x["token"] == tok][0]
+            sn.pop("taken_ts"); sn.pop("taken_seq"); sn.pop("view", None)
+            fn(sn)
+            return call("POST", "/_test/import", m)[0]
+        self.assertEqual(legacy(lambda sn: None), 204)  # an untouched legacy snapshot is fine
+        self.assertEqual(legacy(lambda sn: (sn["entries"].pop(), sn.__setitem__("closing_balance", sn["entries"][-1][3]))), 422)
+        self.assertEqual(legacy(lambda sn: (sn.__setitem__("entries", []), sn.__setitem__("closing_balance", sn["opening_balance"]))), 422)
+        def shift(sn):
+            sn["opening_balance"] += 1
+            for e in sn["entries"]:
+                e[3] += 1
+            sn["closing_balance"] += 1
+        self.assertEqual(legacy(shift), 422)
 
 
 if __name__ == "__main__":

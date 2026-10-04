@@ -229,11 +229,10 @@ def load_state(st):
                          + [a["seq"] for a in s.auths] + [0]))
     if hasattr(s, "open_auths"):
         sweep(s, time.time())
+    ledger_latest = [None]
     for sn in st.get("snapshots", []):  # frozen statements survive an import (older exports have none)
-        _need(isinstance(sn, dict) and set(sn) in ({"token", "user_id", "opening_balance", "entries",
-                                                     "closing_balance", "echo"},
-                                                    {"token", "user_id", "opening_balance", "entries",
-                                                     "closing_balance", "echo", "taken_ts", "taken_seq"}))
+        base = {"token", "user_id", "opening_balance", "entries", "closing_balance", "echo"}
+        _need(isinstance(sn, dict) and set(sn) in (base, base | {"taken_ts", "taken_seq"}))
         _need(_str(sn["token"]) and sn["token"] and sn["token"] not in s.snapshots and sn["user_id"] in s.users)
         _need(_int(sn["opening_balance"]) and _int(sn["closing_balance"]) and isinstance(sn["entries"], list))
         _need(isinstance(sn["echo"], dict) and set(sn["echo"]) <= {"from", "to", "known_at"}
@@ -249,7 +248,6 @@ def load_state(st):
         if lo is not None and hi is not None and hi < lo:
             hi = lo
         known = win.get("known_at")
-        prev = None
         running = sn["opening_balance"]
         entries = []
         for e in sn["entries"]:
@@ -264,18 +262,16 @@ def load_state(st):
             _need(rev_no <= len(p["revisions"]))
             r = p["revisions"][rev_no - 1]  # the entry is a frozen copy of exactly this revision
             _need(amount == r["amount"] and eff_at == r["effective_at"] and rec_at == r["recorded_at"])
-            if known is not None:  # the revision selected when taken: latest recorded by min(known_at, taken_ts)
-                k = min(known, sn["taken_ts"]) if "taken_ts" in sn else known
-                _need(r["recorded_ts"] <= k and (rev_no == len(p["revisions"])
-                                                 or p["revisions"][rev_no]["recorded_ts"] > k))
-            _need((lo is None or r["effective_ts"] >= lo) and (hi is None or r["effective_ts"] < hi))
-            _need(prev is None or prev <= (r["effective_ts"], pid))
-            prev = (r["effective_ts"], pid)
             running += delta
             _need(after == running)
             entries.append(tuple(e))
         _need(running == sn["closing_balance"])
-        if "taken_ts" in sn:  # frozen facts: rebuild the whole statement and require exact equality
+        if "taken_ts" not in sn:  # a legacy snapshot: derive when it was taken from the ledger and its own entries
+            if ledger_latest[0] is None:
+                ledger_latest[0] = max([r["recorded_ts"] for p in s.payments for r in p["revisions"]] + [0.0])
+            latest = max([ledger_latest[0]] + [parse_instant(e[5]) for e in entries])
+            sn = dict(sn, taken_ts=latest, taken_seq=st["seq"])
+        if True:  # frozen facts: rebuild the whole statement and require exact equality, never skipped
             _need(_num(sn["taken_ts"]) and _int(sn["taken_seq"]) and 0 <= sn["taken_seq"])
             _need(sn["taken_seq"] <= st["seq"] and sn["taken_ts"] <= time.time() + 86400)  # taken in this ledger's past
             ob, rebuilt, cb = build_statement(s, sn["user_id"], lo, hi, known, sn["taken_ts"], sn["taken_seq"])
