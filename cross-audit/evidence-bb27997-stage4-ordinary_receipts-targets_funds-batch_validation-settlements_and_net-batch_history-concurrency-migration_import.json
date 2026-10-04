@@ -1,0 +1,869 @@
+{
+  "probes": 162,
+  "passed": 162,
+  "failed": [],
+  "results": [
+    {
+      "probe": "reset",
+      "passed": true,
+      "detail": null
+    },
+    {
+      "probe": "ordinary-refund-null",
+      "passed": true,
+      "detail": null
+    },
+    {
+      "probe": "refund-auth-None",
+      "passed": true,
+      "detail": null
+    },
+    {
+      "probe": "refund-auth-a",
+      "passed": true,
+      "detail": null
+    },
+    {
+      "probe": "refund-auth-c",
+      "passed": true,
+      "detail": null
+    },
+    {
+      "probe": "refund-auth-o",
+      "passed": true,
+      "detail": null
+    },
+    {
+      "probe": "refund-unknown",
+      "passed": true,
+      "detail": null
+    },
+    {
+      "probe": "refund-key-required",
+      "passed": true,
+      "detail": null
+    },
+    {
+      "probe": "refund-key-required",
+      "passed": true,
+      "detail": null
+    },
+    {
+      "probe": "refund-key-long",
+      "passed": true,
+      "detail": null
+    },
+    {
+      "probe": "refund-invalid-amount-0",
+      "passed": true,
+      "detail": null
+    },
+    {
+      "probe": "refund-invalid-amount--1",
+      "passed": true,
+      "detail": null
+    },
+    {
+      "probe": "refund-invalid-amount-1.5",
+      "passed": true,
+      "detail": null
+    },
+    {
+      "probe": "refund-invalid-amount-True",
+      "passed": true,
+      "detail": null
+    },
+    {
+      "probe": "refund-invalid-amount-1",
+      "passed": true,
+      "detail": null
+    },
+    {
+      "probe": "refund-invalid-amount-None",
+      "passed": true,
+      "detail": null
+    },
+    {
+      "probe": "refund-invalid-amount-[]",
+      "passed": true,
+      "detail": null
+    },
+    {
+      "probe": "refund-invalid-amount-1000000001",
+      "passed": true,
+      "detail": null
+    },
+    {
+      "probe": "refund-amount-required",
+      "passed": true,
+      "detail": null
+    },
+    {
+      "probe": "refund-exact-number",
+      "passed": true,
+      "detail": null
+    },
+    {
+      "probe": "refund-exact-number",
+      "passed": true,
+      "detail": null
+    },
+    {
+      "probe": "refund-exact-number",
+      "passed": true,
+      "detail": null
+    },
+    {
+      "probe": "refund-exact-number",
+      "passed": true,
+      "detail": null
+    },
+    {
+      "probe": "refund-too-large",
+      "passed": true,
+      "detail": null
+    },
+    {
+      "probe": "exceeds-atomic",
+      "passed": true,
+      "detail": null
+    },
+    {
+      "probe": "refund-create",
+      "passed": true,
+      "detail": null
+    },
+    {
+      "probe": "refund-receipt",
+      "passed": true,
+      "detail": {
+        "payment_id": "p_~000000000002",
+        "from_user_id": "u_b",
+        "from_handle": "b",
+        "to_user_id": "u_a",
+        "to_handle": "a",
+        "amount": 40,
+        "currency": "EUR",
+        "note": "  \u00e9 \ud83e\udeb7  ",
+        "visibility": "private",
+        "request_id": null,
+        "settlement_id": null,
+        "authorization_id": null,
+        "refund_of": "p_~000000000001",
+        "created_at": "2026-10-04T10:18:57+00:00"
+      }
+    },
+    {
+      "probe": "refund-balances",
+      "passed": true,
+      "detail": null
+    },
+    {
+      "probe": "refund-private-feed",
+      "passed": true,
+      "detail": null
+    },
+    {
+      "probe": "refund-replay",
+      "passed": true,
+      "detail": null
+    },
+    {
+      "probe": "refund-original-response",
+      "passed": true,
+      "detail": null
+    },
+    {
+      "probe": "refund-key-conflict-before-validation",
+      "passed": true,
+      "detail": null
+    },
+    {
+      "probe": "refund-of-refund",
+      "passed": true,
+      "detail": null
+    },
+    {
+      "probe": "correct-refund-immutable",
+      "passed": true,
+      "detail": null
+    },
+    {
+      "probe": "correct-below-refunded",
+      "passed": true,
+      "detail": null
+    },
+    {
+      "probe": "correct-to-refunded",
+      "passed": true,
+      "detail": null
+    },
+    {
+      "probe": "refund-current-corrected-cap",
+      "passed": true,
+      "detail": null
+    },
+    {
+      "probe": "correct-increase-capacity",
+      "passed": true,
+      "detail": null
+    },
+    {
+      "probe": "refund-new-capacity",
+      "passed": true,
+      "detail": null
+    },
+    {
+      "probe": "refund-cumulative-exceeds",
+      "passed": true,
+      "detail": null
+    },
+    {
+      "probe": "original-payment-retry-unchanged",
+      "passed": true,
+      "detail": null
+    },
+    {
+      "probe": "refund-old-replay-after-correction",
+      "passed": true,
+      "detail": null
+    },
+    {
+      "probe": "refund-statement-opposite",
+      "passed": true,
+      "detail": null
+    },
+    {
+      "probe": "reset",
+      "passed": true,
+      "detail": null
+    },
+    {
+      "probe": "refund-request-payment",
+      "passed": true,
+      "detail": null
+    },
+    {
+      "probe": "request-stays-paid",
+      "passed": true,
+      "detail": null
+    },
+    {
+      "probe": "refund-capture",
+      "passed": true,
+      "detail": null
+    },
+    {
+      "probe": "capture-stays-closed",
+      "passed": true,
+      "detail": {
+        "authorization_id": "a_aa5935b087af431d",
+        "from_user_id": "u_a",
+        "from_handle": "a",
+        "to_user_id": "u_b",
+        "to_handle": "b",
+        "amount": 1000,
+        "captured_amount": 400,
+        "remaining_amount": 0,
+        "currency": "EUR",
+        "note": "capture note",
+        "visibility": "private",
+        "status": "captured",
+        "expires_at": "2026-10-04T10:28:57+00:00",
+        "payment_id": "p_~000000000005",
+        "payment_ids": [
+          "p_~000000000005"
+        ],
+        "created_at": "2026-10-04T10:18:57+00:00",
+        "closed_at": "2026-10-04T10:18:57+00:00"
+      }
+    },
+    {
+      "probe": "refund-no-reopened-hold",
+      "passed": true,
+      "detail": null
+    },
+    {
+      "probe": "reset",
+      "passed": true,
+      "detail": null
+    },
+    {
+      "probe": "refund-uses-available",
+      "passed": true,
+      "detail": null
+    },
+    {
+      "probe": "refund-insufficient-atomic",
+      "passed": true,
+      "detail": null
+    },
+    {
+      "probe": "failed-refund-key-reusable",
+      "passed": true,
+      "detail": null
+    },
+    {
+      "probe": "reset",
+      "passed": true,
+      "detail": null
+    },
+    {
+      "probe": "settlement-refund",
+      "passed": true,
+      "detail": null
+    },
+    {
+      "probe": "refund-not-settlement-member",
+      "passed": true,
+      "detail": null
+    },
+    {
+      "probe": "batch-below-refunded",
+      "passed": true,
+      "detail": null
+    },
+    {
+      "probe": "batch-at-refund-floor",
+      "passed": true,
+      "detail": null
+    },
+    {
+      "probe": "settlement-retry-original",
+      "passed": true,
+      "detail": null
+    },
+    {
+      "probe": "reset",
+      "passed": true,
+      "detail": null
+    },
+    {
+      "probe": "batch-auth-None",
+      "passed": true,
+      "detail": null
+    },
+    {
+      "probe": "batch-auth-a",
+      "passed": true,
+      "detail": null
+    },
+    {
+      "probe": "batch-auth-b",
+      "passed": true,
+      "detail": null
+    },
+    {
+      "probe": "batch-auth-c",
+      "passed": true,
+      "detail": null
+    },
+    {
+      "probe": "batch-key-required",
+      "passed": true,
+      "detail": null
+    },
+    {
+      "probe": "batch-key-required",
+      "passed": true,
+      "detail": null
+    },
+    {
+      "probe": "batch-key-long",
+      "passed": true,
+      "detail": null
+    },
+    {
+      "probe": "batch-shape",
+      "passed": true,
+      "detail": null
+    },
+    {
+      "probe": "batch-shape",
+      "passed": true,
+      "detail": null
+    },
+    {
+      "probe": "batch-shape",
+      "passed": true,
+      "detail": null
+    },
+    {
+      "probe": "batch-shape",
+      "passed": true,
+      "detail": null
+    },
+    {
+      "probe": "batch-shape",
+      "passed": true,
+      "detail": null
+    },
+    {
+      "probe": "batch-shape",
+      "passed": true,
+      "detail": null
+    },
+    {
+      "probe": "batch-shape",
+      "passed": true,
+      "detail": null
+    },
+    {
+      "probe": "batch-shape",
+      "passed": true,
+      "detail": null
+    },
+    {
+      "probe": "batch-shape",
+      "passed": true,
+      "detail": null
+    },
+    {
+      "probe": "batch-required",
+      "passed": true,
+      "detail": null
+    },
+    {
+      "probe": "batch-required-payment_id",
+      "passed": true,
+      "detail": null
+    },
+    {
+      "probe": "batch-required-expected_revision",
+      "passed": true,
+      "detail": null
+    },
+    {
+      "probe": "batch-required-amount",
+      "passed": true,
+      "detail": null
+    },
+    {
+      "probe": "batch-required-effective_at",
+      "passed": true,
+      "detail": null
+    },
+    {
+      "probe": "batch-required-reason",
+      "passed": true,
+      "detail": null
+    },
+    {
+      "probe": "batch-field-payment_id",
+      "passed": true,
+      "detail": null
+    },
+    {
+      "probe": "batch-field-payment_id",
+      "passed": true,
+      "detail": null
+    },
+    {
+      "probe": "batch-field-payment_id",
+      "passed": true,
+      "detail": null
+    },
+    {
+      "probe": "batch-field-payment_id",
+      "passed": true,
+      "detail": null
+    },
+    {
+      "probe": "batch-field-expected_revision",
+      "passed": true,
+      "detail": null
+    },
+    {
+      "probe": "batch-field-expected_revision",
+      "passed": true,
+      "detail": null
+    },
+    {
+      "probe": "batch-field-expected_revision",
+      "passed": true,
+      "detail": null
+    },
+    {
+      "probe": "batch-field-expected_revision",
+      "passed": true,
+      "detail": null
+    },
+    {
+      "probe": "batch-field-expected_revision",
+      "passed": true,
+      "detail": null
+    },
+    {
+      "probe": "batch-field-expected_revision",
+      "passed": true,
+      "detail": null
+    },
+    {
+      "probe": "batch-field-amount",
+      "passed": true,
+      "detail": null
+    },
+    {
+      "probe": "batch-field-amount",
+      "passed": true,
+      "detail": null
+    },
+    {
+      "probe": "batch-field-amount",
+      "passed": true,
+      "detail": null
+    },
+    {
+      "probe": "batch-field-amount",
+      "passed": true,
+      "detail": null
+    },
+    {
+      "probe": "batch-field-amount",
+      "passed": true,
+      "detail": null
+    },
+    {
+      "probe": "batch-field-reason",
+      "passed": true,
+      "detail": null
+    },
+    {
+      "probe": "batch-field-reason",
+      "passed": true,
+      "detail": null
+    },
+    {
+      "probe": "batch-field-reason",
+      "passed": true,
+      "detail": null
+    },
+    {
+      "probe": "batch-field-reason",
+      "passed": true,
+      "detail": null
+    },
+    {
+      "probe": "batch-field-effective_at",
+      "passed": true,
+      "detail": null
+    },
+    {
+      "probe": "batch-field-effective_at",
+      "passed": true,
+      "detail": null
+    },
+    {
+      "probe": "batch-field-effective_at",
+      "passed": true,
+      "detail": null
+    },
+    {
+      "probe": "batch-field-effective_at",
+      "passed": true,
+      "detail": null
+    },
+    {
+      "probe": "batch-unknown",
+      "passed": true,
+      "detail": null
+    },
+    {
+      "probe": "batch-stale",
+      "passed": true,
+      "detail": null
+    },
+    {
+      "probe": "item-order-unknown-first",
+      "passed": true,
+      "detail": null
+    },
+    {
+      "probe": "batch-invalid-atomic",
+      "passed": true,
+      "detail": null
+    },
+    {
+      "probe": "item-order-validation-first",
+      "passed": true,
+      "detail": null
+    },
+    {
+      "probe": "operator-corrects-other-sender",
+      "passed": true,
+      "detail": null
+    },
+    {
+      "probe": "batch-response",
+      "passed": true,
+      "detail": {
+        "correction_batch_id": "cb_f334bcc72a834125",
+        "recorded_at": "2026-10-04T10:18:58.016577+00:00",
+        "revisions": [
+          {
+            "payment_id": "p_~000000000001",
+            "revision": 2,
+            "amount": 50,
+            "effective_at": "2026-10-04T10:18:57+00:00",
+            "recorded_at": "2026-10-04T10:18:58.016577+00:00",
+            "reason": "batch fix",
+            "correction_batch_id": "cb_f334bcc72a834125"
+          }
+        ]
+      }
+    },
+    {
+      "probe": "batch-conflict-before-validation",
+      "passed": true,
+      "detail": null
+    },
+    {
+      "probe": "batch-replay",
+      "passed": true,
+      "detail": null
+    },
+    {
+      "probe": "ordinary-single-after-batch",
+      "passed": true,
+      "detail": null
+    },
+    {
+      "probe": "batch-replay-after-newer",
+      "passed": true,
+      "detail": null
+    },
+    {
+      "probe": "reset",
+      "passed": true,
+      "detail": null
+    },
+    {
+      "probe": "incomplete-settlement",
+      "passed": true,
+      "detail": null
+    },
+    {
+      "probe": "incomplete-atomic",
+      "passed": true,
+      "detail": null
+    },
+    {
+      "probe": "item-before-completeness",
+      "passed": true,
+      "detail": null
+    },
+    {
+      "probe": "settlement-different-effective",
+      "passed": true,
+      "detail": null
+    },
+    {
+      "probe": "combined-affordable-reversal",
+      "passed": true,
+      "detail": null
+    },
+    {
+      "probe": "net-no-balance-change",
+      "passed": true,
+      "detail": null
+    },
+    {
+      "probe": "batch-original-feed",
+      "passed": true,
+      "detail": null
+    },
+    {
+      "probe": "batch-frozen-snapshot",
+      "passed": true,
+      "detail": null
+    },
+    {
+      "probe": "batch-input-order",
+      "passed": true,
+      "detail": null
+    },
+    {
+      "probe": "batch-common-recorded",
+      "passed": true,
+      "detail": null
+    },
+    {
+      "probe": "batch-new-statement",
+      "passed": true,
+      "detail": null
+    },
+    {
+      "probe": "settlement-replay-original",
+      "passed": true,
+      "detail": null
+    },
+    {
+      "probe": "batch-current-insufficient",
+      "passed": true,
+      "detail": null
+    },
+    {
+      "probe": "batch-current-atomic",
+      "passed": true,
+      "detail": null
+    },
+    {
+      "probe": "batch-failed-key-reusable",
+      "passed": true,
+      "detail": null
+    },
+    {
+      "probe": "reset",
+      "passed": true,
+      "detail": null
+    },
+    {
+      "probe": "batch-max32",
+      "passed": true,
+      "detail": null
+    },
+    {
+      "probe": "reset",
+      "passed": true,
+      "detail": null
+    },
+    {
+      "probe": "batch-historical-overdraft",
+      "passed": true,
+      "detail": null
+    },
+    {
+      "probe": "batch-history-atomic",
+      "passed": true,
+      "detail": null
+    },
+    {
+      "probe": "batch-historical-net-valid",
+      "passed": true,
+      "detail": null
+    },
+    {
+      "probe": "reset",
+      "passed": true,
+      "detail": null
+    },
+    {
+      "probe": "batch-historical-available",
+      "passed": true,
+      "detail": null
+    },
+    {
+      "probe": "batch-held-atomic",
+      "passed": true,
+      "detail": null
+    },
+    {
+      "probe": "batch-current-before-historical",
+      "passed": true,
+      "detail": null
+    },
+    {
+      "probe": "reset",
+      "passed": true,
+      "detail": null
+    },
+    {
+      "probe": "refund-identical-once",
+      "passed": true,
+      "detail": null
+    },
+    {
+      "probe": "refund-identical-body",
+      "passed": true,
+      "detail": null
+    },
+    {
+      "probe": "reset",
+      "passed": true,
+      "detail": null
+    },
+    {
+      "probe": "refund-capacity-concurrent",
+      "passed": true,
+      "detail": null
+    },
+    {
+      "probe": "refund-conservation",
+      "passed": true,
+      "detail": null
+    },
+    {
+      "probe": "reset",
+      "passed": true,
+      "detail": null
+    },
+    {
+      "probe": "batch-identical-once",
+      "passed": true,
+      "detail": null
+    },
+    {
+      "probe": "batch-identical-body",
+      "passed": true,
+      "detail": null
+    },
+    {
+      "probe": "overlap-only-one",
+      "passed": true,
+      "detail": [
+        201,
+        409
+      ]
+    },
+    {
+      "probe": "reset",
+      "passed": true,
+      "detail": null
+    },
+    {
+      "probe": "stage3-upgrade",
+      "passed": true,
+      "detail": null
+    },
+    {
+      "probe": "stage3-snapshot-preserved",
+      "passed": true,
+      "detail": null
+    },
+    {
+      "probe": "stage3-correction-preserved",
+      "passed": true,
+      "detail": null
+    },
+    {
+      "probe": "reset",
+      "passed": true,
+      "detail": null
+    },
+    {
+      "probe": "stage4-import",
+      "passed": true,
+      "detail": null
+    },
+    {
+      "probe": "stage4-export-identical",
+      "passed": true,
+      "detail": null
+    },
+    {
+      "probe": "imported-refund-retry",
+      "passed": true,
+      "detail": null
+    },
+    {
+      "probe": "imported-batch-retry",
+      "passed": true,
+      "detail": null
+    },
+    {
+      "probe": "imported-stage4-snapshot",
+      "passed": true,
+      "detail": null
+    }
+  ]
+}

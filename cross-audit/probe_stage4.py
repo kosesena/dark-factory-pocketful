@@ -107,10 +107,11 @@ def concurrency():
     check('overlap-only-one',sum(r[0]==201 for r in rs)==1 and sum(r[0]==409 and r[1]['error']['code']=='stale_revision' for r in rs)==1,[r[0] for r in rs])
 
 def migration_import():
-    old='http://cross-s3-495d5d6:8080';reset(histfixture(),base=old);tok=call('POST','/auth/login',{'email':'a@example.com','password':'eight chars'},base=old)[1]['token'];call('POST','/payments/p_b/corrections',{'expected_revision':1,'amount':150,'effective_at':D0,'reason':'legacy'},user=tok,key='legacy',base=old)
+    old=os.getenv('OLD_STAGE3','http://cross-s3-495d5d6:8080');reset(histfixture(),base=old);tok=call('POST','/auth/login',{'email':'a@example.com','password':'eight chars'},base=old)[1]['token'];call('POST','/payments/p_b/corrections',{'expected_revision':1,'amount':150,'effective_at':D0,'reason':'legacy'},user=tok,key='legacy',base=old)
     snap=call('GET','/statement',user=tok,base=old)[1];export=state(old);expect('stage3-upgrade',call('POST','/_test/import',export),204);TOK['a']=tok
     actual=statement(snapshot=snap['snapshot'])[1];expected=copy.deepcopy(snap)
-    for e in expected['entries']:e['payment'].setdefault('refund_of',None)
+    if os.getenv('LEGACY_ADD_REFUND_FIELD')=='1':
+        for e in expected['entries']:e['payment'].setdefault('refund_of',None)
     check('stage3-snapshot-preserved',actual==expected,{'actual':actual,'expected':expected} if actual!=expected else None);check('stage3-correction-preserved',me()['balance']==680 and revisions('p_b')[1]['revisions'][-1]['amount']==150)
     # New stage4 state/receipts survives cross-process import unchanged.
     reset();p=payment('p',amount=100)[1];r=refund(p['payment_id'],40)[1];b=batch([item(p,60)])[1];snap=statement()[1];export=state();expect('stage4-import',call('POST','/_test/import',export,base=DEST),204);check('stage4-export-identical',state(DEST)==export)
