@@ -110,6 +110,15 @@ S4_FAULTS = [
      '    if legacy:  # a snapshot taken before stage 4', '    if False:  # a snapshot taken before stage 4'),
     ("L01", "§10/S4-37 a view-less (pre-stage-4) snapshot cannot hold a refund entry", "snapshot.py",
      '_need("view" in sn or all(', '_need(True or all('),
+    ("M01", "S4-36/§10 legacy candidates are only real moments of the ledger", "snapshot.py",
+     "        if all(ts <= tm for seq, ts in by_seq if seq <= best) and all(ts > tm for seq, ts in by_seq if seq > best):",
+     "        if True:"),
+    ("M02", "§10 a legacy snapshot's balances must equal the rebuild", "snapshot.py",
+     'if ob == sn["opening_balance"] and cb == sn["closing_balance"] and rebuilt == entries:', 'if rebuilt == entries:'),
+    ("M03", "§10 a legacy snapshot's entries must equal the rebuild", "snapshot.py",
+     'and rebuilt == entries:', 'and len(rebuilt) == len(entries):'),
+    ("M04", "S4-36 a legacy snapshot taken before later facts still imports (search is complete)", "snapshot.py",
+     'for taken_ts, taken_seq in past[0]:', 'for taken_ts, taken_seq in past[0][:1]:'),
 ]
 
 K_FAULTS = [
@@ -183,8 +192,9 @@ def evidence(d, url, prev, tag):
     mine = os.path.join(ROOT, f"audit/probes/stage{STAGE}_probes.py")
     rc, out = run([VPY, mine, url, prev], ROOT)
     res["auditor"] = fails(out)
-    rc, out = run([VPY, os.path.join(ROOT, "audit/probes/legacy_snapshot_probes.py"), url, str(STAGE)], ROOT)
-    res["auditor"] = sorted(set(res["auditor"]) | {"legacy:" + x for x in fails(out)})
+    for mode in sorted({STAGE, 3}):
+        rc, out = run([VPY, os.path.join(ROOT, "audit/probes/legacy_snapshot_probes.py"), url, str(mode)], ROOT)
+        res["auditor"] = sorted(set(res["auditor"]) | {f"legacy{mode}:" + x for x in fails(out)})
     rc, out = run(["/bin/sh", "-c", f". .venv/bin/activate && python -m harness run --track pocketful --base-url {url} "
                    f"--previous-base-url {prev} --stages {STAGE} --out {CHECKS}/spec-auditor-seed{STAGE}-{tag}-{int(time.time())}"], HARNESS)
     res["shipped"] = set() if f"stage {STAGE}: pass" in out else {f"stage {STAGE} not pass"}

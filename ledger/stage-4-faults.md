@@ -60,3 +60,16 @@ include this mutation. K02 was first caught only by the implementer; the empty-w
 | L01 | §10/S4-37 a view-less (pre-stage-4) snapshot cannot hold a refund entry | snapshot.py: `_need("view" in sn or all(` → `_need(True or all(` | auditor, impl |
 
 Earlier results stand for the unchanged code: J01–J15 (8bbd03a) and K01–K04 (b6afe75). K03 is still caught only by the spec-auditor's same-instant swap probe.
+
+## Revision 6487f2a: fix-revision seeding (changed code: legacy snapshot search over past moments)
+
+| # | Requirement broken | Change | Caught by |
+|---|---|---|---|
+| J00 | control | none | — (control) |
+| M01 | S4-36/§10 legacy candidates are only real moments of the ledger | snapshot.py: drop the "real moment" filter in `_past_moments` | none in the band's evidence; caught afterwards by the new spec-auditor probe "legacy page at an unreal moment" (seeded payments whose created_at order differs from seq order) |
+| M02 | §10 a legacy snapshot's balances must equal the rebuild | legacy match ignores opening/closing | auditor, impl |
+| M03 | §10 a legacy snapshot's entries must equal the rebuild | legacy match compares entry counts only | none in the seeded run; spec-auditor legacy probe in refund-free mode (same-instant swap) catches it |
+| M04 | S4-36 the legacy search is complete (snapshots taken before later facts) | only the latest moment is tried | impl |
+
+M01 and M03 are caught only by the spec-auditor's probes. Suggested tests: the unreal-moment case and the same-instant
+swap on a refund-free legacy snapshot. The seeding runner now runs the legacy probe in both stage-3 and stage-4 modes.

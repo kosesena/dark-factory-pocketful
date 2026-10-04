@@ -75,7 +75,7 @@ def main():
     if r[0] == 204:
         for n, t in snaps.items():
             pg = call("GET", f"/statement?snapshot={t}&limit=50", token=tok("bob" if n == "bob" else "ada"))[1]
-            same = pg == pages[n] or (STAGE >= 4 and _no_refund_of(pages[n]) == pg)
+            same = pg == pages[n] or _no_refund_of(pages[n]) == pg
             check(f"legacy {n} pages its original entries", same, (pg, pages[n]))
     # tampering after the metadata is stripped
     muts = {
@@ -146,6 +146,7 @@ def main():
                 hit = True
         r = call("POST", "/_test/import", e4)
         check("del view on a snapshot that holds a refund entry -> 422", hit and r[0] == 422, (hit, r[0], r[1]))
+    unreal_moment_probe()
     print(f"{len(fails)} failed")
     sys.exit(1 if fails else 0)
 
@@ -184,6 +185,25 @@ def _no_refund_of(page):
 
 def reset_state(exp):
     assert call("POST", "/_test/import", exp)[0] == 204
+
+
+
+def unreal_moment_probe():
+    """Seeded payments whose created_at order differs from their seq order: a page holding only the earlier-created
+    (later-seq) payment never existed (both were present from reset on), so a legacy snapshot showing it gives 422."""
+    reset(fx(payments=[S3.PM("p_a", amount=100, created=S3.ago(3600)), S3.PM("p_b", amount=50, created=S3.ago(7200))]))
+    ada = tok("ada")
+    ok(S3.st(ada, limit=1), 200)
+    exp = ok(call("GET", "/_test/export"), 200)
+    sn = exp["state"]["snapshots"][0]
+    strip(sn)
+    first = [e for e in sn["entries"] if e[0] == "p_b"]
+    check("seeded out-of-order fixture has p_b first", len(sn["entries"]) == 2 and sn["entries"][0][0] == "p_b",
+          sn["entries"])
+    sn["entries"] = first
+    sn["closing_balance"] = first[0][3]
+    r = call("POST", "/_test/import", exp)
+    check("legacy page at an unreal moment (only the later-seq seeded payment) -> 422", r[0] == 422, r[:2])
 
 
 if __name__ == "__main__":
