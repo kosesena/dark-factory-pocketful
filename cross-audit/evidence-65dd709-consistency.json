@@ -1,0 +1,102 @@
+{
+  "probes": 19,
+  "passed": 19,
+  "failed": [],
+  "results": [
+    {
+      "probe": "reset",
+      "passed": true,
+      "detail": null
+    },
+    {
+      "probe": "record-consistency-self-payment",
+      "passed": true,
+      "detail": null
+    },
+    {
+      "probe": "record-consistency-atomic-self-payment",
+      "passed": true,
+      "detail": null
+    },
+    {
+      "probe": "record-consistency-self-request",
+      "passed": true,
+      "detail": null
+    },
+    {
+      "probe": "record-consistency-atomic-self-request",
+      "passed": true,
+      "detail": null
+    },
+    {
+      "probe": "record-consistency-request-payment-amount-mismatch",
+      "passed": true,
+      "detail": null
+    },
+    {
+      "probe": "record-consistency-atomic-request-payment-amount-mismatch",
+      "passed": true,
+      "detail": null
+    },
+    {
+      "probe": "record-consistency-pending-request-with-fulfillment",
+      "passed": true,
+      "detail": null
+    },
+    {
+      "probe": "record-consistency-atomic-pending-request-with-fulfillment",
+      "passed": true,
+      "detail": null
+    },
+    {
+      "probe": "record-consistency-settlement-member-time-mismatch",
+      "passed": true,
+      "detail": null
+    },
+    {
+      "probe": "record-consistency-atomic-settlement-member-time-mismatch",
+      "passed": true,
+      "detail": null
+    },
+    {
+      "probe": "record-consistency-settlement-member-list-mismatch",
+      "passed": true,
+      "detail": null
+    },
+    {
+      "probe": "record-consistency-atomic-settlement-member-list-mismatch",
+      "passed": true,
+      "detail": null
+    },
+    {
+      "probe": "record-consistency-split-note-overlimit",
+      "passed": true,
+      "detail": null
+    },
+    {
+      "probe": "record-consistency-atomic-split-note-overlimit",
+      "passed": true,
+      "detail": null
+    },
+    {
+      "probe": "seed-note-overlimit-payments",
+      "passed": true,
+      "detail": null
+    },
+    {
+      "probe": "seed-note-atomic-payments",
+      "passed": true,
+      "detail": null
+    },
+    {
+      "probe": "seed-note-overlimit-requests",
+      "passed": true,
+      "detail": null
+    },
+    {
+      "probe": "seed-note-atomic-requests",
+      "passed": true,
+      "detail": null
+    }
+  ]
+}
