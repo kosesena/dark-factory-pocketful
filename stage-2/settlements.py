@@ -1,5 +1,5 @@
 """POST /settlements: atomic net settlement of up to 32 transfers."""
-from common import (ApiError, authenticate, idempotent, new_id, now_ts, parse_amount, parse_note,
+from common import (ApiError, held_of, authenticate, idempotent, new_id, now_ts, parse_amount, parse_note,
                     parse_visibility, store, validation)
 from wallet import lookup_handle, move_money, pay_view
 
@@ -35,7 +35,7 @@ def create_settlement(req):
         for frm, to, amount, _, _ in entries:
             net[frm["id"]] = net.get(frm["id"], 0) - amount
             net[to["id"]] = net.get(to["id"], 0) + amount
-        if any(s.users[uid]["balance"] + d < 0 for uid, d in net.items()):
+        if any(s.users[uid]["balance"] + d < held_of(s, uid) for uid, d in net.items()):
             raise ApiError(409, "insufficient_funds", "settlement is not affordable")
         sid = new_id("st_")
         stamp = now_ts()

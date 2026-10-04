@@ -43,9 +43,34 @@ class State:
         self.idem = {}        # (user id, key, path) -> (fingerprint, response)
         self.operators = set()
         self.seq = 0
+        self.auths = []       # authorizations, insertion order
+        self.auths_by_id = {}
+        self.open_auths = {}  # id -> record, only status "open"
+        self.auth_ttl = 600
 
 
 store = types.SimpleNamespace(state=State())
+
+
+def held_of(s, uid):
+    return sum(a["amount"] - a["captured_amount"] for a in s.open_auths.values()
+               if a["from_user_id"] == uid)
+
+
+def available_of(s, user):
+    return user["balance"] - held_of(s, user["id"])
+
+
+def close_auth(s, a, status):
+    a["status"] = status
+    s.open_auths.pop(a["id"], None)
+
+
+def sweep(s, now):
+    """Expire open authorizations whose deadline has passed (releases their remainder)."""
+    for a in list(s.open_auths.values()):
+        if a["expires_ts"] <= now:
+            close_auth(s, a, "expired")
 
 
 def next_seq(s):

@@ -513,5 +513,153 @@ class ExportImport(Base):
         self.assertEqual(call("POST", "/settlements", {"transfers": [{"from_handle": "ada", "to_handle": "bob", "amount": 1}]}, token=self.ada, key="X")[0], 201)
 
 
+class Authorizations(Base):
+    def auth(self, tok, body, key="A"):
+        return call("POST", "/authorizations", body, token=tok, key=key)
+
+    def cap(self, tok, aid, body, key="C"):
+        return call("POST", "/authorizations/%s/capture" % aid, body, token=tok, key=key)
+
+    def me(self, tok):
+        return call("GET", "/me", token=tok)[1]
+
+    def test_me_fields(self):
+        m = self.me(self.ada)
+        self.assertEqual((m["balance"], m["total"], m["available"], m["held"]), (10000, 10000, 10000, 0))
+
+    def test_hold_capture_release(self):
+        s, a, _ = self.auth(self.ada, {"to_handle": "bob", "amount": 2000, "note": "dep", "visibility": "private"})
+        self.assertEqual((s, a["status"], a["remaining_amount"], a["captured_amount"], a["payment_id"]), (201, "open", 2000, 0, None))
+        self.assertEqual(a["payment_ids"], [])
+        m = self.me(self.ada)
+        self.assertEqual((m["balance"], m["available"], m["held"]), (10000, 8000, 2000))
+        self.assertEqual(len(call("GET", "/activity", token=self.bob)[1]["payments"]), 1)
+        self.assertEqual(self.auth(self.ada, {"to_handle": "bob", "amount": 2000, "note": "dep", "visibility": "private"}, "A")[0], 200)
+        # held funds cannot fund payments
+        self.assertEqual(call("POST", "/payments", {"to_handle": "bob", "amount": 8001}, token=self.ada, key="p")[1]["error"]["code"], "insufficient_funds")
+        self.assertEqual(self.auth(self.ada, {"to_handle": "bob", "amount": 8001}, "A2")[0], 409)
+        aid = a["authorization_id"]
+        self.assertEqual(self.cap(self.ada, aid, {})[0], 403)
+        self.assertEqual(self.cap(self.cy, aid, {})[0], 403)
+        self.assertEqual(self.cap(self.bob, aid, {"amount": 2001})[1]["error"]["code"], "capture_exceeds_authorization")
+        self.assertEqual(self.cap(self.bob, aid, {"amount": 0})[0], 422)
+        s, p, _ = self.cap(self.bob, aid, {"amount": 1500})
+        self.assertEqual((s, p["amount"], p["authorization_id"], p["request_id"], p["visibility"], p["note"]), (201, 1500, aid, None, "private", "dep"))
+        m = self.me(self.ada)
+        self.assertEqual((m["balance"], m["available"], m["held"]), (8500, 8500, 0))
+        self.assertEqual(self.me(self.bob)["balance"], 4000)
+        self.assertEqual(self.cap(self.bob, aid, {"amount": 1500})[0], 200)
+        self.assertEqual(self.cap(self.bob, aid, {"amount": 1}, "C2")[1]["error"]["code"], "authorization_not_open")
+        self.assertEqual(call("POST", "/authorizations/%s/void" % aid, token=self.ada)[0], 409)
+        s, b, _ = call("GET", "/authorizations?status=captured", token=self.bob)
+        self.assertEqual((b["authorizations"][0]["captured_amount"], b["authorizations"][0]["remaining_amount"]), (1500, 0))
+        self.assertEqual(call("GET", "/authorizations", token=self.cy)[1]["authorizations"], [])
+        self.assertEqual(self.total(), 12500)
+
+    def test_extended_capture_void_and_validation(self):
+        aid = self.auth(self.ada, {"to_handle": "bob", "amount": 1000})[1]["authorization_id"]
+        s, p, _ = self.cap(self.bob, aid, {"amount": 400, "final": False}, "C1")
+        a = call("GET", "/authorizations?direction=incoming", token=self.bob)[1]["authorizations"][0]
+        self.assertEqual((a["status"], a["remaining_amount"], a["captured_amount"], a["payment_ids"]), ("open", 600, 400, [p["payment_id"]]))
+        self.assertEqual(self.me(self.ada)["held"], 600)
+        self.assertEqual(self.cap(self.bob, aid, {"amount": 700, "final": False}, "C2")[0], 422)
+        self.assertEqual(self.cap(self.bob, aid, {"final": "no"}, "C3")[0], 400)
+        s, p2, _ = self.cap(self.bob, aid, {"amount": 100, "final": False}, "C4")
+        self.assertEqual(call("POST", "/authorizations/%s/void" % aid, token=self.cy)[0], 403)
+        self.assertEqual(call("POST", "/authorizations/%s/void" % aid, token=self.bob)[0], 403)
+        s, v, _ = call("POST", "/authorizations/%s/void" % aid, token=self.ada)
+        self.assertEqual((s, v["status"], v["remaining_amount"], v["captured_amount"], v["payment_ids"]), (200, "voided", 0, 500, [p["payment_id"], p2["payment_id"]]))
+        self.assertEqual(call("POST", "/authorizations/%s/void" % aid, token=self.ada)[0], 200)
+        self.assertEqual(self.cap(self.bob, aid, {}, "C5")[1]["error"]["code"], "authorization_not_open")
+        self.assertEqual(self.me(self.ada)["held"], 0)
+        self.assertEqual(self.me(self.ada)["balance"], 9500)
+        # full remainder with final false closes it
+        aid = self.auth(self.ada, {"to_handle": "bob", "amount": 100}, "A9")[1]["authorization_id"]
+        self.cap(self.bob, aid, {"amount": 100, "final": False}, "C6")
+        self.assertEqual(call("GET", "/authorizations?status=captured", token=self.ada)[1]["authorizations"][0]["authorization_id"], aid)
+        for bad in ({"to_handle": "ada", "amount": 1}, {"to_handle": "zz", "amount": 1}):
+            self.assertIn(self.auth(self.ada, bad, "B")[0], (404, 422))
+        self.assertEqual(call("POST", "/authorizations/nope/void", token=self.ada)[0], 404)
+        self.assertEqual(self.cap(self.bob, "nope", {})[0], 404)
+        self.assertEqual(call("GET", "/authorizations?direction=x", token=self.ada)[0], 422)
+
+    def test_expiry_and_ttl(self):
+        fx = fixture(authorization_ttl_seconds=1)
+        call("POST", "/_test/reset", fx)
+        ada, bob = login("ada"), login("bob")
+        s, a, _ = self.auth(ada, {"to_handle": "bob", "amount": 3000})
+        self.assertEqual(self.me(ada)["available"], 7000)
+        import time
+        time.sleep(2.2)
+        self.assertEqual(self.me(ada)["available"], 10000)
+        self.assertEqual(call("GET", "/authorizations?status=expired", token=ada)[1]["authorizations"][0]["status"], "expired")
+        self.assertEqual(call("GET", "/authorizations?status=open", token=ada)[1]["authorizations"], [])
+        self.assertEqual(self.cap(bob, a["authorization_id"], {}, "k")[1]["error"]["code"], "authorization_expired")
+        self.assertEqual(call("POST", "/authorizations/%s/void" % a["authorization_id"], token=ada)[0], 409)
+        for ttl in (0, -1, "5", True, 1.5):
+            self.assertEqual(call("POST", "/_test/reset", fixture(authorization_ttl_seconds=ttl))[0], 422)
+
+    def test_seeded_holds(self):
+        past = "2000-01-01T00:00:00+00:00"
+        fx = fixture(authorizations=[
+            {"id": "a_1", "from_user_id": "u_ada", "to_user_id": "u_bob", "amount": 2000, "note": "deposit",
+             "visibility": "public", "status": "open", "expires_at": "2099-01-01T00:00:00+00:00"},
+            {"id": "a_2", "from_user_id": "u_ada", "to_user_id": "u_bob", "amount": 99999,
+             "status": "open", "expires_at": past},
+            {"id": "a_3", "from_user_id": "u_ada", "to_user_id": "u_bob", "amount": 5, "status": "voided",
+             "expires_at": "2099-01-01T00:00:00+00:00"}])
+        self.assertEqual(call("POST", "/_test/reset", fx)[0], 204)
+        ada = login("ada")
+        m = self.me(ada)
+        self.assertEqual((m["balance"], m["available"], m["held"]), (10000, 8000, 2000))
+        st = {a["authorization_id"]: a["status"] for a in call("GET", "/authorizations", token=ada)[1]["authorizations"]}
+        self.assertEqual(st, {"a_1": "open", "a_2": "expired", "a_3": "voided"})
+        fx["authorizations"][0]["amount"] = 10001
+        self.assertEqual(call("POST", "/_test/reset", fx)[0], 422)
+        self.assertEqual(self.me(ada)["held"], 2000)
+        fx2 = fixture(settlement_operator_ids=["u_ada"], authorizations=[{"id": "a_1", "from_user_id": "u_cy", "to_user_id": "u_bob", "amount": 1,
+            "status": "open", "expires_at": "2099-01-01T00:00:00+00:00"}])
+        self.assertEqual(call("POST", "/_test/reset", fx2)[0], 422)  # cy has 0
+
+    def test_settlement_respects_holds(self):
+        self.auth(self.ada, {"to_handle": "bob", "amount": 9000})
+        t = [{"from_handle": "ada", "to_handle": "bob", "amount": 1001}]
+        self.assertEqual(call("POST", "/settlements", {"transfers": t}, token=self.ada, key="S")[0], 409)
+        t[0]["amount"] = 1000
+        self.assertEqual(call("POST", "/settlements", {"transfers": t}, token=self.ada, key="S2")[0], 201)
+
+    def test_concurrent_captures_and_payments(self):
+        aid = self.auth(self.ada, {"to_handle": "bob", "amount": 1000})[1]["authorization_id"]
+        with ThreadPoolExecutor(30) as ex:
+            res = list(ex.map(lambda i: self.cap(self.bob, aid, {"amount": 100, "final": False}, "c%d" % i), range(30)))
+        self.assertEqual(sum(1 for r in res if r[0] == 201), 10)
+        self.assertTrue(all(r[0] in (201, 409) for r in res))
+        self.assertEqual(self.me(self.ada)["held"], 0)
+        self.assertEqual(self.bal(self.ada), 9000)
+        # payments racing a hold: available never negative
+        aid = self.auth(self.ada, {"to_handle": "cy", "amount": 6000}, "z")[1]["authorization_id"]
+        with ThreadPoolExecutor(30) as ex:
+            res = list(ex.map(lambda i: call("POST", "/payments", {"to_handle": "bob", "amount": 100}, token=self.ada, key="q%d" % i), range(30)))
+        self.assertEqual(sum(1 for r in res if r[0] == 201), 30)
+        res = call("POST", "/payments", {"to_handle": "bob", "amount": 100}, token=self.ada, key="last")
+        self.assertEqual(res[0], 409)
+        self.assertEqual(self.me(self.ada)["available"], 0)
+        self.assertEqual(self.total(), 12500)
+
+    def test_import_stage1_export(self):
+        s, snap, _ = call("GET", "/_test/export")
+        st = snap["state"]
+        for k in ("authorizations", "auth_ttl"):
+            st.pop(k)
+        for p in st["payments"]:
+            p.pop("authorization_id", None)
+        self.assertEqual(call("POST", "/_test/import", snap)[0], 204)
+        self.assertEqual(self.me(self.ada)["available"], 10000)
+        s, snap, _ = call("GET", "/_test/export")
+        self.auth(self.ada, {"to_handle": "bob", "amount": 100})
+        self.assertEqual(call("POST", "/_test/import", snap)[0], 204)
+        self.assertEqual(self.me(self.ada)["held"], 0)
+
+
 if __name__ == "__main__":
     unittest.main()

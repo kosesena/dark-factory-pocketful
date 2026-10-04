@@ -3,16 +3,18 @@ import json
 import os
 import re
 import sys
+import time
 from http.server import BaseHTTPRequestHandler, ThreadingHTTPServer
 from urllib.parse import parse_qs, unquote, urlsplit
 
 import accounts
+import authorizations
 import settlements
 import snapshot
 import wallet
-from common import LOCK, ApiError
+from common import LOCK, ApiError, store, sweep
 
-MODULES = [accounts, wallet, snapshot, settlements]
+MODULES = [accounts, wallet, snapshot, settlements, authorizations]
 
 ROUTES = [(m, re.compile(p), fn) for mod in MODULES for (m, p, fn) in mod.ROUTES]
 
@@ -32,6 +34,7 @@ def dispatch(req):
             if method == req.method:
                 req.params = m.groups()
                 with LOCK:
+                    sweep(store.state, time.time())
                     return fn(req)
             allowed = True
     if allowed:

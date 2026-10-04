@@ -1,7 +1,8 @@
 """Health, reset, signup, login and /me."""
 import re
+import time
 
-from common import (ApiError, State, store, STATUSES, HANDLE_RE, EMAIL_RE, authenticate,
+from common import (ApiError, State, available_of, held_of, store, sweep, STATUSES, HANDLE_RE, EMAIL_RE, authenticate,
                     check_password, get_str, hash_password, new_id, next_seq, now_ts,
                     parse_json, parse_ts, validation)
 
@@ -104,6 +105,44 @@ def build_state(fx):
         s.requests.append(rec)
         s.requests_by_id[rid] = rec
 
+    ttl = fx.get("authorization_ttl_seconds", 600)
+    if isinstance(ttl, bool) or not isinstance(ttl, int) or ttl < 1:
+        raise validation("authorization_ttl_seconds must be a positive integer")
+    s.auth_ttl = ttl
+    now = time.time()
+    for a in lst("authorizations"):
+        aid = a.get("id") if a.get("id") is not None else new_id("a_")
+        amt = _int(a.get("amount"), 1)
+        cap = _int(a.get("captured_amount", 0 if a.get("status", "open") != "captured" else a.get("amount")))
+        note = a.get("note", "")
+        vis = a.get("visibility", "public")
+        status = a.get("status", "open")
+        pids = a.get("payment_ids", [])
+        if (not isinstance(aid, str) or not aid or len(aid) > 64 or aid in s.auths_by_id
+                or a.get("from_user_id") not in s.users or a.get("to_user_id") not in s.users
+                or amt is None or cap is None or cap > amt or not isinstance(note, str)
+                or vis not in ("public", "private") or not isinstance(vis, str)
+                or status not in ("open", "captured", "voided", "expired")
+                or not isinstance(status, str)
+                or not isinstance(pids, list) or not all(isinstance(x, str) for x in pids)):
+            raise validation("bad authorization")
+        try:
+            ets, eat = parse_ts(a.get("expires_at"))
+        except (ValueError, OverflowError, OSError):
+            raise validation("bad expires_at")
+        rec = {"id": aid, "from_user_id": a["from_user_id"], "to_user_id": a["to_user_id"],
+               "amount": amt, "captured_amount": cap, "note": note, "visibility": vis,
+               "status": status, "expires_at": eat, "expires_ts": ets, "payment_ids": list(pids)}
+        stamp(a, rec)
+        s.auths.append(rec)
+        s.auths_by_id[aid] = rec
+        if status == "open":
+            s.open_auths[aid] = rec
+    sweep(s, now)
+    for uid, u in s.users.items():
+        if held_of(s, uid) > u["balance"]:
+            raise validation("seeded holds exceed the balance")
+
     ops = fx.get("settlement_operator_ids", [])
     if not isinstance(ops, list) or not all(isinstance(x, str) for x in ops):
         raise validation("settlement_operator_ids must be an array of strings")
@@ -169,6 +208,8 @@ def me(req):
     s = store.state
     return 200, {"user_id": user["id"], "display_name": user["display_name"],
                  "handle": user["handle"], "balance": user["balance"],
+                 "total": user["balance"], "available": available_of(s, user),
+                 "held": held_of(s, user["id"]),
                  "currency": s.currency, "minor_units": s.minor_units}
 
 

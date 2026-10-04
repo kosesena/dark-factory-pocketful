@@ -1,5 +1,5 @@
 """Payments, requests, splits and the activity feed."""
-from common import (ApiError, STATUSES, authenticate, get_str, idempotent, new_id, next_seq,
+from common import (ApiError, available_of, STATUSES, authenticate, get_str, idempotent, new_id, next_seq,
                     now_ts, paginate, parse_amount, parse_json, parse_note, parse_visibility,
                     store, validation)
 
@@ -10,6 +10,7 @@ def pay_view(s, p):
             "to_user_id": tu["id"], "to_handle": tu["handle"], "amount": p["amount"],
             "currency": s.currency, "note": p["note"], "visibility": p["visibility"],
             "request_id": p["request_id"], "settlement_id": p["settlement_id"],
+            "authorization_id": p.get("authorization_id"),
             "created_at": p["created_at"]}
 
 
@@ -22,9 +23,9 @@ def req_view(s, r):
 
 
 def move_money(s, frm, to, amount, note, visibility, request_id=None, settlement_id=None,
-               stamp=None, check_funds=True):
-    """Caller holds the lock."""
-    if check_funds and frm["balance"] < amount:
+               stamp=None, check_funds=True, authorization_id=None):
+    """Caller holds the lock. Held funds cannot fund a transfer (checked against available)."""
+    if check_funds and available_of(s, frm) < amount:
         raise ApiError(409, "insufficient_funds", "insufficient funds")
     frm["balance"] -= amount
     to["balance"] += amount
@@ -32,6 +33,7 @@ def move_money(s, frm, to, amount, note, visibility, request_id=None, settlement
     p = {"id": new_id("p_"), "from_user_id": frm["id"], "to_user_id": to["id"],
          "amount": amount, "note": note, "visibility": visibility,
          "request_id": request_id, "settlement_id": settlement_id,
+         "authorization_id": authorization_id,
          "created_at": created, "ts": ts, "seq": next_seq(s)}
     s.payments.append(p)
     s.payments_by_id[p["id"]] = p

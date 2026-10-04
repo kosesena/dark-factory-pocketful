@@ -1,7 +1,7 @@
 """GET /_test/export and POST /_test/import."""
 import json
 
-from common import (HANDLE_RE, STATUSES, State, parse_json, store, validation)
+from common import (HANDLE_RE, held_of, STATUSES, State, parse_json, store, validation)
 
 
 def export(req):
@@ -14,6 +14,7 @@ def export(req):
         "splits": s.splits, "settlements": s.settlements,
         "idempotency": [[u, k, p, fp, resp] for (u, k, p), (fp, resp) in s.idem.items()],
         "operators": sorted(s.operators), "seq": s.seq,
+        "authorizations": s.auths, "auth_ttl": s.auth_ttl,
     }
     # serialised under the lock: an atomic, read-only snapshot
     data = json.dumps({"track": "pocketful", "format_version": 1, "state": state})
@@ -57,6 +58,7 @@ def load_state(st):
     for p in st["payments"]:
         rec = {k: p[k] for k in ("id", "from_user_id", "to_user_id", "amount", "note", "visibility",
                                  "request_id", "settlement_id", "created_at", "ts", "seq")}
+        rec["authorization_id"] = p.get("authorization_id")  # absent in stage-1 exports
         _need(_str(rec["id"]) and rec["id"] not in s.payments_by_id)
         _need(rec["from_user_id"] in s.users and rec["to_user_id"] in s.users)
         _need(_int(rec["amount"]) and rec["amount"] >= 0 and _str(rec["note"]))
@@ -89,8 +91,31 @@ def load_state(st):
         s.idem[(u, k, p)] = (fp, resp)
     _need(isinstance(st["operators"], list) and all(_str(x) for x in st["operators"]))
     s.operators = set(st["operators"])
+    ttl = st.get("auth_ttl", 600)  # stage-1 exports carry no authorizations
+    _need(_int(ttl) and ttl >= 1)
+    s.auth_ttl = ttl
+    for a in st.get("authorizations", []):
+        rec = {k: a[k] for k in ("id", "from_user_id", "to_user_id", "amount", "captured_amount",
+                                 "note", "visibility", "status", "expires_at", "expires_ts",
+                                 "payment_ids", "created_at", "ts", "seq")}
+        _need(_str(rec["id"]) and rec["id"] not in s.auths_by_id)
+        _need(rec["from_user_id"] in s.users and rec["to_user_id"] in s.users)
+        _need(_int(rec["amount"]) and _int(rec["captured_amount"])
+              and 0 <= rec["captured_amount"] <= rec["amount"] and _str(rec["note"]))
+        _need(rec["visibility"] in ("public", "private")
+              and rec["status"] in ("open", "captured", "voided", "expired"))
+        _need(_str(rec["expires_at"]) and isinstance(rec["expires_ts"], (int, float)))
+        _need(isinstance(rec["payment_ids"], list) and all(_str(x) for x in rec["payment_ids"]))
+        _need(_str(rec["created_at"]) and isinstance(rec["ts"], (int, float)) and _int(rec["seq"]))
+        s.auths.append(rec)
+        s.auths_by_id[rec["id"]] = rec
+        if rec["status"] == "open":
+            s.open_auths[rec["id"]] = rec
+    for uid, u in s.users.items():
+        _need(held_of(s, uid) <= u["balance"])
     _need(_int(st["seq"]))
-    s.seq = max(st["seq"], max([p["seq"] for p in s.payments] + [r["seq"] for r in s.requests] + [0]))
+    s.seq = max(st["seq"], max([p["seq"] for p in s.payments] + [r["seq"] for r in s.requests]
+                         + [a["seq"] for a in s.auths] + [0]))
     return s
 
 
