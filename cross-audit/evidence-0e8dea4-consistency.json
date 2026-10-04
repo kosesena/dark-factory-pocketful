@@ -1,0 +1,263 @@
+{
+  "probes": 20,
+  "passed": 1,
+  "failed": [
+    {
+      "probe": "record-consistency-self-payment",
+      "passed": false,
+      "detail": {
+        "status": 204,
+        "body": null
+      }
+    },
+    {
+      "probe": "record-consistency-atomic-self-payment",
+      "passed": false,
+      "detail": null
+    },
+    {
+      "probe": "record-consistency-self-request",
+      "passed": false,
+      "detail": {
+        "status": 204,
+        "body": null
+      }
+    },
+    {
+      "probe": "record-consistency-atomic-self-request",
+      "passed": false,
+      "detail": null
+    },
+    {
+      "probe": "record-consistency-request-payment-amount-mismatch",
+      "passed": false,
+      "detail": {
+        "status": 204,
+        "body": null
+      }
+    },
+    {
+      "probe": "record-consistency-atomic-request-payment-amount-mismatch",
+      "passed": false,
+      "detail": null
+    },
+    {
+      "probe": "record-consistency-pending-request-with-fulfillment",
+      "passed": false,
+      "detail": {
+        "status": 204,
+        "body": null
+      }
+    },
+    {
+      "probe": "record-consistency-atomic-pending-request-with-fulfillment",
+      "passed": false,
+      "detail": null
+    },
+    {
+      "probe": "import-does-not-enable-second-fulfillment",
+      "passed": false,
+      "detail": {
+        "pay_status": 201,
+        "payments_for_request": 2
+      }
+    },
+    {
+      "probe": "record-consistency-settlement-member-time-mismatch",
+      "passed": false,
+      "detail": {
+        "status": 204,
+        "body": null
+      }
+    },
+    {
+      "probe": "record-consistency-atomic-settlement-member-time-mismatch",
+      "passed": false,
+      "detail": null
+    },
+    {
+      "probe": "record-consistency-settlement-member-list-mismatch",
+      "passed": false,
+      "detail": {
+        "status": 204,
+        "body": null
+      }
+    },
+    {
+      "probe": "record-consistency-atomic-settlement-member-list-mismatch",
+      "passed": false,
+      "detail": null
+    },
+    {
+      "probe": "record-consistency-split-note-overlimit",
+      "passed": false,
+      "detail": {
+        "status": 204,
+        "body": null
+      }
+    },
+    {
+      "probe": "record-consistency-atomic-split-note-overlimit",
+      "passed": false,
+      "detail": null
+    },
+    {
+      "probe": "seed-note-overlimit-payments",
+      "passed": false,
+      "detail": {
+        "status": 204,
+        "body": null
+      }
+    },
+    {
+      "probe": "seed-note-atomic-payments",
+      "passed": false,
+      "detail": null
+    },
+    {
+      "probe": "seed-note-overlimit-requests",
+      "passed": false,
+      "detail": {
+        "status": 204,
+        "body": null
+      }
+    },
+    {
+      "probe": "seed-note-atomic-requests",
+      "passed": false,
+      "detail": null
+    }
+  ],
+  "results": [
+    {
+      "probe": "reset",
+      "passed": true,
+      "detail": null
+    },
+    {
+      "probe": "record-consistency-self-payment",
+      "passed": false,
+      "detail": {
+        "status": 204,
+        "body": null
+      }
+    },
+    {
+      "probe": "record-consistency-atomic-self-payment",
+      "passed": false,
+      "detail": null
+    },
+    {
+      "probe": "record-consistency-self-request",
+      "passed": false,
+      "detail": {
+        "status": 204,
+        "body": null
+      }
+    },
+    {
+      "probe": "record-consistency-atomic-self-request",
+      "passed": false,
+      "detail": null
+    },
+    {
+      "probe": "record-consistency-request-payment-amount-mismatch",
+      "passed": false,
+      "detail": {
+        "status": 204,
+        "body": null
+      }
+    },
+    {
+      "probe": "record-consistency-atomic-request-payment-amount-mismatch",
+      "passed": false,
+      "detail": null
+    },
+    {
+      "probe": "record-consistency-pending-request-with-fulfillment",
+      "passed": false,
+      "detail": {
+        "status": 204,
+        "body": null
+      }
+    },
+    {
+      "probe": "record-consistency-atomic-pending-request-with-fulfillment",
+      "passed": false,
+      "detail": null
+    },
+    {
+      "probe": "import-does-not-enable-second-fulfillment",
+      "passed": false,
+      "detail": {
+        "pay_status": 201,
+        "payments_for_request": 2
+      }
+    },
+    {
+      "probe": "record-consistency-settlement-member-time-mismatch",
+      "passed": false,
+      "detail": {
+        "status": 204,
+        "body": null
+      }
+    },
+    {
+      "probe": "record-consistency-atomic-settlement-member-time-mismatch",
+      "passed": false,
+      "detail": null
+    },
+    {
+      "probe": "record-consistency-settlement-member-list-mismatch",
+      "passed": false,
+      "detail": {
+        "status": 204,
+        "body": null
+      }
+    },
+    {
+      "probe": "record-consistency-atomic-settlement-member-list-mismatch",
+      "passed": false,
+      "detail": null
+    },
+    {
+      "probe": "record-consistency-split-note-overlimit",
+      "passed": false,
+      "detail": {
+        "status": 204,
+        "body": null
+      }
+    },
+    {
+      "probe": "record-consistency-atomic-split-note-overlimit",
+      "passed": false,
+      "detail": null
+    },
+    {
+      "probe": "seed-note-overlimit-payments",
+      "passed": false,
+      "detail": {
+        "status": 204,
+        "body": null
+      }
+    },
+    {
+      "probe": "seed-note-atomic-payments",
+      "passed": false,
+      "detail": null
+    },
+    {
+      "probe": "seed-note-overlimit-requests",
+      "passed": false,
+      "detail": {
+        "status": 204,
+        "body": null
+      }
+    },
+    {
+      "probe": "seed-note-atomic-requests",
+      "passed": false,
+      "detail": null
+    }
+  ]
+}

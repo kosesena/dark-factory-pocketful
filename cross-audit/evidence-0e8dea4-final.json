@@ -1,0 +1,640 @@
+{
+  "probes": 120,
+  "passed": 116,
+  "failed": [
+    {
+      "probe": "record-rule-payments-note-xxxxxxxxxxxxxxxxxxxx",
+      "passed": false,
+      "detail": {
+        "status": 204,
+        "body": null
+      }
+    },
+    {
+      "probe": "record-rule-atomic-payments-note",
+      "passed": false,
+      "detail": null
+    },
+    {
+      "probe": "record-rule-requests-note-xxxxxxxxxxxxxxxxxxxx",
+      "passed": false,
+      "detail": {
+        "status": 204,
+        "body": null
+      }
+    },
+    {
+      "probe": "record-rule-atomic-requests-note",
+      "passed": false,
+      "detail": null
+    }
+  ],
+  "results": [
+    {
+      "probe": "reset",
+      "passed": true,
+      "detail": null
+    },
+    {
+      "probe": "canonical-first-0",
+      "passed": true,
+      "detail": null
+    },
+    {
+      "probe": "canonical-repeat-0",
+      "passed": true,
+      "detail": null
+    },
+    {
+      "probe": "canonical-original-0",
+      "passed": true,
+      "detail": null
+    },
+    {
+      "probe": "canonical-first-1",
+      "passed": true,
+      "detail": null
+    },
+    {
+      "probe": "canonical-repeat-1",
+      "passed": true,
+      "detail": null
+    },
+    {
+      "probe": "canonical-original-1",
+      "passed": true,
+      "detail": null
+    },
+    {
+      "probe": "canonical-first-2",
+      "passed": true,
+      "detail": null
+    },
+    {
+      "probe": "canonical-repeat-2",
+      "passed": true,
+      "detail": null
+    },
+    {
+      "probe": "canonical-original-2",
+      "passed": true,
+      "detail": null
+    },
+    {
+      "probe": "canonical-first-3",
+      "passed": true,
+      "detail": null
+    },
+    {
+      "probe": "canonical-repeat-3",
+      "passed": true,
+      "detail": null
+    },
+    {
+      "probe": "canonical-original-3",
+      "passed": true,
+      "detail": null
+    },
+    {
+      "probe": "canonical-first-4",
+      "passed": true,
+      "detail": null
+    },
+    {
+      "probe": "canonical-repeat-4",
+      "passed": true,
+      "detail": null
+    },
+    {
+      "probe": "canonical-original-4",
+      "passed": true,
+      "detail": null
+    },
+    {
+      "probe": "canonical-first-5",
+      "passed": true,
+      "detail": null
+    },
+    {
+      "probe": "canonical-repeat-5",
+      "passed": true,
+      "detail": null
+    },
+    {
+      "probe": "canonical-original-5",
+      "passed": true,
+      "detail": null
+    },
+    {
+      "probe": "canonical-first-6",
+      "passed": true,
+      "detail": null
+    },
+    {
+      "probe": "canonical-repeat-6",
+      "passed": true,
+      "detail": null
+    },
+    {
+      "probe": "canonical-original-6",
+      "passed": true,
+      "detail": null
+    },
+    {
+      "probe": "extreme-amount-1e1000000",
+      "passed": true,
+      "detail": null
+    },
+    {
+      "probe": "extreme-amount-atomic-1e1000000",
+      "passed": true,
+      "detail": null
+    },
+    {
+      "probe": "extreme-amount-1e-1000000",
+      "passed": true,
+      "detail": null
+    },
+    {
+      "probe": "extreme-amount-atomic-1e-1000000",
+      "passed": true,
+      "detail": null
+    },
+    {
+      "probe": "extreme-amount--1e1000000",
+      "passed": true,
+      "detail": null
+    },
+    {
+      "probe": "extreme-amount-atomic--1e1000000",
+      "passed": true,
+      "detail": null
+    },
+    {
+      "probe": "extreme-amount-1e9999999999999999999",
+      "passed": true,
+      "detail": null
+    },
+    {
+      "probe": "extreme-amount-atomic-1e9999999999999999999",
+      "passed": true,
+      "detail": null
+    },
+    {
+      "probe": "extreme-amount-1e-9999999999999999999",
+      "passed": true,
+      "detail": null
+    },
+    {
+      "probe": "extreme-amount-atomic-1e-9999999999999999999",
+      "passed": true,
+      "detail": null
+    },
+    {
+      "probe": "long-integral-0",
+      "passed": true,
+      "detail": null
+    },
+    {
+      "probe": "long-integral-1",
+      "passed": true,
+      "detail": null
+    },
+    {
+      "probe": "long-integral-2",
+      "passed": true,
+      "detail": null
+    },
+    {
+      "probe": "reset-unknown-number-0",
+      "passed": true,
+      "detail": null
+    },
+    {
+      "probe": "reset-unknown-number-1",
+      "passed": true,
+      "detail": null
+    },
+    {
+      "probe": "reset-unknown-number-2",
+      "passed": true,
+      "detail": null
+    },
+    {
+      "probe": "reset",
+      "passed": true,
+      "detail": null
+    },
+    {
+      "probe": "transition-pay",
+      "passed": true,
+      "detail": null
+    },
+    {
+      "probe": "transition-cancel",
+      "passed": true,
+      "detail": null
+    },
+    {
+      "probe": "transition-decline",
+      "passed": true,
+      "detail": null
+    },
+    {
+      "probe": "full-transition-import",
+      "passed": true,
+      "detail": null
+    },
+    {
+      "probe": "full-transition-exact",
+      "passed": true,
+      "detail": null
+    },
+    {
+      "probe": "historic-request-replay-pay",
+      "passed": true,
+      "detail": null
+    },
+    {
+      "probe": "historic-request-exact-pay",
+      "passed": true,
+      "detail": null
+    },
+    {
+      "probe": "historic-request-replay-cancel",
+      "passed": true,
+      "detail": null
+    },
+    {
+      "probe": "historic-request-exact-cancel",
+      "passed": true,
+      "detail": null
+    },
+    {
+      "probe": "historic-request-replay-decline",
+      "passed": true,
+      "detail": null
+    },
+    {
+      "probe": "historic-request-exact-decline",
+      "passed": true,
+      "detail": null
+    },
+    {
+      "probe": "receipt-type-/payments-created_at",
+      "passed": true,
+      "detail": null
+    },
+    {
+      "probe": "receipt-type-atomic-/payments-created_at",
+      "passed": true,
+      "detail": null
+    },
+    {
+      "probe": "receipt-type-/payments-currency",
+      "passed": true,
+      "detail": null
+    },
+    {
+      "probe": "receipt-type-atomic-/payments-currency",
+      "passed": true,
+      "detail": null
+    },
+    {
+      "probe": "receipt-type-/payments-note",
+      "passed": true,
+      "detail": null
+    },
+    {
+      "probe": "receipt-type-atomic-/payments-note",
+      "passed": true,
+      "detail": null
+    },
+    {
+      "probe": "receipt-owner-path-/payments-0",
+      "passed": true,
+      "detail": null
+    },
+    {
+      "probe": "receipt-owner-path-atomic-/payments-0",
+      "passed": true,
+      "detail": null
+    },
+    {
+      "probe": "receipt-owner-path-/payments-2",
+      "passed": true,
+      "detail": null
+    },
+    {
+      "probe": "receipt-owner-path-atomic-/payments-2",
+      "passed": true,
+      "detail": null
+    },
+    {
+      "probe": "receipt-type-/requests-created_at",
+      "passed": true,
+      "detail": null
+    },
+    {
+      "probe": "receipt-type-atomic-/requests-created_at",
+      "passed": true,
+      "detail": null
+    },
+    {
+      "probe": "receipt-type-/requests-currency",
+      "passed": true,
+      "detail": null
+    },
+    {
+      "probe": "receipt-type-atomic-/requests-currency",
+      "passed": true,
+      "detail": null
+    },
+    {
+      "probe": "receipt-type-/requests-note",
+      "passed": true,
+      "detail": null
+    },
+    {
+      "probe": "receipt-type-atomic-/requests-note",
+      "passed": true,
+      "detail": null
+    },
+    {
+      "probe": "receipt-owner-path-/requests-0",
+      "passed": true,
+      "detail": null
+    },
+    {
+      "probe": "receipt-owner-path-atomic-/requests-0",
+      "passed": true,
+      "detail": null
+    },
+    {
+      "probe": "receipt-owner-path-/requests-2",
+      "passed": true,
+      "detail": null
+    },
+    {
+      "probe": "receipt-owner-path-atomic-/requests-2",
+      "passed": true,
+      "detail": null
+    },
+    {
+      "probe": "receipt-type-/pay-created_at",
+      "passed": true,
+      "detail": null
+    },
+    {
+      "probe": "receipt-type-atomic-/pay-created_at",
+      "passed": true,
+      "detail": null
+    },
+    {
+      "probe": "receipt-type-/pay-currency",
+      "passed": true,
+      "detail": null
+    },
+    {
+      "probe": "receipt-type-atomic-/pay-currency",
+      "passed": true,
+      "detail": null
+    },
+    {
+      "probe": "receipt-type-/pay-note",
+      "passed": true,
+      "detail": null
+    },
+    {
+      "probe": "receipt-type-atomic-/pay-note",
+      "passed": true,
+      "detail": null
+    },
+    {
+      "probe": "receipt-owner-path-/pay-0",
+      "passed": true,
+      "detail": null
+    },
+    {
+      "probe": "receipt-owner-path-atomic-/pay-0",
+      "passed": true,
+      "detail": null
+    },
+    {
+      "probe": "receipt-owner-path-/pay-2",
+      "passed": true,
+      "detail": null
+    },
+    {
+      "probe": "receipt-owner-path-atomic-/pay-2",
+      "passed": true,
+      "detail": null
+    },
+    {
+      "probe": "receipt-type-/splits-created_at",
+      "passed": true,
+      "detail": null
+    },
+    {
+      "probe": "receipt-type-atomic-/splits-created_at",
+      "passed": true,
+      "detail": null
+    },
+    {
+      "probe": "receipt-type-/splits-currency",
+      "passed": true,
+      "detail": null
+    },
+    {
+      "probe": "receipt-type-atomic-/splits-currency",
+      "passed": true,
+      "detail": null
+    },
+    {
+      "probe": "receipt-type-/splits-note",
+      "passed": true,
+      "detail": null
+    },
+    {
+      "probe": "receipt-type-atomic-/splits-note",
+      "passed": true,
+      "detail": null
+    },
+    {
+      "probe": "receipt-owner-path-/splits-0",
+      "passed": true,
+      "detail": null
+    },
+    {
+      "probe": "receipt-owner-path-atomic-/splits-0",
+      "passed": true,
+      "detail": null
+    },
+    {
+      "probe": "receipt-owner-path-/splits-2",
+      "passed": true,
+      "detail": null
+    },
+    {
+      "probe": "receipt-owner-path-atomic-/splits-2",
+      "passed": true,
+      "detail": null
+    },
+    {
+      "probe": "receipt-type-/settlements-committed_at",
+      "passed": true,
+      "detail": null
+    },
+    {
+      "probe": "receipt-type-atomic-/settlements-committed_at",
+      "passed": true,
+      "detail": null
+    },
+    {
+      "probe": "receipt-owner-path-/settlements-0",
+      "passed": true,
+      "detail": null
+    },
+    {
+      "probe": "receipt-owner-path-atomic-/settlements-0",
+      "passed": true,
+      "detail": null
+    },
+    {
+      "probe": "receipt-owner-path-/settlements-2",
+      "passed": true,
+      "detail": null
+    },
+    {
+      "probe": "receipt-owner-path-atomic-/settlements-2",
+      "passed": true,
+      "detail": null
+    },
+    {
+      "probe": "record-rule-payments-note-xxxxxxxxxxxxxxxxxxxx",
+      "passed": false,
+      "detail": {
+        "status": 204,
+        "body": null
+      }
+    },
+    {
+      "probe": "record-rule-atomic-payments-note",
+      "passed": false,
+      "detail": null
+    },
+    {
+      "probe": "record-rule-payments-amount--1",
+      "passed": true,
+      "detail": null
+    },
+    {
+      "probe": "record-rule-atomic-payments-amount",
+      "passed": true,
+      "detail": null
+    },
+    {
+      "probe": "record-rule-payments-amount-1000000001",
+      "passed": true,
+      "detail": null
+    },
+    {
+      "probe": "record-rule-atomic-payments-amount",
+      "passed": true,
+      "detail": null
+    },
+    {
+      "probe": "record-rule-payments-id-xxxxxxxxxxxxxxxxxxxx",
+      "passed": true,
+      "detail": null
+    },
+    {
+      "probe": "record-rule-atomic-payments-id",
+      "passed": true,
+      "detail": null
+    },
+    {
+      "probe": "record-rule-requests-note-xxxxxxxxxxxxxxxxxxxx",
+      "passed": false,
+      "detail": {
+        "status": 204,
+        "body": null
+      }
+    },
+    {
+      "probe": "record-rule-atomic-requests-note",
+      "passed": false,
+      "detail": null
+    },
+    {
+      "probe": "record-rule-requests-amount--1",
+      "passed": true,
+      "detail": null
+    },
+    {
+      "probe": "record-rule-atomic-requests-amount",
+      "passed": true,
+      "detail": null
+    },
+    {
+      "probe": "record-rule-requests-amount-1000000001",
+      "passed": true,
+      "detail": null
+    },
+    {
+      "probe": "record-rule-atomic-requests-amount",
+      "passed": true,
+      "detail": null
+    },
+    {
+      "probe": "record-rule-requests-id-xxxxxxxxxxxxxxxxxxxx",
+      "passed": true,
+      "detail": null
+    },
+    {
+      "probe": "record-rule-atomic-requests-id",
+      "passed": true,
+      "detail": null
+    },
+    {
+      "probe": "reset-invalid-balance-1",
+      "passed": true,
+      "detail": null
+    },
+    {
+      "probe": "reset-invalid-atomic-balance",
+      "passed": true,
+      "detail": null
+    },
+    {
+      "probe": "reset-invalid-balance9007199254740993",
+      "passed": true,
+      "detail": null
+    },
+    {
+      "probe": "reset-invalid-atomic-balance",
+      "passed": true,
+      "detail": null
+    },
+    {
+      "probe": "reset-invalid-handleINVALID",
+      "passed": true,
+      "detail": null
+    },
+    {
+      "probe": "reset-invalid-atomic-handle",
+      "passed": true,
+      "detail": null
+    },
+    {
+      "probe": "reset-invalid-idxxxxxxxxxxxxxxxxxxxx",
+      "passed": true,
+      "detail": null
+    },
+    {
+      "probe": "reset-invalid-atomic-id",
+      "passed": true,
+      "detail": null
+    }
+  ]
+}
