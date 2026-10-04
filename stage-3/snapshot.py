@@ -277,6 +277,7 @@ def load_state(st):
         _need(running == sn["closing_balance"])
         if "taken_ts" in sn:  # frozen facts: rebuild the whole statement and require exact equality
             _need(_num(sn["taken_ts"]) and _int(sn["taken_seq"]) and 0 <= sn["taken_seq"])
+            _need(sn["taken_seq"] <= st["seq"] and sn["taken_ts"] <= time.time() + 86400)  # taken in this ledger's past
             ob, rebuilt, cb = build_statement(s, sn["user_id"], lo, hi, known, sn["taken_ts"], sn["taken_seq"])
             _need(ob == sn["opening_balance"] and cb == sn["closing_balance"] and rebuilt == entries)
         s.snapshots[sn["token"]] = dict(sn, entries=entries)
