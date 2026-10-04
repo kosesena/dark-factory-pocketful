@@ -1,6 +1,6 @@
 # ADR-001: Keep the spec-auditor, our most expensive seat
 
-**Status:** Accepted for the submitted run; options measured on 3 October 2026 (below); to be re-checked against the submitted run
+**Status:** Accepted; options measured on 3 October 2026; re-checked against the submitted run (4 October 2026, section below)
 **Date:** 3 October 2026
 **Author:** Sena Köse
 **Decides:** which seats verify the work, and on which model
@@ -162,8 +162,35 @@ model change the day before the final run would be unrehearsed.
 - **One run per arm.** Each arm above ran once; a second run could differ.
 - **List price, not invoice.** The numbers are the equivalent API cost of subscription usage.
 
+## Result in the submitted run
+
+Four stages, one dispatch, 4 October 2026 (`FACTORY.md` section 7).
+
+| Seat | Cost (USD, list) | Share of Claude spend |
+|---|---|---|
+| implementer | 37.89 | 29 % |
+| **spec-auditor** | **35.79** | **27 %** |
+| reviewer | 32.90 | 25 % |
+| coordinator | 12.89 | 10 % |
+| customer | 11.82 | 9 % |
+
+- **Its share fell from 48 % to 27 %.** The cap on seeded faults and fix-scoped reseeding held
+  its cost close to the reviewer's over four stages.
+- **Its fault seeding is the run's headline measurement:** 81 faults across the four stages; the
+  shipped checks caught 8, the band's evidence 75, and the other 6 changed nothing observable.
+  Without the auditor there would be no number to put against the shipped checks.
+- **It again caught what the reviewer accepted.** The reviewer accepted stage-4 revision
+  `0f56cc2`; the auditor rejected it with a tampered import that took 29.6 s against a 5 s limit,
+  and the reviewer then reproduced the timeout and withdrew its accept. On `145b98e` (stage 1) it
+  rejected together with the reviewer and the cross-auditor.
+- **It was not the only seat to see what others missed.** On five revisions it accepted with the
+  reviewer and the customer while the cross-auditor rejected (ADR-002). The auditor reads the same
+  specification as the other Claude seats and shares their blind spots.
+
+The condition for testing option C (share near half, no unique catches) was not met. The decision
+stands.
+
 ## Revisit when
 
-The submitted run's numbers are in. If the auditor's share stays near half and its unique
-catches drop to zero across four stages, option C is tested next. If it again catches what the
-reviewer accepted, this decision stands.
+A run where the auditor's fault seeding finds nothing the shipped checks miss, or where its share
+of spend rises back towards half without a catch the reviewer missed.

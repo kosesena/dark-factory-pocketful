@@ -1,6 +1,6 @@
 # ADR-002: Add a verifier on a second model family
 
-**Status:** Accepted for the submitted run
+**Status:** Accepted; confirmed by the submitted run (4 October 2026, section below)
 **Date:** 3 October 2026
 **Author:** Sena Köse
 **Decides:** whether all verifiers run on one model family, and if not, where the second family sits
@@ -97,8 +97,29 @@ check sources. A stage closes only on four accepts of the same revision.
 - **How the cross-auditor behaves on a long stage** with a browser interface; practice run 6 was
   a one-file service.
 
+## Result in the submitted run
+
+Four stages, one dispatch, 4 October 2026 (`FACTORY.md` sections 6 and 7).
+
+- **The cross-auditor alone rejected five revisions that all three Claude verifiers accepted:**
+  `69289b3` and `0e8dea4` (stage 1), `7c35a2a` (stage 3), `8bbd03a` and `2bd67ec` (stage 4).
+  Among them: fractional amounts rounded into valid payments, a paid request that a hand-edited
+  import let be paid a second time, legacy statements that skipped validation on import, and a
+  genuine stage-3 export that stage 4 refused.
+- **It cast 13 of the run's 27 reject verdicts**, more than any other seat (reviewer 8,
+  spec-auditor 4, customer 2).
+- **The overlap is still partial in the other direction.** It accepted `94e856c`, which the
+  customer rejected for a desktop layout with a large empty column, and the reviewer reached the
+  stage-2 currency-label and hold-expiry defects on a revision it never judged. Neither family covered the other, as in the experiment.
+- **Cost:** 1.30 M input, 233 k output and 46.7 M cached tokens on the ChatGPT plan, 22 points of
+  that plan's weekly allowance. Its reject rounds lengthened stage 1 (three rounds) and stage 4
+  (six) more than any other seat's.
+
+The condition for bringing option A back, that it raises nothing the Claude verifiers did not,
+was not met. The decision stands.
+
 ## Revisit when
 
-The submitted run's numbers are in: count the defects only the cross-auditor raised, and its
-share of reject rounds. If it raises nothing the Claude verifiers did not, option A comes back on
-the table.
+The cross-auditor goes a whole multi-stage run without a reject that the Claude verifiers missed,
+or a different second family (or option B, the reviewer on Codex) is measured against it on the
+same revisions.
