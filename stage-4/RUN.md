@@ -50,12 +50,14 @@ Browser check (Playwright, kickoff venv): `python tests/ui_check.py [screenshot-
 
 - A statement snapshot with no `taken_ts`/`taken_seq` (an export of an older stage) is accepted only if its whole
   page (opening, entries, closing, echoed query) equals the full rebuild at some recorded moment of the imported
-  ledger. The search covers every moment back to the snapshot's own latest recorded instant, with no cap; a snapshot
+  ledger. The search covers every moment back to the snapshot's own latest recorded instant, with no cap and in near-linear time
+  (moments are indexed once per import; each snapshot is screened by running counts/sums and only rebuilt when they agree); a snapshot
   matching no moment is refused with 422 and the destination is unchanged.
 - A recorded instant is only a reconstruction device, not proof that a read happened there. The check is that owner,
   window, known_at selection, balances and ledger cutoff all agree with a possible read at such a moment.
 - This admits two classes of alternative valid earlier states (never equivalent to the original, non-empty page), which cannot be told from a genuine page: "the
-  last-created fact dropped, closing adjusted" and "cleared entries equal to the empty-ledger statement". Every other
+  last-created fact dropped, closing adjusted" and "cleared entries equal to the empty-ledger statement". Both are instances of one rule: the statement as of any earlier recorded moment not before the snapshot's
+  latest entry (so a later correction reverted inside a stripped snapshot is such a state too). Every other
   change (shifted or reordered balances, duplicated entries, another user, malformed fields) is refused.
 - A snapshot without `view` predates refunds and is refused if any entry is a refund.
 - Current-format snapshots (with `taken_ts`, `taken_seq`, `view`) are checked against their explicit frozen metadata.

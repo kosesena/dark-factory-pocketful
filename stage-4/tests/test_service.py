@@ -2254,7 +2254,7 @@ class LegacySnapshotManyLaterFacts(unittest.TestCase):
         ada = login("ada")
         first = call("GET", "/statement", token=ada)[1]
         time.sleep(1.1)
-        for i in range(2100):
+        for i in range(3000):
             self.assertEqual(call("POST", "/payments", {"to_handle": "bob", "amount": 1}, token=ada, key="m%d" % i)[0], 201)
         exp = call("GET", "/_test/export")[1]
         for sn in exp["state"]["snapshots"]:
@@ -2262,7 +2262,7 @@ class LegacySnapshotManyLaterFacts(unittest.TestCase):
                 sn.pop(k, None)
         t0 = time.time()
         self.assertEqual(call("POST", "/_test/import", exp)[0], 204)
-        self.assertLess(time.time() - t0, 30)
+        self.assertLess(time.time() - t0, 3)  # near-linear: well inside the 5 s request limit
         got = call("GET", "/statement?snapshot=" + first["snapshot"], token=ada)[1]
         no_refund = lambda o: ({k: no_refund(v) for k, v in o.items() if k != "refund_of"} if isinstance(o, dict)
                                else [no_refund(v) for v in o] if isinstance(o, list) else o)  # view-less pages predate refund_of
@@ -2272,7 +2272,7 @@ class LegacySnapshotManyLaterFacts(unittest.TestCase):
         [x for x in bad["state"]["snapshots"] if x["token"] == first["snapshot"]][0]["closing_balance"] += 1
         t0 = time.time()
         self.assertEqual(call("POST", "/_test/import", bad)[0], 422)
-        self.assertLess(time.time() - t0, 30)
+        self.assertLess(time.time() - t0, 3)  # near-linear: well inside the 5 s request limit
 
 
 class LegacyEmptyLedgerMoment(unittest.TestCase):
@@ -2327,6 +2327,53 @@ class LegacyEmptyLedgerMoment(unittest.TestCase):
             sn["echo"] = {"from": "2090-01-01T00:00:00+00:00"}  # a different query that no rebuild reproduces with a closing difference
             sn["closing_balance"] += 1
         self.assertEqual(self.imp(self.full["snapshot"], other_echo), 422)
+
+
+class LegacyMomentMustBeReal(unittest.TestCase):
+    def legacy_import(self, exp, token, fn=None):
+        m = json.loads(json.dumps(exp))
+        for sn in m["state"]["snapshots"]:
+            for k in ("taken_ts", "taken_seq", "view"):
+                sn.pop(k, None)
+        if fn:
+            fn([x for x in m["state"]["snapshots"] if x["token"] == token][0])
+        return call("POST", "/_test/import", m)[0]
+
+    def test_page_holding_only_the_earlier_created_payment_is_not_a_real_moment(self):
+        fx = hist_fixture()
+        fx["payments"] = [  # inserted (seq) order differs from creation order: p_late first, p_early second
+            {"id": "p_late", "from_user_id": "u_ada", "to_user_id": "u_bob", "amount": 100, "note": "", "visibility": "public", "created_at": "2026-09-21T10:00:00+00:00"},
+            {"id": "p_early", "from_user_id": "u_ada", "to_user_id": "u_bob", "amount": 50, "note": "", "visibility": "public", "created_at": "2026-09-20T10:00:00+00:00"}]
+        self.assertEqual(call("POST", "/_test/reset", fx)[0], 204)
+        ada = login("ada")
+        page = call("GET", "/statement", token=ada)[1]
+        self.assertEqual(len(page["entries"]), 2)
+        exp = call("GET", "/_test/export")[1]
+        self.assertEqual(self.legacy_import(exp, page["snapshot"]), 204)  # the genuine full page migrates
+
+        def only_early(sn):  # no moment of this ledger had exactly p_early: its sequence number is after p_late's
+            keep = [e for e in sn["entries"] if e[0] == "p_early"]
+            self.assertEqual(len(keep), 1)
+            keep[0][3] = sn["opening_balance"] + keep[0][2]
+            sn["entries"] = keep
+            sn["closing_balance"] = keep[0][3]
+        self.assertEqual(self.legacy_import(exp, page["snapshot"], only_early), 422)
+
+    def test_same_instant_swap_with_recomputed_balances_is_refused(self):
+        self.assertEqual(call("POST", "/_test/reset", hist_fixture())[0], 204)
+        bob = login("bob")
+        page = call("GET", "/statement?from=2026-09-22T00:00:00%2B00:00&to=2026-09-23T00:00:00%2B00:00", token=bob)[1]
+        self.assertEqual(len(page["entries"]), 2)  # p_c and p_d share one instant
+        exp = call("GET", "/_test/export")[1]
+        self.assertEqual(self.legacy_import(exp, page["snapshot"]), 204)
+
+        def swap(sn):
+            sn["entries"].reverse()
+            running = sn["opening_balance"]
+            for e in sn["entries"]:
+                running += e[2]
+                e[3] = running
+        self.assertEqual(self.legacy_import(exp, page["snapshot"], swap), 422)
 
 
 class ViewlessSnapshotWithRefund(unittest.TestCase):
