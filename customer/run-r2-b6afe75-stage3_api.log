@@ -1,0 +1,181 @@
+ok   reset
+ok   balances unchanged by seeded payments
+ok   seeded created_at in activity
+ok   as_of before earliest -> opening
+ok   as_of exactly at p_a counts
+ok   as_of after p_b
+ok   bob as_of tB
+ok   as_of at latest -> current
+ok   sum at opening
+ok   as_of echoed exact (+02:00)
+ok   as_of echoed exact
+ok   Z accepted + echoed
+ok   as_of bad '2026-09-24T13:20:00'
+ok   known_at bad '2026-09-24T13:20:00'
+ok   as_of bad '2026-09-24'
+ok   known_at bad '2026-09-24'
+ok   as_of bad ''
+ok   known_at bad ''
+ok   as_of bad 'garbage'
+ok   known_at bad 'garbage'
+ok   as_of bad '2026-09-24 13:20:00+00:00'
+ok   known_at bad '2026-09-24 13:20:00+00:00'
+ok   as_of bad '1700000000'
+ok   known_at bad '1700000000'
+ok   me still has stage-2 fields
+ok   statement full
+ok   entry has revision fields + snapshot
+ok   sum identity
+ok   half-open [tB,tC)
+ok   from after tB excludes p_b
+ok   to == tA excludes p_a, empty window
+ok   future to ok
+ok   page limit1 offset1
+ok   final partial page has_more false
+ok   exact end has_more false
+ok   offset beyond end
+ok   statement bad {'limit': 0}
+ok   statement bad {'limit': 201}
+ok   statement bad {'offset': -1}
+ok   statement bad {'limit': '1e1'}
+ok   statement bad {'from': '2026-01-01'}
+ok   statement bad {'to': ''}
+ok   statement bad {'from': 'x'}
+ok   unknown param ignored
+ok   from>to no 5xx
+ok   cy statement only own
+ok   op statement empty though payments public
+ok   bob statement deltas
+ok   statement 401
+ok   api payment created_at now
+ok   api payment last in statement
+ok   snapshot page1
+ok   snapshot ignores later payment
+ok   snapshot no params -> full
+ok   snapshot+from 422
+ok   snapshot+to 422
+ok   snapshot+known_at 422
+ok   snapshot unknown 404
+ok   snapshot other user 404
+ok   snapshot bad limit 422
+ok   snapshot offset beyond end
+ok   correction 201
+ok   correction replay 200 same
+ok   same key diff body 409
+ok   stale revision 409
+ok   non-sender 403
+ok   unknown payment 404
+ok   no token 401
+ok   no key 400
+ok   correction invalid: missing amount
+ok     422 code missing amount
+ok   correction invalid: missing reason
+ok     422 code missing reason
+ok   correction invalid: missing rev
+ok     422 code missing rev
+ok   correction invalid: missing eff
+ok     422 code missing eff
+ok   correction invalid: rev 0
+ok     422 code rev 0
+ok   correction invalid: rev -1
+ok     422 code rev -1
+ok   correction invalid: neg amount
+ok     422 code neg amount
+ok   correction invalid: amount 1e9+1
+ok     422 code amount 1e9+1
+ok   correction invalid: amount frac
+ok     422 code amount frac
+ok   correction invalid: reason empty
+ok     422 code reason empty
+ok   correction invalid: reason 201
+ok     422 code reason 201
+ok   correction invalid: future eff
+ok     422 code future eff
+ok   correction invalid: naive eff
+ok     422 code naive eff
+ok   correction invalid: bad eff
+ok     422 code bad eff
+ok   reason wrong type no 5xx
+ok   amount 1e9 boundary valid-or-funds
+ok   current balances after correction
+ok   current ada/bob after decrease
+   ada/bob current: 10000 2500
+ok   sum conserved after correction
+ok   sum equals seeded total
+ok   ada +100 bob -100
+ok   as_of before eff of rev2: p_a not counted
+ok   as_of tB (p_a moved later)
+ok   as_of tC
+ok   as_of at eff counts rev2
+ok   sum at tB
+ok   statement ordering by effective_at
+ok   balance_after chain
+ok   correction moved p_a out of [tA,tB)
+ok   original snapshot unchanged after correction
+ok   known_at before correction -> original view
+ok   me known_at old, as_of now
+ok   known_at before any recording -> opening
+ok   known_at before all: no entries
+ok   future known_at/as_of fine
+ok   revisions list
+ok   receiver can read revisions
+ok   third party 404 even public
+ok   revisions 401
+ok   revisions unknown 404
+ok   recorded_at strictly increases
+ok   activity original amount, no extra items
+ok   zero correction 201
+ok   replay old correction after newer
+ok   zero: current ada/bob
+ok   zero revision still an entry w/ zero delta
+ok   zero reverses entire payment: ada back +400
+   ada/bob after zero: 10400 2100
+ok   increase 201
+ok   increase: cy +50
+ok   cy has 350 -> reversal ok
+ok   cy can pay
+ok   reset fx2
+ok   fx2 opening
+ok   historical_overdraft 409
+ok   overdraft preserved state
+ok   failed key reusable with new body (first use)
+ok   increase moved 50 ada->cy
+ok   insufficient_funds precedence
+ok   receiver can't fund decrease -> insufficient_funds
+ok   reset fx3
+ok   reset fx3b
+ok   effective shift makes receiver negative in past -> historical_overdraft
+ok   same-instant combined seed accepted
+ok   same-instant ordered by id
+ok   as_of at same instant combined
+ok   future created_at 422, no change
+ok   omitted created_at: seeded older than API payments
+ok   omitted: opening still derived
+ok   settlement member rev1 eff=rec=committed_at
+ok   settlement member correction 422
+ok   capture correction 422
+ok   capture appears once in statement
+ok   auth open/closing not in statement
+   entries ada: 5
+ok   seeded hold current
+ok   before reset: hold not yet
+ok   future before expiry: held
+ok   future after expiry: released
+ok   closed_at null while open
+ok   closed_at set on void
+ok   as_of before create: no hold of it
+ok   as_of after create before capture
+ok   after nonfinal capture
+ok   after void releases remainder only
+ok   at close instant: released
+ok   known_at before creation: hold unknown
+ok   expired closed_at == expires_at
+ok   as_of just before expiry: held
+ok   as_of at expiry: released
+ok   concurrent corrections: exactly one 201, rest 409
+ok   revision history length 2
+ok   snapshot unchanged during concurrent payments
+ok   sum conserved
+ok   snapshot dies on reset
+
+STAGE3 API 176 checks, 0 failed: []

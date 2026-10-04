@@ -1,0 +1,4 @@
+Traceback (most recent call last):
+  File "/Users/kosesena/Desktop/dark-factory/band-work/result/customer/journey_stage3_legacy.py", line 3, in <module>
+    src = open("journey_stage3_api.py").read().split("N = datetime.now(timezone.utc)")[0]
+FileNotFoundError: [Errno 2] No such file or directory: 'journey_stage3_api.py'

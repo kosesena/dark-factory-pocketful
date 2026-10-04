@@ -1,0 +1,34 @@
+ok   batch created
+ok   genuine export imports
+ok   batch replay after import
+ok   corrupt batch receipt [drop a revision] -> 422
+ok     unchanged after [drop a revision]
+ok   corrupt batch receipt [reorder] -> 422
+ok     unchanged after [reorder]
+ok   corrupt batch receipt [duplicate revision] -> 422
+ok     unchanged after [duplicate revision]
+ok   corrupt batch receipt [wrong amount] -> 422
+ok     unchanged after [wrong amount]
+ok   corrupt batch receipt [wrong batch id on revision] -> 422
+ok     unchanged after [wrong batch id on revision]
+ok   corrupt batch receipt [wrong recorded_at] -> 422
+ok     unchanged after [wrong recorded_at]
+ok   corrupt batch receipt [wrong reason] -> 422
+ok     unchanged after [wrong reason]
+ok   corrupt batch receipt [wrong effective_at] -> 422
+ok     unchanged after [wrong effective_at]
+ok   corrupt batch receipt [wrong revision number] -> 422
+ok     unchanged after [wrong revision number]
+ok   corrupt batch receipt [unknown payment] -> 422
+ok     unchanged after [unknown payment]
+ok   corrupt batch receipt [top-level batch id] -> 422
+ok     unchanged after [top-level batch id]
+ok   corrupt batch receipt [top-level recorded_at] -> 422
+ok     unchanged after [top-level recorded_at]
+ok   corrupt batch receipt [non-operator owner] -> 422
+ok     unchanged after [non-operator owner]
+ok   corrupt batch receipt [ledger revision removed] -> 422
+ok     unchanged after [ledger revision removed]
+ok   state still working
+
+RECEIPTS 32 checks, 0 failed: []
