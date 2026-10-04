@@ -43,7 +43,7 @@ the mandates contain no personality, and the seats behave exactly as
 
 *Blue cone with a conductor's baton*
 
-Reads the dispatch, splits the work, routes every handoff and closes the stage with a report.
+Runs on Claude Code with `claude-sonnet-5-5`. Reads the dispatch, splits the work, routes every handoff and closes the stage with a report.
 
 **Never writes code.**
 
@@ -55,7 +55,7 @@ Reads the dispatch, splits the work, routes every handoff and closes the stage w
 
 *Orange craftsperson with a beret and tool apron*
 
-Writes the code one small, separately committed change at a time, then hands it over to be checked.
+Runs on Claude Code with `claude-sonnet-5-5`. Writes the code one small, separately committed change at a time, then hands it over to be checked.
 
 **Never accepts its own work.**
 
@@ -67,7 +67,7 @@ Writes the code one small, separately committed change at a time, then hands it 
 
 *Purple long-nosed detective with a magnifying glass*
 
-Verifies independently: builds its own reference model from the specification and compares it with the service over random sequences of operations.
+Runs on Claude Code with `claude-opus-5-5`. Verifies independently: builds its own reference model from the specification and compares it with the service over random sequences of operations.
 
 **Never edits code.**
 
@@ -79,7 +79,7 @@ Verifies independently: builds its own reference model from the specification an
 
 *Green book with round glasses and a checklist*
 
-Turns the specification into a requirements ledger, then breaks one requirement at a time in a throwaway copy and runs all the evidence against it, to prove the checks would notice.
+Runs on Claude Code with `claude-opus-5-5`. Turns the specification into a requirements ledger, then breaks one requirement at a time in a throwaway copy and runs all the evidence against it, to prove the checks would notice.
 
 **Never edits code or writes tests to pass.**
 
@@ -91,7 +91,7 @@ Turns the specification into a requirements ledger, then breaks one requirement 
 
 *Pink floppy-eared character holding a phone*
 
-Uses the product through its real interface at desktop and phone widths, without reading the implementation, and reports what a user would see.
+Runs on Claude Code with `claude-sonnet-5-5`. Uses the product through its real interface at desktop and phone widths, without reading the implementation, and reports what a user would see.
 
 **Never reads the code to judge it.**
 
