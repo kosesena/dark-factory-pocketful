@@ -45,11 +45,11 @@
   "id": "H01",
   "requirement": "S3-8 as_of is inclusive",
   "file": "ledger.py",
-  "old": "if as_of is None or eff <= as_of:",
+  "old": "if as_of is None or eff <\u003d as_of:",
   "new": "if as_of is None or eff < as_of:",
   "fails": {
    "impl": [
-    "(failures=2)",
+    "(failures\u003d2)",
     "exit"
    ],
    "reviewer:probes_s3.py": [
@@ -71,11 +71,11 @@
     "exit"
    ],
    "customer:journey_stage3_fix.py": [
-    "as_of == created_at includes payment #0",
-    "as_of == created_at includes payment #1",
-    "as_of == created_at includes payment #2",
-    "as_of == created_at includes payment #3",
-    "as_of == created_at includes payment #4",
+    "as_of \u003d\u003d created_at includes payment #0",
+    "as_of \u003d\u003d created_at includes payment #1",
+    "as_of \u003d\u003d created_at includes payment #2",
+    "as_of \u003d\u003d created_at includes payment #3",
+    "as_of \u003d\u003d created_at includes payment #4",
     "as_of exactly effective counts; 1\u00b5s earlier doesn't",
     "reset receiver spends before receiving"
    ],
@@ -121,7 +121,7 @@
   ],
   "new_fails": {
    "impl": [
-    "(failures=2)",
+    "(failures\u003d2)",
     "exit"
    ],
    "reviewer:probes_s3.py": [
@@ -143,11 +143,11 @@
     "exit"
    ],
    "customer:journey_stage3_fix.py": [
-    "as_of == created_at includes payment #0",
-    "as_of == created_at includes payment #1",
-    "as_of == created_at includes payment #2",
-    "as_of == created_at includes payment #3",
-    "as_of == created_at includes payment #4",
+    "as_of \u003d\u003d created_at includes payment #0",
+    "as_of \u003d\u003d created_at includes payment #1",
+    "as_of \u003d\u003d created_at includes payment #2",
+    "as_of \u003d\u003d created_at includes payment #3",
+    "as_of \u003d\u003d created_at includes payment #4",
     "as_of exactly effective counts; 1\u00b5s earlier doesn't"
    ],
    "cross:probe_stage3.py": [
@@ -168,11 +168,11 @@
   "id": "H02",
   "requirement": "S3-34 known_at selects by recorded time",
   "file": "ledger.py",
-  "old": "if r[\"recorded_ts\"] <= known:",
-  "new": "if r[\"effective_ts\"] <= known:",
+  "old": "if r[\"recorded_ts\"] <\u003d known:",
+  "new": "if r[\"effective_ts\"] <\u003d known:",
   "fails": {
    "impl": [
-    "(failures=2)",
+    "(failures\u003d2)",
     "exit"
    ],
    "reviewer:probes_s3.py": [
@@ -186,11 +186,11 @@
    "customer:journey_stage3_extra.py": [],
    "customer:journey_stage3_fix.py": [
     "import 204",
-    "known_at == recorded_at of rev2 selects it",
-    "known_at == recorded_at of rev3 selects it",
-    "known_at == recorded_at of rev4 selects it",
-    "known_at == recorded_at of rev5 selects it",
-    "known_at == recorded_at of rev6 selects it",
+    "known_at \u003d\u003d recorded_at of rev2 selects it",
+    "known_at \u003d\u003d recorded_at of rev3 selects it",
+    "known_at \u003d\u003d recorded_at of rev4 selects it",
+    "known_at \u003d\u003d recorded_at of rev5 selects it",
+    "known_at \u003d\u003d recorded_at of rev6 selects it",
     "snapshot after import",
     "snapshot survives export/import identical pages"
    ],
@@ -252,7 +252,7 @@
   ],
   "new_fails": {
    "impl": [
-    "(failures=2)",
+    "(failures\u003d2)",
     "exit"
    ],
    "reviewer:probes_s3.py": [
@@ -264,11 +264,11 @@
    ],
    "customer:journey_stage3_fix.py": [
     "import 204",
-    "known_at == recorded_at of rev2 selects it",
-    "known_at == recorded_at of rev3 selects it",
-    "known_at == recorded_at of rev4 selects it",
-    "known_at == recorded_at of rev5 selects it",
-    "known_at == recorded_at of rev6 selects it",
+    "known_at \u003d\u003d recorded_at of rev2 selects it",
+    "known_at \u003d\u003d recorded_at of rev3 selects it",
+    "known_at \u003d\u003d recorded_at of rev4 selects it",
+    "known_at \u003d\u003d recorded_at of rev5 selects it",
+    "known_at \u003d\u003d recorded_at of rev6 selects it",
     "snapshot after import",
     "snapshot survives export/import identical pages"
    ],
@@ -313,11 +313,11 @@
   "id": "H03",
   "requirement": "S3-13 ties ordered by payment id ascending",
   "file": "history.py",
-  "old": "key=lambda e: (e[0], e[1]))",
-  "new": "key=lambda e: (e[0], [-ord(c) for c in e[1]]))",
+  "old": "key\u003dlambda e: (e[0], e[1]))",
+  "new": "key\u003dlambda e: (e[0], [-ord(c) for c in e[1]]))",
   "fails": {
    "impl": [
-    "(failures=4)",
+    "(failures\u003d4)",
     "exit"
    ],
    "reviewer:probes_s3.py": [],
@@ -384,7 +384,7 @@
   ],
   "new_fails": {
    "impl": [
-    "(failures=4)",
+    "(failures\u003d4)",
     "exit"
    ],
    "reviewer:model": [
@@ -428,11 +428,11 @@
   "id": "H04",
   "requirement": "S3-12 statement window is half-open (to exclusive)",
   "file": "history.py",
-  "old": "if hi is not None and t >= hi:",
+  "old": "if hi is not None and t >\u003d hi:",
   "new": "if hi is not None and t > hi:",
   "fails": {
    "impl": [
-    "(failures=2)",
+    "(failures\u003d2)",
     "exit"
    ],
    "reviewer:probes_s3.py": [
@@ -445,7 +445,7 @@
    "customer:journey_stage3_api.py": [
     "correction moved p_a out of",
     "half-open",
-    "to == tA excludes p_a, empty window"
+    "to \u003d\u003d tA excludes p_a, empty window"
    ],
    "customer:journey_stage3_extra.py": [],
    "customer:journey_stage3_fix.py": [
@@ -494,7 +494,7 @@
   ],
   "new_fails": {
    "impl": [
-    "(failures=2)",
+    "(failures\u003d2)",
     "exit"
    ],
    "reviewer:probes_s3.py": [
@@ -507,7 +507,7 @@
    "customer:journey_stage3_api.py": [
     "correction moved p_a out of",
     "half-open",
-    "to == tA excludes p_a, empty window"
+    "to \u003d\u003d tA excludes p_a, empty window"
    ],
    "customer:journey_stage3_fix.py": [
     "import 204",
@@ -534,10 +534,10 @@
   "requirement": "S3-42 snapshots page their frozen entries",
   "file": "history.py",
   "old": "        return 200, _page(s, snap, limit, offset)\n    frm",
-  "new": "        return 200, _page(s, dict(snap, entries=build_statement(s, snap[\"user_id\"], None, None, None, time.time(), s.seq)[1]), limit, offset)\n    frm",
+  "new": "        return 200, _page(s, dict(snap, entries\u003dbuild_statement(s, snap[\"user_id\"], None, None, None, time.time(), s.seq)[1]), limit, offset)\n    frm",
   "fails": {
    "impl": [
-    "(failures=1)",
+    "(failures\u003d1)",
     "exit"
    ],
    "reviewer:probes_s3.py": [
@@ -610,7 +610,7 @@
   ],
   "new_fails": {
    "impl": [
-    "(failures=1)",
+    "(failures\u003d1)",
     "exit"
    ],
    "reviewer:probes_s3.py": [
@@ -664,11 +664,11 @@
   "id": "H06",
   "requirement": "S3-16 paging never changes the opening balance",
   "file": "history.py",
-  "old": "body = {\"opening_balance\": snap[\"opening_balance\"],",
-  "new": "body = {\"opening_balance\": (chunk[0][3] - chunk[0][2]) if chunk else snap[\"opening_balance\"],",
+  "old": "body \u003d {\"opening_balance\": snap[\"opening_balance\"],",
+  "new": "body \u003d {\"opening_balance\": (chunk[0][3] - chunk[0][2]) if chunk else snap[\"opening_balance\"],",
   "fails": {
    "impl": [
-    "(failures=1)",
+    "(failures\u003d1)",
     "exit"
    ],
    "reviewer:probes_s3.py": [
@@ -725,7 +725,7 @@
   ],
   "new_fails": {
    "impl": [
-    "(failures=1)",
+    "(failures\u003d1)",
     "exit"
    ],
    "reviewer:probes_s3.py": [
@@ -755,11 +755,11 @@
   "id": "H07",
   "requirement": "S3-26/27 a decrease debits the receiver (affordability of the receiver)",
   "file": "history.py",
-  "old": "debtor = sender if diff > 0 else receiver",
-  "new": "debtor = sender",
+  "old": "debtor \u003d sender if diff > 0 else receiver",
+  "new": "debtor \u003d sender",
   "fails": {
    "impl": [
-    "(failures=1)",
+    "(failures\u003d1)",
     "exit"
    ],
    "reviewer:probes_s3.py": [],
@@ -806,7 +806,7 @@
   ],
   "new_fails": {
    "impl": [
-    "(failures=1)",
+    "(failures\u003d1)",
     "exit"
    ],
    "reviewer:model": [
@@ -828,7 +828,7 @@
   "new": "if False:",
   "fails": {
    "impl": [
-    "(errors=3)",
+    "(errors\u003d3)",
     "exit",
     "test_historical_overdraft_and_funds",
     "test_import_rejects_a_backdating_that_overdraws_available",
@@ -900,7 +900,7 @@
   ],
   "new_fails": {
    "impl": [
-    "(errors=3)",
+    "(errors\u003d3)",
     "exit",
     "test_historical_overdraft_and_funds",
     "test_import_rejects_a_backdating_that_overdraws_available",
@@ -945,11 +945,11 @@
   "id": "H09",
   "requirement": "S3-23 recorded times strictly increase per payment",
   "file": "history.py",
-  "old": "rec_ts = max(now, cur[\"recorded_ts\"] + 1e-6)",
-  "new": "rec_ts = float(int(now))",
+  "old": "rec_ts \u003d max(now, cur[\"recorded_ts\"] + 1e-6)",
+  "new": "rec_ts \u003d float(int(now))",
   "fails": {
    "impl": [
-    "(failures=3)",
+    "(failures\u003d3)",
     "exit"
    ],
    "reviewer:probes_s3.py": [],
@@ -960,11 +960,11 @@
    "customer:journey_stage3_extra.py": [],
    "customer:journey_stage3_fix.py": [
     "import 204",
-    "known_at == recorded_at of rev2 selects it",
-    "known_at == recorded_at of rev3 selects it",
-    "known_at == recorded_at of rev4 selects it",
-    "known_at == recorded_at of rev5 selects it",
-    "known_at == recorded_at of rev6 selects it",
+    "known_at \u003d\u003d recorded_at of rev2 selects it",
+    "known_at \u003d\u003d recorded_at of rev3 selects it",
+    "known_at \u003d\u003d recorded_at of rev4 selects it",
+    "known_at \u003d\u003d recorded_at of rev5 selects it",
+    "known_at \u003d\u003d recorded_at of rev6 selects it",
     "recorded_at strictly increasing",
     "recorded_at strings distinct",
     "snapshot after import",
@@ -1021,7 +1021,7 @@
   ],
   "new_fails": {
    "impl": [
-    "(failures=3)",
+    "(failures\u003d3)",
     "exit"
    ],
    "reviewer:model": [
@@ -1029,11 +1029,11 @@
    ],
    "customer:journey_stage3_fix.py": [
     "import 204",
-    "known_at == recorded_at of rev2 selects it",
-    "known_at == recorded_at of rev3 selects it",
-    "known_at == recorded_at of rev4 selects it",
-    "known_at == recorded_at of rev5 selects it",
-    "known_at == recorded_at of rev6 selects it",
+    "known_at \u003d\u003d recorded_at of rev2 selects it",
+    "known_at \u003d\u003d recorded_at of rev3 selects it",
+    "known_at \u003d\u003d recorded_at of rev4 selects it",
+    "known_at \u003d\u003d recorded_at of rev5 selects it",
+    "known_at \u003d\u003d recorded_at of rev6 selects it",
     "recorded_at strictly increasing",
     "recorded_at strings distinct",
     "snapshot after import",
@@ -1074,11 +1074,11 @@
   "id": "H10",
   "requirement": "S3-24/33 a stale expected revision is 409",
   "file": "history.py",
-  "old": "if expected != cur[\"revision\"]:",
+  "old": "if expected !\u003d cur[\"revision\"]:",
   "new": "if expected > cur[\"revision\"]:",
   "fails": {
    "impl": [
-    "(failures=1, errors=1)",
+    "(failures\u003d1, errors\u003d1)",
     "exit",
     "test_corrections_basic"
    ],
@@ -1147,7 +1147,7 @@
   ],
   "new_fails": {
    "impl": [
-    "(failures=1, errors=1)",
+    "(failures\u003d1, errors\u003d1)",
     "exit",
     "test_corrections_basic"
    ],
@@ -1193,7 +1193,7 @@
   "new": "if p.get(\"authorization_id\") is not None:",
   "fails": {
    "impl": [
-    "(errors=1)",
+    "(errors\u003d1)",
     "exit",
     "test_linked_payments_immutable"
    ],
@@ -1248,7 +1248,7 @@
   ],
   "new_fails": {
    "impl": [
-    "(errors=1)",
+    "(errors\u003d1)",
     "exit",
     "test_linked_payments_immutable"
    ],
@@ -1276,10 +1276,10 @@
   "requirement": "S3-32 revisions are hidden from third parties even for public payments",
   "file": "history.py",
   "old": "if p is None or user[\"id\"] not in (p[\"from_user_id\"], p[\"to_user_id\"]):",
-  "new": "if p is None or (p[\"visibility\"] != \"public\" and user[\"id\"] not in (p[\"from_user_id\"], p[\"to_user_id\"])):",
+  "new": "if p is None or (p[\"visibility\"] !\u003d \"public\" and user[\"id\"] not in (p[\"from_user_id\"], p[\"to_user_id\"])):",
   "fails": {
    "impl": [
-    "(failures=1)",
+    "(failures\u003d1)",
     "exit"
    ],
    "reviewer:probes_s3.py": [
@@ -1331,7 +1331,7 @@
   ],
   "new_fails": {
    "impl": [
-    "(failures=1)",
+    "(failures\u003d1)",
     "exit"
    ],
    "reviewer:probes_s3.py": [
@@ -1359,7 +1359,7 @@
   "new": "if any(k in q for k in (\"from\", \"to\")):",
   "fails": {
    "impl": [
-    "(failures=1)",
+    "(failures\u003d1)",
     "exit"
    ],
    "reviewer:probes_s3.py": [
@@ -1409,7 +1409,7 @@
   ],
   "new_fails": {
    "impl": [
-    "(failures=1)",
+    "(failures\u003d1)",
     "exit"
    ],
    "reviewer:probes_s3.py": [
@@ -1433,8 +1433,8 @@
   "id": "H14",
   "requirement": "S3-52 a nonfinal capture reduces the hold at capture time",
   "file": "ledger.py",
-  "old": "done = early + sum(c[\"amount\"] for c in caps if whole(c[\"ts\"]) <= m)",
-  "new": "done = early + sum(c[\"amount\"] for c in caps)",
+  "old": "done \u003d early + sum(c[\"amount\"] for c in caps if whole(c[\"ts\"]) <\u003d m)",
+  "new": "done \u003d early + sum(c[\"amount\"] for c in caps)",
   "fails": {
    "impl": [],
    "reviewer:probes_s3.py": [],
