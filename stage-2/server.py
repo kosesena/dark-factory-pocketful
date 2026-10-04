@@ -9,6 +9,7 @@ from urllib.parse import parse_qs, unquote, urlsplit
 
 import accounts
 import authorizations
+import ui
 import settlements
 import snapshot
 import wallet
@@ -27,6 +28,9 @@ class Req:
 
 
 def dispatch(req):
+    page = ui.serve(req)
+    if page is not None:
+        return page
     allowed = False
     for method, rx, fn in ROUTES:
         m = rx.fullmatch(req.path)
@@ -81,10 +85,14 @@ class Handler(BaseHTTPRequestHandler):
             parts = urlsplit(self.path)
             query = {k: v[0] for k, v in parse_qs(parts.query, keep_blank_values=True).items()}
             req = Req(self.command, unquote(parts.path), query, self.headers, raw)
-            status, payload = dispatch(req)
+            result = dispatch(req)
+            status, payload = result[0], result[1]
+            ctype = result[2] if len(result) > 2 else "application/json; charset=utf-8"
         except ApiError as e:
+            ctype = "application/json; charset=utf-8"
             status, payload = e.status, error_body(e.code, e.message)
         except Exception as e:  # never leak a traceback; still a well-formed error body
+            ctype = "application/json; charset=utf-8"
             status, payload = 500, error_body("internal_error", type(e).__name__)
         if payload is None:
             self.send_response(status)
@@ -93,7 +101,9 @@ class Handler(BaseHTTPRequestHandler):
             return
         data = payload if isinstance(payload, bytes) else json.dumps(payload).encode("utf-8")
         self.send_response(status)
-        self.send_header("Content-Type", "application/json; charset=utf-8")
+        self.send_header("Content-Type", ctype)
+        if ctype.startswith(("text/html", "text/css", "application/javascript")):
+            self.send_header("Cache-Control", "no-cache")
         self.send_header("Content-Length", str(len(data)))
         self.end_headers()
         self.wfile.write(data)

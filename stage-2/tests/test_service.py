@@ -27,7 +27,7 @@ def call(method, path, body=None, token=None, key=None, raw=None, headers=None):
     txt = r.read()
     ctype = r.getheader("Content-Type")
     c.close()
-    return r.status, (json.loads(txt) if txt else None), ctype
+    return r.status, (json.loads(txt) if txt and "json" in (ctype or "") else (txt.decode() if txt else None)), ctype
 
 
 def fixture(**kw):
@@ -150,6 +150,20 @@ class Basics(Base):
             self.assertEqual(call("GET", p + "?limit=200&offset=0&foo=bar", token=self.ada)[0], 200)
         self.assertEqual(call("GET", "/requests?status=x", token=self.ada)[0], 422)
         self.assertEqual(call("GET", "/requests?direction=x", token=self.ada)[0], 422)
+
+
+class Pages(Base):
+    def test_html_vs_json(self):
+        for path in ("/", "/requests", "/split", "/signup", "/login", "/authorizations"):
+            s, _, ct = call("GET", path, headers={"Accept": "text/html,application/xhtml+xml"})
+            self.assertEqual((s, ct), (200, "text/html; charset=utf-8"), path)
+        for path in ("/split", "/signup", "/login"):
+            self.assertEqual(call("GET", path)[2], "text/html; charset=utf-8")
+        s, b, ct = call("GET", "/requests", token=self.ada, headers={"Accept": "application/json"})
+        self.assertEqual((s, ct, "requests" in b), (200, "application/json; charset=utf-8", True))
+        s, b, ct = call("GET", "/authorizations", token=self.ada)
+        self.assertEqual((s, "authorizations" in b), (200, True))
+        self.assertEqual(call("GET", "/requests")[0], 401)
 
 
 class Payments(Base):
