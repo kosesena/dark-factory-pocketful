@@ -304,3 +304,80 @@ if mutate(st_):
     r = call("POST", "/_test/import", bad); chk("negative-balance import 422", r[0] == 422, r)
     chk("state intact after bad import", call("POST", "/auth/login", {"email": "ada@example.com", "password": "correct horse"})[0] == 200)
 print(f"\nFINAL {n} checks, {len(fails)} failed: {fails}")
+# extras for 0e8dea4 fixes
+call("POST", "/_test/reset", fx); A = login("ada@example.com"); Bo = login("bob@example.com")
+def raw_pay(body, key, tok=None):
+    return call("POST", "/payments", raw=body, tok=tok or A, key=key)
+r = raw_pay(b'{"to_handle":"bob","amount":15e1}', "n1"); chk("15e1 ok 150", r[0] == 201 and r[1]["amount"] == 150, r)
+r = raw_pay(b'{"to_handle":"bob","amount":150}', "n1"); chk("15e1 == 150 replay", r[0] == 200, r)
+r = raw_pay(b'{"to_handle":"bob","amount":1.50e2}', "n1"); chk("1.50e2 == 150 replay", r[0] == 200, r)
+r = raw_pay(b'{"to_handle":"bob","amount":"150"}', "n1"); chk("string 150 differs from 150 (409)", r[0] == 409, r)
+r = raw_pay(b'{"to_handle":"bob","amount":1e999999999}', "n2"); chk("1e999999999 no 5xx 422", r[0] == 422, r)
+r = raw_pay(b'{"to_handle":"bob","amount":1e-999999999}', "n3"); chk("1e-999999999 no 5xx 422", r[0] == 422, r)
+r = raw_pay(b'{"to_handle":"bob","amount":-0.0}', "n4"); chk("-0.0 422", r[0] == 422, r)
+r = raw_pay(b'{"to_handle":"bob","amount":10000e-4}', "n5"); chk("10000e-4 == 1", r[0] == 201 and r[1]["amount"] == 1, r)
+r = raw_pay(b'{"to_handle":"bob","amount":1.000000000000000000000000000001}', "n6"); chk("1.000..1 422", r[0] == 422, r)
+r = raw_pay(b'{"to_handle":"bob","amount":1000000000.0}', "n7"); chk("1e9 float ok-or-funds", r[0] in (201, 409), r)
+r = raw_pay(b'{"to_handle":"bob","amount":1000000001.0}', "n8"); chk("1e9+1 float 422", r[0] == 422, r)
+r = raw_pay(b'{"to_handle":"bob","amount":5,"note":"x","amount":6}', "n9"); chk("dup key no 5xx", r[0] < 500, r)
+r = raw_pay(b'{"to_handle":"bob","amount":NaN}', "n10"); chk("NaN no 5xx", r[0] in (400, 422), r)
+r = raw_pay(b'{"to_handle":"bob","amount":Infinity}', "n11"); chk("Infinity no 5xx", r[0] in (400, 422), r)
+r = raw_pay(b'{"to_handle":"bob","amount":' + b'1' * 5000 + b'}', "n12"); chk("5000-digit int 422", r[0] == 422, r)
+r = raw_pay(b'{"to_handle":"bob","amount":5,"note":"a"}', "o1"); r2 = raw_pay(b'{"note":"a","amount":5.0,"to_handle":"bob"}', "o1"); chk("reorder + 5.0 replay", r[0] == 201 and r2[0] == 200 and r2[1] == r[1], r2)
+r = call("POST", "/payments", raw=b'{"to_handle":"bob","amount":5,"deep":' + b'[' * 5000 + b']' * 5000 + b'}', tok=A, key="deep"); chk("deep nesting no 5xx", r[0] < 500, r)
+r = call("POST", "/settlements", raw=b'{"transfers":[{"from_handle":"ada","to_handle":"bob","amount":1e999999999}]}', tok=login("op@example.com"), key="so"); chk("settlement huge exp no 5xx", r[0] == 422, r)
+r = call("POST", "/splits", raw=b'{"amount":1e999999999,"participant_handles":["ada"]}', tok=A, key="spx"); chk("split huge exp 422", r[0] == 422, r)
+r = call("POST", "/requests", raw=b'{"payer_handle":"bob","amount":1e-999999999}', tok=A, key="rqx"); chk("request tiny exp 422", r[0] == 422, r)
+# import/reset validation round trips
+call("POST", "/_test/reset", fx); A = login("ada@example.com"); O2 = login("op@example.com")
+call("POST", "/payments", {"to_handle": "bob", "amount": 100, "note": "e"}, tok=A, key="ie1")
+call("POST", "/requests/rq_1/pay", {"visibility": "private"}, tok=A, key="ie2")
+call("POST", "/splits", {"amount": 10, "participant_handles": ["ada", "bob", "cy"]}, tok=A, key="ie3")
+call("POST", "/settlements", T, tok=O2, key="ie4")
+call("POST", "/payments", {"to_handle": "bob", "amount": 10 ** 6}, tok=A, key="ie5")
+snap = call("GET", "/_test/export")[1]
+call("POST", "/_test/reset", fx)
+chk("import real export", call("POST", "/_test/import", snap)[0] == 204)
+for k, body in [("ie1", {"to_handle": "bob", "amount": 100, "note": "e"})]:
+    r = call("POST", "/payments", body, tok=A, key=k); chk("receipt valid after import " + k, r[0] == 200, r)
+r = call("POST", "/requests/rq_1/pay", {"visibility": "private"}, tok=A, key="ie2"); chk("pay receipt after import", r[0] == 200 and r[1]["request_id"] == "rq_1", r)
+chk("failed key remains reusable after import", call("POST", "/payments", {"to_handle": "bob", "amount": 10 ** 6}, tok=A, key="ie5")[0] in (200, 409) )
+r = call("POST", "/settlements", T, tok=O2, key="ie4"); chk("settlement receipt after import", r[0] == 200, r)
+snap2 = call("GET", "/_test/export")[1]; chk("export stable after import", snap2 == snap or snap2["state"] == snap["state"])
+# bad imports: mutate receipts / records
+def tamper(fn):
+    s = copy.deepcopy(snap); fn(s["state"]); return s
+cases = {}
+def walk(o, f):
+    if isinstance(o, dict):
+        for k, v in list(o.items()):
+            if f(o, k, v): return True
+            if walk(v, f): return True
+    elif isinstance(o, list):
+        for v in o:
+            if walk(v, f): return True
+    return False
+before_me = call("GET", "/me", tok=A)[1]
+def set_first(key_match, newval):
+    def fn(st):
+        walk(st, lambda o, k, v: (o.__setitem__(k, newval) or True) if k == key_match else False)
+    return fn
+for nm, fn in [("amount->-7", set_first("amount", -7)), ("amount->string", set_first("amount", "x")), ("balance->-1", set_first("balance", -1)), ("visibility->bogus", set_first("visibility", "bogus")), ("status->bogus", set_first("status", "bogus")), ("state list", None)]:
+    s = snap if fn is None else tamper(fn)
+    if fn is None: s = {"track": "pocketful", "format_version": 1, "state": [1]}
+    r = call("POST", "/_test/import", s)
+    chk("tampered import " + nm + " -> 422 or accepted w/o 5xx", r[0] in (204, 422) and r[0] < 500, r)
+    if r[0] == 422: chk("  state unchanged after " + nm, call("GET", "/me", tok=A)[1] == before_me)
+    call("POST", "/_test/import", snap)
+# reset validation like import
+for nm, f2 in [("dup handle", lambda f: f["users"].append(dict(f["users"][0], id="u_x", email="x@e.com"))),
+               ("dup email", lambda f: f["users"].append(dict(f["users"][0], id="u_y", handle="yy"))),
+               ("bad handle", lambda f: f["users"][0].__setitem__("handle", "Bad Handle")),
+               ("bad minor_units", lambda f: f.__setitem__("minor_units", 5)),
+               ("unknown payment user", lambda f: f["payments"][0].__setitem__("from_user_id", "nobody")),
+               ("operator unknown", lambda f: f.__setitem__("settlement_operator_ids", ["nobody"])),
+               ("bad request status", lambda f: f["requests"][0].__setitem__("status", "zzz"))]:
+    f3 = copy.deepcopy(fx); f2(f3); r = call("POST", "/_test/reset", f3); chk("reset " + nm + " 422, no 5xx", r[0] == 422, r)
+    chk("  state kept after " + nm, call("POST", "/auth/login", {"email": "ada@example.com", "password": "correct horse"})[0] == 200)
+chk("reset ok again", call("POST", "/_test/reset", fx)[0] == 204)
+print(f"\nFINAL2 {n} checks, {len(fails)} failed: {fails}")

@@ -1,0 +1,266 @@
+ok   reset 204
+ok   reset negative 422
+ok   state kept after bad reset
+ok   me
+ok   me no token 401
+ok   me bad token
+ok   login wrong 401
+ok   login unknown 401
+ok   signup 201
+ok   derived handle
+ok   email_taken
+ok   handle_taken
+ok   handle_taken no account
+ok   short pw 422
+ok   bad email 422
+ok   long handle truncated 20
+ok   signup bad json 400
+ok   pay 201
+ok   pay body
+ok   pay replay 200 same
+ok   balance after
+ok   key reuse 409
+ok   key reuse precedes validation
+ok   missing key 400
+ok   empty key 400
+ok   256 key 422
+ok   255 key ok
+ok   key scoped per user
+ok   same key other path ok
+ok   amount0
+ok   amount neg
+ok   amount big
+ok   amount max ok-funds
+ok   amount frac
+ok   amount str
+ok   amount bool
+ok   amount null
+ok   amount missing
+ok   note null
+ok   note 201
+ok   vis bad
+ok   self pay
+ok   unknown handle
+ok   handle wrong type
+ok   array body
+ok   bad json 400
+ok   pay unauth 401
+ok   1e1 amount ok + extra ignored
+ok   10.0 ok
+ok   note 200 ok
+ok   insufficient 409
+ok   failed pay no trace
+ok   key reusable after 4xx
+ok   private pay
+ok   private visible sender
+ok   private visible receiver
+ok   private hidden third
+ok   private hidden from operator
+ok   public visible to third
+ok   seeded payment p_1 in feed
+ok   limit 2 has_more
+ok   newest first
+ok   activity bad ?limit=0
+ok   activity bad ?limit=201
+ok   activity bad ?offset=-1
+ok   activity bad ?limit=1e1
+ok   activity bad ?limit=4.0
+ok   activity bad ?limit=+4
+ok   activity bad ?limit=abc
+ok   activity bad ?offset=1e1
+ok   unknown query ignored
+ok   offset beyond
+ok   activity 401
+ok   request > balance ok
+ok   req replay
+ok   req self
+ok   req unk
+ok   req amt0
+ok   req note
+ok   req no key
+ok   rq_1 listed for payer & requester
+ok   requests not visible to third
+ok   op not granted requests
+ok   incoming only
+ok   outgoing for bob
+ok   requests bad ?direction=x
+ok   requests bad ?status=x
+ok   requests bad ?limit=0
+ok   requests bad ?offset=-1
+ok   requests bad ?limit=4.0
+ok   requests status filter
+ok   requests newest first
+ok   requests not in feed
+ok   pay short 409
+ok   still pending
+ok   requester can't pay 403
+ok   third pay 403 or 404
+ok   pay unknown 404
+ok   pay bad vis 422
+ok   pay no key 400
+ok   pay rq_1 201
+ok   balances moved
+ok   rq_1 paid with payment_id
+ok   pay replay 200 same
+ok   pay replay diff body 409
+ok   pay again new key 409 not_pending
+ok   no double move
+ok   private req payment hidden from third
+ok   decline paid 409
+ok   cancel paid 409
+ok   decline by requester 403
+ok   cancel by payer 403
+ok   decline
+ok   decline twice 200
+ok   cancel declined 409
+ok   pay declined 409
+ok   cancel
+ok   cancel twice 200
+ok   decline cancelled 409
+ok   decline unknown 404
+ok   replay after cancel returns original
+ok   cy short
+ok   same key after 4xx now pays
+ok   split 1000/3
+ok   split replay
+ok   split no feed
+ok   split 1/3
+ok   split 10/3
+ok   split 999/3
+ok   split 5/5
+ok   zero share request exists
+ok   1/3 caller middle: zero-share requests
+ok   solo split
+ok   caller omitted
+ok   split empty
+ok   split dup
+ok   split unk
+ok   split amt
+ok   split note
+ok   split no key
+ok   settle non-op 403
+ok   settle no tok 401
+ok   settle no key 400
+ok   settle 201
+ok   settle replay
+ok   settle sum
+ok   settle private hidden from third
+ok   plain payment settlement_id null
+ok   op no funds 409
+ok   collective insufficient 409
+ok   chain affordable by net
+ok   settle sum 2
+ok   settle self
+ok   settle unk
+ok   settle empty
+ok   settle 33
+ok   settle notobj
+ok   settle amt
+ok   settle order
+ok   settle missing
+ok   32 ok
+ok   op sees no others' requests
+ok   concurrent: 0..., only 0 successes beyond balance
+ok   concurrent double spend
+ok   concurrent 25 succeed of 50 (2500/100)
+ok   bob 0, sum kept
+ok   concurrent same key: one 201, rest 200
+ok   request pays once
+ok   export
+ok   import 204
+ok   import again 204
+ok   token valid after import
+ok   retry after import 200 same
+ok   settlement replay after import
+ok   post-export write gone
+ok   login hashed after import
+ok   operator preserved
+ok   import invalid 422
+ok   import invalid 422
+ok   import invalid 422
+ok   import invalid 422
+ok   import bad json 400
+ok   still working after bad import
+ok   currency JPY
+ok   currency BHD
+ok   reset wipes signup
+ok   unauth GET requests
+
+187 checks, 0 failed: []
+ok   fractional/huge amount 422
+ok   fractional/huge amount 422
+ok   fractional/huge amount 422
+ok   fractional/huge amount 422
+ok   1E1 ok
+ok   1E1 == 10 replay
+ok   different amount reuse 409
+ok   huge limit 422
+ok   huge offset empty 200
+ok   huge limit req 422
+ok   basic 401
+ok   200 unicode chars ok
+ok   import with zero-share request
+ok   zero-share request kept
+ok   reset with amount 0 payment 204
+ok   import amount-0 payment
+ok   2000-user reset <10s
+ok   seeded login in big
+ok   negative-balance import 422
+ok   state intact after bad import
+
+FINAL 207 checks, 0 failed: []
+ok   15e1 ok 150
+ok   15e1 == 150 replay
+ok   1.50e2 == 150 replay
+ok   string 150 differs from 150 (409)
+ok   1e999999999 no 5xx 422
+ok   1e-999999999 no 5xx 422
+ok   -0.0 422
+ok   10000e-4 == 1
+ok   1.000..1 422
+ok   1e9 float ok-or-funds
+ok   1e9+1 float 422
+ok   dup key no 5xx
+ok   NaN no 5xx
+ok   Infinity no 5xx
+ok   5000-digit int 422
+ok   reorder + 5.0 replay
+ok   deep nesting no 5xx
+ok   settlement huge exp no 5xx
+ok   split huge exp 422
+ok   request tiny exp 422
+ok   import real export
+ok   receipt valid after import ie1
+ok   pay receipt after import
+ok   failed key remains reusable after import
+ok   settlement receipt after import
+ok   export stable after import
+ok   tampered import amount->-7 -> 422 or accepted w/o 5xx
+ok     state unchanged after amount->-7
+ok   tampered import amount->string -> 422 or accepted w/o 5xx
+ok     state unchanged after amount->string
+ok   tampered import balance->-1 -> 422 or accepted w/o 5xx
+ok     state unchanged after balance->-1
+ok   tampered import visibility->bogus -> 422 or accepted w/o 5xx
+ok     state unchanged after visibility->bogus
+ok   tampered import status->bogus -> 422 or accepted w/o 5xx
+ok     state unchanged after status->bogus
+ok   tampered import state list -> 422 or accepted w/o 5xx
+ok     state unchanged after state list
+ok   reset dup handle 422, no 5xx
+ok     state kept after dup handle
+ok   reset dup email 422, no 5xx
+ok     state kept after dup email
+ok   reset bad handle 422, no 5xx
+ok     state kept after bad handle
+ok   reset bad minor_units 422, no 5xx
+ok     state kept after bad minor_units
+ok   reset unknown payment user 422, no 5xx
+ok     state kept after unknown payment user
+FAIL reset operator unknown 422, no 5xx (204, None)
+ok     state kept after operator unknown
+ok   reset bad request status 422, no 5xx
+ok     state kept after bad request status
+ok   reset ok again
+
+FINAL2 260 checks, 1 failed: ['reset operator unknown 422, no 5xx']
