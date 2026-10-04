@@ -101,6 +101,11 @@ def _no_const(name):
     raise ValueError(name)
 
 
+def _big_int(text):
+    # huge integers stay exact Decimals (range-checked later) instead of tripping int()'s digit limit
+    return int(text) if len(text) <= 18 else Decimal(text)
+
+
 def parse_json(raw, allow_empty=False, decimal=True):
     """decimal=True parses JSON fractions exactly (API bodies); test endpoints keep floats."""
     if not raw.strip():
@@ -109,7 +114,8 @@ def parse_json(raw, allow_empty=False, decimal=True):
         raise ApiError(400, "malformed_request", "request body is required")
     try:
         value = json.loads(raw.decode("utf-8"), parse_constant=_no_const,
-                           parse_float=Decimal if decimal else float)
+                           parse_float=Decimal if decimal else float,
+                           parse_int=_big_int if decimal else int)
     except (ValueError, RecursionError):
         raise ApiError(400, "malformed_request", "body is not valid JSON")
     if not isinstance(value, dict):
