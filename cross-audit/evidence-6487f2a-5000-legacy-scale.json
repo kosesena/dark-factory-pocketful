@@ -1,0 +1,112 @@
+{
+  "probes": 10,
+  "passed": 6,
+  "failed": [
+    {
+      "probe": "many-later-facts-import",
+      "passed": false,
+      "detail": {
+        "status": 0,
+        "body": {
+          "transport_error": "timed out"
+        }
+      }
+    },
+    {
+      "probe": "many-later-facts-import-time",
+      "passed": false,
+      "detail": {
+        "seconds": 10.016704961999494,
+        "facts": 5000
+      }
+    },
+    {
+      "probe": "many-later-facts-invalid",
+      "passed": false,
+      "detail": {
+        "status": 0,
+        "body": {
+          "transport_error": "timed out"
+        }
+      }
+    },
+    {
+      "probe": "many-later-facts-invalid-time",
+      "passed": false,
+      "detail": {
+        "seconds": 10.014746462999028
+      }
+    }
+  ],
+  "results": [
+    {
+      "probe": "reset",
+      "passed": true,
+      "detail": null
+    },
+    {
+      "probe": "first-source-payment",
+      "passed": true,
+      "detail": null
+    },
+    {
+      "probe": "real-empty-first-import",
+      "passed": true,
+      "detail": null
+    },
+    {
+      "probe": "real-empty-first-page",
+      "passed": true,
+      "detail": null
+    },
+    {
+      "probe": "later-facts-created",
+      "passed": true,
+      "detail": {
+        "count": 5000,
+        "last_status": 201,
+        "seconds": 3.6030196260035154
+      }
+    },
+    {
+      "probe": "many-later-facts-import",
+      "passed": false,
+      "detail": {
+        "status": 0,
+        "body": {
+          "transport_error": "timed out"
+        }
+      }
+    },
+    {
+      "probe": "many-later-facts-import-time",
+      "passed": false,
+      "detail": {
+        "seconds": 10.016704961999494,
+        "facts": 5000
+      }
+    },
+    {
+      "probe": "many-later-facts-invalid",
+      "passed": false,
+      "detail": {
+        "status": 0,
+        "body": {
+          "transport_error": "timed out"
+        }
+      }
+    },
+    {
+      "probe": "many-later-facts-invalid-time",
+      "passed": false,
+      "detail": {
+        "seconds": 10.014746462999028
+      }
+    },
+    {
+      "probe": "many-later-facts-invalid-atomic",
+      "passed": true,
+      "detail": null
+    }
+  ]
+}

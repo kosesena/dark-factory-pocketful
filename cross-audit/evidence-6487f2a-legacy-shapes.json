@@ -1,0 +1,472 @@
+{
+  "probes": 93,
+  "passed": 93,
+  "failed": [],
+  "results": [
+    {
+      "probe": "reset",
+      "passed": true,
+      "detail": null
+    },
+    {
+      "probe": "invalid-shape-False-drop-first-coherent",
+      "passed": true,
+      "detail": null
+    },
+    {
+      "probe": "invalid-shape-atomic-False-drop-first-coherent",
+      "passed": true,
+      "detail": null
+    },
+    {
+      "probe": "invalid-shape-False-drop-middle-coherent",
+      "passed": true,
+      "detail": null
+    },
+    {
+      "probe": "invalid-shape-atomic-False-drop-middle-coherent",
+      "passed": true,
+      "detail": null
+    },
+    {
+      "probe": "invalid-shape-False-reverse",
+      "passed": true,
+      "detail": null
+    },
+    {
+      "probe": "invalid-shape-atomic-False-reverse",
+      "passed": true,
+      "detail": null
+    },
+    {
+      "probe": "invalid-shape-False-duplicate",
+      "passed": true,
+      "detail": null
+    },
+    {
+      "probe": "invalid-shape-atomic-False-duplicate",
+      "passed": true,
+      "detail": null
+    },
+    {
+      "probe": "invalid-shape-False-other-party-owner",
+      "passed": true,
+      "detail": null
+    },
+    {
+      "probe": "invalid-shape-atomic-False-other-party-owner",
+      "passed": true,
+      "detail": null
+    },
+    {
+      "probe": "invalid-shape-False-unrelated-owner",
+      "passed": true,
+      "detail": null
+    },
+    {
+      "probe": "invalid-shape-atomic-False-unrelated-owner",
+      "passed": true,
+      "detail": null
+    },
+    {
+      "probe": "invalid-shape-False-impossible-window",
+      "passed": true,
+      "detail": null
+    },
+    {
+      "probe": "invalid-shape-atomic-False-impossible-window",
+      "passed": true,
+      "detail": null
+    },
+    {
+      "probe": "invalid-shape-False-unknown-revision",
+      "passed": true,
+      "detail": null
+    },
+    {
+      "probe": "invalid-shape-atomic-False-unknown-revision",
+      "passed": true,
+      "detail": null
+    },
+    {
+      "probe": "invalid-shape-False-bad-echo",
+      "passed": true,
+      "detail": null
+    },
+    {
+      "probe": "invalid-shape-atomic-False-bad-echo",
+      "passed": true,
+      "detail": null
+    },
+    {
+      "probe": "invalid-shape-False-entries-None",
+      "passed": true,
+      "detail": null
+    },
+    {
+      "probe": "invalid-shape-atomic-False-entries-None",
+      "passed": true,
+      "detail": null
+    },
+    {
+      "probe": "invalid-shape-False-entries-True",
+      "passed": true,
+      "detail": null
+    },
+    {
+      "probe": "invalid-shape-atomic-False-entries-True",
+      "passed": true,
+      "detail": null
+    },
+    {
+      "probe": "invalid-shape-False-entries-123",
+      "passed": true,
+      "detail": null
+    },
+    {
+      "probe": "invalid-shape-atomic-False-entries-123",
+      "passed": true,
+      "detail": null
+    },
+    {
+      "probe": "invalid-shape-False-entries-bad",
+      "passed": true,
+      "detail": null
+    },
+    {
+      "probe": "invalid-shape-atomic-False-entries-bad",
+      "passed": true,
+      "detail": null
+    },
+    {
+      "probe": "invalid-shape-False-echo-None",
+      "passed": true,
+      "detail": null
+    },
+    {
+      "probe": "invalid-shape-atomic-False-echo-None",
+      "passed": true,
+      "detail": null
+    },
+    {
+      "probe": "invalid-shape-False-echo-True",
+      "passed": true,
+      "detail": null
+    },
+    {
+      "probe": "invalid-shape-atomic-False-echo-True",
+      "passed": true,
+      "detail": null
+    },
+    {
+      "probe": "invalid-shape-False-echo-123",
+      "passed": true,
+      "detail": null
+    },
+    {
+      "probe": "invalid-shape-atomic-False-echo-123",
+      "passed": true,
+      "detail": null
+    },
+    {
+      "probe": "invalid-shape-False-echo-bad",
+      "passed": true,
+      "detail": null
+    },
+    {
+      "probe": "invalid-shape-atomic-False-echo-bad",
+      "passed": true,
+      "detail": null
+    },
+    {
+      "probe": "invalid-shape-False-entry-None",
+      "passed": true,
+      "detail": null
+    },
+    {
+      "probe": "invalid-shape-atomic-False-entry-None",
+      "passed": true,
+      "detail": null
+    },
+    {
+      "probe": "invalid-shape-False-entry-True",
+      "passed": true,
+      "detail": null
+    },
+    {
+      "probe": "invalid-shape-atomic-False-entry-True",
+      "passed": true,
+      "detail": null
+    },
+    {
+      "probe": "invalid-shape-False-entry-123",
+      "passed": true,
+      "detail": null
+    },
+    {
+      "probe": "invalid-shape-atomic-False-entry-123",
+      "passed": true,
+      "detail": null
+    },
+    {
+      "probe": "invalid-shape-False-entry-bad",
+      "passed": true,
+      "detail": null
+    },
+    {
+      "probe": "invalid-shape-atomic-False-entry-bad",
+      "passed": true,
+      "detail": null
+    },
+    {
+      "probe": "invalid-shape-False-entry-{}",
+      "passed": true,
+      "detail": null
+    },
+    {
+      "probe": "invalid-shape-atomic-False-entry-{}",
+      "passed": true,
+      "detail": null
+    },
+    {
+      "probe": "invalid-shape-False-entry-[]",
+      "passed": true,
+      "detail": null
+    },
+    {
+      "probe": "invalid-shape-atomic-False-entry-[]",
+      "passed": true,
+      "detail": null
+    },
+    {
+      "probe": "invalid-shape-True-drop-first-coherent",
+      "passed": true,
+      "detail": null
+    },
+    {
+      "probe": "invalid-shape-atomic-True-drop-first-coherent",
+      "passed": true,
+      "detail": null
+    },
+    {
+      "probe": "invalid-shape-True-drop-middle-coherent",
+      "passed": true,
+      "detail": null
+    },
+    {
+      "probe": "invalid-shape-atomic-True-drop-middle-coherent",
+      "passed": true,
+      "detail": null
+    },
+    {
+      "probe": "invalid-shape-True-reverse",
+      "passed": true,
+      "detail": null
+    },
+    {
+      "probe": "invalid-shape-atomic-True-reverse",
+      "passed": true,
+      "detail": null
+    },
+    {
+      "probe": "invalid-shape-True-duplicate",
+      "passed": true,
+      "detail": null
+    },
+    {
+      "probe": "invalid-shape-atomic-True-duplicate",
+      "passed": true,
+      "detail": null
+    },
+    {
+      "probe": "invalid-shape-True-other-party-owner",
+      "passed": true,
+      "detail": null
+    },
+    {
+      "probe": "invalid-shape-atomic-True-other-party-owner",
+      "passed": true,
+      "detail": null
+    },
+    {
+      "probe": "invalid-shape-True-unrelated-owner",
+      "passed": true,
+      "detail": null
+    },
+    {
+      "probe": "invalid-shape-atomic-True-unrelated-owner",
+      "passed": true,
+      "detail": null
+    },
+    {
+      "probe": "invalid-shape-True-impossible-window",
+      "passed": true,
+      "detail": null
+    },
+    {
+      "probe": "invalid-shape-atomic-True-impossible-window",
+      "passed": true,
+      "detail": null
+    },
+    {
+      "probe": "invalid-shape-True-unknown-revision",
+      "passed": true,
+      "detail": null
+    },
+    {
+      "probe": "invalid-shape-atomic-True-unknown-revision",
+      "passed": true,
+      "detail": null
+    },
+    {
+      "probe": "invalid-shape-True-bad-echo",
+      "passed": true,
+      "detail": null
+    },
+    {
+      "probe": "invalid-shape-atomic-True-bad-echo",
+      "passed": true,
+      "detail": null
+    },
+    {
+      "probe": "invalid-shape-True-entries-None",
+      "passed": true,
+      "detail": null
+    },
+    {
+      "probe": "invalid-shape-atomic-True-entries-None",
+      "passed": true,
+      "detail": null
+    },
+    {
+      "probe": "invalid-shape-True-entries-True",
+      "passed": true,
+      "detail": null
+    },
+    {
+      "probe": "invalid-shape-atomic-True-entries-True",
+      "passed": true,
+      "detail": null
+    },
+    {
+      "probe": "invalid-shape-True-entries-123",
+      "passed": true,
+      "detail": null
+    },
+    {
+      "probe": "invalid-shape-atomic-True-entries-123",
+      "passed": true,
+      "detail": null
+    },
+    {
+      "probe": "invalid-shape-True-entries-bad",
+      "passed": true,
+      "detail": null
+    },
+    {
+      "probe": "invalid-shape-atomic-True-entries-bad",
+      "passed": true,
+      "detail": null
+    },
+    {
+      "probe": "invalid-shape-True-echo-None",
+      "passed": true,
+      "detail": null
+    },
+    {
+      "probe": "invalid-shape-atomic-True-echo-None",
+      "passed": true,
+      "detail": null
+    },
+    {
+      "probe": "invalid-shape-True-echo-True",
+      "passed": true,
+      "detail": null
+    },
+    {
+      "probe": "invalid-shape-atomic-True-echo-True",
+      "passed": true,
+      "detail": null
+    },
+    {
+      "probe": "invalid-shape-True-echo-123",
+      "passed": true,
+      "detail": null
+    },
+    {
+      "probe": "invalid-shape-atomic-True-echo-123",
+      "passed": true,
+      "detail": null
+    },
+    {
+      "probe": "invalid-shape-True-echo-bad",
+      "passed": true,
+      "detail": null
+    },
+    {
+      "probe": "invalid-shape-atomic-True-echo-bad",
+      "passed": true,
+      "detail": null
+    },
+    {
+      "probe": "invalid-shape-True-entry-None",
+      "passed": true,
+      "detail": null
+    },
+    {
+      "probe": "invalid-shape-atomic-True-entry-None",
+      "passed": true,
+      "detail": null
+    },
+    {
+      "probe": "invalid-shape-True-entry-True",
+      "passed": true,
+      "detail": null
+    },
+    {
+      "probe": "invalid-shape-atomic-True-entry-True",
+      "passed": true,
+      "detail": null
+    },
+    {
+      "probe": "invalid-shape-True-entry-123",
+      "passed": true,
+      "detail": null
+    },
+    {
+      "probe": "invalid-shape-atomic-True-entry-123",
+      "passed": true,
+      "detail": null
+    },
+    {
+      "probe": "invalid-shape-True-entry-bad",
+      "passed": true,
+      "detail": null
+    },
+    {
+      "probe": "invalid-shape-atomic-True-entry-bad",
+      "passed": true,
+      "detail": null
+    },
+    {
+      "probe": "invalid-shape-True-entry-{}",
+      "passed": true,
+      "detail": null
+    },
+    {
+      "probe": "invalid-shape-atomic-True-entry-{}",
+      "passed": true,
+      "detail": null
+    },
+    {
+      "probe": "invalid-shape-True-entry-[]",
+      "passed": true,
+      "detail": null
+    },
+    {
+      "probe": "invalid-shape-atomic-True-entry-[]",
+      "passed": true,
+      "detail": null
+    }
+  ]
+}

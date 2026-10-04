@@ -23,7 +23,9 @@ def run():
                 sn['opening_balance']+=1;sn['closing_balance']+=1
                 for e in sn['entries']:e[3]+=1
             call('POST','/_test/import',original);before=state();r=call('POST','/_test/import',bad)
-            if alternatives and legacy and mode in ['drop-last','empty']:
+            # This historical seeded fixture has no recorded moment before its
+            # first included movement. Its cleared page must still reject.
+            if alternatives and legacy and mode=='drop-last':
                 expect('alternative-valid-earlier-state-'+mode,r,204)
                 if r[0]==204:
                     expected=copy.deepcopy(page)
@@ -40,6 +42,19 @@ def run():
             if r[0]==204:
                 got=statement(snapshot=page['snapshot'])[1];check('diagnostic-inconsistent-snapshot',False,{'mode':mode,'legacy':legacy,'snapshot':got})
     call('POST','/_test/import',original)
+    if alternatives:
+        # Separately exercise the approved empty-state collision on an API-created
+        # history with a real empty first read, rather than assuming every cleared
+        # historical window has a compatible recorded cutoff.
+        reset();empty=statement()[1];expect('empty-state-source-payment',payment(),201)
+        full=statement()[1];export=state();sn=next(s for s in export['state']['snapshots'] if s['token']==full['snapshot'])
+        sn.pop('taken_ts',None);sn.pop('taken_seq',None);sn.pop('view',None)
+        sn['entries']=[];sn['closing_balance']=sn['opening_balance']
+        r=call('POST','/_test/import',export);expect('alternative-valid-empty-state',r,204)
+        if r[0]==204:
+            expected=copy.deepcopy(empty);expected['snapshot']=full['snapshot']
+            got=statement(snapshot=full['snapshot'])[1]
+            check('alternative-valid-empty-page',got==expected,{'actual':got,'expected':expected} if got!=expected else None)
 
 if __name__=='__main__':
     try:run()

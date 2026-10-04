@@ -2,7 +2,7 @@
 from probe_stage3 import *
 
 def legacy_exports():
-    old='http://cross-s3legacy-495d5d6:8080'
+    old=os.getenv('OLD_LEGACY','http://cross-s3legacy-495d5d6:8080')
     for later in [False,True]:
         for q in [{}, {'from':D0,'to':D4,'known_at':D4}, {'known_at':'2090-01-01T00:00:00Z'}]:
             reset(histfixture(),base=old)

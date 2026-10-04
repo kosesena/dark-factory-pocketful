@@ -1,0 +1,76 @@
+{
+  "probes": 12,
+  "passed": 12,
+  "failed": [],
+  "results": [
+    {
+      "probe": "reset",
+      "passed": true,
+      "detail": null
+    },
+    {
+      "probe": "first-source-payment",
+      "passed": true,
+      "detail": null
+    },
+    {
+      "probe": "real-empty-first-import",
+      "passed": true,
+      "detail": null
+    },
+    {
+      "probe": "real-empty-first-page",
+      "passed": true,
+      "detail": null
+    },
+    {
+      "probe": "later-facts-created",
+      "passed": true,
+      "detail": {
+        "count": 2105,
+        "last_status": 201,
+        "seconds": 1.784182793002401
+      }
+    },
+    {
+      "probe": "many-later-facts-import",
+      "passed": true,
+      "detail": null
+    },
+    {
+      "probe": "many-later-facts-import-time",
+      "passed": true,
+      "detail": {
+        "seconds": 2.4444481679965975,
+        "facts": 2105
+      }
+    },
+    {
+      "probe": "many-later-facts-frozen-empty",
+      "passed": true,
+      "detail": null
+    },
+    {
+      "probe": "many-later-facts-frozen-nonempty",
+      "passed": true,
+      "detail": null
+    },
+    {
+      "probe": "many-later-facts-invalid",
+      "passed": true,
+      "detail": null
+    },
+    {
+      "probe": "many-later-facts-invalid-time",
+      "passed": true,
+      "detail": {
+        "seconds": 2.4737019179956405
+      }
+    },
+    {
+      "probe": "many-later-facts-invalid-atomic",
+      "passed": true,
+      "detail": null
+    }
+  ]
+}

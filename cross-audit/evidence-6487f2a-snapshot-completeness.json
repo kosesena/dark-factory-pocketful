@@ -1,0 +1,132 @@
+{
+  "probes": 25,
+  "passed": 25,
+  "failed": [],
+  "results": [
+    {
+      "probe": "reset",
+      "passed": true,
+      "detail": null
+    },
+    {
+      "probe": "snapshot-completeness-False-drop-last",
+      "passed": true,
+      "detail": null
+    },
+    {
+      "probe": "snapshot-completeness-atomic",
+      "passed": true,
+      "detail": null
+    },
+    {
+      "probe": "snapshot-completeness-False-empty",
+      "passed": true,
+      "detail": null
+    },
+    {
+      "probe": "snapshot-completeness-atomic",
+      "passed": true,
+      "detail": null
+    },
+    {
+      "probe": "snapshot-completeness-False-shift-balances",
+      "passed": true,
+      "detail": null
+    },
+    {
+      "probe": "snapshot-completeness-atomic",
+      "passed": true,
+      "detail": null
+    },
+    {
+      "probe": "snapshot-completeness-False-empty-inconsistent",
+      "passed": true,
+      "detail": null
+    },
+    {
+      "probe": "snapshot-completeness-atomic",
+      "passed": true,
+      "detail": null
+    },
+    {
+      "probe": "snapshot-completeness-False-empty-impossible-opening",
+      "passed": true,
+      "detail": null
+    },
+    {
+      "probe": "snapshot-completeness-atomic",
+      "passed": true,
+      "detail": null
+    },
+    {
+      "probe": "alternative-valid-earlier-state-drop-last",
+      "passed": true,
+      "detail": null
+    },
+    {
+      "probe": "alternative-valid-earlier-page-drop-last",
+      "passed": true,
+      "detail": null
+    },
+    {
+      "probe": "snapshot-completeness-True-empty",
+      "passed": true,
+      "detail": null
+    },
+    {
+      "probe": "snapshot-completeness-atomic",
+      "passed": true,
+      "detail": null
+    },
+    {
+      "probe": "snapshot-completeness-True-shift-balances",
+      "passed": true,
+      "detail": null
+    },
+    {
+      "probe": "snapshot-completeness-atomic",
+      "passed": true,
+      "detail": null
+    },
+    {
+      "probe": "snapshot-completeness-True-empty-inconsistent",
+      "passed": true,
+      "detail": null
+    },
+    {
+      "probe": "snapshot-completeness-atomic",
+      "passed": true,
+      "detail": null
+    },
+    {
+      "probe": "snapshot-completeness-True-empty-impossible-opening",
+      "passed": true,
+      "detail": null
+    },
+    {
+      "probe": "snapshot-completeness-atomic",
+      "passed": true,
+      "detail": null
+    },
+    {
+      "probe": "reset",
+      "passed": true,
+      "detail": null
+    },
+    {
+      "probe": "empty-state-source-payment",
+      "passed": true,
+      "detail": null
+    },
+    {
+      "probe": "alternative-valid-empty-state",
+      "passed": true,
+      "detail": null
+    },
+    {
+      "probe": "alternative-valid-empty-page",
+      "passed": true,
+      "detail": null
+    }
+  ]
+}

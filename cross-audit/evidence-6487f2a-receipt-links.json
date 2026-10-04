@@ -1,0 +1,162 @@
+{
+  "probes": 31,
+  "passed": 31,
+  "failed": [],
+  "results": [
+    {
+      "probe": "reset",
+      "passed": true,
+      "detail": null
+    },
+    {
+      "probe": "receipt-/refunds-owner",
+      "passed": true,
+      "detail": null
+    },
+    {
+      "probe": "receipt-mutation-atomic",
+      "passed": true,
+      "detail": null
+    },
+    {
+      "probe": "receipt-/refunds-path",
+      "passed": true,
+      "detail": null
+    },
+    {
+      "probe": "receipt-mutation-atomic",
+      "passed": true,
+      "detail": null
+    },
+    {
+      "probe": "receipt-/refunds-receipt-type",
+      "passed": true,
+      "detail": null
+    },
+    {
+      "probe": "receipt-mutation-atomic",
+      "passed": true,
+      "detail": null
+    },
+    {
+      "probe": "receipt-/refunds-receipt-time",
+      "passed": true,
+      "detail": null
+    },
+    {
+      "probe": "receipt-mutation-atomic",
+      "passed": true,
+      "detail": null
+    },
+    {
+      "probe": "receipt-/corrections-owner",
+      "passed": true,
+      "detail": null
+    },
+    {
+      "probe": "receipt-mutation-atomic",
+      "passed": true,
+      "detail": null
+    },
+    {
+      "probe": "receipt-/corrections-path",
+      "passed": true,
+      "detail": null
+    },
+    {
+      "probe": "receipt-mutation-atomic",
+      "passed": true,
+      "detail": null
+    },
+    {
+      "probe": "receipt-/corrections-receipt-type",
+      "passed": true,
+      "detail": null
+    },
+    {
+      "probe": "receipt-mutation-atomic",
+      "passed": true,
+      "detail": null
+    },
+    {
+      "probe": "receipt-/corrections-receipt-time",
+      "passed": true,
+      "detail": null
+    },
+    {
+      "probe": "receipt-mutation-atomic",
+      "passed": true,
+      "detail": null
+    },
+    {
+      "probe": "receipt-/correction-batches-owner",
+      "passed": true,
+      "detail": null
+    },
+    {
+      "probe": "receipt-mutation-atomic",
+      "passed": true,
+      "detail": null
+    },
+    {
+      "probe": "receipt-/correction-batches-path",
+      "passed": true,
+      "detail": null
+    },
+    {
+      "probe": "receipt-mutation-atomic",
+      "passed": true,
+      "detail": null
+    },
+    {
+      "probe": "receipt-/correction-batches-receipt-type",
+      "passed": true,
+      "detail": null
+    },
+    {
+      "probe": "receipt-mutation-atomic",
+      "passed": true,
+      "detail": null
+    },
+    {
+      "probe": "receipt-/correction-batches-receipt-time",
+      "passed": true,
+      "detail": null
+    },
+    {
+      "probe": "receipt-mutation-atomic",
+      "passed": true,
+      "detail": null
+    },
+    {
+      "probe": "receipt-different-target-/refunds",
+      "passed": true,
+      "detail": null
+    },
+    {
+      "probe": "target-mutation-atomic",
+      "passed": true,
+      "detail": null
+    },
+    {
+      "probe": "receipt-different-target-/corrections",
+      "passed": true,
+      "detail": null
+    },
+    {
+      "probe": "target-mutation-atomic",
+      "passed": true,
+      "detail": null
+    },
+    {
+      "probe": "genuine-all-receipts-import",
+      "passed": true,
+      "detail": null
+    },
+    {
+      "probe": "genuine-receipts-state-identical",
+      "passed": true,
+      "detail": null
+    }
+  ]
+}

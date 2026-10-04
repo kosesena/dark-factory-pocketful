@@ -1,7 +1,7 @@
 from probe_stage3 import *
 
 def run():
-    old='http://cross-s3legacy-495d5d6:8080'
+    old=os.getenv('OLD_LEGACY','http://cross-s3legacy-495d5d6:8080')
     for change in ['none','correction','payment']:
         reset(histfixture(),base=old)
         tok=call('POST','/auth/login',{'email':'a@example.com','password':'eight chars'},base=old)[1]['token']

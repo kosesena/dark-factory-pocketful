@@ -1,0 +1,63 @@
+{
+  "probes": 6,
+  "passed": 4,
+  "failed": [
+    {
+      "probe": "diagnostic-genuine-contract-time",
+      "passed": false,
+      "detail": {
+        "status": 204,
+        "seconds": 17.762777675001416
+      }
+    },
+    {
+      "probe": "diagnostic-corrupt-contract-time",
+      "passed": false,
+      "detail": {
+        "status": 422,
+        "seconds": 18.527643008994346
+      }
+    }
+  ],
+  "results": [
+    {
+      "probe": "diagnostic-source-size",
+      "passed": true,
+      "detail": {
+        "payments": 5001,
+        "snapshots": 2
+      }
+    },
+    {
+      "probe": "diagnostic-genuine-status",
+      "passed": true,
+      "detail": null
+    },
+    {
+      "probe": "diagnostic-genuine-contract-time",
+      "passed": false,
+      "detail": {
+        "status": 204,
+        "seconds": 17.762777675001416
+      }
+    },
+    {
+      "probe": "diagnostic-corrupt-status",
+      "passed": true,
+      "detail": null
+    },
+    {
+      "probe": "diagnostic-corrupt-contract-time",
+      "passed": false,
+      "detail": {
+        "status": 422,
+        "seconds": 18.527643008994346
+      }
+    },
+    {
+      "probe": "diagnostic-corrupt-atomic",
+      "passed": true,
+      "detail": null
+    }
+  ]
+}
