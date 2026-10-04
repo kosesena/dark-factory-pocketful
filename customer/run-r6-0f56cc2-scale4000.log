@@ -1,0 +1,31 @@
+  [corr+pay] import 0.01s, later facts 0
+ok   [corr+pay] import under 2.5s
+ok   [corr+pay] real stage-3 export imports 204
+ok   [corr+pay] all snapshot pages identical
+  [corr only] import 0.00s, later facts 0
+ok   [corr only] import under 2.5s
+ok   [corr only] real stage-3 export imports 204
+ok   [corr only] all snapshot pages identical
+  [pay only] import 0.00s, later facts 0
+ok   [pay only] import under 2.5s
+ok   [pay only] real stage-3 export imports 204
+ok   [pay only] all snapshot pages identical
+  [no later write] import 0.01s, later facts 0
+ok   [no later write] import under 2.5s
+ok   [no later write] real stage-3 export imports 204
+ok   [no later write] all snapshot pages identical
+  [empty-first] import 0.01s, later facts 0
+ok   [empty-first] import under 2.5s
+ok   [empty-first] real stage-3 export imports 204
+ok   [empty-first] all snapshot pages identical
+ok   empty-first snapshot token exists
+  [2100 later facts] import 0.16s, later facts 2100
+ok   [2100 later facts] import under 2.5s
+ok   [2100 later facts] real stage-3 export imports 204
+ok   [2100 later facts] all snapshot pages identical
+  [4000 later facts] import 0.22s, later facts 4000
+ok   [4000 later facts] import under 2.5s
+ok   [4000 later facts] real stage-3 export imports 204
+ok   [4000 later facts] all snapshot pages identical
+ok   tampered 4000 -> 422 fast (0.12s)
+SCALE 23 checks, 0 failed: []

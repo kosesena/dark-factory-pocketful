@@ -1,0 +1,73 @@
+INFO  B revert-correction tamper (admitted: coordinator ruling de5f3df5, any earlier recorded moment) -> 204
+INFO  B genuine entry: [{"payment": {"payment_id": "p_s1", "from_user_id": "u_b", "from_handle": "b", "to_user_id": "u_a", "to_handle": "a", "amount": 250, "currency": "EUR", "note": "", "visibility": "public", "request_id": null, "settlement_id": null, "authorization_id": null, "created_at": "2026-09-30T12:32:10+00:00"}, "delta": 250, "balance_after": 499950, "revision": 2, "effective_at": "2026-09-30T12:32:10+00:00", 
+INFO  B imported entry: [{"payment": {"payment_id": "p_s1", "from_user_id": "u_b", "from_handle": "b", "to_user_id": "u_a", "to_handle": "a", "amount": 300, "currency": "EUR", "note": "", "visibility": "public", "request_id": null, "settlement_id": null, "authorization_id": null, "created_at": "2026-09-30T12:32:10+00:00"}, "delta": 300, "balance_after": 500000, "revision": 1, "effective_at": "2026-09-30T12:32:10+00:00", 
+D import took 0.53s
+D tampered import took 0.32s
+PASS  A empty-first: source statement is empty
+PASS  A empty-first: source snapshots are metadata-free
+PASS  A empty-first: real 495d5d6 export imports (204)
+PASS  A empty-first: import within 5 s
+PASS  A empty-first: original page retained
+PASS  A correction: source correction
+PASS  A later correction: real 495d5d6 export imports (204)
+PASS  A later correction: import within 5 s
+PASS  A later correction: original page retained
+PASS  A later correction: original page retained
+PASS  A payment: source payment
+PASS  A later payment: real 495d5d6 export imports (204)
+PASS  A later payment: import within 5 s
+PASS  A later payment: original page retained
+PASS  A later payment: original page retained
+PASS  A both: source correction
+PASS  A both: source payment
+PASS  A later both: real 495d5d6 export imports (204)
+PASS  A later both: import within 5 s
+PASS  A later both: original page retained
+PASS  A later both: original page retained
+PASS  B source correction
+PASS  B genuine corrected-statement export imports
+PASS  B tamper applicable (corrected entry put back to revision 1)
+PASS  C malformed legacy (entry not a list) -> 422
+PASS  C malformed legacy (entry not a list) leaves destination unchanged
+PASS  C malformed legacy (entry too short) -> 422
+PASS  C malformed legacy (entry too short) leaves destination unchanged
+PASS  C malformed legacy (unknown payment) -> 422
+PASS  C malformed legacy (unknown payment) leaves destination unchanged
+PASS  C malformed legacy (payment id int) -> 422
+PASS  C malformed legacy (payment id int) leaves destination unchanged
+PASS  C malformed legacy (revision string) -> 422
+PASS  C malformed legacy (revision string) leaves destination unchanged
+PASS  C malformed legacy (recorded_at garbage) -> 422
+PASS  C malformed legacy (recorded_at garbage) leaves destination unchanged
+PASS  C malformed legacy (recorded_at naive) -> 422
+PASS  C malformed legacy (recorded_at naive) leaves destination unchanged
+PASS  C malformed legacy (huge balance) -> 422
+PASS  C malformed legacy (huge balance) leaves destination unchanged
+PASS  C malformed legacy (opening float) -> 422
+PASS  C malformed legacy (opening float) leaves destination unchanged
+PASS  C malformed legacy (echo int) -> 422
+PASS  C malformed legacy (echo int) leaves destination unchanged
+PASS  C malformed legacy (user unknown) -> 422
+PASS  C malformed legacy (user unknown) leaves destination unchanged
+PASS  C malformed legacy (entries null) -> 422
+PASS  C malformed legacy (entries null) leaves destination unchanged
+PASS  C malformed legacy (token empty) -> 422
+PASS  C malformed legacy (token empty) leaves destination unchanged
+PASS  C far-future known_at relabel -> 204 or 422, never 5xx
+PASS  D created 6000 later payments on the source
+PASS  A 6000 later facts, 10 legacy snapshots: real 495d5d6 export imports (204)
+PASS  A 6000 later facts, 10 legacy snapshots: import within 5 s
+PASS  A 6000 later facts, 10 legacy snapshots: original page retained
+PASS  A 6000 later facts, 10 legacy snapshots: original page retained
+PASS  A 6000 later facts, 10 legacy snapshots: original page retained
+PASS  A 6000 later facts, 10 legacy snapshots: original page retained
+PASS  A 6000 later facts, 10 legacy snapshots: original page retained
+PASS  A 6000 later facts, 10 legacy snapshots: original page retained
+PASS  A 6000 later facts, 10 legacy snapshots: original page retained
+PASS  A 6000 later facts, 10 legacy snapshots: original page retained
+PASS  A 6000 later facts, 10 legacy snapshots: original page retained
+PASS  A 6000 later facts, 10 legacy snapshots: original page retained
+PASS  D tampered (6000 facts, 10 snapshots, one shifted +1) -> 422
+PASS  D tampered refused within 5 s
+PASS  D tampered leaves destination unchanged
+67 probes, 0 failed

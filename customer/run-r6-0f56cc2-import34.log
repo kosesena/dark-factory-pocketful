@@ -1,0 +1,34 @@
+PASS  stage-1 export imports
+PASS  stage-1 balances/tokens kept
+PASS  stage-1 payment replay
+PASS  stage-1 settlement replay
+PASS  stage-1 settlement membership kept (incomplete)
+PASS  stage-1 re-export re-imports
+PASS  stage-2 export imports
+PASS  stage-2 balances/tokens kept
+PASS  stage-2 payment replay
+PASS  stage-2 settlement replay
+PASS  stage-2 settlement membership kept (incomplete)
+PASS  stage-2 capture immutable after import
+PASS  stage-2 holds kept
+PASS  stage-2 re-export re-imports
+PASS  stage-3 export imports
+PASS  stage-3 balances/tokens kept
+PASS  stage-3 payment replay
+PASS  stage-3 settlement replay
+PASS  stage-3 settlement membership kept (incomplete)
+PASS  stage-3 capture immutable after import
+PASS  stage-3 holds kept
+PASS  stage-3 corrections kept
+PASS  stage-3 correction replay
+PASS  stage-3 snapshot kept
+PASS  stage-3 re-export re-imports
+PASS  own export imports
+PASS  tamper naive recorded_at -> 422
+PASS  tamper naive recorded_at leaves destination unchanged
+PASS  tamper non-string effective_at -> 422
+PASS  tamper non-string effective_at leaves destination unchanged
+PASS  tamper negative opening balance -> 422
+PASS  tamper negative opening balance leaves destination unchanged
+PASS  destination still matches after tampers
+33 probes, 0 failed

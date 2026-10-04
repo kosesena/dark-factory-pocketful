@@ -1,0 +1,89 @@
+PASS  auth-error on wrong password
+PASS  auth-error absent initially
+PASS  signup short password -> auth-error
+PASS  signup lands signed in
+PASS  logout
+PASS  wallet-balance formatted total
+PASS  wallet-available formatted
+PASS  wallet-held formatted
+PASS  available is the headline number
+PASS  available is the largest number on the page
+PASS  current-user/handle on /
+PASS  current-user/handle on /requests
+PASS  current-user/handle on /split
+PASS  current-user/handle on /authorizations
+PASS  pay '15.005' rejected without request
+PASS  pay 'abc' rejected without request
+PASS  pay '1,5' rejected without request
+PASS  pay '-3' rejected without request
+PASS  pay '' rejected without request
+PASS  15.5 submits 1550 and balance falls
+PASS  pay-error absent after success
+PASS  pay form keeps values
+PASS  unchanged resubmit: same key, one payment, no error
+PASS  changed field -> new payment, 15 submits 1500
+PASS  feed newest first and complete
+PASS  feed note present when empty
+PASS  feed parties contain both handles
+PASS  feed amount formatted
+PASS  feed visibility attribute
+PASS  feed note verbatim
+PASS  refused: pay-error, balance refreshed, inputs kept
+PASS  held funds refused, no uncertain
+PASS  lost response -> pay-uncertain, not pay-error
+PASS  retry: same key and body, money once, alerts cleared
+PASS  latest refresh wins
+PASS  refresh keeps pay form
+PASS  upgrade: signed-in browser retries lost payment after import, once
+PASS  incoming has pay+decline
+PASS  request amount formatted
+PASS  outgoing has cancel only
+PASS  status attribute
+PASS  cancelled elsewhere: request-error and stale pay button gone
+PASS  pay via UI -> paid, balance refreshed
+PASS  cancel via UI
+PASS  split preview before posting
+PASS  split preview zero shares
+PASS  submitted split matches preview
+PASS  split error shown
+PASS  split 1.234 rejected without request
+PASS  seeded hold listed open with void
+PASS  authorization amount + expires rfc3339
+PASS  captured element absent when open
+PASS  authorize over available -> authorize-error
+PASS  authorize via UI: available falls, held shown
+PASS  authorization list newest first
+PASS  capture amount prefilled with remaining
+PASS  receiver has no void
+PASS  capture over remaining -> authorization-error
+PASS  capture via UI -> captured with captured amount
+PASS  final capture released remainder
+PASS  void refused after capture elsewhere: error + refreshed
+PASS  empty-authorizations
+PASS  empty-requests
+PASS  empty-activity
+PASS  JPY formatting
+PASS  JPY: no form label names another currency
+PASS  no horizontal scroll / @375
+PASS  nav labels do not wrap / @375
+PASS  no horizontal scroll /requests @375
+PASS  nav labels do not wrap /requests @375
+PASS  no horizontal scroll /split @375
+PASS  nav labels do not wrap /split @375
+PASS  no horizontal scroll /authorizations @375
+PASS  nav labels do not wrap /authorizations @375
+PASS  no horizontal scroll /login @375
+PASS  no horizontal scroll /signup @375
+PASS  no horizontal scroll / @1280
+PASS  nav labels do not wrap / @1280
+PASS  no horizontal scroll /requests @1280
+PASS  nav labels do not wrap /requests @1280
+PASS  no horizontal scroll /split @1280
+PASS  nav labels do not wrap /split @1280
+PASS  no horizontal scroll /authorizations @1280
+PASS  nav labels do not wrap /authorizations @1280
+PASS  no horizontal scroll /login @1280
+PASS  no horizontal scroll /signup @1280
+PASS  keyboard focus is visible
+PASS  login inputs have visible labels
+88 UI checks, 0 failed

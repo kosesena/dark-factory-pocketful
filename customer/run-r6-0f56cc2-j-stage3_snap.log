@@ -1,0 +1,64 @@
+ok   export carries 6 snapshots
+ok   genuine export with 6 old snapshots imports unchanged
+ok   all snapshot pages identical after import
+ok   other-user snapshot 404 after import
+ok   snapshot + from/to/known_at still 422 after import
+ok   known_at snapshot echo retained
+   snapshot keys: ['closing_balance', 'echo', 'entries', 'opening_balance', 'taken_seq', 'taken_ts', 'token', 'user_id', 'view'] entry: ['p_b', 1, 1200, 10800, '2026-10-04T10:36:01+00:00', '2026-10-04T10:36:01+00:00', 1200]
+ok   corrupt snapshot [revision 99/default] -> 422
+ok     state unchanged after [revision 99/default]
+ok   corrupt snapshot [revision 99/window] -> 422
+ok     state unchanged after [revision 99/window]
+ok   corrupt snapshot [wrong delta/default] -> 422
+ok     state unchanged after [wrong delta/default]
+ok   corrupt snapshot [wrong balance_after/default] -> 422
+ok     state unchanged after [wrong balance_after/default]
+ok   corrupt snapshot [wrong effective_at/default] -> 422
+ok     state unchanged after [wrong effective_at/default]
+ok   corrupt snapshot [wrong effective_at/known_at] -> 422
+ok     state unchanged after [wrong effective_at/known_at]
+ok   corrupt snapshot [wrong recorded_at/default] -> 422
+ok     state unchanged after [wrong recorded_at/default]
+ok   corrupt snapshot [wrong amount/default] -> 422
+ok     state unchanged after [wrong amount/default]
+ok   corrupt snapshot [wrong amount/known_at] -> 422
+ok     state unchanged after [wrong amount/known_at]
+ok   corrupt snapshot [owner other user/default] -> 422
+ok     state unchanged after [owner other user/default]
+ok   corrupt snapshot [owner unknown/default] -> 422
+ok     state unchanged after [owner unknown/default]
+ok   corrupt snapshot [closing balance wrong/default] -> 422
+ok     state unchanged after [closing balance wrong/default]
+ok   corrupt snapshot [opening balance wrong/default] -> 422
+ok     state unchanged after [opening balance wrong/default]
+ok   corrupt snapshot [entry dropped/default] -> 422
+ok     state unchanged after [entry dropped/default]
+ok   corrupt snapshot [entry duplicated/default] -> 422
+ok     state unchanged after [entry duplicated/default]
+ok   corrupt snapshot [entries reordered/default] -> 422
+ok     state unchanged after [entries reordered/default]
+ok   corrupt snapshot [entry unknown payment/default] -> 422
+ok     state unchanged after [entry unknown payment/default]
+ok   corrupt snapshot [known_at echo early/known_at] -> 422
+ok     state unchanged after [known_at echo early/known_at]
+ok   corrupt snapshot [known_at echo early/default] -> 422
+ok     state unchanged after [known_at echo early/default]
+ok   corrupt snapshot [known_at echo bad/known_at] -> 422
+ok     state unchanged after [known_at echo bad/known_at]
+ok   corrupt snapshot [window excludes entries/default] -> 422
+ok     state unchanged after [window excludes entries/default]
+ok   corrupt snapshot [window excludes entries/window] -> 422
+ok     state unchanged after [window excludes entries/window]
+ok   corrupt snapshot [token duplicated/default] -> 422
+ok     state unchanged after [token duplicated/default]
+ok   corrupt snapshot [missing token/default] -> 422
+ok     state unchanged after [missing token/default]
+ok   corrupt snapshot [taken_seq corrupt/default] -> 422
+ok     state unchanged after [taken_seq corrupt/default]
+ok   corrupt snapshot [taken_ts corrupt/default] -> 422
+ok     state unchanged after [taken_ts corrupt/default]
+ok   snapshots still frozen after new writes post-import
+ok   re-import twice 204
+ok   snapshot after double import
+
+SNAP 61 checks, 0 failed: []
