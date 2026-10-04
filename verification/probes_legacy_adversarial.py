@@ -7,6 +7,8 @@ Two ledger shapes defeat a balance-based screen of candidate moments, because ma
   E1  same-amount back-dated corrections: K statements, then N corrections of one payment that keep its amount.
   E2  closed-window same-instant swap: two payments at one instant inside a closed past window, a statement of that
       window, then N later payments outside it; the tamper swaps the two same-instant entries (balances recomputed).
+  E3  a combination: three users, closed/open/known_at windows, same-amount corrections interleaved with
+      out-of-window payments, K statements; tampered by a same-instant swap and by a balance shift.
 For each shape the genuine export must import (204, original pages) and the tampered export must be refused (422,
 destination unchanged), each inside 5 s. SRC is a real older stage-3 service (495d5d6), DST is stage 4.
 
@@ -159,6 +161,59 @@ def e2_tamper(bad):
 
 
 judge("E2 closed-window swap, %d later facts, %d snapshots" % (N, len(pages)), call(SRC, "GET", "/_test/export")[1], pages, "a", e2_tamper)
+
+# ---- E3 combination: three users, closed/open/known_at windows, same-amount corrections + out-of-window payments --
+USERS3 = USERS + [{"id": "u_c", "email": "c@x.io", "password": "password", "display_name": "C", "handle": "c", "balance": 10 ** 7}]
+fx = {"currency": "EUR", "minor_units": 2, "users": USERS3, "requests": [],
+      "payments": [{"id": "p_1", "from_user_id": "u_a", "to_user_id": "u_b", "amount": 300, "note": "", "visibility": "public",
+                    "created_at": T1.isoformat()},
+                   {"id": "p_2", "from_user_id": "u_b", "to_user_id": "u_a", "amount": 120, "note": "", "visibility": "public",
+                    "created_at": T1.isoformat()},
+                   {"id": "p_3", "from_user_id": "u_c", "to_user_id": "u_a", "amount": 55, "note": "", "visibility": "public",
+                    "created_at": (T1 + timedelta(hours=1)).isoformat()}]}
+check("E3 source reset", call(SRC, "POST", "/_test/reset", fx)[0] == 204, "")
+tk = {h: login(SRC, h) for h in "abc"}
+closed = "&from=" + urllib.parse.quote((T1 - timedelta(hours=1)).isoformat()) + "&to=" + urllib.parse.quote((T1 + timedelta(hours=2)).isoformat())
+qs3 = [closed, "", "&known_at=" + urllib.parse.quote((NOW + timedelta(days=2)).isoformat()),
+       "&from=" + urllib.parse.quote((T1 - timedelta(days=1)).isoformat())]
+pages3 = {}
+owners = {}
+for i in range(K):
+    h = "abc"[i % 3]
+    s = call(SRC, "GET", "/statement?limit=1" + qs3[(i // 3) % len(qs3)], None, tk[h])[1]
+    pages3[s["snapshot"]] = page(SRC, tk[h], s["snapshot"])
+    owners[s["snapshot"]] = h
+t = time.time()
+okc = 0
+for i in range(N):
+    if i % 2 == 0:
+        st, b = call(SRC, "POST", "/payments/p_1/corrections", {"expected_revision": okc + 1, "amount": 300,
+                     "effective_at": T1.isoformat(), "reason": "same"}, tk["a"], "e3c%d" % i)
+        okc += st == 201
+    else:
+        f, to = ("a", "b") if i % 4 == 1 else ("c", "b")
+        call(SRC, "POST", "/payments", {"to_handle": to, "amount": 1}, tk[f], "e3p%d" % i)
+check("E3 %d mixed later facts on the source (%d same-amount corrections)" % (N, okc), okc == (N + 1) // 2, "%.1fs" % (time.time() - t))
+ex3 = call(SRC, "GET", "/_test/export")[1]
+st, b, dt = timed_import(ex3)
+check("E3: genuine imports (204)", st == 204, (st, b))
+check("E3: genuine import within 5 s", dt < 5, "%.2fs" % dt)
+print("E3 combined (%d facts, %d snapshots, 3 users): genuine %s in %.2fs" % (N, K, st, dt))
+if st == 204:
+    dtk = {h: login(DST, h) for h in "abc"}
+    check("E3: every original page retained", all(page(DST, dtk[owners[sn]], sn) == pg for sn, pg in pages3.items()), "")
+base3 = call(DST, "GET", "/_test/export")[1]
+for kind in ("swap", "shift"):
+    bad = copy.deepcopy(ex3)
+    if kind == "swap":
+        e2_tamper(bad)
+    else:
+        e1_tamper(bad)
+    st, b, dt = timed_import(bad)
+    check("E3: tampered (%s) refused (422)" % kind, st == 422, (st, b))
+    check("E3: tampered (%s) refused within 5 s" % kind, dt < 5, "%.2fs" % dt)
+    check("E3: tampered (%s) leaves destination unchanged" % kind, call(DST, "GET", "/_test/export")[1] == base3, "")
+    print("E3 combined: tampered %s %s in %.2fs" % (kind, st, dt))
 
 fails = [r for r in RESULTS if not r[1]]
 for n, ok, d in RESULTS:
