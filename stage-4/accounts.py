@@ -98,7 +98,7 @@ def build_state(fx):
         rec = {"id": pid, "from_user_id": p["from_user_id"], "to_user_id": p["to_user_id"],
                "amount": amt, "note": note, "visibility": vis,
                "request_id": p.get("request_id"), "settlement_id": None,
-               "authorization_id": None}
+               "authorization_id": None, "refund_of": None}
         stamp(p, rec)
         if rec["ts"] > time.time():
             raise validation("a seeded payment cannot be created in the future")

@@ -10,13 +10,14 @@ from urllib.parse import parse_qs, unquote, urlsplit
 import accounts
 import authorizations
 import history
+import refunds
 import ui
 import settlements
 import snapshot
 import wallet
 from common import LOCK, ApiError, store, sweep
 
-MODULES = [accounts, wallet, snapshot, settlements, authorizations, history]
+MODULES = [accounts, wallet, snapshot, settlements, authorizations, history, refunds]
 
 ROUTES = [(m, re.compile(p), fn) for mod in MODULES for (m, p, fn) in mod.ROUTES]
 

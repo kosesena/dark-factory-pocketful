@@ -51,6 +51,7 @@ def check_state_invariants(s):
     for tok, uid in s.tokens.items():
         _need(isinstance(tok, str) and tok and uid in s.users)
 
+    refunded = {}
     auths = getattr(s, "auths", [])
     auths_by_id = getattr(s, "auths_by_id", {})
     seqs = []
@@ -70,6 +71,14 @@ def check_state_invariants(s):
             _ts_ok(r["recorded_at"], r["recorded_ts"])
         seqs.append(p["seq"])
         rid = p["request_id"]
+        rof = p.get("refund_of")
+        if rof is not None:  # a refund: the target's receiver paying back, an ordinary immutable payment
+            t = s.payments_by_id.get(rof)
+            _need(t is not None and t.get("refund_of") is None and p["from_user_id"] == t["to_user_id"]
+                  and p["to_user_id"] == t["from_user_id"] and p["note"] == t["note"]
+                  and p["visibility"] == t["visibility"] and rid is None and p["settlement_id"] is None
+                  and p.get("authorization_id") is None and len(revs) == 1)
+        refunded[rof] = refunded.get(rof, 0) + p["amount"] if rof is not None else 0
         if rid is not None:  # a payment for a request: that request is paid by exactly this payment
             r = s.requests_by_id.get(rid)
             _need(r is not None and r["status"] == "paid" and r["payment_id"] == p["id"])
@@ -86,6 +95,9 @@ def check_state_invariants(s):
             _need(a is not None and p["id"] in a["payment_ids"] and rid is None and sid is None)
             _need(p["from_user_id"] == a["from_user_id"] and p["to_user_id"] == a["to_user_id"]
                   and p["visibility"] == a["visibility"] and p["note"] == a["note"])
+    for tid, total in refunded.items():  # refunds never exceed the payment's current corrected amount
+        if tid is not None:
+            _need(total <= s.payments_by_id[tid]["revisions"][-1]["amount"])
     for r in s.requests:
         _need(r["requester_id"] in s.users and r["payer_id"] in s.users and r["requester_id"] != r["payer_id"])
         _need(_amount(r["amount"]) and isinstance(r["note"], str) and len(r["note"]) <= 200)

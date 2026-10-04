@@ -127,6 +127,8 @@ def load_state(st):
         rec = {k: p[k] for k in ("id", "from_user_id", "to_user_id", "amount", "note", "visibility",
                                  "request_id", "settlement_id", "created_at", "ts", "seq")}
         rec["authorization_id"] = p.get("authorization_id")  # absent in stage-1 exports
+        rec["refund_of"] = p.get("refund_of")  # absent before stage 4
+        _need(rec["refund_of"] is None or _str(rec["refund_of"]))
         if "revisions" in p:  # absent before stage 3: revision 1 is derived from the payment itself
             rec["revisions"] = p["revisions"]
         _need(_id(rec["id"]) and rec["id"] not in s.payments_by_id)
@@ -265,6 +267,7 @@ PATH_PAY = re.compile(r"/requests/([^/]+)/pay")
 PATH_SPLITS = re.compile(r"/splits")
 PATH_SETTLEMENTS = re.compile(r"/settlements")
 PATH_CORRECTION = re.compile(r"/payments/([^/]+)/corrections")
+PATH_REFUND = re.compile(r"/payments/([^/]+)/refunds")
 PATH_AUTHS = re.compile(r"/authorizations")
 PATH_CAPTURE = re.compile(r"/authorizations/([^/]+)/capture")
 
@@ -276,8 +279,9 @@ def _payment_receipt(s, resp):
     from wallet import pay_view
     _need(isinstance(resp, dict) and resp.get("payment_id") in s.payments_by_id)
     expected = pay_view(s, s.payments_by_id[resp["payment_id"]])
-    if "authorization_id" not in resp:  # receipts written before stage 2 have no such field
-        expected.pop("authorization_id", None)
+    for k in ("authorization_id", "refund_of"):  # receipts written before stage 2 / 4 lack these fields
+        if k not in resp:
+            expected.pop(k, None)
     _need(resp == expected)
     return s.payments_by_id[resp["payment_id"]]
 
@@ -383,6 +387,9 @@ def check_receipts(s):
             p = _payment_receipt(s, resp)
             _need(p.get("authorization_id") == c and c in s.auths_by_id
                   and s.auths_by_id[c]["to_user_id"] == uid)
+        elif PATH_REFUND.fullmatch(path):
+            p = _payment_receipt(s, resp)
+            _need(p.get("refund_of") == PATH_REFUND.fullmatch(path).group(1) and p["from_user_id"] == uid)
         elif PATH_CORRECTION.fullmatch(path):
             _correction_receipt(s, uid, PATH_CORRECTION.fullmatch(path).group(1), resp)
         else:

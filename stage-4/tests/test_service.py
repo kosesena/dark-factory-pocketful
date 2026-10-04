@@ -1464,5 +1464,112 @@ class Ledger(unittest.TestCase):
         self.assertEqual(call("POST", "/_test/import", e)[0], 204)
 
 
+class Refunds(unittest.TestCase):
+    def setUp(self):
+        self.assertEqual(call("POST", "/_test/reset", hist_fixture())[0], 204)
+        self.ada, self.bob, self.cy = login("ada"), login("bob"), login("cy")
+
+    def refund(self, tok, pid, body, key="r1"):
+        return call("POST", "/payments/%s/refunds" % pid, body, token=tok, key=key)
+
+    def bal(self, tok):
+        return call("GET", "/me", token=tok)[1]["balance"]
+
+    def test_refund_rules(self):
+        self.assertEqual(self.refund(self.bob, "p_b", {"amount": 5})[0], 403)   # the sender
+        self.assertEqual(self.refund(self.cy, "p_b", {"amount": 5})[0], 403)    # a third party
+        self.assertEqual(self.refund(self.ada, "nope", {"amount": 5})[0], 404)
+        self.assertEqual(call("POST", "/payments/p_b/refunds", {"amount": 5}, key="x")[0], 401)
+        self.assertEqual(call("POST", "/payments/p_b/refunds", {"amount": 5}, token=self.ada)[0], 400)
+        for bad in ({}, {"amount": 0}, {"amount": -1}, {"amount": 1.5}, {"amount": "5"}, {"amount": True}, {"amount": 1000000001}):
+            self.assertEqual(self.refund(self.ada, "p_b", bad, "bad")[0], 422, bad)
+        before = (self.bal(self.ada), self.bal(self.bob))
+        s, r, _ = self.refund(self.ada, "p_b", {"amount": 200})
+        self.assertEqual((s, r["refund_of"], r["from_handle"], r["to_handle"], r["amount"], r["request_id"], r["authorization_id"], r["note"], r["visibility"]),
+                         (201, "p_b", "ada", "bob", 200, None, None, "two", "private"))
+        self.assertEqual((self.bal(self.ada), self.bal(self.bob)), (before[0] - 200, before[1] + 200))
+        self.assertEqual(self.refund(self.ada, "p_b", {"amount": 200})[1], r)
+        self.assertEqual(self.refund(self.ada, "p_b", {"amount": 200})[0], 200)
+        self.assertEqual(self.refund(self.ada, "p_b", {"amount": 201})[1]["error"]["code"], "idempotency_key_reuse")
+        self.assertEqual((self.bal(self.ada), self.bal(self.bob)), (before[0] - 200, before[1] + 200))
+        # other payments carry refund_of null
+        act = {x["payment_id"]: x for x in call("GET", "/activity", token=self.ada)[1]["payments"]}
+        self.assertIsNone(act["p_a"]["refund_of"])
+        # cumulative limit
+        s, b, _ = self.refund(self.ada, "p_b", {"amount": 1001}, "r2")
+        self.assertEqual((s, b["error"]["code"]), (422, "refund_exceeds_payment"))
+        self.assertEqual(self.refund(self.ada, "p_b", {"amount": 1000}, "r3")[0], 201)
+        self.assertEqual(self.refund(self.ada, "p_b", {"amount": 1}, "r4")[1]["error"]["code"], "refund_exceeds_payment")
+        # refunds of refunds are refused; refunds are immutable
+        s, b, _ = self.refund(self.bob, r["payment_id"], {"amount": 1}, "r5")
+        self.assertEqual((s, b["error"]["code"]), (422, "invalid_refund_target"))
+        body = {"expected_revision": 1, "amount": 1, "effective_at": "2026-09-22T10:00:00+00:00", "reason": "r"}
+        s, b, _ = call("POST", "/payments/%s/corrections" % r["payment_id"], body, token=self.ada, key="cr")
+        self.assertEqual((s, b["error"]["code"]), (422, "linked_payment_immutable"))
+        # statements show refunds as ordinary payments, once
+        st = call("GET", "/statement", token=self.ada)[1]
+        self.assertEqual(sum(1 for x in st["entries"] if x["payment"]["refund_of"] == "p_b"), 2)
+        self.assertEqual(st["opening_balance"] + sum(x["delta"] for x in st["entries"]), st["closing_balance"])
+
+    def test_correction_cannot_go_below_refunded(self):
+        self.assertEqual(self.refund(self.cy, "p_c", {"amount": 200})[0], 201)  # cy got 300 from bob
+        body = {"expected_revision": 1, "amount": 150, "effective_at": "2026-09-22T10:00:00+00:00", "reason": "r"}
+        s, b, _ = call("POST", "/payments/p_c/corrections", body, token=self.bob, key="cc1")
+        self.assertEqual((s, b["error"]["code"]), (422, "refund_exceeds_payment"))
+        s, b, _ = call("POST", "/payments/p_c/corrections", {**body, "amount": 200}, token=self.bob, key="cc2")
+        self.assertEqual(s, 201)
+        # refunds limit follows the corrected amount
+        self.assertEqual(self.refund(self.cy, "p_c", {"amount": 1}, "rr")[1]["error"]["code"], "refund_exceeds_payment")
+
+    def test_available_funds_and_non_effects(self):
+        # cy locks everything in a hold: nothing left to refund from
+        a = call("POST", "/authorizations", {"to_handle": "ada", "amount": 600}, token=self.cy, key="h")[1]
+        s, b, _ = self.refund(self.cy, "p_c", {"amount": 1})
+        self.assertEqual((s, b["error"]["code"]), (409, "insufficient_funds"))
+        call("POST", "/authorizations/%s/void" % a["authorization_id"], token=self.cy)
+        self.assertEqual(self.refund(self.cy, "p_c", {"amount": 1})[0], 201)
+        # a request payment: the request stays paid
+        rq = call("POST", "/requests", {"payer_handle": "bob", "amount": 50}, token=self.cy, key="rq")[1]["request_id"]
+        pay = call("POST", "/requests/%s/pay" % rq, {}, token=self.bob, key="rqp")[1]
+        self.assertEqual(self.refund(self.cy, pay["payment_id"], {"amount": 50}, "rf2")[0], 201)
+        reqs = {r["request_id"]: r for r in call("GET", "/requests", token=self.cy)[1]["requests"]}
+        self.assertEqual(reqs[rq]["status"], "paid")
+        # a capture: the authorization stays captured and the hold is not restored
+        a2 = call("POST", "/authorizations", {"to_handle": "cy", "amount": 100}, token=self.bob, key="h2")[1]["authorization_id"]
+        cap = call("POST", "/authorizations/%s/capture" % a2, {"amount": 60}, token=self.cy, key="hc")[1]
+        self.assertEqual(self.refund(self.cy, cap["payment_id"], {"amount": 60}, "rf3")[0], 201)
+        me = call("GET", "/me", token=self.bob)[1]
+        self.assertEqual(me["held"], 0)
+        got = [x for x in call("GET", "/authorizations", token=self.bob)[1]["authorizations"] if x["authorization_id"] == a2][0]
+        self.assertEqual((got["status"], got["captured_amount"]), ("captured", 60))
+        # a settlement member can be refunded; membership is unchanged
+        st = call("POST", "/settlements", {"transfers": [{"from_handle": "ada", "to_handle": "bob", "amount": 30}]}, token=self.ada, key="s1")[1]
+        sp = st["payments"][0]["payment_id"]
+        self.assertEqual(self.refund(self.bob, sp, {"amount": 30}, "rf4")[0], 201)
+        again = call("POST", "/settlements", {"transfers": [{"from_handle": "ada", "to_handle": "bob", "amount": 30}]}, token=self.ada, key="s1")
+        self.assertEqual((again[0], again[1]), (200, st))
+        # round trip and conservation
+        s, snap, _ = call("GET", "/_test/export")
+        self.assertEqual(call("POST", "/_test/import", snap)[0], 204)
+        tot = sum(call("GET", "/me", token=t)[1]["balance"] for t in (self.ada, self.bob, self.cy))
+        self.assertEqual(tot, 10000 + 2500 + 600)
+
+    def test_import_checks_refunds(self):
+        self.refund(self.ada, "p_b", {"amount": 100})
+        s, snap, _ = call("GET", "/_test/export")
+        snap["state"]["idempotency"] = []
+        self.assertEqual(call("POST", "/_test/import", snap)[0], 204)
+        def refund_payment(st):
+            return [p for p in st["payments"] if p.get("refund_of")][0]
+        for f in (lambda st: refund_payment(st).__setitem__("refund_of", "ghost"),
+                  lambda st: refund_payment(st).__setitem__("amount", 5000),
+                  lambda st: refund_payment(st).__setitem__("note", "changed"),
+                  lambda st: refund_payment(st).__setitem__("refund_of", refund_payment(st)["id"]),
+                  lambda st: refund_payment(st).__setitem__("to_user_id", st["users"][2]["id"])):
+            m = json.loads(json.dumps(snap))
+            f(m["state"])
+            self.assertEqual(call("POST", "/_test/import", m)[0], 422)
+
+
 if __name__ == "__main__":
     unittest.main()

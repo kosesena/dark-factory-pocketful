@@ -7,6 +7,7 @@ from decimal import Decimal
 from common import (ApiError, MAX_AMOUNT, authenticate, available_of, decimal_int, idempotent, parse_page,
                     store, validation)
 from ledger import effects, history_ok, instant_param, parse_instant
+from refunds import refunded_total
 from wallet import pay_view
 
 
@@ -116,11 +117,14 @@ def correct(req):
         reason = body["reason"]
         if not isinstance(reason, str) or not 1 <= len(reason) <= 200:
             raise validation("reason must be 1 to 200 characters")
-        if p["settlement_id"] is not None or p.get("authorization_id") is not None:
+        if (p["settlement_id"] is not None or p.get("authorization_id") is not None
+                or p.get("refund_of") is not None):
             raise ApiError(422, "linked_payment_immutable", "settlement members and captures cannot be corrected")
         cur = p["revisions"][-1]
         if expected != cur["revision"]:
             raise ApiError(409, "stale_revision", "the payment has a newer revision")
+        if amount < refunded_total(s, pid):
+            raise ApiError(422, "refund_exceeds_payment", "a payment cannot be corrected below what was refunded")
         diff = amount - cur["amount"]
         sender, receiver = s.users[p["from_user_id"]], s.users[p["to_user_id"]]
         debtor = sender if diff > 0 else receiver  # increasing debits the sender, decreasing the receiver

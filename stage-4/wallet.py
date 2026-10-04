@@ -11,7 +11,7 @@ def pay_view(s, p):
             "to_user_id": tu["id"], "to_handle": tu["handle"], "amount": p["amount"],
             "currency": s.currency, "note": p["note"], "visibility": p["visibility"],
             "request_id": p["request_id"], "settlement_id": p["settlement_id"],
-            "authorization_id": p.get("authorization_id"),
+            "authorization_id": p.get("authorization_id"), "refund_of": p.get("refund_of"),
             "created_at": p["created_at"]}
 
 
@@ -24,7 +24,7 @@ def req_view(s, r):
 
 
 def move_money(s, frm, to, amount, note, visibility, request_id=None, settlement_id=None,
-               stamp=None, check_funds=True, authorization_id=None):
+               stamp=None, check_funds=True, authorization_id=None, refund_of=None):
     """Caller holds the lock. Held funds cannot fund a transfer (checked against available)."""
     if check_funds and available_of(s, frm) < amount:
         raise ApiError(409, "insufficient_funds", "insufficient funds")
@@ -37,7 +37,7 @@ def move_money(s, frm, to, amount, note, visibility, request_id=None, settlement
     p = {"id": "p_~%012d" % seq, "from_user_id": frm["id"], "to_user_id": to["id"],
          "amount": amount, "note": note, "visibility": visibility,
          "request_id": request_id, "settlement_id": settlement_id,
-         "authorization_id": authorization_id,
+         "authorization_id": authorization_id, "refund_of": refund_of,
          "created_at": created, "ts": ts, "seq": seq}
     ensure_revisions(p)
     s.payments.append(p)
