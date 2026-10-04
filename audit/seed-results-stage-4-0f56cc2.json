@@ -1,0 +1,397 @@
+[
+ {
+  "id": "J00",
+  "requirement": "baseline: unmodified copy (must be caught by nothing)",
+  "file": "refunds.py",
+  "old": "def refunded_total(s, pid):",
+  "new": "def refunded_total(s, pid):",
+  "fails": {
+   "impl": [],
+   "reviewer:probes_s4.py": [],
+   "reviewer:model": [],
+   "customer:journey_stage4_api.py": [],
+   "customer:journey_stage4_import.py": [],
+   "customer:journey_stage4_legacyreal.py": [
+    "exit"
+   ],
+   "customer:journey_stage4_receipts.py": [],
+   "customer:journey_stage4_scale.py": [
+    "exit"
+   ],
+   "cross:probe_stage4.py": [
+    "{\"probe\": \"migration_import-uncaught\", \"passed\": false, \"detail\": \"'token'\"}",
+    "{\"probe\": \"reset\", \"passed\": false, \"detail\": {\"status\": 0, \"body\": {\"transport_"
+   ],
+   "cross:probe_stage4_import.py": [],
+   "cross:probe_stage4_receipt_links.py": [],
+   "auditor": [],
+   "shipped": []
+  },
+  "caught_by": [],
+  "new_fails": {}
+ },
+ {
+  "id": "M05",
+  "requirement": "\u00a710 a legacy snapshot's entries must equal the rebuild (0f56cc2 search)",
+  "file": "snapshot.py",
+  "old": "if ob == sn[\"opening_balance\"] and cb == sn[\"closing_balance\"] and rebuilt == entries:\n            return tm, cut",
+  "new": "if ob == sn[\"opening_balance\"] and cb == sn[\"closing_balance\"]:\n            return tm, cut",
+  "fails": {
+   "impl": [
+    "(failures=1, errors=56)",
+    "exit",
+    "test_auth_and_validation",
+    "test_available_funds_and_non_effects",
+    "test_backdating_moves_entries_between_windows",
+    "test_bad_timestamps_and_dangling_refs_rejected_on_reset_and_import",
+    "test_batch_netting_and_key_reuse",
+    "test_batch_recorded_at_after_a_single_correction_in_the_same_second",
+    "test_concurrent_drain",
+    "test_concurrent_pay_one_request",
+    "test_concurrent_refunds_respect_the_cap",
+    "test_concurrent_same_key",
+    "test_conservation_after_paying_all",
+    "test_correction_cannot_go_below_refunded",
+    "test_created_at_on_every_payment_endpoint",
+    "test_decline_cancel_idempotent_states",
+    "test_default_statement_snapshot_is_frozen_after_lifecycle_events",
+    "test_exact_numbers_in_body_identity",
+    "test_fuzz",
+    "test_history_accounts_for_refunds_and_batches",
+    "test_html_vs_json",
+    "test_huge_integers",
+    "test_idempotency",
+    "test_import_applies_every_api_field_rule",
+    "test_import_checks_refunds",
+    "test_import_is_strict_and_transactional",
+    "test_insufficient_funds_beats_historical_overdraft",
+    "test_key_bounds",
+    "test_known_at_between_pay_and_correction",
+    "test_legacy_fingerprints_still_replay",
+    "test_lifecycle",
+    "test_list_filters_and_order",
+    "test_net_affordability_and_atomic",
+    "test_no_cap_on_how_many_facts_follow_a_legacy_snapshot",
+    "test_numbers_never_collide_with_strings_or_overflow",
+    "test_older_stage_export_imports_with_its_original_page",
+    "test_pay_body_variants_and_other_path",
+    "test_pay_races_cancel",
+    "test_payment_shape_and_errors",
+    "test_property_every_state_reimports_unchanged",
+    "test_receipts_round_trip_and_tampering",
+    "test_recorded_at_strictly_increases_within_a_second",
+    "test_refund_rules",
+    "test_refund_shape_everywhere",
+    "test_removing_metadata_does_not_skip_validation",
+    "test_replay_after_balance_zero",
+    "test_response_shape_replay_visibility",
+    "test_ring_conserved",
+    "test_rounding_and_self",
+    "test_short_then_payable_and_replay_after_cancel",
+    "test_single_correction_and_batch_share_a_revision",
+    "test_split",
+    "test_split_errors",
+    "test_string_literals_never_equal_json_literals",
+    "test_trailing_zeros_are_the_same_value",
+    "test_view_less_snapshot_cannot_hold_a_refund_entry",
+    "test_zero_share_state_roundtrips"
+   ],
+   "reviewer:probes_s4.py": [
+    "exit"
+   ],
+   "reviewer:model": [
+    "exit"
+   ],
+   "customer:journey_stage4_api.py": [
+    "exit"
+   ],
+   "customer:journey_stage4_import.py": [],
+   "customer:journey_stage4_legacyreal.py": [
+    "exit"
+   ],
+   "customer:journey_stage4_receipts.py": [],
+   "customer:journey_stage4_scale.py": [
+    "exit"
+   ],
+   "cross:probe_stage4.py": [
+    "{\"probe\": \"migration_import-uncaught\", \"passed\": false, \"detail\": \"'token'\"}",
+    "{\"probe\": \"reset\", \"passed\": false, \"detail\": {\"status\": 0, \"body\": {\"transport_"
+   ],
+   "cross:probe_stage4_import.py": [],
+   "cross:probe_stage4_receipt_links.py": [],
+   "auditor": [
+    "legacy3:snapshot 1 legacy + swap same-instant entries, balances recomputed -> 422",
+    "legacy3:snapshot 2 legacy + swap same-instant entries, balances recomputed -> 422",
+    "legacy3:snapshot 3 legacy + swap same-instant entries, balances recomputed -> 422"
+   ],
+   "shipped": []
+  },
+  "caught_by": [
+   "auditor",
+   "customer",
+   "impl",
+   "reviewer"
+  ],
+  "new_fails": {
+   "impl": [
+    "(failures=1, errors=56)",
+    "exit",
+    "test_auth_and_validation",
+    "test_available_funds_and_non_effects",
+    "test_backdating_moves_entries_between_windows",
+    "test_bad_timestamps_and_dangling_refs_rejected_on_reset_and_import",
+    "test_batch_netting_and_key_reuse",
+    "test_batch_recorded_at_after_a_single_correction_in_the_same_second",
+    "test_concurrent_drain",
+    "test_concurrent_pay_one_request",
+    "test_concurrent_refunds_respect_the_cap",
+    "test_concurrent_same_key",
+    "test_conservation_after_paying_all",
+    "test_correction_cannot_go_below_refunded",
+    "test_created_at_on_every_payment_endpoint",
+    "test_decline_cancel_idempotent_states",
+    "test_default_statement_snapshot_is_frozen_after_lifecycle_events",
+    "test_exact_numbers_in_body_identity",
+    "test_fuzz",
+    "test_history_accounts_for_refunds_and_batches",
+    "test_html_vs_json",
+    "test_huge_integers",
+    "test_idempotency",
+    "test_import_applies_every_api_field_rule",
+    "test_import_checks_refunds",
+    "test_import_is_strict_and_transactional",
+    "test_insufficient_funds_beats_historical_overdraft",
+    "test_key_bounds",
+    "test_known_at_between_pay_and_correction",
+    "test_legacy_fingerprints_still_replay",
+    "test_lifecycle",
+    "test_list_filters_and_order",
+    "test_net_affordability_and_atomic",
+    "test_no_cap_on_how_many_facts_follow_a_legacy_snapshot",
+    "test_numbers_never_collide_with_strings_or_overflow",
+    "test_older_stage_export_imports_with_its_original_page",
+    "test_pay_body_variants_and_other_path",
+    "test_pay_races_cancel",
+    "test_payment_shape_and_errors",
+    "test_property_every_state_reimports_unchanged",
+    "test_receipts_round_trip_and_tampering",
+    "test_recorded_at_strictly_increases_within_a_second",
+    "test_refund_rules",
+    "test_refund_shape_everywhere",
+    "test_removing_metadata_does_not_skip_validation",
+    "test_replay_after_balance_zero",
+    "test_response_shape_replay_visibility",
+    "test_ring_conserved",
+    "test_rounding_and_self",
+    "test_short_then_payable_and_replay_after_cancel",
+    "test_single_correction_and_batch_share_a_revision",
+    "test_split",
+    "test_split_errors",
+    "test_string_literals_never_equal_json_literals",
+    "test_trailing_zeros_are_the_same_value",
+    "test_view_less_snapshot_cannot_hold_a_refund_entry",
+    "test_zero_share_state_roundtrips"
+   ],
+   "reviewer:probes_s4.py": [
+    "exit"
+   ],
+   "reviewer:model": [
+    "exit"
+   ],
+   "customer:journey_stage4_api.py": [
+    "exit"
+   ],
+   "auditor": [
+    "legacy3:snapshot 1 legacy + swap same-instant entries, balances recomputed -> 422",
+    "legacy3:snapshot 2 legacy + swap same-instant entries, balances recomputed -> 422",
+    "legacy3:snapshot 3 legacy + swap same-instant entries, balances recomputed -> 422"
+   ]
+  }
+ },
+ {
+  "id": "M06",
+  "requirement": "S4-36 the legacy search is complete (tries earlier moments, latest first)",
+  "file": "snapshot.py",
+  "old": "for tm, cut, sig in reversed(passing):",
+  "new": "for tm, cut, sig in reversed(passing[-1:]):",
+  "fails": {
+   "impl": [
+    "(errors=6)",
+    "exit",
+    "test_property_every_state_reimports_unchanged",
+    "test_receipts_round_trip_and_tampering",
+    "test_string_literals_never_equal_json_literals",
+    "test_trailing_zeros_are_the_same_value",
+    "test_view_less_snapshot_cannot_hold_a_refund_entry",
+    "test_zero_share_state_roundtrips"
+   ],
+   "reviewer:probes_s4.py": [],
+   "reviewer:model": [],
+   "customer:journey_stage4_api.py": [],
+   "customer:journey_stage4_import.py": [],
+   "customer:journey_stage4_legacyreal.py": [
+    "exit"
+   ],
+   "customer:journey_stage4_receipts.py": [],
+   "customer:journey_stage4_scale.py": [
+    "exit"
+   ],
+   "cross:probe_stage4.py": [
+    "{\"probe\": \"migration_import-uncaught\", \"passed\": false, \"detail\": \"'token'\"}",
+    "{\"probe\": \"reset\", \"passed\": false, \"detail\": {\"status\": 0, \"body\": {\"transport_"
+   ],
+   "cross:probe_stage4_import.py": [],
+   "cross:probe_stage4_receipt_links.py": [],
+   "auditor": [],
+   "shipped": []
+  },
+  "caught_by": [
+   "impl"
+  ],
+  "new_fails": {
+   "impl": [
+    "(errors=6)",
+    "exit",
+    "test_property_every_state_reimports_unchanged",
+    "test_receipts_round_trip_and_tampering",
+    "test_string_literals_never_equal_json_literals",
+    "test_trailing_zeros_are_the_same_value",
+    "test_view_less_snapshot_cannot_hold_a_refund_entry",
+    "test_zero_share_state_roundtrips"
+   ]
+  }
+ },
+ {
+  "id": "N01",
+  "requirement": "S4-36 legacy screen: opening is the balance before from",
+  "file": "snapshot.py",
+  "old": "and base + tot.prefix(lo_i) == sn[\"opening_balance\"]",
+  "new": "and base + tot.prefix(hi_i) == sn[\"opening_balance\"]",
+  "fails": {
+   "impl": [
+    "(failures=7)",
+    "exit"
+   ],
+   "reviewer:probes_s4.py": [],
+   "reviewer:model": [],
+   "customer:journey_stage4_api.py": [],
+   "customer:journey_stage4_import.py": [
+    "import stage3 export into stage 4"
+   ],
+   "customer:journey_stage4_legacyreal.py": [
+    "exit"
+   ],
+   "customer:journey_stage4_receipts.py": [],
+   "customer:journey_stage4_scale.py": [
+    "exit"
+   ],
+   "cross:probe_stage4.py": [
+    "{\"probe\": \"migration_import-uncaught\", \"passed\": false, \"detail\": \"'token'\"}",
+    "{\"probe\": \"reset\", \"passed\": false, \"detail\": {\"status\": 0, \"body\": {\"transport_"
+   ],
+   "cross:probe_stage4_import.py": [],
+   "cross:probe_stage4_receipt_links.py": [],
+   "auditor": [
+    "legacy3:legacy shape, untampered, imports"
+   ],
+   "shipped": []
+  },
+  "caught_by": [
+   "auditor",
+   "customer",
+   "impl"
+  ],
+  "new_fails": {
+   "impl": [
+    "(failures=7)",
+    "exit"
+   ],
+   "customer:journey_stage4_import.py": [
+    "import stage3 export into stage 4"
+   ],
+   "auditor": [
+    "legacy3:legacy shape, untampered, imports"
+   ]
+  }
+ },
+ {
+  "id": "N02",
+  "requirement": "S4-36/\u00a710 legacy candidates are only real moments (prefix test)",
+  "file": "snapshot.py",
+  "old": "if i == 0 or seqs[i - 1] == best:",
+  "new": "if True:",
+  "fails": {
+   "impl": [
+    "(failures=1)",
+    "exit"
+   ],
+   "reviewer:probes_s4.py": [],
+   "reviewer:model": [],
+   "customer:journey_stage4_api.py": [],
+   "customer:journey_stage4_import.py": [],
+   "customer:journey_stage4_legacyreal.py": [
+    "exit"
+   ],
+   "customer:journey_stage4_receipts.py": [],
+   "customer:journey_stage4_scale.py": [
+    "exit"
+   ],
+   "cross:probe_stage4.py": [
+    "{\"probe\": \"migration_import-uncaught\", \"passed\": false, \"detail\": \"'token'\"}",
+    "{\"probe\": \"reset\", \"passed\": false, \"detail\": {\"status\": 0, \"body\": {\"transport_"
+   ],
+   "cross:probe_stage4_import.py": [],
+   "cross:probe_stage4_receipt_links.py": [],
+   "auditor": [
+    "legacy3:legacy page at an unreal moment",
+    "legacy4:legacy page at an unreal moment"
+   ],
+   "shipped": []
+  },
+  "caught_by": [
+   "auditor",
+   "impl"
+  ],
+  "new_fails": {
+   "impl": [
+    "(failures=1)",
+    "exit"
+   ],
+   "auditor": [
+    "legacy3:legacy page at an unreal moment",
+    "legacy4:legacy page at an unreal moment"
+   ]
+  }
+ },
+ {
+  "id": "N03",
+  "requirement": "S4-36 a legacy known_at snapshot selects revisions recorded by min(known_at, moment)",
+  "file": "snapshot.py",
+  "old": "kk = tm if known is None else min(known, tm)",
+  "new": "kk = tm",
+  "fails": {
+   "impl": [],
+   "reviewer:probes_s4.py": [],
+   "reviewer:model": [],
+   "customer:journey_stage4_api.py": [],
+   "customer:journey_stage4_import.py": [],
+   "customer:journey_stage4_legacyreal.py": [
+    "exit"
+   ],
+   "customer:journey_stage4_receipts.py": [],
+   "customer:journey_stage4_scale.py": [
+    "exit"
+   ],
+   "cross:probe_stage4.py": [
+    "{\"probe\": \"migration_import-uncaught\", \"passed\": false, \"detail\": \"'token'\"}",
+    "{\"probe\": \"reset\", \"passed\": false, \"detail\": {\"status\": 0, \"body\": {\"transport_"
+   ],
+   "cross:probe_stage4_import.py": [],
+   "cross:probe_stage4_receipt_links.py": [],
+   "auditor": [],
+   "shipped": []
+  },
+  "caught_by": [],
+  "new_fails": {}
+ }
+]

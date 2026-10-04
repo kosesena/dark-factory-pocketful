@@ -60,8 +60,30 @@ def migrate(name, tokens, timed=False):
     at(SRC)
 
 
+_conn = {}
+
+
 def pay(t, to, n):
-    return ok(call("POST", "/payments", {"to_handle": to, "amount": n}, token=t, key=k()), 201)["payment_id"]
+    """One persistent connection per server, so thousands of payments do not exhaust local ports."""
+    import http.client
+    import json as _j
+    key = (P.BASE.hostname, P.BASE.port)
+    for attempt in (0, 1):
+        c = _conn.get(key) or http.client.HTTPConnection(*key, timeout=30)
+        _conn[key] = c
+        try:
+            c.request("POST", "/payments", body=_j.dumps({"to_handle": to, "amount": n}),
+                      headers={"Authorization": "Bearer " + t, "Idempotency-Key": k(),
+                               "Content-Type": "application/json"})
+            r = c.getresponse()
+            body = _j.loads(r.read())
+            assert r.status == 201, (r.status, body)
+            return body["payment_id"]
+        except (http.client.HTTPException, OSError):
+            c.close()
+            _conn.pop(key, None)
+            if attempt:
+                raise
 
 
 def snap(t, **kw):

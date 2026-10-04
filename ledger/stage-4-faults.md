@@ -73,3 +73,16 @@ Earlier results stand for the unchanged code: J01–J15 (8bbd03a) and K01–K04 
 
 M01 and M03 are caught only by the spec-auditor's probes. Suggested tests: the unreal-moment case and the same-instant
 swap on a refund-free legacy snapshot. The seeding runner now runs the legacy probe in both stage-3 and stage-4 modes.
+
+## Revision 0f56cc2: fix-revision seeding (changed code: one-pass moment index, Fenwick-screened legacy search)
+
+| # | Requirement broken | Change | Caught by |
+|---|---|---|---|
+| J00 | control | none | — (control) |
+| N01 | S4-36 legacy screen: opening is the balance before `from` | screen uses `prefix(hi_i)` for opening | auditor, customer, impl |
+| N02 | S4-36/§10 legacy candidates are only real moments | prefix-of-seq test → `True` | auditor (unreal-moment probe), impl |
+| N03 | S4-36 legacy known_at screen uses min(known_at, moment) | `kk = tm` | none — equivalent: the screen only picks which moment is rebuilt, and an earlier passing moment (at or after the floor) always rebuilds to the same page; my migration probe with a known_at snapshot followed by a later correction still passes |
+| M05 | §10 legacy entries must equal the rebuild | match ignores entries | auditor, customer, impl, reviewer |
+| M06 | S4-36 the legacy search is complete | only the latest passing moment is rebuilt | impl |
+
+The implementer's new tests now catch M01 and M03 (LegacyMomentMustBeReal).

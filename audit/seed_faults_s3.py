@@ -110,6 +110,12 @@ S4_FAULTS = [
      '    if legacy:  # a snapshot taken before stage 4', '    if False:  # a snapshot taken before stage 4'),
     ("L01", "§10/S4-37 a view-less (pre-stage-4) snapshot cannot hold a refund entry", "snapshot.py",
      '_need("view" in sn or all(', '_need(True or all('),
+    ("N01", "S4-36 legacy screen: opening is the balance before from", "snapshot.py",
+     'and base + tot.prefix(lo_i) == sn["opening_balance"]', 'and base + tot.prefix(hi_i) == sn["opening_balance"]'),
+    ("N02", "S4-36/§10 legacy candidates are only real moments (prefix test)", "snapshot.py",
+     'if i == 0 or seqs[i - 1] == best:', 'if True:'),
+    ("N03", "S4-36 a legacy known_at snapshot selects revisions recorded by min(known_at, moment)", "snapshot.py",
+     'kk = tm if known is None else min(known, tm)', 'kk = tm'),
     ("M01", "S4-36/§10 legacy candidates are only real moments of the ledger", "snapshot.py",
      "        if all(ts <= tm for seq, ts in by_seq if seq <= best) and all(ts > tm for seq, ts in by_seq if seq > best):",
      "        if True:"),
@@ -119,6 +125,11 @@ S4_FAULTS = [
      'and rebuilt == entries:', 'and len(rebuilt) == len(entries):'),
     ("M04", "S4-36 a legacy snapshot taken before later facts still imports (search is complete)", "snapshot.py",
      'for taken_ts, taken_seq in past[0]:', 'for taken_ts, taken_seq in past[0][:1]:'),
+    ("M05", "§10 a legacy snapshot's entries must equal the rebuild (0f56cc2 search)", "snapshot.py",
+     'if ob == sn["opening_balance"] and cb == sn["closing_balance"] and rebuilt == entries:\n            return tm, cut',
+     'if ob == sn["opening_balance"] and cb == sn["closing_balance"]:\n            return tm, cut'),
+    ("M06", "S4-36 the legacy search is complete (tries earlier moments, latest first)", "snapshot.py",
+     'for tm, cut, sig in reversed(passing):', 'for tm, cut, sig in reversed(passing[-1:]):'),
 ]
 
 K_FAULTS = [
