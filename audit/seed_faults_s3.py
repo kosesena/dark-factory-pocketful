@@ -27,7 +27,7 @@ EV = os.path.join(ROOT, "audit", "mutants", f"_ev{STAGE}")
 HARNESS = "/Users/kosesena/Desktop/dark-factory/dark-factory-wearedevs"
 VPY = os.path.join(HARNESS, ".venv", "bin", "python")
 CHECKS = "/Users/kosesena/Desktop/dark-factory/band-work/checks"
-PREV_PORT = 9600 + STAGE
+PREV_PORT = 18090 + STAGE * 100
 
 S3_FAULTS = [
     ("H00", "baseline: unmodified copy (must be caught by nothing)", "ledger.py", "def whole(ts):", "def whole(ts):"),
@@ -110,7 +110,18 @@ S4_FAULTS = [
      '    if legacy:  # a snapshot taken before stage 4', '    if False:  # a snapshot taken before stage 4'),
 ]
 
-FAULTS = S4_FAULTS if STAGE == 4 else S3_FAULTS
+K_FAULTS = [
+    ("K01", "§10/S3-42 imported snapshots are always rebuilt (never skipped for legacy shape)", "snapshot.py",
+     'if True:  # frozen facts', 'if sn["taken_seq"] != st["seq"]:  # frozen facts'),
+    ("K02", "§10/S3-42 imported snapshot balances must equal the rebuild", "snapshot.py",
+     '_need(ob == sn["opening_balance"] and cb == sn["closing_balance"] and rebuilt == entries)', '_need(rebuilt == entries)'),
+    ("K03", "§10/S3-42 imported snapshot entries must equal the rebuild", "snapshot.py",
+     'and rebuilt == entries)', 'and len(rebuilt) == len(entries))'),
+    ("K04", "§10/S3-42 a legacy snapshot's time is derived from the whole ledger, not its own entries", "snapshot.py",
+     'latest = max([ledger_latest[0]] + [parse_instant(e[5]) for e in entries])', 'latest = max([0.0] + [parse_instant(e[5]) for e in entries])'),
+]
+
+FAULTS = (S4_FAULTS if STAGE == 4 else S3_FAULTS) + K_FAULTS
 
 
 def wait(port):
@@ -170,6 +181,8 @@ def evidence(d, url, prev, tag):
     mine = os.path.join(ROOT, f"audit/probes/stage{STAGE}_probes.py")
     rc, out = run([VPY, mine, url, prev], ROOT)
     res["auditor"] = fails(out)
+    rc, out = run([VPY, os.path.join(ROOT, "audit/probes/legacy_snapshot_probes.py"), url, str(STAGE)], ROOT)
+    res["auditor"] = sorted(set(res["auditor"]) | {"legacy:" + x for x in fails(out)})
     rc, out = run(["/bin/sh", "-c", f". .venv/bin/activate && python -m harness run --track pocketful --base-url {url} "
                    f"--previous-base-url {prev} --stages {STAGE} --out {CHECKS}/spec-auditor-seed{STAGE}-{tag}-{int(time.time())}"], HARNESS)
     res["shipped"] = set() if f"stage {STAGE}: pass" in out else {f"stage {STAGE} not pass"}
@@ -178,7 +191,7 @@ def evidence(d, url, prev, tag):
 
 def one(args):
     i, (fid, req, fname, old, new) = args
-    port = 9700 + STAGE * 40 + i
+    port = 18000 + STAGE * 100 + i
     d = os.path.join(MUT, fid)
     shutil.rmtree(d, ignore_errors=True)
     shutil.copytree(os.path.join(SRCROOT, f"stage-{STAGE}"), d, ignore=shutil.ignore_patterns("__pycache__"))

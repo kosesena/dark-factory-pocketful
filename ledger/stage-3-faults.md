@@ -29,3 +29,20 @@ Caught = fails a check that passes on the unmodified copy (H00).
 
 Full seeding ran on 65dd709 (H01–H16). 7c35a2a changes only `stage-3/snapshot.py`, so on 7c35a2a only that code was seeded (H17, H18).
 The 65dd709 results still hold for the unchanged code. No fault has survived.
+
+## Revision 397a149: fix-revision seeding (changed code: snapshot import)
+
+Only `snapshot.py` changed since the previous revision, so only it was seeded. The earlier results stand for the unchanged code.
+Evidence now also includes `audit/probes/legacy_snapshot_probes.py`.
+
+| # | Requirement broken | Change | Caught by |
+|---|---|---|---|
+| H00 | baseline: unmodified copy (must be caught by nothing) | ledger.py: `def whole(ts):` → `def whole(ts):` | — (control) |
+| K01 | §10/S3-42 imported snapshots are always rebuilt (never skipped for legacy shape) | snapshot.py: `if True:  # frozen facts` → `if sn["taken_seq"] != st["seq"]:  # frozen facts` | auditor, cross, customer, impl |
+| K02 | §10/S3-42 imported snapshot balances must equal the rebuild | snapshot.py: `_need(ob == sn["opening_balance"] and cb == sn["closing_balance"] and ` → `_need(rebuilt == entries)` | auditor, customer, impl |
+| K03 | §10/S3-42 imported snapshot entries must equal the rebuild | snapshot.py: `and rebuilt == entries)` → `and len(rebuilt) == len(entries))` | auditor |
+| K04 | §10/S3-42 a legacy snapshot's time is derived from the whole ledger, not its own entries | snapshot.py: `latest = max([ledger_latest[0]] + [parse_instant(e[5]) for e in entrie` → `latest = max([0.0] + [parse_instant(e[5]) for e in entries])` | auditor, cross, customer, impl |
+
+K03 is caught only by the spec-auditor's probe: reorder two same-instant entries and recompute balance_after, so
+opening, closing and every per-entry check still hold. Suggested test for the implementer: the snapshot fuzzer should
+include this mutation. K02 was first caught only by the implementer; the empty-window balance shift probe now catches it too.

@@ -1,0 +1,229 @@
+[
+ {
+  "id": "J00",
+  "requirement": "baseline: unmodified copy (must be caught by nothing)",
+  "file": "refunds.py",
+  "old": "def refunded_total(s, pid):",
+  "new": "def refunded_total(s, pid):",
+  "fails": {
+   "impl": [],
+   "reviewer:probes_s4.py": [],
+   "reviewer:model": [],
+   "customer:journey_stage4_api.py": [],
+   "customer:journey_stage4_import.py": [],
+   "customer:journey_stage4_receipts.py": [],
+   "cross:probe_stage4.py": [
+    "{\"probe\": \"migration_import-uncaught\", \"passed\": false, \"detail\": \"'token'\"}",
+    "{\"probe\": \"reset\", \"passed\": false, \"detail\": {\"status\": 0, \"body\": {\"transport_"
+   ],
+   "cross:probe_stage4_import.py": [],
+   "cross:probe_stage4_receipt_links.py": [],
+   "auditor": [
+    "legacy:del view on a snapshot that holds a refund entry -> 422"
+   ],
+   "shipped": []
+  },
+  "caught_by": [],
+  "new_fails": {}
+ },
+ {
+  "id": "K01",
+  "requirement": "\u00a710/S3-42 imported snapshots are always rebuilt (never skipped for legacy shape)",
+  "file": "snapshot.py",
+  "old": "if True:  # frozen facts",
+  "new": "if sn[\"taken_seq\"] != st[\"seq\"]:  # frozen facts",
+  "fails": {
+   "impl": [
+    "(failures=3)",
+    "exit"
+   ],
+   "reviewer:probes_s4.py": [],
+   "reviewer:model": [],
+   "customer:journey_stage4_api.py": [],
+   "customer:journey_stage4_import.py": [],
+   "customer:journey_stage4_receipts.py": [],
+   "cross:probe_stage4.py": [
+    "{\"probe\": \"migration_import-uncaught\", \"passed\": false, \"detail\": \"'token'\"}",
+    "{\"probe\": \"reset\", \"passed\": false, \"detail\": {\"status\": 0, \"body\": {\"transport_"
+   ],
+   "cross:probe_stage4_import.py": [],
+   "cross:probe_stage4_receipt_links.py": [],
+   "auditor": [
+    "legacy:del view on a snapshot that holds a refund entry -> 422",
+    "legacy:snapshot 0 legacy + clear entries, closing=opening -> 422",
+    "legacy:snapshot 0 legacy + drop last entry + closing -> 422",
+    "legacy:snapshot 0 legacy + shift balances +1 -> 422",
+    "legacy:snapshot 1 legacy + clear entries, closing=opening -> 422",
+    "legacy:snapshot 1 legacy + drop last entry + closing -> 422",
+    "legacy:snapshot 1 legacy + shift balances +1 -> 422",
+    "legacy:snapshot 2 legacy + clear entries, closing=opening -> 422",
+    "legacy:snapshot 2 legacy + drop last entry + closing -> 422",
+    "legacy:snapshot 2 legacy + shift balances +1 -> 422"
+   ],
+   "shipped": []
+  },
+  "caught_by": [
+   "auditor",
+   "impl"
+  ],
+  "new_fails": {
+   "impl": [
+    "(failures=3)",
+    "exit"
+   ],
+   "auditor": [
+    "legacy:snapshot 0 legacy + clear entries, closing=opening -> 422",
+    "legacy:snapshot 0 legacy + drop last entry + closing -> 422",
+    "legacy:snapshot 0 legacy + shift balances +1 -> 422",
+    "legacy:snapshot 1 legacy + clear entries, closing=opening -> 422",
+    "legacy:snapshot 1 legacy + drop last entry + closing -> 422",
+    "legacy:snapshot 1 legacy + shift balances +1 -> 422",
+    "legacy:snapshot 2 legacy + clear entries, closing=opening -> 422",
+    "legacy:snapshot 2 legacy + drop last entry + closing -> 422",
+    "legacy:snapshot 2 legacy + shift balances +1 -> 422"
+   ]
+  }
+ },
+ {
+  "id": "K02",
+  "requirement": "\u00a710/S3-42 imported snapshot balances must equal the rebuild",
+  "file": "snapshot.py",
+  "old": "_need(ob == sn[\"opening_balance\"] and cb == sn[\"closing_balance\"] and rebuilt == entries)",
+  "new": "_need(rebuilt == entries)",
+  "fails": {
+   "impl": [
+    "(failures=1)",
+    "exit"
+   ],
+   "reviewer:probes_s4.py": [],
+   "reviewer:model": [],
+   "customer:journey_stage4_api.py": [],
+   "customer:journey_stage4_import.py": [],
+   "customer:journey_stage4_receipts.py": [],
+   "cross:probe_stage4.py": [
+    "{\"probe\": \"migration_import-uncaught\", \"passed\": false, \"detail\": \"'token'\"}",
+    "{\"probe\": \"reset\", \"passed\": false, \"detail\": {\"status\": 0, \"body\": {\"transport_"
+   ],
+   "cross:probe_stage4_import.py": [],
+   "cross:probe_stage4_receipt_links.py": [],
+   "auditor": [
+    "legacy:del view on a snapshot that holds a refund entry -> 422",
+    "legacy:snapshot 0 current + move to other user -> 422",
+    "legacy:snapshot 0 current + opening and closing +1 -> 422",
+    "legacy:snapshot 0 current + shift balances +1 -> 422",
+    "legacy:snapshot 0 legacy + move to other user -> 422",
+    "legacy:snapshot 0 legacy + opening and closing +1 -> 422",
+    "legacy:snapshot 0 legacy + shift balances +1 -> 422"
+   ],
+   "shipped": []
+  },
+  "caught_by": [
+   "auditor",
+   "impl"
+  ],
+  "new_fails": {
+   "impl": [
+    "(failures=1)",
+    "exit"
+   ],
+   "auditor": [
+    "legacy:snapshot 0 current + move to other user -> 422",
+    "legacy:snapshot 0 current + opening and closing +1 -> 422",
+    "legacy:snapshot 0 current + shift balances +1 -> 422",
+    "legacy:snapshot 0 legacy + move to other user -> 422",
+    "legacy:snapshot 0 legacy + opening and closing +1 -> 422",
+    "legacy:snapshot 0 legacy + shift balances +1 -> 422"
+   ]
+  }
+ },
+ {
+  "id": "K03",
+  "requirement": "\u00a710/S3-42 imported snapshot entries must equal the rebuild",
+  "file": "snapshot.py",
+  "old": "and rebuilt == entries)",
+  "new": "and len(rebuilt) == len(entries))",
+  "fails": {
+   "impl": [],
+   "reviewer:probes_s4.py": [],
+   "reviewer:model": [],
+   "customer:journey_stage4_api.py": [],
+   "customer:journey_stage4_import.py": [],
+   "customer:journey_stage4_receipts.py": [],
+   "cross:probe_stage4.py": [
+    "{\"probe\": \"migration_import-uncaught\", \"passed\": false, \"detail\": \"'token'\"}",
+    "{\"probe\": \"reset\", \"passed\": false, \"detail\": {\"status\": 0, \"body\": {\"transport_"
+   ],
+   "cross:probe_stage4_import.py": [],
+   "cross:probe_stage4_receipt_links.py": [],
+   "auditor": [
+    "legacy:del view on a snapshot that holds a refund entry -> 422",
+    "legacy:snapshot 1 current + swap same-instant entries, balances recomputed -> 422",
+    "legacy:snapshot 1 legacy + swap same-instant entries, balances recomputed -> 422",
+    "legacy:snapshot 2 current + swap same-instant entries, balances recomputed -> 422",
+    "legacy:snapshot 2 legacy + swap same-instant entries, balances recomputed -> 422",
+    "legacy:snapshot 3 current + swap same-instant entries, balances recomputed -> 422",
+    "legacy:snapshot 3 legacy + swap same-instant entries, balances recomputed -> 422"
+   ],
+   "shipped": []
+  },
+  "caught_by": [
+   "auditor"
+  ],
+  "new_fails": {
+   "auditor": [
+    "legacy:snapshot 1 current + swap same-instant entries, balances recomputed -> 422",
+    "legacy:snapshot 1 legacy + swap same-instant entries, balances recomputed -> 422",
+    "legacy:snapshot 2 current + swap same-instant entries, balances recomputed -> 422",
+    "legacy:snapshot 2 legacy + swap same-instant entries, balances recomputed -> 422",
+    "legacy:snapshot 3 current + swap same-instant entries, balances recomputed -> 422",
+    "legacy:snapshot 3 legacy + swap same-instant entries, balances recomputed -> 422"
+   ]
+  }
+ },
+ {
+  "id": "K04",
+  "requirement": "\u00a710/S3-42 a legacy snapshot's time is derived from the whole ledger, not its own entries",
+  "file": "snapshot.py",
+  "old": "latest = max([ledger_latest[0]] + [parse_instant(e[5]) for e in entries])",
+  "new": "latest = max([0.0] + [parse_instant(e[5]) for e in entries])",
+  "fails": {
+   "impl": [
+    "(failures=2)",
+    "exit"
+   ],
+   "reviewer:probes_s4.py": [],
+   "reviewer:model": [],
+   "customer:journey_stage4_api.py": [],
+   "customer:journey_stage4_import.py": [],
+   "customer:journey_stage4_receipts.py": [],
+   "cross:probe_stage4.py": [
+    "{\"probe\": \"migration_import-uncaught\", \"passed\": false, \"detail\": \"'token'\"}",
+    "{\"probe\": \"reset\", \"passed\": false, \"detail\": {\"status\": 0, \"body\": {\"transport_"
+   ],
+   "cross:probe_stage4_import.py": [],
+   "cross:probe_stage4_receipt_links.py": [],
+   "auditor": [
+    "legacy:del view on a snapshot that holds a refund entry -> 422",
+    "legacy:snapshot 0 legacy + clear entries, closing=opening -> 422",
+    "legacy:snapshot 1 legacy + clear entries, closing=opening -> 422",
+    "legacy:snapshot 2 legacy + clear entries, closing=opening -> 422"
+   ],
+   "shipped": []
+  },
+  "caught_by": [
+   "auditor",
+   "impl"
+  ],
+  "new_fails": {
+   "impl": [
+    "(failures=2)",
+    "exit"
+   ],
+   "auditor": [
+    "legacy:snapshot 0 legacy + clear entries, closing=opening -> 422",
+    "legacy:snapshot 1 legacy + clear entries, closing=opening -> 422",
+    "legacy:snapshot 2 legacy + clear entries, closing=opening -> 422"
+   ]
+  }
+ }
+]

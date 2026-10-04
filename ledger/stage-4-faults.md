@@ -33,3 +33,20 @@ recorded time is at or after the current clock reading. Reachable states rule th
 - Revision 1 is stamped to the whole second, at or before now.
 - A later write under the global lock comes well after a microsecond.
 Only a backwards clock step could expose it. A test with an injected clock would pin it down (suggestion, not blocking).
+
+## Revision b6afe75: fix-revision seeding (changed code: snapshot import)
+
+Only `snapshot.py` changed since the previous revision, so only it was seeded. The earlier results stand for the unchanged code.
+Evidence now also includes `audit/probes/legacy_snapshot_probes.py`.
+
+| # | Requirement broken | Change | Caught by |
+|---|---|---|---|
+| J00 | baseline: unmodified copy (must be caught by nothing) | refunds.py: `def refunded_total(s, pid):` → `def refunded_total(s, pid):` | — (control) |
+| K01 | §10/S3-42 imported snapshots are always rebuilt (never skipped for legacy shape) | snapshot.py: `if True:  # frozen facts` → `if sn["taken_seq"] != st["seq"]:  # frozen facts` | auditor, impl |
+| K02 | §10/S3-42 imported snapshot balances must equal the rebuild | snapshot.py: `_need(ob == sn["opening_balance"] and cb == sn["closing_balance"] and ` → `_need(rebuilt == entries)` | auditor, impl |
+| K03 | §10/S3-42 imported snapshot entries must equal the rebuild | snapshot.py: `and rebuilt == entries)` → `and len(rebuilt) == len(entries))` | auditor |
+| K04 | §10/S3-42 a legacy snapshot's time is derived from the whole ledger, not its own entries | snapshot.py: `latest = max([ledger_latest[0]] + [parse_instant(e[5]) for e in entrie` → `latest = max([0.0] + [parse_instant(e[5]) for e in entries])` | auditor, impl |
+
+K03 is caught only by the spec-auditor's probe: reorder two same-instant entries and recompute balance_after, so
+opening, closing and every per-entry check still hold. Suggested test for the implementer: the snapshot fuzzer should
+include this mutation. K02 was first caught only by the implementer; the empty-window balance shift probe now catches it too.
