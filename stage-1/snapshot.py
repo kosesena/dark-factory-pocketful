@@ -95,7 +95,7 @@ def load_state(st):
 
 
 def import_state(req):
-    body = parse_json(req.raw)
+    body = parse_json(req.raw, decimal=False)
     if body.get("track") != "pocketful":
         raise validation("track must be pocketful")
     fv = body.get("format_version")
