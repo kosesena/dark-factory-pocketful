@@ -92,7 +92,17 @@ def main():
                                               sn.__setitem__("closing_balance", sn["closing_balance"] + 1),
                                               [e.__setitem__(3, e[3] + 1) for e in sn["entries"]]),
         "swap same-instant entries, balances recomputed": swap_same_instant,
+        "clear entries, closing=opening+1": lambda sn: (sn["entries"].clear(),
+                                                        sn.__setitem__("closing_balance", sn["opening_balance"] + 1)),
+        "clear entries, opening=closing=opening+1": lambda sn: (
+            sn["entries"].clear(), sn.__setitem__("opening_balance", sn["opening_balance"] + 1),
+            sn.__setitem__("closing_balance", sn["opening_balance"])),
+        "drop a middle entry, balances recomputed": drop_middle,
     }
+    # Coordinator ruling (option 1): a legacy page equal to the full rebuild at a real recorded moment of the same
+    # ledger is a valid earlier-moment state. Only these two classes may import (204) in legacy shape, and then the
+    # page must be exactly what was imported.
+    earlier_moment = {"drop last entry + closing", "clear entries, closing=opening"}
     for idx, keep in [(i, kp) for i in range(len(ss)) for kp in (False, True)]:
         for name, fn in muts.items():
             e3 = copy.deepcopy(exp)
@@ -110,6 +120,16 @@ def main():
             ada = tok("ada")
             before = call("GET", "/me", token=ada)[1]
             r = call("POST", "/_test/import", e3)
+            if not keep and name in earlier_moment and r[0] == 204:
+                owner = tok({"u_ada": "ada", "u_bob": "bob"}[sn["user_id"]])
+                pg = call("GET", f"/statement?snapshot={sn['token']}&limit=200", token=owner)[1]
+                got = (pg["opening_balance"], pg["closing_balance"],
+                       [(e["payment"]["payment_id"], e["revision"], e["delta"], e["balance_after"]) for e in pg["entries"]])
+                want = (sn["opening_balance"], sn["closing_balance"], [tuple(e[:4]) for e in sn["entries"]])
+                check(f"snapshot {idx} legacy + {name} -> 204 as an earlier moment, pages what was imported",
+                      got == want, (got, want))
+                reset_state(exp)
+                continue
             ok_ = r[0] == 422 and (r[1] or {}).get("error", {}).get("code") == "validation_failed"
             check(f"snapshot {idx} {'current' if keep else 'legacy'} + {name} -> 422", ok_, (r[0], r[1]))
             if not ok_:
@@ -128,6 +148,18 @@ def main():
         check("del view on a snapshot that holds a refund entry -> 422", hit and r[0] == 422, (hit, r[0], r[1]))
     print(f"{len(fails)} failed")
     sys.exit(1 if fails else 0)
+
+
+def drop_middle(sn):
+    es = sn["entries"]
+    if len(es) < 3:
+        raise ValueError("too short")
+    es.pop(len(es) // 2)
+    run = sn["opening_balance"]
+    for e in es:
+        run += e[2]
+        e[3] = run
+    sn["closing_balance"] = run
 
 
 def swap_same_instant(sn):
