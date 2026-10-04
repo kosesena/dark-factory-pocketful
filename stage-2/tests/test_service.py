@@ -748,6 +748,78 @@ class Authorizations(Base):
         self.assertEqual(self.me(self.ada)["available"], 0)
         self.assertEqual(self.total(), 12500)
 
+    def test_gap_funds_and_capture_rules(self):
+        aid = self.auth(self.ada, {"to_handle": "bob", "amount": 8000}, "g1")[1]["authorization_id"]
+        self.assertEqual(call("POST", "/payments", {"to_handle": "cy", "amount": 2001}, token=self.ada, key="g2")[0], 409)
+        rq = call("POST", "/requests", {"payer_handle": "ada", "amount": 2001}, token=self.cy, key="g3")[1]["request_id"]
+        self.assertEqual(call("POST", "/requests/%s/pay" % rq, {}, token=self.ada, key="g4")[1]["error"]["code"], "insufficient_funds")
+        self.assertEqual(call("POST", "/payments", {"to_handle": "cy", "amount": 2000}, token=self.ada, key="g5")[0], 201)
+        self.assertEqual(self.me(self.ada)["available"], 0)
+        self.assertEqual(self.auth(self.ada, {"to_handle": "bob", "amount": 1}, "g6")[0], 409)
+        self.assertEqual(self.cap(self.bob, aid, {"final": "false"}, "g7")[0], 400)
+        self.assertEqual(self.cap(self.bob, aid, {"amount": 1.5}, "g8")[0], 422)
+        s, p, _ = self.cap(self.bob, aid, {}, "g9")  # full 8000 although available is 0
+        self.assertEqual((s, p["amount"]), (201, 8000))
+        self.assertEqual(self.cap(self.bob, aid, {"amount": 2000}, "g9")[0], 409)  # {} vs {"amount": 2000}
+        self.assertEqual(self.cap(self.bob, aid, {}, "g9")[0], 200)
+        self.assertEqual(self.total(), 12500)
+
+    def test_gap_partial_capture_then_release(self):
+        aid = self.auth(self.ada, {"to_handle": "bob", "amount": 2000}, "h1")[1]["authorization_id"]
+        s, p1, _ = self.cap(self.bob, aid, {"amount": 700, "final": False}, "h2")
+        a = call("GET", "/authorizations", token=self.ada)[1]["authorizations"][0]
+        self.assertEqual((a["status"], a["captured_amount"], a["remaining_amount"], a["payment_ids"]), ("open", 700, 1300, [p1["payment_id"]]))
+        self.assertEqual(self.me(self.ada)["available"], 10000 - 700 - 1300)
+        s, p2, _ = self.cap(self.bob, aid, {"amount": 1300, "final": False}, "h3")
+        a = call("GET", "/authorizations", token=self.ada)[1]["authorizations"][0]
+        self.assertEqual((a["status"], a["remaining_amount"], a["payment_id"]), ("captured", 0, p2["payment_id"]))
+        aid = self.auth(self.ada, {"to_handle": "bob", "amount": 1500}, "h4")[1]["authorization_id"]
+        self.cap(self.bob, aid, {"amount": 1000}, "h5")  # final capture releases the remainder at once
+        self.assertEqual(self.me(self.ada)["available"], 10000 - 2000 - 1000)
+
+    def test_gap_races(self):
+        aid = self.auth(self.ada, {"to_handle": "bob", "amount": 1000}, "r0")[1]["authorization_id"]
+        for n in range(8):
+            a2 = self.auth(self.ada, {"to_handle": "bob", "amount": 100}, "rr%d" % n)[1]["authorization_id"]
+            with ThreadPoolExecutor(2) as ex:
+                f1 = ex.submit(self.cap, self.bob, a2, {}, "rc%d" % n)
+                f2 = ex.submit(call, "POST", "/authorizations/%s/void" % a2, None, self.ada)
+                r = (f1.result()[0], f2.result()[0])
+            st = [x for x in call("GET", "/authorizations?limit=200", token=self.ada)[1]["authorizations"] if x["authorization_id"] == a2][0]["status"]
+            self.assertIn((r, st), [((201, 409), "captured"), ((409, 200), "voided")])
+        with ThreadPoolExecutor(50) as ex:
+            res = list(ex.map(lambda i: self.auth(self.cy, {"to_handle": "ada", "amount": 1}, "dz%d" % i), range(50)))
+        self.assertTrue(all(r[0] == 409 for r in res))
+        s_ = self.me(self.bob)
+        self.assertEqual(s_["available"], s_["total"])
+        with ThreadPoolExecutor(50) as ex:
+            res = list(ex.map(lambda i: self.auth(self.ada, {"to_handle": "cy", "amount": 100}, "dr%d" % i), range(60)))
+        ok = sum(1 for r in res if r[0] == 201)
+        self.assertEqual(self.me(self.ada)["held"], 1000 + ok * 100)
+        m = self.me(self.ada)
+        self.assertGreaterEqual(m["available"], 0)
+        self.assertEqual(self.total(), 12500)
+
+    def test_gap_seeding_and_ttl(self):
+        past = "2000-01-01T00:00:00+00:00"
+        fx = fixture(authorizations=[{"id": "a_1", "from_user_id": "u_ada", "to_user_id": "u_bob", "amount": 12000,
+                                     "status": "open", "expires_at": past}])
+        self.assertEqual(call("POST", "/_test/reset", fx)[0], 204)
+        self.assertEqual(self.me(login("ada"))["available"], 10000)
+        fx = fixture(authorization_ttl_seconds=37)
+        call("POST", "/_test/reset", fx)
+        ada = login("ada")
+        from datetime import datetime
+        a = self.auth(ada, {"to_handle": "bob", "amount": 5}, "ttl")[1]
+        d = datetime.fromisoformat(a["expires_at"]) - datetime.fromisoformat(a["created_at"])
+        self.assertEqual(d.total_seconds(), 37)
+        self.assertEqual(call("POST", "/_test/reset", fixture(authorizations=[
+            {"id": "c", "from_user_id": "u_ada", "to_user_id": "u_bob", "amount": 5, "status": "captured", "expires_at": "2099-01-01T00:00:00+00:00"}]))[0], 204)
+        ada, bob = login("ada"), login("bob")
+        a = call("GET", "/authorizations", token=ada)[1]["authorizations"][0]
+        self.assertEqual((a["captured_amount"], a["remaining_amount"]), (5, 0))
+        self.assertEqual(self.cap(bob, "c", {}, "x")[1]["error"]["code"], "authorization_not_open")
+
     def test_import_stage1_export(self):
         s, snap, _ = call("GET", "/_test/export")
         st = snap["state"]
