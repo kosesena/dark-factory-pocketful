@@ -1427,6 +1427,27 @@ class Ledger(unittest.TestCase):
         self.assertEqual(call("POST", "/_test/import", snap)[0], 204)
         self.assertEqual(call("GET", "/payments/%s/revisions" % pid, token=self.ada)[0], 200)
 
+    def test_snapshots_survive_export_import(self):
+        s, a, _ = call("GET", "/statement?limit=2", token=self.bob)
+        tok = a["snapshot"]
+        s, snap, _ = call("GET", "/_test/export")
+        call("POST", "/payments", {"to_handle": "cy", "amount": 5}, token=self.bob, key="sx1")
+        self.assertEqual(call("POST", "/_test/import", snap)[0], 204)
+        s, p1, _ = call("GET", "/statement?snapshot=%s&limit=3&offset=0" % tok, token=self.bob)
+        s, p2, _ = call("GET", "/statement?snapshot=%s&limit=3&offset=3" % tok, token=self.bob)
+        self.assertEqual((s, len(p1["entries"]), len(p2["entries"]), p2["has_more"]), (200, 3, 1, False))
+        self.assertEqual(p1["closing_balance"], a["closing_balance"])
+        self.assertEqual(call("GET", "/statement?snapshot=" + tok, token=self.ada)[0], 404)
+        # tampered snapshots are rejected, reset forgets them
+        bad = json.loads(json.dumps(snap))
+        bad["state"]["snapshots"][0]["closing_balance"] += 1
+        self.assertEqual(call("POST", "/_test/import", bad)[0], 422)
+        bad = json.loads(json.dumps(snap))
+        bad["state"]["snapshots"][0]["entries"][0][0] = "ghost"
+        self.assertEqual(call("POST", "/_test/import", bad)[0], 422)
+        call("POST", "/_test/reset", hist_fixture())
+        self.assertEqual(call("GET", "/statement?snapshot=" + tok, token=login("bob"))[0], 404)
+
     def test_import_from_earlier_stage_exports(self):
         s, snap, _ = call("GET", "/_test/export")
         st = snap["state"]

@@ -20,6 +20,7 @@ def export(req):
         "idempotency": [[u, k, p, fp, resp] for (u, k, p), (fp, resp) in s.idem.items()],
         "operators": sorted(s.operators), "seq": s.seq,
         "authorizations": s.auths, "auth_ttl": s.auth_ttl,
+        "snapshots": list(s.snapshots.values()),
     }
     # serialised under the lock: an atomic, read-only snapshot
     data = json.dumps({"track": "pocketful", "format_version": 1, "state": state})
@@ -228,6 +229,29 @@ def load_state(st):
                          + [a["seq"] for a in s.auths] + [0]))
     if hasattr(s, "open_auths"):
         sweep(s, time.time())
+    for sn in st.get("snapshots", []):  # frozen statements survive an import (older exports have none)
+        _need(isinstance(sn, dict) and set(sn) == {"token", "user_id", "opening_balance", "entries",
+                                                    "closing_balance", "echo"})
+        _need(_str(sn["token"]) and sn["token"] and sn["token"] not in s.snapshots and sn["user_id"] in s.users)
+        _need(_int(sn["opening_balance"]) and _int(sn["closing_balance"]) and isinstance(sn["entries"], list))
+        _need(isinstance(sn["echo"], dict) and set(sn["echo"]) <= {"from", "to", "known_at"}
+              and all(_str(v) for v in sn["echo"].values()))
+        running = sn["opening_balance"]
+        entries = []
+        for e in sn["entries"]:
+            _need(isinstance(e, list) and len(e) == 7)
+            pid, rev_no, delta, after, eff_at, rec_at, amount = e
+            p = s.payments_by_id.get(pid)
+            _need(p is not None and sn["user_id"] in (p["from_user_id"], p["to_user_id"]))
+            _need(_int(rev_no) and rev_no >= 1 and _int(delta) and _int(after) and _amount(amount))
+            _need(delta == (-amount if p["from_user_id"] == sn["user_id"] else amount))
+            _ts_str(eff_at)
+            _ts_str(rec_at)
+            running += delta
+            _need(after == running)
+            entries.append(tuple(e))
+        _need(running == sn["closing_balance"])
+        s.snapshots[sn["token"]] = dict(sn, entries=entries)
     check_state_invariants(s)
     check_receipts(s)
     return s
