@@ -1,0 +1,50 @@
+ok   import stage1 export into stage 4
+ok   stage1: token valid
+ok   stage1: payment & settlement replays 200
+ok   stage1: pending request payable
+ok   stage1: imported settlement partial batch -> incomplete_settlement (membership retained)
+ok   stage1: whole imported settlement batch ok
+ok   stage1: refund imported settlement member
+ok   stage1: refund imported payment
+ok   stage1: sum conserved
+ok   import stage2 export into stage 4
+ok   stage2: token valid
+ok   stage2: payment & settlement replays 200
+ok   stage2: pending request payable
+ok   stage2: imported settlement partial batch -> incomplete_settlement (membership retained)
+ok   stage2: whole imported settlement batch ok
+ok   stage2: refund imported settlement member
+ok   stage2: refund imported payment
+ok   stage2: sum conserved
+ok   import stage3 export into stage 4
+ok   stage3: token valid
+ok   stage3: payment & settlement replays 200
+ok   stage3: pending request payable
+ok   stage3: imported settlement partial batch -> incomplete_settlement (membership retained)
+ok   stage3: whole imported settlement batch ok
+ok   stage3: refund imported settlement member
+ok   stage3: refund imported payment
+ok   stage3: correction retained, replay 200
+ok   stage3: snapshot token pages same entries after import
+ok   stage3: revisions retained
+ok   stage3: sum conserved
+ok   self import 204
+ok   refund replay after import
+ok   batch replay after import
+ok   refund cumulative retained
+ok   refund payment still immutable after import
+ok   batch revision ids retained
+ok   snapshot after self import
+ok   re-export equal
+ok   batch fuzz not object: 4xx
+ok   batch fuzz bad json: 4xx
+ok   batch fuzz items not objects: 4xx
+ok   batch fuzz huge amount: 4xx
+ok   batch fuzz payment_id wrong type: 4xx
+ok   batch fuzz deep: 4xx
+ok   refund fuzz bad json: 4xx
+ok   refund fuzz array: 4xx
+ok   refund fuzz huge: 4xx
+ok   refund fuzz str amount: 4xx
+
+STAGE4 IMPORT 48 checks, 0 failed: []

@@ -1,0 +1,86 @@
+ok   reset 204
+ok   me fields
+ok   expired seeded not held
+ok   bob no held
+ok   over-held reset 422
+ok   ttl 0 422
+ok   ttl 1.5 422
+ok   omit authorizations ok
+ok   authorize 201
+ok   replay
+ok   held 5000 avail 5000 total 10000
+ok   not in feed
+ok   ttl applied
+ok   authorize insuff
+ok   authorize self
+ok   authorize unk
+ok   authorize amt0
+ok   authorize vis
+ok   authorize note
+ok   authorize frac
+ok   authorize no key
+ok   exactly available ok
+ok   payment blocked by hold
+ok   hold can't fund settlement
+ok   pay request vs available
+ok   split ignores balance
+ok   void released
+ok   payer capture 403
+ok   third capture 403
+ok   third void 403
+ok   receiver void 403
+ok   unknown 404
+ok   exceeds 422
+ok   amount 0 422
+ok   final non-bool 400/422
+ok   partial capture
+ok   partial: stays open
+ok   balances after partial
+ok   replay capture 200
+ok   replay diff body 409
+ok   exceeds remaining 422
+ok   final capture 500 releases 1500
+ok   closed
+ok   released
+ok   capture closed 409
+ok   void captured 409
+ok   capture payments in bob feed
+ok   private capture hidden from cy
+ok   replay capture after close 200
+ok   default capture full
+ok   full remainder closes w/ final false
+ok   void partial releases remainder only
+ok   void twice 200
+ok   capture voided 409
+ok   list incoming paged
+ok   list outgoing for bob empty
+ok   cy sees none
+ok   auth list bad ?direction=x
+ok   auth list bad ?status=x
+ok   auth list bad ?limit=0
+ok   auth list bad ?offset=-1
+ok   auth list bad ?limit=1e1
+ok   newest first
+ok   HTML for browser
+ok   JSON w/o accept
+ok   html /
+ok   html /requests
+ok   html /split
+ok   html /signup
+ok   html /login
+ok   requests JSON w/o accept
+ok   held before expiry
+ok   expiry releases remainder
+ok   status expired, captures kept
+ok   open filter excludes
+ok   capture expired -> not_open/expired 409
+ok   void expired 409
+ok   capture past deadline authorization_expired
+ok   20 concurrent captures of 300/1000: 3 succeed
+ok   sum conserved
+ok   concurrent payments vs hold never dip below available
+ok   currency JPY
+ok   currency BHD
+ok   import w/ holds
+
+STAGE2 API 84 checks, 0 failed: []

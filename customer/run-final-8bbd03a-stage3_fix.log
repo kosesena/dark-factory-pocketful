@@ -1,0 +1,75 @@
+ok   reset
+ok   as_of == created_at includes payment #0
+ok   as_of 1s before excludes this payment #0
+ok   as_of == created_at includes payment #1
+ok   as_of 1s before excludes this payment #1
+ok   as_of == created_at includes payment #2
+ok   as_of 1s before excludes this payment #2
+ok   as_of == created_at includes payment #3
+ok   as_of 1s before excludes this payment #3
+ok   as_of == created_at includes payment #4
+ok   as_of 1s before excludes this payment #4
+ok   statement balance_after consistent for api payments
+ok   statement to=created_at excludes, from=created_at includes
+ok   half-open at last created_at
+ok   rapid correction 0
+ok   rapid correction 1
+ok   rapid correction 2
+ok   rapid correction 3
+ok   rapid correction 4
+ok   rapid correction 5
+ok   recorded_at strictly increasing (parsed)
+ok   recorded_at strings distinct
+ok   recorded_at has offset
+ok   known_at == recorded_at of rev2 selects it
+ok   known_at 1s before rev2 selects previous
+ok   known_at == recorded_at of rev3 selects it
+ok   known_at 1s before rev3 selects previous
+ok   known_at == recorded_at of rev4 selects it
+ok   known_at 1s before rev4 selects previous
+ok   known_at == recorded_at of rev5 selects it
+ok   known_at 1s before rev5 selects previous
+ok   known_at == recorded_at of rev6 selects it
+ok   known_at 1s before rev6 selects previous
+ok   known_at == recorded_at of rev7 selects it
+ok   known_at 1s before rev7 selects previous
+ok   effective_at number -> 4xx
+ok   effective_at float -> 4xx
+ok   effective_at bool -> 4xx
+ok   effective_at null -> 4xx
+ok   effective_at list -> 4xx
+ok   effective_at obj -> 4xx
+ok   microsecond effective_at accepted
+ok   effective_at echoed w/ precision
+ok   from at +1µs excludes payment effective at .000001
+ok   from == effective includes
+ok   as_of exactly effective counts; 1µs earlier doesn't
+ok   export has snapshots
+ok   snapshot dead after reset
+ok   import 204
+ok   snapshot survives export/import identical pages
+ok   snapshot after import: other user 404
+ok   snapshot after import not leaking post-export payment
+ok   correction after import
+ok   snapshot unchanged after post-import correction
+ok   recorded after import strictly later
+ok   tampered import (payment amount inflated (negative history)) 422 or accepted, no 5xx
+ok     state unchanged after (payment amount inflated (negative history))
+ok   tampered import (negative opening) 422 or accepted, no 5xx
+ok     state unchanged after (negative opening)
+ok   tampered import (balance mismatch) 422 or accepted, no 5xx
+ok     state unchanged after (balance mismatch)
+ok   tampered import (snapshot unknown user) 422 or accepted, no 5xx
+ok     state unchanged after (snapshot unknown user)
+ok   tampered import (revision recorded not increasing) 422 or accepted, no 5xx
+ok     state unchanged after (revision recorded not increasing)
+ok   tampered import (revision numbering gap) 422 or accepted, no 5xx
+ok     state unchanged after (revision numbering gap)
+FAIL reset receiver spends before receiving (bob negative at boundary) -> 422 (204, None)
+ok     prior state kept receiver spends before receiving (bob negative at boundary)
+ok   reset hold exceeding available at past boundary -> 422
+ok     prior state kept hold exceeding available at past boundary
+ok   reset valid hold with created_at -> 204
+ok   reset consistent baseline -> 204
+
+FIX 73 checks, 1 failed: ['reset receiver spends before receiving (bob negative at boundary) -> 422']

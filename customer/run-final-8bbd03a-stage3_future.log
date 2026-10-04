@@ -1,0 +1,24 @@
+ok   future known_at: statement 200 w/ snapshot
+ok   future to: statement 200 w/ snapshot
+ok   future from+to: statement 200 w/ snapshot
+ok   future all: statement 200 w/ snapshot
+ok   future from only: statement 200 w/ snapshot
+ok   future-known_at snapshot frozen vs later payment
+ok   import export with future-window snapshots 204
+ok   future snapshots page original result after import
+ok   re-export/import stable
+ok   after reimport still same
+ok   tampered taken_seq 10^9 -> 422
+ok     export of current state still re-importable after [taken_seq 10^9]
+ok   tampered taken_seq seq+1 -> 422
+ok     export of current state still re-importable after [taken_seq seq+1]
+ok   tampered taken_ts +10 days -> 422
+ok     export of current state still re-importable after [taken_ts +10 days]
+ok   tampered taken_ts -10 years -> 422
+ok     export of current state still re-importable after [taken_ts -10 years]
+ok   export→import always accepted after tamper attempt
+ok   me future known_at echo + current balance
+ok   me future both
+ok   future known_at == omitted
+
+FUTURE 22 checks, 0 failed: []

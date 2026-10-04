@@ -1,0 +1,93 @@
+ok   no 5xx /me?as_of='0001-01-01T00:00:00+00:00'
+ok   no 5xx /me?known_at='0001-01-01T00:00:00+00:00'
+ok   no 5xx /statement?from='0001-01-01T00:00:00+00:00'
+ok   no 5xx /statement?to='0001-01-01T00:00:00+00:00'
+ok   no 5xx /statement?known_at='0001-01-01T00:00:00+00:00'
+ok   no 5xx /me?as_of='9999-12-31T23:59:59+00:00'
+ok   no 5xx /me?known_at='9999-12-31T23:59:59+00:00'
+ok   no 5xx /statement?from='9999-12-31T23:59:59+00:00'
+ok   no 5xx /statement?to='9999-12-31T23:59:59+00:00'
+ok   no 5xx /statement?known_at='9999-12-31T23:59:59+00:00'
+ok   no 5xx /me?as_of='2026-09-24T23:59:60Z'
+ok   no 5xx /me?known_at='2026-09-24T23:59:60Z'
+ok   no 5xx /statement?from='2026-09-24T23:59:60Z'
+ok   no 5xx /statement?to='2026-09-24T23:59:60Z'
+ok   no 5xx /statement?known_at='2026-09-24T23:59:60Z'
+ok   no 5xx /me?as_of='2026-09-24T13:20:00+25:00'
+ok   no 5xx /me?known_at='2026-09-24T13:20:00+25:00'
+ok   no 5xx /statement?from='2026-09-24T13:20:00+25:00'
+ok   no 5xx /statement?to='2026-09-24T13:20:00+25:00'
+ok   no 5xx /statement?known_at='2026-09-24T13:20:00+25:00'
+ok   no 5xx /me?as_of='2026-09-24T13:20:00.123456789+00:00'
+ok   no 5xx /me?known_at='2026-09-24T13:20:00.123456789+00:00'
+ok   no 5xx /statement?from='2026-09-24T13:20:00.123456789+00:00'
+ok   no 5xx /statement?to='2026-09-24T13:20:00.123456789+00:00'
+ok   no 5xx /statement?known_at='2026-09-24T13:20:00.123456789+00:00'
+ok   no 5xx /me?as_of='2026-09-24t13:20:00z'
+ok   no 5xx /me?known_at='2026-09-24t13:20:00z'
+ok   no 5xx /statement?from='2026-09-24t13:20:00z'
+ok   no 5xx /statement?to='2026-09-24t13:20:00z'
+ok   no 5xx /statement?known_at='2026-09-24t13:20:00z'
+ok   no 5xx /me?as_of='2026-13-01T00:00:00Z'
+ok   no 5xx /me?known_at='2026-13-01T00:00:00Z'
+ok   no 5xx /statement?from='2026-13-01T00:00:00Z'
+ok   no 5xx /statement?to='2026-13-01T00:00:00Z'
+ok   no 5xx /statement?known_at='2026-13-01T00:00:00Z'
+ok   no 5xx /me?as_of='2026-02-30T00:00:00Z'
+ok   no 5xx /me?known_at='2026-02-30T00:00:00Z'
+ok   no 5xx /statement?from='2026-02-30T00:00:00Z'
+ok   no 5xx /statement?to='2026-02-30T00:00:00Z'
+ok   no 5xx /statement?known_at='2026-02-30T00:00:00Z'
+ok   no 5xx /me?as_of='2026-09-24T13:20:00+00:00 '
+ok   no 5xx /me?known_at='2026-09-24T13:20:00+00:00 '
+ok   no 5xx /statement?from='2026-09-24T13:20:00+00:00 '
+ok   no 5xx /statement?to='2026-09-24T13:20:00+00:00 '
+ok   no 5xx /statement?known_at='2026-09-24T13:20:00+00:00 '
+ok   no 5xx /me?as_of='٢٠٢٦-09-24T13:20:00Z'
+ok   no 5xx /me?known_at='٢٠٢٦-09-24T13:20:00Z'
+ok   no 5xx /statement?from='٢٠٢٦-09-24T13:20:00Z'
+ok   no 5xx /statement?to='٢٠٢٦-09-24T13:20:00Z'
+ok   no 5xx /statement?known_at='٢٠٢٦-09-24T13:20:00Z'
+ok   no 5xx /me?as_of='2026-09-24T13:20:00-00:00'
+ok   no 5xx /me?known_at='2026-09-24T13:20:00-00:00'
+ok   no 5xx /statement?from='2026-09-24T13:20:00-00:00'
+ok   no 5xx /statement?to='2026-09-24T13:20:00-00:00'
+ok   no 5xx /statement?known_at='2026-09-24T13:20:00-00:00'
+ok   no 5xx /me?as_of='0000-00-00T00:00:00Z'
+ok   no 5xx /me?known_at='0000-00-00T00:00:00Z'
+ok   no 5xx /statement?from='0000-00-00T00:00:00Z'
+ok   no 5xx /statement?to='0000-00-00T00:00:00Z'
+ok   no 5xx /statement?known_at='0000-00-00T00:00:00Z'
+ok   no 5xx /me?as_of='+2026-09-24T13:20:00Z'
+ok   no 5xx /me?known_at='+2026-09-24T13:20:00Z'
+ok   no 5xx /statement?from='+2026-09-24T13:20:00Z'
+ok   no 5xx /statement?to='+2026-09-24T13:20:00Z'
+ok   no 5xx /statement?known_at='+2026-09-24T13:20:00Z'
+ok   correction eff '0001-01-01T00:00:00+00:00' no 5xx
+ok   correction eff '9999-12-31T23:59:59+00:00' no 5xx
+ok   correction eff '2026-09-24T23:59:60Z' no 5xx
+ok   correction eff '2026-09-24T13:20:00+25:00' no 5xx
+ok   correction eff '2026-09-24T13:20:00.123456789+00:00' no 5xx
+ok   correction eff '2026-09-24t13:20:00z' no 5xx
+ok   correction eff '2026-13-01T00:00:00Z' no 5xx
+ok   correction eff '2026-02-30T00:00:00Z' no 5xx
+ok   correction eff '2026-09-24T13:20:00+00:00 ' no 5xx
+ok   correction eff '٢٠٢٦-09-24T13:20:00Z' no 5xx
+ok   correction eff '2026-09-24T13:20:00-00:00' no 5xx
+ok   correction eff '0000-00-00T00:00:00Z' no 5xx
+ok   correction eff '+2026-09-24T13:20:00Z' no 5xx
+ok   correction huge exp amount 4xx not 5xx
+ok   correction huge rev 4xx not 5xx
+ok   correction rev float 4xx not 5xx
+ok   correction rev bool 4xx not 5xx
+ok   correction amount str 4xx not 5xx
+ok   correction amount null 4xx not 5xx
+ok   correction reason null 4xx not 5xx
+ok   array body
+ok   bad json 400
+   rev 1.0 -> 409 {'error': {'code': 'insufficient_funds', 'message': 'insufficient available funds for the correction'}}
+ok   long snapshot no 5xx
+ok   odd id no 5xx
+ok   huge offset
+
+FUZZ 90 checks, 0 failed: []
