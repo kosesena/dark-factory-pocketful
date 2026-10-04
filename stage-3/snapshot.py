@@ -240,6 +240,7 @@ PATH_REQUESTS = re.compile(r"/requests")
 PATH_PAY = re.compile(r"/requests/([^/]+)/pay")
 PATH_SPLITS = re.compile(r"/splits")
 PATH_SETTLEMENTS = re.compile(r"/settlements")
+PATH_CORRECTION = re.compile(r"/payments/([^/]+)/corrections")
 PATH_AUTHS = re.compile(r"/authorizations")
 PATH_CAPTURE = re.compile(r"/authorizations/([^/]+)/capture")
 
@@ -321,6 +322,16 @@ def _auth_receipt(s, resp):
           and resp["payment_id"] == (resp["payment_ids"][-1] if resp["payment_ids"] else None))
 
 
+def _correction_receipt(s, uid, pid, resp):
+    """A correction receipt is an immutable revision: it must equal the stored revision it names."""
+    p = s.payments_by_id.get(pid)
+    _need(p is not None and p["from_user_id"] == uid and isinstance(resp, dict)
+          and set(resp) == {"payment_id", "revision", "amount", "effective_at", "recorded_at", "reason"})
+    _need(resp["payment_id"] == pid and _int(resp["revision"]) and 2 <= resp["revision"] <= len(p["revisions"]))
+    r = p["revisions"][resp["revision"] - 1]
+    _need(all(resp[k] == r[k] for k in ("amount", "effective_at", "recorded_at", "reason")))
+
+
 def check_receipts(s):
     for (uid, key, path), (fp, resp) in s.idem.items():
         _need(uid in s.users and (fp.startswith("v2:") or isinstance(json.loads(fp), dict)))
@@ -348,6 +359,8 @@ def check_receipts(s):
             p = _payment_receipt(s, resp)
             _need(p.get("authorization_id") == c and c in s.auths_by_id
                   and s.auths_by_id[c]["to_user_id"] == uid)
+        elif PATH_CORRECTION.fullmatch(path):
+            _correction_receipt(s, uid, PATH_CORRECTION.fullmatch(path).group(1), resp)
         else:
             _need(False)
     for sid, sp in s.splits.items():
@@ -367,6 +380,8 @@ def import_state(req):
     try:
         new = load_state(body["state"])
     except (KeyError, TypeError, ValueError, AttributeError):
+        if __import__("os").environ.get("DEBUG_IMPORT"):
+            __import__("traceback").print_exc()
         raise validation("state is not a valid pocketful state")
     store.state = new
     return 204, None

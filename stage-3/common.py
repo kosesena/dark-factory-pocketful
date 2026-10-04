@@ -48,6 +48,7 @@ class State:
         self.auths_by_id = {}
         self.open_auths = {}  # id -> record, only status "open"
         self.auth_ttl = 600
+        self.snapshots = {}   # statement snapshot token -> frozen statement (until reset)
 
 
 store = types.SimpleNamespace(state=State())

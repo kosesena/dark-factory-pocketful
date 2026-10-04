@@ -31,11 +31,14 @@ def move_money(s, frm, to, amount, note, visibility, request_id=None, settlement
     frm["balance"] -= amount
     to["balance"] += amount
     ts, created = stamp or now_ts()
-    p = {"id": new_id("p_"), "from_user_id": frm["id"], "to_user_id": to["id"],
+    seq = next_seq(s)
+    # ids sort in creation order and after any seeded id ("~" > [0-9A-Za-z_]): same-second payments keep
+    # their true order in statements, which break ties by payment id
+    p = {"id": "p_~%012d" % seq, "from_user_id": frm["id"], "to_user_id": to["id"],
          "amount": amount, "note": note, "visibility": visibility,
          "request_id": request_id, "settlement_id": settlement_id,
          "authorization_id": authorization_id,
-         "created_at": created, "ts": ts, "seq": next_seq(s)}
+         "created_at": created, "ts": ts, "seq": seq}
     ensure_revisions(p)
     s.payments.append(p)
     s.payments_by_id[p["id"]] = p

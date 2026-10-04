@@ -4,7 +4,7 @@ from concurrent.futures import ThreadPoolExecutor
 import time
 
 from invariants import check_state_invariants
-from ledger import compute_opening, ensure_revisions
+from ledger import compute_opening, ensure_revisions, instant_param, view_balances
 from common import (MAX_AMOUNT, ApiError, State, available_of, held_of, store, sweep, STATUSES, HANDLE_RE, EMAIL_RE, authenticate,
                     check_password, get_str, hash_password, new_id, next_seq, now_ts,
                     parse_json, parse_ts, validation)
@@ -261,11 +261,20 @@ def login(req):
 def me(req):
     user = authenticate(req)
     s = store.state
-    return 200, {"user_id": user["id"], "display_name": user["display_name"],
-                 "handle": user["handle"], "balance": user["balance"],
-                 "total": user["balance"], "available": available_of(s, user),
-                 "held": held_of(s, user["id"]),
-                 "currency": s.currency, "minor_units": s.minor_units}
+    as_of = instant_param(req.query, "as_of")
+    known = instant_param(req.query, "known_at")
+    body = {"user_id": user["id"], "display_name": user["display_name"],
+            "handle": user["handle"], "balance": user["balance"],
+            "total": user["balance"], "available": available_of(s, user),
+            "held": held_of(s, user["id"]),
+            "currency": s.currency, "minor_units": s.minor_units}
+    if as_of or known:  # one consistent historical view for all four money fields
+        body.update(view_balances(s, user, as_of[0] if as_of else None, known[0] if known else None, time.time()))
+        if as_of:
+            body["as_of"] = as_of[1]
+        if known:
+            body["known_at"] = known[1]
+    return 200, body
 
 
 ROUTES = [
