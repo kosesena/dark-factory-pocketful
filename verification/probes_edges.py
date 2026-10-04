@@ -110,7 +110,11 @@ def main():
              (b'{"to_handle":"b","amount":1,"x":1e40}', b'{"to_handle":"b","amount":1,"x":"1E+40"}', 409),
              (b'{"to_handle":"b","amount":1,"x":1.50}', b'{"to_handle":"b","amount":1,"x":1.5}', 200),
              (b'{"to_handle":"b","amount":1,"x":1e1000000}', b'{"to_handle":"b","amount":1,"x":1e1000000}', 200),
-             (b'{"to_handle":"b","amount":1,"x":1e-1000000}', b'{"to_handle":"b","amount":1,"x":2e-1000000}', 409)]
+             (b'{"to_handle":"b","amount":1,"x":1e-1000000}', b'{"to_handle":"b","amount":1,"x":2e-1000000}', 409),
+             (b'{"to_handle":"b","amount":1,"x":-0.0}', b'{"to_handle":"b","amount":1,"x":0}', 200),
+             (b'{"to_handle":"b","amount":1,"x":[1,{"y":2.50}]}', b'{"x":[1.0,{"y":25e-1}],"amount":1,"to_handle":"b"}', 200),
+             (b'{"to_handle":"b","amount":1,"x":true}', b'{"to_handle":"b","amount":1,"x":1}', 409),
+             (b'{"to_handle":"b","amount":1,"x":null}', b'{"to_handle":"b","amount":1}', 409)]
     for i, (first, second, want) in enumerate(pairs):
         st1, _ = call("POST", "/payments", first, token=a, key="id%d" % i)
         st2, b2 = call("POST", "/payments", second, token=a, key="id%d" % i)
