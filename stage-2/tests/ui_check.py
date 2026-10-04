@@ -253,5 +253,109 @@ def main():
     finally:
         srv.terminate()
 
+def extra_checks():
+    """Gap-list UI checks: invalid decimals send nothing, JPY/BHD formatting, long text, refresh ordering."""
+    srv = subprocess.Popen([sys.executable, os.path.join(HERE, "..", "server.py")], env={**os.environ, "PORT": str(PORT + 1)})
+    base = "http://127.0.0.1:%d" % (PORT + 1)
+    def api(path, body, token=None, key=None):
+        h = {"Content-Type": "application/json"}
+        if token: h["Authorization"] = "Bearer " + token
+        if key: h["Idempotency-Key"] = key
+        r = urllib.request.urlopen(urllib.request.Request(base + path, data=json.dumps(body).encode(), method="POST", headers=h))
+        return r.status, (json.loads(r.read() or b"null"))
+    try:
+        for _ in range(50):
+            try:
+                urllib.request.urlopen(base + "/health"); break
+            except Exception:
+                time.sleep(0.1)
+        def users(mu_cur):
+            fx = fixture(currency=mu_cur[0], minor_units=mu_cur[1], authorizations=[], requests=[], payments=[])
+            for u in fx["users"]:
+                u["balance"] = 5000000
+            return fx
+        def ui_login(page, who):
+            page.goto(base + "/login")
+            page.get_by_test_id("login-email").fill(who + "@example.com")
+            page.get_by_test_id("login-password").fill("correct horse")
+            page.get_by_test_id("login-submit").click()
+            page.wait_for_url(base + "/")
+            expect(page.get_by_test_id("wallet-available")).to_be_visible()
+        with sync_playwright() as p:
+            br = p.chromium.launch()
+            page = br.new_context(viewport={"width": 375, "height": 800}).new_page()
+            # JPY / BHD
+            api("/_test/reset", users(("JPY", 0)))
+            ui_login(page, "ada")
+            expect(page.get_by_test_id("wallet-balance")).to_have_text("5000000 JPY")
+            bodies = []
+            page.on("request", lambda r: bodies.append(r.post_data) if r.method == "POST" else None)
+            page.get_by_test_id("pay-handle").fill("bob"); page.get_by_test_id("pay-amount").fill("15.5")
+            page.get_by_test_id("pay-submit").click()
+            expect(page.get_by_test_id("pay-error")).to_be_visible()
+            assert not bodies
+            page.get_by_test_id("pay-amount").fill("15"); page.get_by_test_id("pay-submit").click()
+            expect(page.get_by_test_id("wallet-balance")).to_have_text("4999985 JPY")
+            api("/_test/reset", users(("BHD", 3)))
+            page.goto(base + "/login") if False else None
+            ui_login(page, "ada")
+            bodies.clear()
+            page.get_by_test_id("pay-handle").fill("bob"); page.get_by_test_id("pay-amount").fill("1.234")
+            page.get_by_test_id("pay-submit").click()
+            expect(page.get_by_test_id("wallet-balance")).to_have_text("4998.766 BHD")
+            assert json.loads(bodies[-1])["amount"] == 1234
+            # invalid decimals on every form send nothing
+            api("/_test/reset", users(("EUR", 2)))
+            ui_login(page, "ada")
+            bodies.clear()
+            for bad in ["abc", "-5", "1e3", "15,00", "", "10.005", " "]:
+                for pre, handle_val in (("pay", "bob"), ("request", "bob"), ("authorize", "bob")):
+                    page.get_by_test_id(pre + "-handle").fill(handle_val)
+                    page.get_by_test_id(pre + "-amount").fill(bad)
+                    page.get_by_test_id(pre + "-submit").click()
+                    expect(page.get_by_test_id(pre + "-error")).to_be_visible()
+            page.goto(base + "/split")
+            for bad in ["abc", "-5", "1e3", "15,00", "", "10.005"]:
+                page.get_by_test_id("split-amount").fill(bad); page.get_by_test_id("split-handles").fill("bob")
+                page.get_by_test_id("split-submit").click()
+                expect(page.get_by_test_id("split-error")).to_be_visible()
+            assert not bodies, bodies
+            # long unbroken text never scrolls the page sideways
+            tok = api("/auth/login", {"email": "ada@example.com", "password": "correct horse"})[1]["token"]
+            long = "x" * 190
+            api("/payments", {"to_handle": "bob", "amount": 5, "note": long}, tok, "ln1")
+            api("/requests", {"payer_handle": "bob", "amount": 5, "note": long}, tok, "ln2")
+            api("/authorizations", {"to_handle": "bob", "amount": 5, "note": long}, tok, "ln3")
+            for route in ("/", "/requests", "/authorizations"):
+                page.goto(base + route)
+                page.wait_for_timeout(400)
+                no_hscroll(page, "long text " + route)
+            # latest refresh wins
+            page.goto(base + "/")
+            expect(page.get_by_test_id("wallet-available")).to_be_visible()
+            first = {"n": 0}
+            def slow(route):
+                first["n"] += 1
+                if first["n"] == 1:
+                    resp = route.fetch(); time.sleep(2); route.fulfill(response=resp)
+                else:
+                    route.continue_()
+            page.route("**/me", slow)
+            before = page.get_by_test_id("wallet-balance").inner_text()
+            page.get_by_test_id("wallet-refresh").click()
+            page.wait_for_timeout(300)
+            bobtok = api("/auth/login", {"email": "bob@example.com", "password": "correct horse"})[1]["token"]
+            api("/payments", {"to_handle": "ada", "amount": 1000}, bobtok, "ooo")
+            page.get_by_test_id("wallet-refresh").click()
+            expect(page.get_by_test_id("wallet-balance")).not_to_have_text(before)
+            later = page.get_by_test_id("wallet-balance").inner_text()
+            page.wait_for_timeout(2500)
+            expect(page.get_by_test_id("wallet-balance")).to_have_text(later)
+            br.close()
+        print("EXTRA UI CHECK OK")
+    finally:
+        srv.terminate()
+
 
 main()
+extra_checks()
