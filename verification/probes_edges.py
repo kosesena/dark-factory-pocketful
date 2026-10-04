@@ -82,7 +82,9 @@ def main():
              ("/splits", b'{"participant_handles":["b"],"amount":2.0000000000000001}'),
              ("/payments", b'{"to_handle":"b","amount":1e-400}'),
              ("/payments", b'{"to_handle":"b","amount":1e400}'),
-             ("/payments", b'{"to_handle":"b","amount":' + b"9" * 5000 + b'}')]
+             ("/payments", b'{"to_handle":"b","amount":' + b"9" * 5000 + b'}'),
+             ("/payments", b'{"to_handle":"b","amount":1E+999999999}'),
+             ("/payments", b'{"to_handle":"b","amount":1e-999999999}')]
     for i, (path, raw) in enumerate(cases):
         expect("fraction/huge %d %s -> 422" % (i, path), call("POST", path, raw, token=a, key="f%d" % i),
                422, "validation_failed")
@@ -103,7 +105,12 @@ def main():
              (b'{"to_handle":"b","amount":1,"x":100}', b'{"to_handle":"b","amount":1,"x":1e2}', 200),
              (b'{"to_handle":"b","amount":1,"x":1e30}', b'{"to_handle":"b","amount":1,"x":1000000000000000000000000000000}', 200),
              (b'{"to_handle":"b","amount":1,"x":0.1}', b'{"to_handle":"b","amount":1,"x":0.10000000000000001}', 409),
-             (b'{"to_handle":"b","amount":1000,"note":"n"}', b'{"note":"n","amount":1e3,"to_handle":"b"}', 200)]
+             (b'{"to_handle":"b","amount":1000,"note":"n"}', b'{"note":"n","amount":1e3,"to_handle":"b"}', 200),
+             (b'{"to_handle":"b","amount":1,"x":1.5}', b'{"to_handle":"b","amount":1,"x":"1.5"}', 409),
+             (b'{"to_handle":"b","amount":1,"x":1e40}', b'{"to_handle":"b","amount":1,"x":"1E+40"}', 409),
+             (b'{"to_handle":"b","amount":1,"x":1.50}', b'{"to_handle":"b","amount":1,"x":1.5}', 200),
+             (b'{"to_handle":"b","amount":1,"x":1e1000000}', b'{"to_handle":"b","amount":1,"x":1e1000000}', 200),
+             (b'{"to_handle":"b","amount":1,"x":1e-1000000}', b'{"to_handle":"b","amount":1,"x":2e-1000000}', 409)]
     for i, (first, second, want) in enumerate(pairs):
         st1, _ = call("POST", "/payments", first, token=a, key="id%d" % i)
         st2, b2 = call("POST", "/payments", second, token=a, key="id%d" % i)
