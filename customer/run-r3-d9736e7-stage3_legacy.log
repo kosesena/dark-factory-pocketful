@@ -1,0 +1,31 @@
+snapshot keys: ['closing_balance', 'echo', 'entries', 'opening_balance', 'taken_seq', 'taken_ts', 'token', 'user_id', 'view']
+ok   genuine legacy-shaped snapshot imports 204
+FAIL legacy snapshot pages identical 
+ok   full drop-last -> 422
+ok   full drop-last state intact
+ok   full empty -> 422
+ok   full empty state intact
+ok   full shift -> 422
+ok   full shift state intact
+ok   full closing+1 -> 422
+ok   full closing+1 state intact
+ok   full swap -> 422
+ok   full swap state intact
+ok   full dup -> 422
+ok   full dup state intact
+ok   legacy drop-last -> 422
+ok   legacy drop-last state intact
+ok   legacy empty -> 422
+ok   legacy empty state intact
+ok   legacy shift -> 422
+ok   legacy shift state intact
+ok   legacy closing+1 -> 422
+ok   legacy closing+1 state intact
+ok   legacy swap -> 422
+ok   legacy swap state intact
+ok   legacy dup -> 422
+ok   legacy dup state intact
+ok   full export imports
+ok   full pages identical
+ok   re-export/import
+LEGACY 29 checks, 1 failed: ['legacy snapshot pages identical']
