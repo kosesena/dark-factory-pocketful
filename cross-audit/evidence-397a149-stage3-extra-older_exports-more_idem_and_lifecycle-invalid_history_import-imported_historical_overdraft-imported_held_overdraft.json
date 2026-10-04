@@ -1,0 +1,542 @@
+{
+  "probes": 83,
+  "passed": 83,
+  "failed": [],
+  "results": [
+    {
+      "probe": "reset",
+      "passed": true,
+      "detail": null
+    },
+    {
+      "probe": "legacy-import-http://cross-s1upgrade-999fda2:8080",
+      "passed": true,
+      "detail": null
+    },
+    {
+      "probe": "legacy-token-balance",
+      "passed": true,
+      "detail": {
+        "user_id": "u_a",
+        "display_name": "A",
+        "handle": "a",
+        "balance": 9950,
+        "total": 9950,
+        "available": 9950,
+        "held": 0,
+        "currency": "EUR",
+        "minor_units": 2
+      }
+    },
+    {
+      "probe": "legacy-retry-original",
+      "passed": true,
+      "detail": null
+    },
+    {
+      "probe": "legacy-opening",
+      "passed": true,
+      "detail": {
+        "opening_balance": 10000,
+        "entries": [
+          {
+            "payment": {
+              "payment_id": "p_a9d36d9b4eb4442c",
+              "from_user_id": "u_a",
+              "from_handle": "a",
+              "to_user_id": "u_b",
+              "to_handle": "b",
+              "amount": 50,
+              "currency": "EUR",
+              "note": "",
+              "visibility": "public",
+              "request_id": null,
+              "settlement_id": null,
+              "authorization_id": null,
+              "created_at": "2026-10-04T11:59:18+00:00"
+            },
+            "delta": -50,
+            "balance_after": 9950,
+            "revision": 1,
+            "effective_at": "2026-10-04T11:59:18+00:00",
+            "recorded_at": "2026-10-04T11:59:18+00:00"
+          }
+        ],
+        "closing_balance": 9950,
+        "has_more": false,
+        "snapshot": "ROMqV0FAOvygJuYnkyVz1jl3Slm0x-mh"
+      }
+    },
+    {
+      "probe": "legacy-revision-one",
+      "passed": true,
+      "detail": null
+    },
+    {
+      "probe": "legacy-request-pay",
+      "passed": true,
+      "detail": null
+    },
+    {
+      "probe": "reset",
+      "passed": true,
+      "detail": null
+    },
+    {
+      "probe": "legacy-import-http://cross-s2upgrade-d78f1bd:8080",
+      "passed": true,
+      "detail": null
+    },
+    {
+      "probe": "legacy-token-balance",
+      "passed": true,
+      "detail": {
+        "user_id": "u_a",
+        "display_name": "A",
+        "handle": "a",
+        "balance": 9650,
+        "total": 9650,
+        "available": 8950,
+        "held": 700,
+        "currency": "EUR",
+        "minor_units": 2
+      }
+    },
+    {
+      "probe": "legacy-retry-original",
+      "passed": true,
+      "detail": null
+    },
+    {
+      "probe": "legacy-opening",
+      "passed": true,
+      "detail": {
+        "opening_balance": 10000,
+        "entries": [
+          {
+            "payment": {
+              "payment_id": "p_125b5c663abf46cb",
+              "from_user_id": "u_a",
+              "from_handle": "a",
+              "to_user_id": "u_b",
+              "to_handle": "b",
+              "amount": 300,
+              "currency": "EUR",
+              "note": "",
+              "visibility": "public",
+              "request_id": null,
+              "settlement_id": null,
+              "authorization_id": "a_bdd8899f6e354705",
+              "created_at": "2026-10-04T11:59:18+00:00"
+            },
+            "delta": -300,
+            "balance_after": 9700,
+            "revision": 1,
+            "effective_at": "2026-10-04T11:59:18+00:00",
+            "recorded_at": "2026-10-04T11:59:18+00:00"
+          },
+          {
+            "payment": {
+              "payment_id": "p_1beee3f17c9c4b0d",
+              "from_user_id": "u_a",
+              "from_handle": "a",
+              "to_user_id": "u_b",
+              "to_handle": "b",
+              "amount": 50,
+              "currency": "EUR",
+              "note": "",
+              "visibility": "public",
+              "request_id": null,
+              "settlement_id": null,
+              "authorization_id": null,
+              "created_at": "2026-10-04T11:59:18+00:00"
+            },
+            "delta": -50,
+            "balance_after": 9650,
+            "revision": 1,
+            "effective_at": "2026-10-04T11:59:18+00:00",
+            "recorded_at": "2026-10-04T11:59:18+00:00"
+          }
+        ],
+        "closing_balance": 9650,
+        "has_more": false,
+        "snapshot": "ExF8zgk2ag-g8Z9cj5hwMvTfmkyp8U4w"
+      }
+    },
+    {
+      "probe": "legacy-revision-one",
+      "passed": true,
+      "detail": null
+    },
+    {
+      "probe": "legacy-request-pay",
+      "passed": true,
+      "detail": null
+    },
+    {
+      "probe": "legacy-capture-immutable",
+      "passed": true,
+      "detail": null
+    },
+    {
+      "probe": "legacy-remainder-capture",
+      "passed": true,
+      "detail": null
+    },
+    {
+      "probe": "reset",
+      "passed": true,
+      "detail": null
+    },
+    {
+      "probe": "integral-correction-encodings",
+      "passed": true,
+      "detail": null
+    },
+    {
+      "probe": "reason-verbatim",
+      "passed": true,
+      "detail": null
+    },
+    {
+      "probe": "correction-numeric-body-replay",
+      "passed": true,
+      "detail": null
+    },
+    {
+      "probe": "correction-numeric-v-string",
+      "passed": true,
+      "detail": null
+    },
+    {
+      "probe": "same-key-distinct-path",
+      "passed": true,
+      "detail": null
+    },
+    {
+      "probe": "huge-exact-expected-revision",
+      "passed": true,
+      "detail": null
+    },
+    {
+      "probe": "huge-exact-expected-revision",
+      "passed": true,
+      "detail": null
+    },
+    {
+      "probe": "huge-exact-expected-revision",
+      "passed": true,
+      "detail": null
+    },
+    {
+      "probe": "request-linked-correction-eligible",
+      "passed": true,
+      "detail": null
+    },
+    {
+      "probe": "genuine-request-correction-import",
+      "passed": true,
+      "detail": null
+    },
+    {
+      "probe": "original-request-retry",
+      "passed": true,
+      "detail": null
+    },
+    {
+      "probe": "request-payment-retry-original",
+      "passed": true,
+      "detail": null
+    },
+    {
+      "probe": "snapshot-after-authorize",
+      "passed": true,
+      "detail": null
+    },
+    {
+      "probe": "snapshot-after-partial",
+      "passed": true,
+      "detail": null
+    },
+    {
+      "probe": "snapshot-after-void",
+      "passed": true,
+      "detail": null
+    },
+    {
+      "probe": "reset",
+      "passed": true,
+      "detail": null
+    },
+    {
+      "probe": "partial-expiry-future",
+      "passed": true,
+      "detail": null
+    },
+    {
+      "probe": "partial-before-expiry",
+      "passed": true,
+      "detail": null
+    },
+    {
+      "probe": "partial-expiry-records",
+      "passed": true,
+      "detail": {
+        "authorization_id": "a_26f6cdeed34c4c3f",
+        "from_user_id": "u_a",
+        "from_handle": "a",
+        "to_user_id": "u_b",
+        "to_handle": "b",
+        "amount": 1000,
+        "captured_amount": 300,
+        "remaining_amount": 0,
+        "currency": "EUR",
+        "note": "",
+        "visibility": "public",
+        "status": "expired",
+        "expires_at": "2026-10-04T11:59:21+00:00",
+        "payment_id": "p_~000000000002",
+        "payment_ids": [
+          "p_~000000000002"
+        ],
+        "created_at": "2026-10-04T11:59:18+00:00",
+        "closed_at": "2026-10-04T11:59:21+00:00"
+      }
+    },
+    {
+      "probe": "export-readonly",
+      "passed": true,
+      "detail": null
+    },
+    {
+      "probe": "expiry-history-before-capture-known",
+      "passed": true,
+      "detail": null
+    },
+    {
+      "probe": "reset",
+      "passed": true,
+      "detail": null
+    },
+    {
+      "probe": "invalid-history-revision-reason-too-long",
+      "passed": true,
+      "detail": null
+    },
+    {
+      "probe": "invalid-history-atomic-revision-reason-too-long",
+      "passed": true,
+      "detail": null
+    },
+    {
+      "probe": "invalid-history-revision-reason-wrong-type",
+      "passed": true,
+      "detail": null
+    },
+    {
+      "probe": "invalid-history-atomic-revision-reason-wrong-type",
+      "passed": true,
+      "detail": null
+    },
+    {
+      "probe": "invalid-history-revision-amount-fraction",
+      "passed": true,
+      "detail": null
+    },
+    {
+      "probe": "invalid-history-atomic-revision-amount-fraction",
+      "passed": true,
+      "detail": null
+    },
+    {
+      "probe": "invalid-history-revision-amount-negative",
+      "passed": true,
+      "detail": null
+    },
+    {
+      "probe": "invalid-history-atomic-revision-amount-negative",
+      "passed": true,
+      "detail": null
+    },
+    {
+      "probe": "invalid-history-revision-amount-too-large",
+      "passed": true,
+      "detail": null
+    },
+    {
+      "probe": "invalid-history-atomic-revision-amount-too-large",
+      "passed": true,
+      "detail": null
+    },
+    {
+      "probe": "invalid-history-revision-number-gap",
+      "passed": true,
+      "detail": null
+    },
+    {
+      "probe": "invalid-history-atomic-revision-number-gap",
+      "passed": true,
+      "detail": null
+    },
+    {
+      "probe": "invalid-history-revision-number-boolean",
+      "passed": true,
+      "detail": null
+    },
+    {
+      "probe": "invalid-history-atomic-revision-number-boolean",
+      "passed": true,
+      "detail": null
+    },
+    {
+      "probe": "invalid-history-revision-recorded-nonincreasing",
+      "passed": true,
+      "detail": null
+    },
+    {
+      "probe": "invalid-history-atomic-revision-recorded-nonincreasing",
+      "passed": true,
+      "detail": null
+    },
+    {
+      "probe": "invalid-history-revision-effective-subsecond-mismatch",
+      "passed": true,
+      "detail": null
+    },
+    {
+      "probe": "invalid-history-atomic-revision-effective-subsecond-mismatch",
+      "passed": true,
+      "detail": null
+    },
+    {
+      "probe": "invalid-history-hold-close-subsecond-mismatch",
+      "passed": true,
+      "detail": null
+    },
+    {
+      "probe": "invalid-history-atomic-hold-close-subsecond-mismatch",
+      "passed": true,
+      "detail": null
+    },
+    {
+      "probe": "invalid-history-revision-effective-invalid",
+      "passed": true,
+      "detail": null
+    },
+    {
+      "probe": "invalid-history-atomic-revision-effective-invalid",
+      "passed": true,
+      "detail": null
+    },
+    {
+      "probe": "invalid-history-revision-recorded-future",
+      "passed": true,
+      "detail": null
+    },
+    {
+      "probe": "invalid-history-atomic-revision-recorded-future",
+      "passed": true,
+      "detail": null
+    },
+    {
+      "probe": "invalid-history-revision-effective-future",
+      "passed": true,
+      "detail": null
+    },
+    {
+      "probe": "invalid-history-atomic-revision-effective-future",
+      "passed": true,
+      "detail": null
+    },
+    {
+      "probe": "invalid-history-original-revision-amount-mismatch",
+      "passed": true,
+      "detail": null
+    },
+    {
+      "probe": "invalid-history-atomic-original-revision-amount-mismatch",
+      "passed": true,
+      "detail": null
+    },
+    {
+      "probe": "invalid-history-original-revision-effective-mismatch",
+      "passed": true,
+      "detail": null
+    },
+    {
+      "probe": "invalid-history-atomic-original-revision-effective-mismatch",
+      "passed": true,
+      "detail": null
+    },
+    {
+      "probe": "invalid-history-opening-inconsistent",
+      "passed": true,
+      "detail": null
+    },
+    {
+      "probe": "invalid-history-atomic-opening-inconsistent",
+      "passed": true,
+      "detail": null
+    },
+    {
+      "probe": "invalid-history-current-balance-inconsistent-history",
+      "passed": true,
+      "detail": null
+    },
+    {
+      "probe": "invalid-history-atomic-current-balance-inconsistent-history",
+      "passed": true,
+      "detail": null
+    },
+    {
+      "probe": "invalid-history-closed-hold-no-close-time",
+      "passed": true,
+      "detail": null
+    },
+    {
+      "probe": "invalid-history-atomic-closed-hold-no-close-time",
+      "passed": true,
+      "detail": null
+    },
+    {
+      "probe": "invalid-history-closed-hold-before-creation",
+      "passed": true,
+      "detail": null
+    },
+    {
+      "probe": "invalid-history-atomic-closed-hold-before-creation",
+      "passed": true,
+      "detail": null
+    },
+    {
+      "probe": "reset",
+      "passed": true,
+      "detail": null
+    },
+    {
+      "probe": "import-historical-overdraft",
+      "passed": true,
+      "detail": null
+    },
+    {
+      "probe": "import-historical-overdraft-atomic",
+      "passed": true,
+      "detail": null
+    },
+    {
+      "probe": "reset",
+      "passed": true,
+      "detail": null
+    },
+    {
+      "probe": "import-historical-held-overdraft",
+      "passed": true,
+      "detail": null
+    },
+    {
+      "probe": "import-historical-held-overdraft-atomic",
+      "passed": true,
+      "detail": null
+    }
+  ]
+}
