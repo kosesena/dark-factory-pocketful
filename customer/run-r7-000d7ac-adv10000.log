@@ -1,0 +1,19 @@
+A: snapshots 20 entries0 2
+  A genuine closed-window N=10000 K=20: 204 in 1.12s
+ok   A genuine closed-window N=10000 K=20 -> 204 within 2.5s
+  A same-instant swap N=10000 K=20: 422 in 0.34s
+ok   A same-instant swap N=10000 K=20 -> 422 within 2.5s
+  A shift+1 N=10000 K=20: 422 in 0.28s
+ok   A shift+1 N=10000 K=20 -> 422 within 2.5s
+  B genuine 1000 payments, 5000 same-amount corrections, K=20: 204 in 0.67s
+ok   B genuine 1000 payments, 5000 same-amount corrections, K=20 -> 204 within 4.5s
+  B shift+1: 422 in 0.16s
+ok   B shift+1 -> 422 within 4.5s
+C: snapshots 54
+  C combo genuine N=10000: 204 in 1.43s
+ok   C combo genuine N=10000 -> 204 within 4.5s
+  C swap: 422 in 0.34s
+ok   C swap -> 422 within 4.5s
+  C shift+1: 422 in 0.31s
+ok   C shift+1 -> 422 within 4.5s
+ADVERSARIAL 8 checks, 0 failed: []

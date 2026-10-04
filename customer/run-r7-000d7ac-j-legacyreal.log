@@ -1,0 +1,30 @@
+ok   [corr+pay] real stage-3 export imports 204
+ok   [corr+pay] all snapshot pages identical
+ok   [corr only] real stage-3 export imports 204
+ok   [corr only] all snapshot pages identical
+ok   [pay only] real stage-3 export imports 204
+ok   [pay only] all snapshot pages identical
+ok   [no later write] real stage-3 export imports 204
+ok   [no later write] all snapshot pages identical
+ok   [empty-first] real stage-3 export imports 204
+ok   [empty-first] all snapshot pages identical
+ok   empty-first snapshot token exists
+ok   [2100 later facts] real stage-3 export imports 204
+ok   [2100 later facts] all snapshot pages identical
+ok   tamper shift -> 422 (no 500)
+ok   tamper shift destination intact
+ok   tamper reverse -> 422 (no 500)
+ok   tamper reverse destination intact
+ok   tamper dup -> 422 (no 500)
+ok   tamper dup destination intact
+ok   tamper dropfirst -> 422 (no 500)
+ok   tamper dropfirst destination intact
+ok   tamper closing -> 422 (no 500)
+ok   tamper closing destination intact
+ok   tamper otheruser -> 422 (no 500)
+ok   tamper otheruser destination intact
+ok   tamper malformed -> 422 (no 500)
+ok   tamper malformed destination intact
+ok   tamper badwin -> 422 (no 500)
+ok   tamper badwin destination intact
+LEGACYREAL 29 checks, 0 failed: []

@@ -1,0 +1,28 @@
+PASS  setup: all writes succeeded
+PASS  genuine export imports
+PASS  every receipt replays its original body
+PASS  tamper batch: member dropped -> 422
+PASS  tamper batch: member dropped leaves destination unchanged
+PASS  tamper batch: order reversed -> 422
+PASS  tamper batch: order reversed leaves destination unchanged
+PASS  tamper batch: member duplicated -> 422
+PASS  tamper batch: member duplicated leaves destination unchanged
+PASS  tamper batch: recorded_at changed -> 422
+PASS  tamper batch: recorded_at changed leaves destination unchanged
+PASS  tamper batch: one revision's recorded_at changed -> 422
+PASS  tamper batch: one revision's recorded_at changed leaves destination unchanged
+PASS  tamper batch: amount changed -> 422
+PASS  tamper batch: amount changed leaves destination unchanged
+PASS  tamper batch: batch id changed -> 422
+PASS  tamper batch: batch id changed leaves destination unchanged
+PASS  tamper batch: owned by non-operator -> 422
+PASS  tamper batch: owned by non-operator leaves destination unchanged
+PASS  tamper refund: amount changed -> 422
+PASS  tamper refund: amount changed leaves destination unchanged
+PASS  tamper refund: refund_of changed -> 422
+PASS  tamper refund: refund_of changed leaves destination unchanged
+PASS  tamper correction: revision changed -> 422
+PASS  tamper correction: revision changed leaves destination unchanged
+PASS  tamper correction: reason changed -> 422
+PASS  tamper correction: reason changed leaves destination unchanged
+27 probes, 0 failed

@@ -1,0 +1,44 @@
+ok   known_at before creation: nothing known
+ok   known_at after create only: hold 1000, no capture
+ok   known_at after capture: held 700 total 9700
+ok   known_at after void: held 0
+ok   as_of before capture, known now: hold 1000 total 10000
+ok   future as_of with only-create known: expired at deadline
+ok   future as_of before deadline: still held
+ok   reset with seeded hold created_at
+ok   seeded hold with created_at honoured historically
+ok   before seeded hold created
+ok   available negative in past -> historical_overdraft
+ok   state unchanged
+ok   earlier effective ok
+ok   import stage1 export into stage 3
+ok   stage1: old token valid
+    stage1 {'user_id': 'u_ada', 'display_name': 'Ada', 'handle': 'ada', 'balance': 9890, 'total': 9890, 'available': 9890, 'held': 0, 'currency': 'EUR', 'minor_units': 2}
+ok   stage1: payment replay 200 same
+ok   stage1: settlement replay 200
+ok   stage1: pending request payable
+ok   stage1: statement has imported payments once, sums
+ok   stage1: opening = end - seeded net
+ok   stage1: revisions for imported payment
+ok   stage1: correction on imported payment works
+ok   stage1: settlement member immutable
+ok   stage1: sum conserved
+ok   import stage2 export into stage 3
+ok   stage2: old token valid
+    stage2 {'user_id': 'u_ada', 'display_name': 'Ada', 'handle': 'ada', 'balance': 9690, 'total': 9690, 'available': 9190, 'held': 500, 'currency': 'EUR', 'minor_units': 2}
+ok   stage2: payment replay 200 same
+ok   stage2: settlement replay 200
+ok   stage2: pending request payable
+ok   stage2: statement has imported payments once, sums
+ok   stage2: opening = end - seeded net
+ok   stage2: revisions for imported payment
+ok   stage2: correction on imported payment works
+ok   stage2: settlement member immutable
+ok   stage2: hold carried (held 500)
+ok   stage2: capture replay 200
+ok   stage2: capture immutable
+ok   stage2: capture once in statement
+ok   stage2: authorization has closed_at null
+ok   stage2: sum conserved
+
+STAGE3 EXTRA 40 checks, 0 failed: []

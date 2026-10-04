@@ -1,0 +1,171 @@
+snapshot record shape: {"token": "vkr4sBiEV9UZ8pVjVVy37L3uwCyHC60v", "user_id": "u_ada", "opening_balance": 10000, "entries": [], "closing_balance": 10000, "echo": {"to": "2001-01-01T00:00:00+00:00"}, "taken_ts": 1791118229.8469691, "taken_seq": 4, "view": 4}
+PASS legacy shape, untampered, imports (snapshots taken after the last write)
+PASS legacy empty pages its original entries
+PASS legacy default pages its original entries
+PASS legacy known pages its original entries
+PASS legacy bob pages its original entries
+PASS snapshot 0 legacy + shift balances +1 -> 422
+PASS snapshot 0 legacy + shift balances +1 leaves state
+PASS snapshot 0 legacy + move to other user -> 422
+PASS snapshot 0 legacy + move to other user leaves state
+PASS snapshot 0 legacy + opening and closing +1 -> 422
+PASS snapshot 0 legacy + opening and closing +1 leaves state
+PASS snapshot 0 legacy + clear entries, closing=opening+1 -> 422
+PASS snapshot 0 legacy + clear entries, closing=opening+1 leaves state
+PASS snapshot 0 legacy + clear entries, opening=closing=opening+1 -> 422
+PASS snapshot 0 legacy + clear entries, opening=closing=opening+1 leaves state
+PASS snapshot 0 current + shift balances +1 -> 422
+PASS snapshot 0 legacy + shift balances +1 leaves state
+PASS snapshot 0 current + move to other user -> 422
+PASS snapshot 0 legacy + move to other user leaves state
+PASS snapshot 0 current + opening and closing +1 -> 422
+PASS snapshot 0 legacy + opening and closing +1 leaves state
+PASS snapshot 0 current + clear entries, closing=opening+1 -> 422
+PASS snapshot 0 legacy + clear entries, closing=opening+1 leaves state
+PASS snapshot 0 current + clear entries, opening=closing=opening+1 -> 422
+PASS snapshot 0 legacy + clear entries, opening=closing=opening+1 leaves state
+PASS snapshot 1 legacy + drop last entry + closing -> 422
+PASS snapshot 1 legacy + drop last entry + closing leaves state
+PASS snapshot 1 legacy + clear entries, closing=opening -> 204 as an earlier moment, pages what was imported
+PASS snapshot 1 legacy + shift balances +1 -> 422
+PASS snapshot 1 legacy + shift balances +1 leaves state
+PASS snapshot 1 legacy + drop first entry -> 422
+PASS snapshot 1 legacy + drop first entry leaves state
+PASS snapshot 1 legacy + duplicate first entry -> 422
+PASS snapshot 1 legacy + duplicate first entry leaves state
+PASS snapshot 1 legacy + reverse entries -> 422
+PASS snapshot 1 legacy + reverse entries leaves state
+PASS snapshot 1 legacy + move to other user -> 422
+PASS snapshot 1 legacy + move to other user leaves state
+PASS snapshot 1 legacy + opening and closing +1 -> 422
+PASS snapshot 1 legacy + opening and closing +1 leaves state
+PASS snapshot 1 legacy + swap same-instant entries, balances recomputed -> 422
+PASS snapshot 1 legacy + swap same-instant entries, balances recomputed leaves state
+PASS snapshot 1 legacy + clear entries, closing=opening+1 -> 422
+PASS snapshot 1 legacy + clear entries, closing=opening+1 leaves state
+PASS snapshot 1 legacy + clear entries, opening=closing=opening+1 -> 422
+PASS snapshot 1 legacy + clear entries, opening=closing=opening+1 leaves state
+PASS snapshot 1 legacy + drop a middle entry, balances recomputed -> 422
+PASS snapshot 1 legacy + drop a middle entry, balances recomputed leaves state
+PASS snapshot 1 current + drop last entry + closing -> 422
+PASS snapshot 1 legacy + drop last entry + closing leaves state
+PASS snapshot 1 current + clear entries, closing=opening -> 422
+PASS snapshot 1 legacy + clear entries, closing=opening leaves state
+PASS snapshot 1 current + shift balances +1 -> 422
+PASS snapshot 1 legacy + shift balances +1 leaves state
+PASS snapshot 1 current + drop first entry -> 422
+PASS snapshot 1 legacy + drop first entry leaves state
+PASS snapshot 1 current + duplicate first entry -> 422
+PASS snapshot 1 legacy + duplicate first entry leaves state
+PASS snapshot 1 current + reverse entries -> 422
+PASS snapshot 1 legacy + reverse entries leaves state
+PASS snapshot 1 current + move to other user -> 422
+PASS snapshot 1 legacy + move to other user leaves state
+PASS snapshot 1 current + opening and closing +1 -> 422
+PASS snapshot 1 legacy + opening and closing +1 leaves state
+PASS snapshot 1 current + swap same-instant entries, balances recomputed -> 422
+PASS snapshot 1 legacy + swap same-instant entries, balances recomputed leaves state
+PASS snapshot 1 current + clear entries, closing=opening+1 -> 422
+PASS snapshot 1 legacy + clear entries, closing=opening+1 leaves state
+PASS snapshot 1 current + clear entries, opening=closing=opening+1 -> 422
+PASS snapshot 1 legacy + clear entries, opening=closing=opening+1 leaves state
+PASS snapshot 1 current + drop a middle entry, balances recomputed -> 422
+PASS snapshot 1 legacy + drop a middle entry, balances recomputed leaves state
+PASS snapshot 2 legacy + drop last entry + closing -> 422
+PASS snapshot 2 legacy + drop last entry + closing leaves state
+PASS snapshot 2 legacy + clear entries, closing=opening -> 204 as an earlier moment, pages what was imported
+PASS snapshot 2 legacy + shift balances +1 -> 422
+PASS snapshot 2 legacy + shift balances +1 leaves state
+PASS snapshot 2 legacy + drop first entry -> 422
+PASS snapshot 2 legacy + drop first entry leaves state
+PASS snapshot 2 legacy + duplicate first entry -> 422
+PASS snapshot 2 legacy + duplicate first entry leaves state
+PASS snapshot 2 legacy + reverse entries -> 422
+PASS snapshot 2 legacy + reverse entries leaves state
+PASS snapshot 2 legacy + move to other user -> 422
+PASS snapshot 2 legacy + move to other user leaves state
+PASS snapshot 2 legacy + opening and closing +1 -> 422
+PASS snapshot 2 legacy + opening and closing +1 leaves state
+PASS snapshot 2 legacy + swap same-instant entries, balances recomputed -> 422
+PASS snapshot 2 legacy + swap same-instant entries, balances recomputed leaves state
+PASS snapshot 2 legacy + clear entries, closing=opening+1 -> 422
+PASS snapshot 2 legacy + clear entries, closing=opening+1 leaves state
+PASS snapshot 2 legacy + clear entries, opening=closing=opening+1 -> 422
+PASS snapshot 2 legacy + clear entries, opening=closing=opening+1 leaves state
+PASS snapshot 2 legacy + drop a middle entry, balances recomputed -> 422
+PASS snapshot 2 legacy + drop a middle entry, balances recomputed leaves state
+PASS snapshot 2 current + drop last entry + closing -> 422
+PASS snapshot 2 legacy + drop last entry + closing leaves state
+PASS snapshot 2 current + clear entries, closing=opening -> 422
+PASS snapshot 2 legacy + clear entries, closing=opening leaves state
+PASS snapshot 2 current + shift balances +1 -> 422
+PASS snapshot 2 legacy + shift balances +1 leaves state
+PASS snapshot 2 current + drop first entry -> 422
+PASS snapshot 2 legacy + drop first entry leaves state
+PASS snapshot 2 current + duplicate first entry -> 422
+PASS snapshot 2 legacy + duplicate first entry leaves state
+PASS snapshot 2 current + reverse entries -> 422
+PASS snapshot 2 legacy + reverse entries leaves state
+PASS snapshot 2 current + move to other user -> 422
+PASS snapshot 2 legacy + move to other user leaves state
+PASS snapshot 2 current + opening and closing +1 -> 422
+PASS snapshot 2 legacy + opening and closing +1 leaves state
+PASS snapshot 2 current + swap same-instant entries, balances recomputed -> 422
+PASS snapshot 2 legacy + swap same-instant entries, balances recomputed leaves state
+PASS snapshot 2 current + clear entries, closing=opening+1 -> 422
+PASS snapshot 2 legacy + clear entries, closing=opening+1 leaves state
+PASS snapshot 2 current + clear entries, opening=closing=opening+1 -> 422
+PASS snapshot 2 legacy + clear entries, opening=closing=opening+1 leaves state
+PASS snapshot 2 current + drop a middle entry, balances recomputed -> 422
+PASS snapshot 2 legacy + drop a middle entry, balances recomputed leaves state
+PASS snapshot 3 legacy + drop last entry + closing -> 422
+PASS snapshot 3 legacy + drop last entry + closing leaves state
+PASS snapshot 3 legacy + clear entries, closing=opening -> 204 as an earlier moment, pages what was imported
+PASS snapshot 3 legacy + shift balances +1 -> 422
+PASS snapshot 3 legacy + shift balances +1 leaves state
+PASS snapshot 3 legacy + drop first entry -> 422
+PASS snapshot 3 legacy + drop first entry leaves state
+PASS snapshot 3 legacy + duplicate first entry -> 422
+PASS snapshot 3 legacy + duplicate first entry leaves state
+PASS snapshot 3 legacy + reverse entries -> 422
+PASS snapshot 3 legacy + reverse entries leaves state
+PASS snapshot 3 legacy + move to other user -> 422
+PASS snapshot 3 legacy + move to other user leaves state
+PASS snapshot 3 legacy + opening and closing +1 -> 422
+PASS snapshot 3 legacy + opening and closing +1 leaves state
+PASS snapshot 3 legacy + swap same-instant entries, balances recomputed -> 422
+PASS snapshot 3 legacy + swap same-instant entries, balances recomputed leaves state
+PASS snapshot 3 legacy + clear entries, closing=opening+1 -> 422
+PASS snapshot 3 legacy + clear entries, closing=opening+1 leaves state
+PASS snapshot 3 legacy + clear entries, opening=closing=opening+1 -> 422
+PASS snapshot 3 legacy + clear entries, opening=closing=opening+1 leaves state
+PASS snapshot 3 legacy + drop a middle entry, balances recomputed -> 422
+PASS snapshot 3 legacy + drop a middle entry, balances recomputed leaves state
+PASS snapshot 3 current + drop last entry + closing -> 422
+PASS snapshot 3 legacy + drop last entry + closing leaves state
+PASS snapshot 3 current + clear entries, closing=opening -> 422
+PASS snapshot 3 legacy + clear entries, closing=opening leaves state
+PASS snapshot 3 current + shift balances +1 -> 422
+PASS snapshot 3 legacy + shift balances +1 leaves state
+PASS snapshot 3 current + drop first entry -> 422
+PASS snapshot 3 legacy + drop first entry leaves state
+PASS snapshot 3 current + duplicate first entry -> 422
+PASS snapshot 3 legacy + duplicate first entry leaves state
+PASS snapshot 3 current + reverse entries -> 422
+PASS snapshot 3 legacy + reverse entries leaves state
+PASS snapshot 3 current + move to other user -> 422
+PASS snapshot 3 legacy + move to other user leaves state
+PASS snapshot 3 current + opening and closing +1 -> 422
+PASS snapshot 3 legacy + opening and closing +1 leaves state
+PASS snapshot 3 current + swap same-instant entries, balances recomputed -> 422
+PASS snapshot 3 legacy + swap same-instant entries, balances recomputed leaves state
+PASS snapshot 3 current + clear entries, closing=opening+1 -> 422
+PASS snapshot 3 legacy + clear entries, closing=opening+1 leaves state
+PASS snapshot 3 current + clear entries, opening=closing=opening+1 -> 422
+PASS snapshot 3 legacy + clear entries, opening=closing=opening+1 leaves state
+PASS snapshot 3 current + drop a middle entry, balances recomputed -> 422
+PASS snapshot 3 legacy + drop a middle entry, balances recomputed leaves state
+PASS del view on a snapshot that holds a refund entry -> 422
+PASS seeded out-of-order fixture has p_b first
+PASS legacy page at an unreal moment (only the later-seq seeded payment) -> 422
+0 failed

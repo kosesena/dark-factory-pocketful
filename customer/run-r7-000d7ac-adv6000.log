@@ -1,0 +1,20 @@
+A: snapshots 20 entries0 2
+  A genuine closed-window N=6000 K=20: 204 in 0.50s
+ok   A genuine closed-window N=6000 K=20 -> 204 within 2.5s
+  A same-instant swap N=6000 K=20: 422 in 0.18s
+ok   A same-instant swap N=6000 K=20 -> 422 within 2.5s
+  A shift+1 N=6000 K=20: 422 in 0.14s
+ok   A shift+1 N=6000 K=20 -> 422 within 2.5s
+corr fail (422, {'error': {'code': 'validation_failed', 'message': 'effective_at cannot be in the future'}})
+  B genuine 1000 payments, 347 same-amount corrections, K=20: 204 in 0.22s
+ok   B genuine 1000 payments, 347 same-amount corrections, K=20 -> 204 within 4.5s
+  B shift+1: 422 in 0.07s
+ok   B shift+1 -> 422 within 4.5s
+C: snapshots 54
+  C combo genuine N=6000: 204 in 2.18s
+ok   C combo genuine N=6000 -> 204 within 4.5s
+  C swap: 422 in 0.39s
+ok   C swap -> 422 within 4.5s
+  C shift+1: 422 in 0.34s
+ok   C shift+1 -> 422 within 4.5s
+ADVERSARIAL 8 checks, 0 failed: []
