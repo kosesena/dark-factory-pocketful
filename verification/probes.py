@@ -94,8 +94,9 @@ def main():
 
     # §3 conventions
     st, body, hd = call("GET", "/me", token=a)
-    check("me shape", body == {"user_id": "u_ada", "display_name": "Ada", "handle": "ada",
-                               "balance": 10000, "currency": "EUR", "minor_units": 2}, body)
+    want_me = {"user_id": "u_ada", "display_name": "Ada", "handle": "ada",
+               "balance": 10000, "currency": "EUR", "minor_units": 2}
+    check("me shape", all(body.get(k) == v for k, v in want_me.items()), body)  # later stages add fields
     check("content-type json utf-8", "application/json" in hd.get("Content-Type", "")
           and "utf-8" in hd.get("Content-Type", "").lower(), hd.get("Content-Type"))
     st, p, _ = call("POST", "/payments", {"to_handle": "bob", "amount": 1500, "note": "dinner",
