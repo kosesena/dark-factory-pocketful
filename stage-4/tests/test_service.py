@@ -1844,6 +1844,16 @@ class Batches(unittest.TestCase):
         self.assertEqual(call("POST", "/_test/import", snap)[0], 204)
         def rev(st_, pid):
             return [p for p in st_["payments"] if p["id"] == pid][0]["revisions"][1]
+        def batch_row(st_):
+            return [r for r in st_["idempotency"] if r[2] == "/correction-batches"][0]
+        for f in (lambda st_: batch_row(st_)[4]["revisions"].pop(),
+                  lambda st_: batch_row(st_)[4]["revisions"].reverse(),
+                  lambda st_: batch_row(st_)[4]["revisions"].append(dict(batch_row(st_)[4]["revisions"][0])),
+                  lambda st_: batch_row(st_)[4].__setitem__("recorded_at", "2001-01-01T00:00:00+00:00"),
+                  lambda st_: st_["operators"].clear()):
+            m = json.loads(json.dumps(snap))
+            f(m["state"])
+            self.assertEqual(call("POST", "/_test/import", m)[0], 422)
         snap["state"]["idempotency"] = []
         muts = [lambda st_: rev(st_, m1).__setitem__("correction_batch_id", None),
                 lambda st_: rev(st_, m2).__setitem__("effective_at", "2026-09-22T12:00:00+00:00") or rev(st_, m2).__setitem__("effective_ts", 1.0),

@@ -382,8 +382,10 @@ def _auth_receipt(s, resp):
           and resp["payment_id"] == (resp["payment_ids"][-1] if resp["payment_ids"] else None))
 
 
-def _batch_receipt(s, resp):
-    """A batch receipt lists immutable revisions that share one recorded time and one batch id."""
+def _batch_receipt(s, uid, fp, resp):
+    """A batch receipt lists immutable revisions that share one recorded time and one batch id, completely
+    (every revision of the batch) and in the order of the request's corrections."""
+    _need(uid in s.operators)
     _need(isinstance(resp, dict) and set(resp) == {"correction_batch_id", "recorded_at", "revisions"})
     _need(isinstance(resp["revisions"], list) and 1 <= len(resp["revisions"]) <= 32 and _str(resp["recorded_at"]))
     seen = set()
@@ -396,6 +398,12 @@ def _batch_receipt(s, resp):
         r = p["revisions"][it["revision"] - 1]
         _need(all(it[k] == r[k] for k in ("amount", "effective_at", "recorded_at", "reason", "correction_batch_id")))
         _need(it["correction_batch_id"] == resp["correction_batch_id"] and it["recorded_at"] == resp["recorded_at"])
+    members = {(p["id"], r["revision"]) for p in s.payments for r in p["revisions"]
+               if r.get("correction_batch_id") == resp["correction_batch_id"]}
+    _need(members == {(it["payment_id"], it["revision"]) for it in resp["revisions"]})
+    if fp.startswith("v2:"):  # input order: the payment ids as they appear in the stored request body
+        sent = [json.loads(m) for m in re.findall(r'"payment_id":("(?:[^"\\]|\\.)*")', fp)]
+        _need(sent == [it["payment_id"] for it in resp["revisions"]])
 
 
 def _correction_receipt(s, uid, pid, resp):
@@ -439,7 +447,7 @@ def check_receipts(s):
             p = _payment_receipt(s, resp)
             _need(p.get("refund_of") == PATH_REFUND.fullmatch(path).group(1) and p["from_user_id"] == uid)
         elif PATH_BATCH.fullmatch(path):
-            _batch_receipt(s, resp)
+            _batch_receipt(s, uid, fp, resp)
         elif PATH_CORRECTION.fullmatch(path):
             _correction_receipt(s, uid, PATH_CORRECTION.fullmatch(path).group(1), resp)
         else:
