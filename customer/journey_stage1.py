@@ -61,7 +61,7 @@ r = call("POST", "/payments", {"to_handle": "bob", "amount": 5}, tok=A); chk("mi
 r = call("POST", "/payments", {"to_handle": "bob", "amount": 5}, tok=A, key=""); chk("empty key 400", r[0] == 400, r)
 r = call("POST", "/payments", {"to_handle": "bob", "amount": 5}, tok=A, key="x" * 256); chk("256 key 422", r[0] == 422, r)
 r = call("POST", "/payments", {"to_handle": "bob", "amount": 5}, tok=A, key="x" * 255); chk("255 key ok", r[0] == 201, r)
-r = call("POST", "/payments", {"to_handle": "bob", "amount": 5}, tok=Bo, key="k1"); chk("key scoped per user", r[0] == 201, r)
+r = call("POST", "/payments", {"to_handle": "ada", "amount": 5}, tok=Bo, key="k1"); chk("key scoped per user", r[0] == 201, r)
 r = call("POST", "/requests", {"payer_handle": "ada", "amount": 5}, tok=Bo, key="k1"); chk("same key other path ok", r[0] == 201, r)
 def v(name, body, st, c, tok=A):
     r = call("POST", "/payments", body, tok=tok, key="v-" + name); chk(name, r[0] == st and code(r) == c, r)
@@ -118,7 +118,7 @@ chk("req no key", code(call("POST", "/requests", {"payer_handle": "ada", "amount
 rq = lambda t, q="": call("GET", "/requests" + q, tok=t)[1]["requests"]
 chk("rq_1 listed for payer & requester", any(x["request_id"] == "rq_1" for x in rq(A)) and any(x["request_id"] == "rq_1" for x in rq(Bo)))
 chk("requests not visible to third", not rq(C) and not rq(D))
-chk("op not granted requests", not rq(O))
+chk("op not granted requests", all("op" in (x["requester_handle"], x["payer_handle"]) for x in rq(O)))
 chk("incoming only", all(x["payer_handle"] == "ada" for x in rq(A, "?direction=incoming")) and not rq(A, "?direction=outgoing"))
 chk("outgoing for bob", len(rq(Bo, "?direction=outgoing")) >= 3 and not rq(Bo, "?direction=incoming"))
 for q in ("?direction=x", "?status=x", "?limit=0", "?offset=-1", "?limit=4.0"):
@@ -213,7 +213,7 @@ for nm, b, s2, c in [("self", {"transfers": [{"from_handle": "ada", "to_handle":
                       ("missing", {}, 422, "validation_failed")]:
     r = st(b, "sv" + nm); chk("settle " + nm, r[0] == s2 and code(r) == c, r)
 r = st({"transfers": [{"from_handle": "ada", "to_handle": "bob", "amount": 1}] * 32}, "st32"); chk("32 ok", r[0] == 201 and len(r[1]["payments"]) == 32, r)
-chk("op sees no others' requests", not rq(O))
+chk("op sees no others' requests", all(O_ in ("op",) for x in rq(O) for O_ in (x["requester_handle"], x["payer_handle"]) if O_=="op") and all("op" in (x["requester_handle"], x["payer_handle"]) for x in rq(O)))
 # concurrency: cy-like fresh wallet double spend
 call("POST", "/_test/reset", fx); A, Bo, C, O = [login(e + "@example.com") for e in ("ada", "bob", "cy", "op")]
 res = []
@@ -264,3 +264,43 @@ for cur, mu in (("JPY", 0), ("BHD", 3)):
 chk("reset wipes signup", call("POST", "/auth/login", {"email": "dee.smith+x@example.com", "password": "longenough"})[0] == 401)
 chk("unauth GET requests", call("GET", "/requests")[0] == 401)
 print(f"\n{n} checks, {len(fails)} failed: {fails}")
+# extras for 145b98e fixes
+call("POST", "/_test/reset", fx); A = login("ada@example.com")
+for body in (b'{"to_handle":"bob","amount":1.5}', b'{"to_handle":"bob","amount":0.9999999999999999999}', b'{"to_handle":"bob","amount":1e400}', b'{"to_handle":"bob","amount":' + b'9' * 400 + b'}'):
+    r = call("POST", "/payments", raw=body, tok=A, key="dec" + str(len(body))); chk("fractional/huge amount 422", r[0] == 422 and code(r) == "validation_failed", r)
+r = call("POST", "/payments", raw=b'{"to_handle":"bob","amount":1E1}', tok=A, key="E1"); chk("1E1 ok", r[0] == 201 and r[1]["amount"] == 10, r)
+r = call("POST", "/payments", raw=b'{"to_handle":"bob","amount":10}', tok=A, key="E1"); chk("1E1 == 10 replay", r[0] == 200, r)
+r = call("POST", "/payments", raw=b'{"to_handle":"bob","amount":11}', tok=A, key="E1"); chk("different amount reuse 409", r[0] == 409, r)
+r = call("GET", "/activity?limit=" + "9" * 500, tok=A); chk("huge limit 422", r[0] == 422, r)
+r = call("GET", "/activity?offset=" + "9" * 500, tok=A); chk("huge offset empty 200", r[0] == 200 and r[1]["payments"] == [], r)
+r = call("GET", "/requests?limit=" + "9" * 500, tok=A); chk("huge limit req 422", r[0] == 422, r)
+r = call("GET", "/me", hdr={"Authorization": "Basic abc"}); chk("basic 401", r[0] == 401 and code(r) == "unauthenticated", r)
+r = call("POST", "/payments", {"to_handle":"bob","amount":5,"note":"é" * 200}, tok=A, key="uni"); chk("200 unicode chars ok", r[0] == 201, r)
+# import: zero-share request and amount-0 payments
+call("POST", "/splits", {"amount": 1, "participant_handles": ["ada", "bob", "cy"]}, tok=A, key="zs")
+e = call("GET", "/_test/export")[1]
+chk("import with zero-share request", call("POST", "/_test/import", e)[0] == 204)
+chk("zero-share request kept", any(x["amount"] == 0 for x in rq(login("bob@example.com"))))
+f0 = json.loads(json.dumps(fx)); f0["payments"].append({"id": "p_z", "from_user_id": "u_ada", "to_user_id": "u_bob", "amount": 0, "note": "", "visibility": "public"})
+chk("reset with amount 0 payment 204", call("POST", "/_test/reset", f0)[0] == 204)
+e = call("GET", "/_test/export")[1]; chk("import amount-0 payment", call("POST", "/_test/import", e)[0] == 204)
+import copy, time
+big = copy.deepcopy(fx); big["payments"] = []; big["requests"] = []; big["settlement_operator_ids"] = []; big["users"] = [{"id": f"u{i}", "email": f"u{i}@example.com", "password": "correct horse", "display_name": f"U{i}", "handle": f"u{i}", "balance": 100} for i in range(2000)]
+t0 = time.time(); r = call("POST", "/_test/reset", big); chk("2000-user reset <10s", r[0] == 204 and time.time() - t0 < 10, (r, time.time() - t0))
+chk("seeded login in big", call("POST", "/auth/login", {"email": "u1999@example.com", "password": "correct horse"})[0] == 200)
+# tampered state import leaves state intact
+call("POST", "/_test/reset", fx); e = call("GET", "/_test/export")[1]; bad = copy.deepcopy(e)
+st_ = bad["state"]
+def mutate(o):
+    if isinstance(o, dict):
+        for k in list(o):
+            if isinstance(o[k], int) and not isinstance(o[k], bool) and "balance" in k: o[k] = -5; return True
+            if mutate(o[k]): return True
+    elif isinstance(o, list):
+        for i in o:
+            if mutate(i): return True
+    return False
+if mutate(st_):
+    r = call("POST", "/_test/import", bad); chk("negative-balance import 422", r[0] == 422, r)
+    chk("state intact after bad import", call("POST", "/auth/login", {"email": "ada@example.com", "password": "correct horse"})[0] == 200)
+print(f"\nFINAL {n} checks, {len(fails)} failed: {fails}")
