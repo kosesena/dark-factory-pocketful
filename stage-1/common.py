@@ -80,18 +80,18 @@ def now_ts():
 
 # --- passwords -------------------------------------------------------------
 
-def _scrypt(password, salt):
+def _scrypt(password, salt, n=2 ** 12):
     return hashlib.scrypt(password.encode("utf-8", "surrogatepass"), salt=salt,
-                          n=2 ** 12, r=8, p=1, dklen=32)
+                          n=n, r=8, p=1, dklen=32)
 
 
-def hash_password(password):
+def hash_password(password, n=2 ** 12):
     salt = os.urandom(16)
-    return salt.hex(), _scrypt(password, salt).hex()
+    return salt.hex(), _scrypt(password, salt, n).hex()
 
 
 def check_password(user, password):
-    got = _scrypt(password, bytes.fromhex(user["salt"]))
+    got = _scrypt(password, bytes.fromhex(user["salt"]), user.get("n", 2 ** 12))
     return hmac.compare_digest(got, bytes.fromhex(user["hash"]))
 
 

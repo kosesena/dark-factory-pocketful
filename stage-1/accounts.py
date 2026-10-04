@@ -1,9 +1,13 @@
 """Health, reset, signup, login and /me."""
 import re
+from concurrent.futures import ThreadPoolExecutor
 
 from common import (ApiError, State, store, STATUSES, HANDLE_RE, EMAIL_RE, authenticate,
                     check_password, get_str, hash_password, new_id, next_seq, now_ts,
                     parse_json, parse_ts, validation)
+
+
+SEED_KDF_N = 2 ** 10  # seeded fixture passwords: cheaper scrypt keeps a 1000+ user reset well under 10 s
 
 
 def health(req):
@@ -36,6 +40,7 @@ def build_state(fx):
             raise validation(name + " must be an array of objects")
         return v
 
+    pending = []  # (user record, password) hashed together after validation
     for u in lst("users"):
         uid, handle = u.get("id"), u.get("handle")
         email, pw = u.get("email"), u.get("password")
@@ -53,12 +58,18 @@ def build_state(fx):
         bal = _int(u.get("balance", 0))
         if bal is None:
             raise validation("balance must be a non-negative integer")
-        salt, h = hash_password(pw)
         rec = {"id": uid, "email": email, "display_name": name, "handle": handle,
-               "balance": bal, "salt": salt, "hash": h}
+               "balance": bal, "salt": "", "hash": "", "n": SEED_KDF_N}
+        pending.append((rec, pw))
         s.users[uid] = rec
         s.by_handle[handle] = rec
         s.by_email[email.lower()] = rec
+
+    def hash_one(item):
+        rec, pw = item
+        rec["salt"], rec["hash"] = hash_password(pw, SEED_KDF_N)
+    with ThreadPoolExecutor(2) as pool:  # scrypt releases the GIL: two cores hash seeded users
+        list(pool.map(hash_one, pending))
 
     def stamp(item, rec):
         if "created_at" in item and item["created_at"] is not None:
@@ -146,7 +157,7 @@ def signup(req):
         raise ApiError(409, "handle_taken", "derived handle already taken")
     salt, h = hash_password(password)
     user = {"id": new_id("u_"), "email": email, "display_name": name, "handle": handle,
-            "balance": 0, "salt": salt, "hash": h}
+            "balance": 0, "salt": salt, "hash": h, "n": 2 ** 12}
     s.users[user["id"]] = user
     s.by_handle[handle] = user
     s.by_email[email.lower()] = user

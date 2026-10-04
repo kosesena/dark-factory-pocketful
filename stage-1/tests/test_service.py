@@ -86,6 +86,26 @@ class Basics(Base):
                 self.assertEqual(s, 401, (m, p, hdr))
                 self.assertEqual(b["error"]["code"], "unauthenticated")
 
+    def test_basic_scheme_and_big_reset(self):
+        s, _, _ = call("GET", "/me", headers={"Authorization": "Basic " + self.ada})
+        self.assertEqual(s, 401)
+        s, _, _ = call("GET", "/me", headers={"Authorization": self.ada})
+        self.assertEqual(s, 401)
+        import time
+        fx = fixture()
+        fx["users"] += [{"id": "x%d" % i, "email": "x%d@e.io" % i, "password": "pw-%d-xxxxxxxx" % i,
+                         "display_name": "X", "handle": "x%d" % i, "balance": 1} for i in range(1200)]
+        t0 = time.time()
+        self.assertEqual(call("POST", "/_test/reset", fx)[0], 204)
+        self.assertLess(time.time() - t0, 6)
+        s, b, _ = call("POST", "/auth/login", {"email": "x77@e.io", "password": "pw-77-xxxxxxxx"})
+        self.assertEqual(s, 200)
+        self.assertEqual(call("POST", "/auth/login", {"email": "x77@e.io", "password": "wrong-password"})[0], 401)
+        s, snap, _ = call("GET", "/_test/export")
+        call("POST", "/_test/reset", fixture())
+        self.assertEqual(call("POST", "/_test/import", snap)[0], 204)
+        self.assertEqual(call("POST", "/auth/login", {"email": "x77@e.io", "password": "pw-77-xxxxxxxx"})[0], 200)
+
     def test_signup_login(self):
         s, b, _ = call("POST", "/auth/signup", {"email": "ada@example.com", "password": "12345678", "display_name": "x"})
         self.assertEqual((s, b["error"]["code"]), (409, "email_taken"))
