@@ -1,4 +1,17 @@
-# The Felt Five — a very dark factory that tests its own tests
+<p align="center">
+  <img src="docs/crew/crew-with-outsider.png" width="860" alt="The Felt Five and a golden wool-plush outsider in their workshop">
+</p>
+
+<h1 align="center">The Felt Five</h1>
+
+<p align="center">
+  <b>a very dark factory that tests its own tests</b><br>
+  WeAreDevelopers x BAND "Dark Factory" hackathon (lablab.ai) · track: pocketful · Sena Köse (solo) · stages 1–4
+</p>
+
+<p align="center">
+  <img src="docs/readme/headline.svg" width="860" alt="81 faults planted; the shipped checks caught 8; the band's own evidence caught 75. 4/4 stages, one dispatch, six seats on two model families, 4 h 09 min, 131 USD at list price.">
+</p>
 
 > **The spec-auditor seeded 81 faults across four stages, one at a time, in the requirements it
 > judged highest-risk. The shipped checks, a partial sample by design, caught 8; our band's own
@@ -6,8 +19,16 @@
 > one dispatch, no human message after it. On five revisions three Claude verifiers accepted and
 > only the Codex seat said no; twice the customer said no to a layout the reviewer had accepted.
 
-Entry for the WeAreDevelopers x BAND "Dark Factory" hackathon (lablab.ai).
-**Track:** pocketful. **Team:** Sena Köse (solo). **Stages delivered:** 1–4.
+<p align="center">
+  <a href="FACTORY.md"><b>FACTORY.md</b></a> ·
+  <a href="#the-submitted-run-at-a-glance">the run at a glance</a> ·
+  <a href="#autonomy-and-what-we-do-not-claim">autonomy and limits</a> ·
+  <a href="#evidence-index">evidence index</a> ·
+  <a href="https://felt-five-pocketful.onrender.com">live demo</a> ·
+  <a href="#meet-the-crew-seat-by-seat">the crew</a>
+</p>
+
+<p align="center"><img src="docs/readme/stitch.svg" width="860" alt=""></p>
 
 ## The submitted run at a glance
 
@@ -36,14 +57,14 @@ Shipped-check counts are from the final isolated run, `docs/evidence/isolated-st
 
 ### Seat by seat
 
-| Seat | Model | Commits | Tool calls in the room | Text messages | Reject verdicts | Spend (USD, list) |
-|---|---|---|---|---|---|---|
-| implementer | claude-sonnet-5-5 | 56 | 487 | 34 | (fixes) | 37.89 |
-| reviewer | claude-opus-5-5 | 27 | 425 | 28 | 8 | 32.90 |
-| cross-auditor | gpt-6-astra | 23 | 615 | 54 | 13 | ChatGPT plan |
-| customer | claude-sonnet-5-5 | 19 | 206 | 20 | 2 | 11.82 |
-| spec-auditor | claude-opus-5-5 | 17 | 392 | 25 | 4 | 35.79 |
-| coordinator | claude-sonnet-5-5 | 2 | 251 | 187 | (routing) | 12.89 |
+| | Seat | Model | Commits | Tool calls in the room | Text messages | Reject verdicts | Spend (USD, list) |
+|---|---|---|---|---|---|---|---|
+| <img src="docs/crew/implementer.png" height="48" alt=""> | **implementer** | claude-sonnet-5-5 | 56 | 487 | 34 | (fixes) | 37.89 |
+| <img src="docs/crew/reviewer.png" height="48" alt=""> | **reviewer** | claude-opus-5-5 | 27 | 425 | 28 | 8 | 32.90 |
+| <img src="docs/crew/cross-auditor.png" height="48" alt=""> | **cross-auditor** | gpt-6-astra | 23 | 615 | 54 | 13 | ChatGPT plan |
+| <img src="docs/crew/customer.png" height="48" alt=""> | **customer** | claude-sonnet-5-5 | 19 | 206 | 20 | 2 | 11.82 |
+| <img src="docs/crew/spec-auditor.png" height="48" alt=""> | **spec-auditor** | claude-opus-5-5 | 17 | 392 | 25 | 4 | 35.79 |
+| <img src="docs/crew/coordinator.png" height="48" alt=""> | **coordinator** | claude-sonnet-5-5 | 2 | 251 | 187 | (routing) | 12.89 |
 
 All 56 commits under `stage-1/` to `stage-4/` are the implementer's; each verifier commits only in
 its own folder.
@@ -102,9 +123,18 @@ demo; if it looks empty, sign up and use it fresh.
 *The delivered wallet (stage 4), as the customer seat saw it at 1280 px. Every screen at desktop
 and phone width is in `customer/screens-stage4-final/`.*
 
+<p align="center"><img src="docs/readme/stitch.svg" width="860" alt=""></p>
+
 ## The crew
 
-![The Felt Five and a golden wool-plush outsider in their workshop](docs/crew/crew-with-outsider.png)
+<p align="center">
+  <img src="docs/crew/coordinator.png" height="130" alt="coordinator: blue cone with a conductor's baton">
+  <img src="docs/crew/implementer.png" height="130" alt="implementer: orange craftsperson with a beret and tool apron">
+  <img src="docs/crew/reviewer.png" height="130" alt="reviewer: purple long-nosed detective with a magnifying glass">
+  <img src="docs/crew/spec-auditor.png" height="130" alt="spec-auditor: green book with round glasses and a checklist">
+  <img src="docs/crew/customer.png" height="130" alt="customer: pink floppy-eared character holding a phone">
+  <img src="docs/crew/cross-auditor.png" height="130" alt="cross-auditor: golden wool-plush pebble with a monocle">
+</p>
 
 The Felt Five now welcome **one outsider**: a cross-auditor from a different model family.
 The original crew keeps its stitched felt; the visitor is a soft golden wool-plush pebble
@@ -130,7 +160,7 @@ the mandates contain no personality, and the seats behave exactly as
 | `coordinator/final-report.md` | the coordinator's closing report: accepts per stage, rejects and fixes, rulings, open limitation | coordinator |
 | `docs/evidence/` | files FACTORY.md cites from the submitted run: check fingerprints, kicker and watchdog logs, the final isolated report, the visual brief and its two images, the measurement script's output | operator, harness |
 | `docs/experiments/` | the scripts and results behind ADR-001 and ADR-002 | operator |
-| `docs/crew/` | the mascot images on this page | operator |
+| `docs/crew/`, `docs/readme/` | the mascot images and the headline card on this page | operator |
 
 "Operator" is Sena Köse, working with Claude Code as a writing and tooling assistant outside the
 room. Two early commits (30 Sep) that added the first mandates and the FACTORY.md skeleton carry
@@ -154,6 +184,8 @@ python3 ../result/tools/factory_numbers.py --help   # spend and time tables; nee
 
 The video of the room working is attached to the lablab submission. Authoritative rules:
 https://github.com/band-ai/dark-factory-wearedevs/blob/main/docs/participant-guide.md
+
+<p align="center"><img src="docs/readme/stitch.svg" width="860" alt=""></p>
 
 ## Meet the crew, seat by seat
 

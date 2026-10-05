@@ -1,0 +1,21 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 1640 520" width="1640" height="520" role="img" aria-label="81 faults planted. The shipped checks caught 8. The band's own evidence caught 75. Four of four stages, one dispatch and no other human message, six seats on two model families, 4 hours 9 minutes of work, 131 dollars at list price.">
+  <rect x="4" y="4" width="1632" height="512" rx="36" fill="#F6EFE4" stroke="#D9C9B3" stroke-width="4"/>
+  <rect x="24" y="24" width="1592" height="472" rx="24" fill="none" stroke="#D9C9B3" stroke-width="3" stroke-dasharray="14 12" stroke-linecap="round"/>
+  <g font-family="'Times New Roman', Times, serif" font-weight="700" text-anchor="middle">
+    <text x="290" y="232" font-size="190" fill="#3B2416">81</text>
+    <text x="820" y="232" font-size="190" fill="#9A4A18">8</text>
+    <text x="1350" y="232" font-size="190" fill="#3E5A2D">75</text>
+  </g>
+  <g font-family="-apple-system, 'Segoe UI', Helvetica, Arial, sans-serif" text-anchor="middle" fill="#3B2416">
+    <text x="290" y="292" font-size="30" font-weight="700">faults planted</text>
+    <text x="290" y="334" font-size="26" fill="#6B5242">one requirement at a time</text>
+    <text x="820" y="292" font-size="30" font-weight="700">caught by the shipped checks</text>
+    <text x="820" y="334" font-size="26" fill="#6B5242">a partial sample by design</text>
+    <text x="1350" y="292" font-size="30" font-weight="700">caught by the band</text>
+    <text x="1350" y="334" font-size="26" fill="#6B5242">6 more change nothing observable</text>
+  </g>
+  <line x1="555" y1="90" x2="555" y2="340" stroke="#D9C9B3" stroke-width="3" stroke-dasharray="10 12" stroke-linecap="round"/>
+  <line x1="1085" y1="90" x2="1085" y2="340" stroke="#D9C9B3" stroke-width="3" stroke-dasharray="10 12" stroke-linecap="round"/>
+  <rect x="60" y="386" width="1520" height="76" rx="38" fill="#3B2416"/>
+  <text x="820" y="435" text-anchor="middle" font-family="-apple-system, 'Segoe UI', Helvetica, Arial, sans-serif" font-size="27" font-weight="700" fill="#F6EFE4">4/4 stages  ·  one dispatch  ·  six seats, two model families  ·  4 h 09 min  ·  $131 list</text>
+</svg>
