@@ -20,12 +20,12 @@
 > only the Codex seat said no; twice the customer said no to a layout the reviewer had accepted.
 
 <p align="center">
-  <a href="FACTORY.md"><b>FACTORY.md</b></a> ·
-  <a href="#the-submitted-run-at-a-glance">the run at a glance</a> ·
-  <a href="#autonomy-and-what-we-do-not-claim">autonomy and limits</a> ·
-  <a href="#evidence-index">evidence index</a> ·
-  <a href="https://felt-five-pocketful.onrender.com">live demo</a> ·
-  <a href="#meet-the-crew-seat-by-seat">the crew</a>
+  <a href="FACTORY.md"><img src="docs/readme/pill-factory.svg" height="30" alt="FACTORY.md"></a>
+  <a href="#the-submitted-run-at-a-glance"><img src="docs/readme/pill-glance.svg" height="30" alt="the run at a glance"></a>
+  <a href="#autonomy-and-what-we-do-not-claim"><img src="docs/readme/pill-autonomy.svg" height="30" alt="autonomy and limits"></a>
+  <a href="#evidence-index"><img src="docs/readme/pill-evidence.svg" height="30" alt="evidence index"></a>
+  <a href="https://felt-five-pocketful.onrender.com"><img src="docs/readme/pill-demo.svg" height="30" alt="live demo"></a>
+  <a href="#meet-the-crew-seat-by-seat"><img src="docs/readme/pill-crew.svg" height="30" alt="the crew"></a>
 </p>
 
 <p align="center"><img src="docs/readme/stitch.svg" width="860" alt=""></p>
