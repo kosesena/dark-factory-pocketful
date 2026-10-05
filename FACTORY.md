@@ -354,7 +354,9 @@ subscriptions, so this is the equivalent API cost, not an invoice. BAND's own es
 room, which also prices the Codex seat, was about 182 USD. Plan meters read before and after the
 run: Claude Max weekly 3 % to 14 % and one full five-hour window; ChatGPT Pro weekly 87 % to 65 %
 remaining. The Claude weekly figure also includes the operator's own monitoring session, so it is
-an upper bound.
+an upper bound. That session was a Claude Code session outside the room: it watched the result
+repository's Git history and the kicker and watchdog logs, and at 13:24 it replaced the kicker
+(section 8). It sent nothing to the room and committed nothing during the run.
 
 ### Outcome
 

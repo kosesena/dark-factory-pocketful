@@ -132,6 +132,10 @@ the mandates contain no personality, and the seats behave exactly as
 | `docs/experiments/` | the scripts and results behind ADR-001 and ADR-002 | operator |
 | `docs/crew/` | the mascot images on this page | operator |
 
+"Operator" is Sena Köse, working with Claude Code as a writing and tooling assistant outside the
+room. Two early commits (30 Sep) that added the first mandates and the FACTORY.md skeleton carry
+Claude's name as author. No seat of the band wrote any of the operator's files.
+
 The Git history shows the same split: each seat commits under its own name. Every commit after
 the coordinator's final report (`cd6e904`) is the operator's: one escapes a character in an audit
 record (FACTORY.md section 8), one adds `room.json`, and the rest edit documents, `docs/` and
