@@ -2,10 +2,9 @@
   <img src="docs/crew/crew-with-outsider.png" width="860" alt="The Felt Five and a golden wool-plush outsider in their workshop">
 </p>
 
-<h1 align="center">The Felt Five</h1>
+<h1 align="center"><img src="docs/readme/title.svg" width="860" alt="The Felt Five: a very dark factory that tests its own tests"></h1>
 
 <p align="center">
-  <b>a very dark factory that tests its own tests</b><br>
   WeAreDevelopers x BAND "Dark Factory" hackathon (lablab.ai) · track: pocketful · Sena Köse (solo) · stages 1–4
 </p>
 
@@ -28,9 +27,8 @@
   <a href="#meet-the-crew-seat-by-seat"><img src="docs/readme/pill-crew.svg" height="30" alt="the crew"></a>
 </p>
 
-<p align="center"><img src="docs/readme/stitch.svg" width="860" alt=""></p>
-
-## The submitted run at a glance
+<a name="the-submitted-run-at-a-glance"></a>
+<p align="center"><img src="docs/readme/h-glance.svg" width="860" alt="The submitted run at a glance"></p>
 
 | | |
 |---|---|
@@ -69,7 +67,8 @@ Shipped-check counts are from the final isolated run, `docs/evidence/isolated-st
 All 56 commits under `stage-1/` to `stage-4/` are the implementer's; each verifier commits only in
 its own folder.
 
-## Autonomy, and what we do not claim
+<a name="autonomy-and-what-we-do-not-claim"></a>
+<p align="center"><img src="docs/readme/h-autonomy.svg" width="860" alt="Autonomy, and what we do not claim"></p>
 
 One human message entered the room: the dispatch. No seat asked the human anything, and nothing
 was approved, hinted or dispatched again. Three things did happen on the host, outside the room,
@@ -96,7 +95,8 @@ We do not claim:
   saved statements over 10,000 later payments takes 5.2 to 6.7 s against a 5 s limit
   (FACTORY.md section 9).
 
-## Evidence index
+<a name="evidence-index"></a>
+<p align="center"><img src="docs/readme/h-evidence.svg" width="860" alt="Evidence index"></p>
 
 | Claim | Where | Check it |
 |---|---|---|
@@ -123,9 +123,8 @@ demo; if it looks empty, sign up and use it fresh.
 *The delivered wallet (stage 4), as the customer seat saw it at 1280 px. Every screen at desktop
 and phone width is in `customer/screens-stage4-final/`.*
 
-<p align="center"><img src="docs/readme/stitch.svg" width="860" alt=""></p>
-
-## The crew
+<a name="the-crew"></a>
+<p align="center"><img src="docs/readme/h-crew.svg" width="860" alt="The crew"></p>
 
 <p align="center">
   <img src="docs/crew/coordinator.png" height="130" alt="coordinator: blue cone with a conductor's baton">
@@ -142,7 +141,8 @@ with a monocle. The mascots are only a storytelling layer for the video and this
 the mandates contain no personality, and the seats behave exactly as
 `mandates/` and `FACTORY.md` describe. Each seat has its own card at the end of this page.
 
-## How to read this repository
+<a name="how-to-read-this-repository"></a>
+<p align="center"><img src="docs/readme/h-how.svg" width="860" alt="How to read this repository"></p>
 
 | Path | What it is | Written by |
 |---|---|---|
@@ -171,7 +171,8 @@ the coordinator's final report (`cd6e904`) is the operator's: one escapes a char
 record (FACTORY.md section 8), one adds `room.json`, and the rest edit documents, `docs/` and
 `tools/window-kicker.sh`. None touches a stage folder.
 
-## Reproduce the checks
+<a name="reproduce-the-checks"></a>
+<p align="center"><img src="docs/readme/h-reproduce.svg" width="860" alt="Reproduce the checks"></p>
 
 ```sh
 git clone <this repository> result
@@ -185,9 +186,8 @@ python3 ../result/tools/factory_numbers.py --help   # spend and time tables; nee
 The video of the room working is attached to the lablab submission. Authoritative rules:
 https://github.com/band-ai/dark-factory-wearedevs/blob/main/docs/participant-guide.md
 
-<p align="center"><img src="docs/readme/stitch.svg" width="860" alt=""></p>
-
-## Meet the crew, seat by seat
+<a name="meet-the-crew-seat-by-seat"></a>
+<p align="center"><img src="docs/readme/h-cards.svg" width="860" alt="Meet the crew, seat by seat"></p>
 
 <img src="docs/crew/coordinator.png" align="left" height="220" alt="Blue cone with a conductor's baton">
 
@@ -249,7 +249,8 @@ Runs on Claude Code with `claude-sonnet-5-5`. Uses the product through its real 
 
 <br clear="all">
 
-## And one outsider
+<a name="and-one-outsider"></a>
+<p align="center"><img src="docs/readme/h-outsider.svg" width="860" alt="And one outsider"></p>
 
 <img src="docs/crew/cross-auditor.png" align="right" height="220" alt="Golden fuzzy pebble with tiny black eyes and a teal-tinted monocle">
 
