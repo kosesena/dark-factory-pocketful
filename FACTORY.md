@@ -497,6 +497,24 @@ the dispatch. What went wrong around it, and every action the operator took outs
 
 ## 11. Reusing this factory on a different problem
 
+What we have to show that the mandates are generic:
+
+- The six files in `mandates/` name no route, field or error code of the track, and
+  `harness check` passes its mandate gate on a clean clone of this repository.
+- The same mandates built two different problems. Practice runs 1, 5 and 6 (section 8) pointed
+  the band at the unscored `toy` track, a shared counter: four seats in run 1, all six in runs 5
+  and 6. Practice runs 2 to 4 and the submitted run pointed it at this track. Between those runs
+  only the dispatch message changed problem. The mandate edits made along the way are process
+  rules (a verdict file per revision, no commits while a revision is under review, what counts
+  as evidence), and each applies to both.
+- Everything a seat knows about the problem arrives in the dispatch (section 4): the paths to the
+  specification, the run contract, and the visual brief. The run contract used to sit in the
+  mandates; it was moved out for this reason.
+
+What we do not have: a run on the other scored track. `toy` is far smaller than a scored track,
+so what it supports is that the roles and handoffs carry over, not the timings or the cost in
+section 7.
+
 1. Copy `mandates/` and this file.
 2. Rename seats and edit the `Harness:` and `Model:` lines if yours differ.
 3. Write a dispatch message (section 4) carrying your own specification.
