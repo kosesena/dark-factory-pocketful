@@ -1,9 +1,10 @@
 # The Felt Five — a very dark factory that tests its own tests
 
-> **The spec-auditor seeded 81 faults across four stages, one at a time. The shipped checks caught
-> 8; our band's own evidence caught 75** (the other 6 changed nothing observable). Six seats, two
-> model families, one dispatch, no human message after it. On five revisions three Claude
-> verifiers accepted and only the Codex seat said no.
+> **The spec-auditor seeded 81 faults across four stages, one at a time, in the requirements it
+> judged highest-risk. The shipped checks, a partial sample by design, caught 8; our band's own
+> evidence caught 75** (the other 6 changed nothing observable). Six seats, two model families,
+> one dispatch, no human message after it. On five revisions three Claude verifiers accepted and
+> only the Codex seat said no; twice the customer said no to a layout the reviewer had accepted.
 
 Entry for the WeAreDevelopers x BAND "Dark Factory" hackathon (lablab.ai).
 **Track:** pocketful. **Team:** Sena Köse (solo). **Stages delivered:** 1–4.
@@ -22,6 +23,74 @@ Entry for the WeAreDevelopers x BAND "Dark Factory" hackathon (lablab.ai).
 
 Every figure is derived, with its source, in [FACTORY.md](FACTORY.md) section 7.
 
+### Stage by stage
+
+| Stage | Closed on | Closed at | Shipped checks | Reject verdicts before close | Revisions judged | Faults seeded / caught by shipped checks / caught by the band |
+|---|---|---|---|---|---|---|
+| 1 | `999fda2` | 12:17 | 147/147 | 6 | 5 | 32 / 6 / 27 (5 equivalent) |
+| 2 | `d78f1bd` | 13:14 | 35/35 | 4 | 5 | 16 / 1 / 16 |
+| 3 | `397a149` | 15:04 | 6/6 | 4 | 5 | 18 / 1 / 18 |
+| 4 | `000d7ac` | 15:59 | 5/5 | 13 | 11 | 15 / 0 / 14 (1 equivalent) |
+
+Shipped-check counts are from the final isolated run, `docs/evidence/isolated-stage-4/report.json`.
+
+### Seat by seat
+
+| Seat | Model | Commits | Tool calls in the room | Text messages | Reject verdicts | Spend (USD, list) |
+|---|---|---|---|---|---|---|
+| implementer | claude-sonnet-5-5 | 56 | 487 | 34 | (fixes) | 37.89 |
+| reviewer | claude-opus-5-5 | 27 | 425 | 28 | 8 | 32.90 |
+| cross-auditor | gpt-6-astra | 23 | 615 | 54 | 13 | ChatGPT plan |
+| customer | claude-sonnet-5-5 | 19 | 206 | 20 | 2 | 11.82 |
+| spec-auditor | claude-opus-5-5 | 17 | 392 | 25 | 4 | 35.79 |
+| coordinator | claude-sonnet-5-5 | 2 | 251 | 187 | (routing) | 12.89 |
+
+All 56 commits under `stage-1/` to `stage-4/` are the implementer's; each verifier commits only in
+its own folder.
+
+## Autonomy, and what we do not claim
+
+One human message entered the room: the dispatch. No seat asked the human anything, and nothing
+was approved, hinted or dispatched again. Three things did happen on the host, outside the room,
+during the run; FACTORY.md section 8 lists them in full:
+
+1. At 13:24 the operator replaced the running restart script (the "window kicker") with a version
+   that ignores the Codex seat's commits.
+2. At 14:31 that script restarted all six seats, after the plan's usage limit had paused the
+   Claude seats for 57 minutes.
+3. At 14:32 the operator accepted an Xcode licence on the host so that `git` worked again.
+
+None of the three wrote to the room or to the repository.
+
+We do not claim:
+
+- a result on the hidden checks: only the shipped part of each stage's suite was run;
+- a run on the other scored track: the same mandates ran only the unscored `toy` track as a
+  second problem (FACTORY.md section 11);
+- an invoice: spend is the list-price equivalent of subscription use, and the Codex seat is not
+  priced;
+- that 8 of 81 is a fair score for the shipped checks: the auditor chose the faults, and the
+  shipped set is a partial sample by design;
+- that stage 4 is free of defects: one limitation is open, an import of about 300 older-format
+  saved statements over 10,000 later payments takes 5.2 to 6.7 s against a 5 s limit
+  (FACTORY.md section 9).
+
+## Evidence index
+
+| Claim | Where | Check it |
+|---|---|---|
+| 1 human message in 6,783 | `room.json` | `python3 -c "import json,collections;print(collections.Counter(m['senderType'] for m in json.load(open('room.json'))['messages']))"` prints Agent 6782, User 1 |
+| No human commit under a stage folder | Git history | `git log --format=%an -- stage-1 stage-2 stage-3 stage-4 \| sort \| uniq -c` prints 56 implementer |
+| 27 reject verdicts (13, 8, 4, 2) | `cross-audit/<revision>.md`, `reviewer/<revision>.md`, `audit/verdict-*`, `customer/verdict-*` | the verdict line at the top of each file |
+| 81 seeded, 8 caught by shipped checks, 75 by the band | `audit/seed-results-stage-*.json`, `ledger/stage-*-faults.md` | the "caught by" column of each row; FACTORY.md section 7 names the five result files |
+| Five revisions only the Codex seat rejected | `cross-audit/` and `reviewer/` files for `69289b3`, `0e8dea4`, `7c35a2a`, `8bbd03a`, `2bd67ec` | FACTORY.md section 6 |
+| Claimed stage 4, isolated | `docs/evidence/isolated-stage-4/report.json` | or run the command under "Reproduce the checks" |
+| Shipped checks not edited | `docs/evidence/checks.sha256` | `shasum -a 256 -c` against the kickoff package |
+| Restarts and operator tooling | `docs/evidence/window-kicker.log`, `docs/evidence/seat-watchdog.log` | FACTORY.md section 8 |
+| Mandates are generic | `mandates/` | `python -m harness check ../result --track pocketful` |
+| Spend | FACTORY.md section 7 | any row can be priced again from its token counts and `tools/prices.json` |
+
+
 **Live demo:** https://felt-five-pocketful.onrender.com — the delivered `stage-4/`, built from its own
 Dockerfile, unchanged. Sign in as `ada@demo.felt` / `felt-demo-ada` or `bob@demo.felt` /
 `felt-demo-bob` (demo data only), or create an account. State lives in memory, as the
@@ -33,7 +102,7 @@ demo; if it looks empty, sign up and use it fresh.
 *The delivered wallet (stage 4), as the customer seat saw it at 1280 px. Every screen at desktop
 and phone width is in `customer/screens-stage4-final/`.*
 
-## Meet the crew
+## The crew
 
 ![The Felt Five and a golden wool-plush outsider in their workshop](docs/crew/crew-with-outsider.png)
 
@@ -41,7 +110,48 @@ The Felt Five now welcome **one outsider**: a cross-auditor from a different mod
 The original crew keeps its stitched felt; the visitor is a soft golden wool-plush pebble
 with a monocle. The mascots are only a storytelling layer for the video and this page:
 the mandates contain no personality, and the seats behave exactly as
-`mandates/` and `FACTORY.md` describe.
+`mandates/` and `FACTORY.md` describe. Each seat has its own card at the end of this page.
+
+## How to read this repository
+
+| Path | What it is | Written by |
+|---|---|---|
+| [FACTORY.md](FACTORY.md) | how to stand the factory up, why it is built this way, measured time and cost, how it catches bad work, what failed | operator |
+| `mandates/` | one generic mandate per seat; the first lines name its harness and model | operator |
+| [docs/decisions/](docs/decisions/) | ADR-001 (keep the expensive spec-auditor), ADR-002 (a second model family) | operator |
+| `tools/` | measurement script, list prices, seat watchdog, usage-window kicker | operator |
+| `room.json` | the BAND room of the submitted run, downloaded unchanged | BAND |
+| `stage-1/` … `stage-4/` | the service, one complete copy per stage, each with `Dockerfile` and `RUN.md` | implementer |
+| `ledger/` | requirements ledgers and fault-seeding tables per stage | spec-auditor |
+| `audit/` | the auditor's verdicts, probes and seeding results | spec-auditor |
+| `reviewer/`, `verification/` | the reviewer's verdicts, reference models, probes | reviewer |
+| `customer/` | journeys and screenshots at desktop and phone width | customer |
+| `cross-audit/` | the Codex seat's atomized requirements, probes, evidence and verdicts | cross-auditor |
+| `coordinator/final-report.md` | the coordinator's closing report: accepts per stage, rejects and fixes, rulings, open limitation | coordinator |
+| `docs/evidence/` | files FACTORY.md cites from the submitted run: check fingerprints, kicker and watchdog logs, the final isolated report, the visual brief and its two images, the measurement script's output | operator, harness |
+| `docs/experiments/` | the scripts and results behind ADR-001 and ADR-002 | operator |
+| `docs/crew/` | the mascot images on this page | operator |
+
+The Git history shows the same split: each seat commits under its own name. Every commit after
+the coordinator's final report (`cd6e904`) is the operator's: one escapes a character in an audit
+record (FACTORY.md section 8), one adds `room.json`, and the rest edit documents, `docs/` and
+`tools/window-kicker.sh`. None touches a stage folder.
+
+## Reproduce the checks
+
+```sh
+git clone <this repository> result
+git clone https://github.com/band-ai/dark-factory-wearedevs && cd dark-factory-wearedevs
+python3 -m venv .venv && . .venv/bin/activate && python -m pip install -r harness/requirements.txt
+python -m harness check ../result --track pocketful
+python -m harness run --track pocketful --repo ../result --stage 4 --mode isolated --out ../checks/final
+python3 ../result/tools/factory_numbers.py --help   # spend and time tables; needs the seats' transcripts, which are not in this repository
+```
+
+The video of the room working is attached to the lablab submission. Authoritative rules:
+https://github.com/band-ai/dark-factory-wearedevs/blob/main/docs/participant-guide.md
+
+## Meet the crew, seat by seat
 
 <img src="docs/crew/coordinator.png" align="left" height="220" alt="Blue cone with a conductor's baton">
 
@@ -118,38 +228,3 @@ verifiers' findings. Fault seeding remains the spec-auditor's responsibility.
 **Never edits code or writes tests meant to make the build pass.**
 
 <br clear="all">
-
-## How to read this repository
-
-| Path | What it is | Written by |
-|---|---|---|
-| [FACTORY.md](FACTORY.md) | how to stand the factory up, why it is built this way, measured time and cost, how it catches bad work, what failed | operator |
-| `mandates/` | one generic mandate per seat; the first lines name its harness and model | operator |
-| [docs/decisions/](docs/decisions/) | ADR-001 (keep the expensive spec-auditor), ADR-002 (a second model family) | operator |
-| `tools/` | measurement script, list prices, seat watchdog, usage-window kicker | operator |
-| `room.json` | the BAND room of the submitted run, downloaded unchanged | BAND |
-| `stage-1/` … `stage-4/` | the service, one complete copy per stage, each with `Dockerfile` and `RUN.md` | implementer |
-| `ledger/` | requirements ledgers and fault-seeding tables per stage | spec-auditor |
-| `audit/` | the auditor's verdicts, probes and seeding results | spec-auditor |
-| `reviewer/`, `verification/` | the reviewer's verdicts, reference models, probes | reviewer |
-| `customer/` | journeys and screenshots at desktop and phone width | customer |
-| `cross-audit/` | the Codex seat's atomized requirements, probes, evidence and verdicts | cross-auditor |
-| `coordinator/final-report.md` | the coordinator's closing report: accepts per stage, rejects and fixes, rulings, open limitation | coordinator |
-| `docs/crew/` | the mascot images on this page | operator |
-
-The Git history shows the same split: each seat commits under its own name. Two commits after
-the run are the operator's and are explained in FACTORY.md section 8.
-
-## Reproduce the checks
-
-```sh
-git clone <this repository> result
-git clone https://github.com/band-ai/dark-factory-wearedevs && cd dark-factory-wearedevs
-python3 -m venv .venv && . .venv/bin/activate && python -m pip install -r harness/requirements.txt
-python -m harness check ../result --track pocketful
-python -m harness run --track pocketful --repo ../result --stage 4 --mode isolated --out ../checks/final
-python3 ../result/tools/factory_numbers.py --help   # the spend, time and verdict tables
-```
-
-The video of the room working is attached to the lablab submission. Authoritative rules:
-https://github.com/band-ai/dark-factory-wearedevs/blob/main/docs/participant-guide.md

@@ -1,0 +1,42 @@
+{
+ "verdict": "REJECT",
+ "lone_surrogate_found": false,
+ "gaps_cited": 0,
+ "cost_usd": 2.3217950000000007,
+ "turns": 24,
+ "seconds": 556,
+ "usage": {
+  "input_tokens": 48,
+  "cache_creation_input_tokens": 112118,
+  "cache_read_input_tokens": 2378895,
+  "output_tokens": 47444,
+  "output_tokens_details": {
+   "thinking_tokens": 9132
+  },
+  "server_tool_use": {
+   "web_search_requests": 0,
+   "web_fetch_requests": 0
+  },
+  "service_tier": "standard",
+  "cache_creation": {
+   "ephemeral_1h_input_tokens": 112118,
+   "ephemeral_5m_input_tokens": 0
+  },
+  "inference_geo": "not_available",
+  "iterations": [
+   {
+    "input_tokens": 2,
+    "output_tokens": 1175,
+    "cache_read_input_tokens": 134334,
+    "cache_creation_input_tokens": 226,
+    "cache_creation": {
+     "ephemeral_5m_input_tokens": 0,
+     "ephemeral_1h_input_tokens": 226
+    },
+    "type": "message"
+   }
+  ],
+  "speed": "standard",
+  "fallback_credit": null
+ }
+}

@@ -1,14 +1,19 @@
 # FACTORY.md
 
 > **In the submitted run the spec-auditor seeded 81 faults, one at a time, across the four
-> stages. The shipped checks caught 8 of them; the band's own evidence caught 75.** The other 6
-> changed no observable behaviour. On five revisions, three Claude verifiers accepted and only the
-> Codex cross-auditor rejected (section 6). The factory is built to measure whether its evidence
-> works, not only whether the checks are green.
+> stages, in the requirements it judged highest-risk. The shipped checks, a partial sample by
+> design, caught 8 of them; the band's own evidence caught 75.** The other 6 changed no observable
+> behaviour. On five revisions, three Claude verifiers accepted and only the Codex cross-auditor
+> rejected; twice the customer rejected a layout the reviewer had accepted (section 6). The
+> factory is built to measure whether its evidence works, not only whether the checks are green.
 
 How to stand up this factory, why it is built this way, what it cost, and how it catches bad
 work. Figures in sections 6 and 7 come from the submitted run (4 Oct 2026, one dispatch, all four
-stages); nothing here is estimated, and `tools/factory_numbers.py` regenerates them.
+stages). Counts of verdicts, commits, messages and seeded faults can be checked against this
+repository (the README's evidence index gives the commands). Spend and token counts were read
+from the seats' transcripts by `tools/factory_numbers.py`; the transcripts are not in this
+repository, so those rows can be priced again from `tools/prices.json` but not regenerated from a
+clone. Files this document cites from outside the seats' folders are in `docs/evidence/`.
 
 ## 1. Overview
 
@@ -32,7 +37,8 @@ seeing the others' work. The human's dispatch message is the only human input pe
 
 The mandates in `mandates/` contain no problem-specific detail. Point the same six files at
 a different specification and the factory runs unchanged; the specification travels in the
-dispatch message and in every handoff.
+dispatch message and in every handoff. What we have to show for that, and what we do not, is in
+section 11.
 
 ## 2. Seats
 
@@ -87,13 +93,15 @@ ChatGPT desktop app; BAND needs Codex 0.146.0 or newer).
    API key).
 3. **Restart after any CLI change:** `band restart --as <owner>/<seat>`. A pending message is
    redelivered to the restarted seat, so work resumes where it stopped.
-4. **Dispatch** from BAND Desktop: Home, Assign work, pick `coordinator`, paste the dispatch
-   message (section 4). The coordinator adds the other seats to the room itself.
+4. **Dispatch** from BAND Desktop: open a new room with all six seats in it, tag `coordinator`
+   and paste the dispatch message (section 4). In the submitted run the six seats joined the room
+   at 10:50 and the dispatch followed at 10:53.
 5. **Start the seat watchdog** just before dispatching, in a terminal that stays open:
    `tools/seat-watchdog.sh <owner> 60 seat-watchdog.log`. Every minute it reads `band status`
    for each seat and restarts any room session whose runtime has disconnected; BAND then
    redelivers the pending message. It never writes to the room or the repository, so it adds
-   no human input. Its log is kept with the run.
+   no human input. The submitted run's log is `docs/evidence/seat-watchdog.log` (started, never
+   needed), and the kicker's is `docs/evidence/window-kicker.log`.
    If the run may outlast the plan's usage window, also start the window kicker:
    `tools/window-kicker.sh <owner> <HH:MM of the reset> <result-repo> 20 window-kicker.log`. One
    minute after the reset it checks the history; if no Claude seat has committed in 20 minutes it
@@ -102,7 +110,8 @@ ChatGPT desktop app; BAND needs Codex 0.146.0 or newer).
    while the Claude seats wait. Like the watchdog, it never writes to the room or the repository.
 6. **Fingerprint the shipped checks** before dispatch, so anyone can confirm they were not
    edited during the run: `find <kickoff>/<track>/test -type f -name '*.py' | sort | xargs shasum -a 256 > checks.sha256`,
-   then `shasum -a 256 -c checks.sha256` after the final report. Both results go in section 7.
+   then `shasum -a 256 -c checks.sha256` after the final report. Both results go in section 7; the
+   submitted run's file is `docs/evidence/checks.sha256`.
 7. **Record the room**: room menu, Open in Band, then in the console scroll the session up to its
    first message before choosing Download full session, and save as `room.json`. The console
    loads messages as you scroll: in the submitted run the first download held only the last 1,700
@@ -111,10 +120,13 @@ ChatGPT desktop app; BAND needs Codex 0.146.0 or newer).
 8. **Measure**: `tools/factory_numbers.py --transcripts <claude-projects-dir-for-the-workspace>
    --repo <result-repo> --since <dispatch-time> --room room.json --prices tools/prices.json --workspace <band working directory>`
    prints the spend, time and verdict tables used in section 7 from the seats' transcripts, the
-   git history, the Codex seat's session logs and the room export, so every figure can be regenerated. Cost is at Anthropic's
+   git history, the Codex seat's session logs and the room export (the submitted run's output is `docs/evidence/factory-numbers.txt`). Cost is at Anthropic's
    public API list prices (`tools/prices.json`; the seats run on a subscription, so this is the
    equivalent API cost, not an invoice). It also lists every ACCEPT and REJECT with its
-   time, revision and `room.json` message id; claims in sections 6 and 7 cite those ids.
+   time, revision and `room.json` message id; claims in sections 6 and 7 cite those ids. That
+   list counts verdict messages in the room, which is not the same as the verdict files the seats
+   committed: a seat may restate a verdict, and the coordinator relays some. The reject counts in
+   this document are from the committed verdict files.
 
 ## 4. The dispatch message
 
@@ -127,8 +139,9 @@ contains no
 opinions about how to build, and nothing else is sent until the stage report arrives.
 
 For a stage with a visual interface the dispatch may also carry a short written visual direction
-(character, palette, type and layout principles, no code) and one mood image of materials and
-colours (no screens or layouts). In the submitted run it did; every screen, component and line of
+(character, palette, type and layout principles, no code) and images of materials and colours
+(no screens or layouts). In the submitted run it did: the brief and its two images, a mood image
+and a palette swatch, are in `docs/evidence/visual-brief/`. Every screen, component and line of
 code was still designed and written by the band, and the room log shows it.
 
 The submitted run's dispatch (3,579 characters, `room.json` message at 07:53:48 UTC, the only
@@ -177,6 +190,17 @@ your instructions ask for.
 
 ## 5. Design choices and why
 
+What the main choices cost in the submitted run:
+
+| Choice | Cost |
+|---|---|
+| A separate spec-auditor on Opus | 35.79 USD, 27 % of the Claude seats' spend |
+| A cross-auditor on a second model family | a second subscription and harness; 22 points of the ChatGPT plan's weekly allowance; 13 of the run's 27 reject verdicts, each a further round |
+| Four accepts on the same revision | stage 4 took 11 revisions and 13 rejects over 3 h 18 min |
+| The specification pasted into every handoff | the coordinator wrote 1.74 million characters of room text, against 35,000 to 79,000 for each other seat, and cost 12.89 USD |
+| Pipelined stages | a late finding in one stage is fixed in every later stage folder too |
+| Seats on plan subscriptions | 57 minutes of wall clock lost to the usage window |
+
 | Choice | Reason |
 |---|---|
 | Self-contained handoffs, specification pasted every time | A seat sees only messages addressed to it; pointers to earlier messages fail silently |
@@ -195,7 +219,8 @@ your instructions ask for.
 | Every report is a new top-level message tagged with its recipients, checked after sending | A seat wakes only when a message addressed to it arrives; a lost or threaded report stops the run silently |
 | No seat ends a turn with a background job still running | A job left running when the turn ends can be stopped with its results unreported |
 | Stages are pipelined: the next one starts once reviewer and customer accept, while the auditor finishes | The auditor's fault seeding was the slowest step of practice run 3; the implementer no longer waits for it, and a late finding is fixed in both stage folders |
-| Fault seeding is capped at 12–15 faults per stage, full set once, fix-scoped afterwards | Enough faults to compare the band's evidence with the shipped checks, without a 25-minute walk on every revision |
+| Fault seeding is capped at 12–15 faults per stage, full set once, fix-scoped afterwards | Enough faults to compare the band's evidence with the shipped checks, without a 25-minute walk on every revision. Stage 1 ended at 32 because each fix-scoped round added faults in the code the fix changed (15 on the first revision, then 24, 30 and 32) |
+| The spec-auditor is the only seat that reads the shipped check sources | It lists what they do not exercise. Its mandate forbids telling the implementer how the checks work; the implementer and the cross-auditor never open them |
 | The auditor reports a blocking gap the moment it finds one | The implementer can fix while fault seeding continues, instead of waiting for the full report |
 | The coordinator treats committed report files as verdicts | A report that reached the repository but not the room still moves the stage forward |
 | A watchdog restarts disconnected seats | A crashed runtime cannot report or wake; restarting it redelivers its pending message |
@@ -206,9 +231,21 @@ your instructions ask for.
 | The customer judges each screen as a whole, not only rule by rule | In practice run 4 every measured rule passed while the desktop layout left a large empty column |
 | The dispatch stays under about 3,500 characters; a visual direction travels as a file path | BAND turns a longer paste into an attachment instead of a message |
 | Opus for reviewer and auditor, Sonnet for coordinator, implementer and customer | The auditor is the most expensive seat (48 % of practice run 3's spend) and the only one that caught what the reviewer accepted; the trade-off, the rejected options and what we do not know are in [ADR-001](docs/decisions/ADR-001-keep-the-spec-auditor.md). In the submitted run the auditor was 27 % of the Claude seats' spend (35.79 of 131.29 USD) and ran the fault seeding behind the headline numbers |
-| A kicker restarts the seats after the plan's usage window resets | In the submitted run every Claude seat hit the session limit at 13:32–13:34 with stages 3 and 4 open; the kicker woke them at 14:31 and the run closed without a human message |
+| A kicker restarts the seats after the plan's usage window resets | In the submitted run the Claude seats stopped at the session limit at 13:32–13:34 with stages 3 and 4 open; the kicker woke them at 14:31 and the run closed without a human message |
 
 ## 6. Catching and recovering from bad work
+
+One defect, start to finish (submitted run, stage 1; the full timeline is below). At 11:00
+revision `69289b3` passed the shipped stage-1 checks, and by 11:25 the customer, the reviewer and
+the spec-auditor had accepted it. At 11:21 the cross-auditor rejected it [`8744646d`] with 529
+assertions of its own, 21 of them failed: among others, a fractional amount such as
+`1.0000000000000001` was rounded to 1 and moved money. The implementer fixed case by case, and
+the cross-auditor rejected two more revisions (`145b98e`, `0e8dea4`), the last for a hand-edited
+import that let a paid request be paid twice [`2fbfbb49`]. At 11:56 the implementer replaced the
+case-by-case fixes with one state checker shared by reset and import. By 12:17 all four verifiers
+had accepted `999fda2`. Before: three accepts and green shipped checks on code that moved money
+on a malformed amount. After: one validator, and all 27 behaviour-changing faults seeded on that
+revision caught.
 
 | Failure | Caught by | Recovery |
 |---|---|---|
@@ -245,12 +282,12 @@ Times are local (UTC+3); ids in brackets are `room.json` message ids, other hash
 
 Three Claude verifiers accepted `69289b3` and `0e8dea4`; the Codex seat alone rejected both. The
 same pattern repeated on `7c35a2a` (stage 3), `8bbd03a` and `2bd67ec` (stage 4): five revisions in
-all. The Claude verifiers in turn caught what the Codex seat accepted: the customer rejected
-`94e856c` for a desktop layout with a large empty column, after the cross-auditor had accepted it
-[`d38303fb`].
+all. The Claude verifiers in turn caught what others accepted: in stage 2 the customer rejected
+`9992acd` for a desktop layout with a large empty column, and then `94e856c` for a button label
+crowding the edge of its pill. The reviewer had accepted both, and the cross-auditor went on to
+accept `94e856c` [`d38303fb`] after the customer's reject [`960f2442`].
 
-Earlier example from practice run 2 (`pocketful` stage 1, 30 Sep 2026; the submitted run will add its
-own). The first revision passed all 147 shipped checks. The auditor had split the specification
+An earlier example, from practice run 2 (`pocketful` stage 1, 30 Sep 2026). The first revision passed all 147 shipped checks. The auditor had split the specification
 into 37 numbered requirements and walked the code against them; three reject rounds followed:
 
 | Time | What happened |
@@ -272,17 +309,19 @@ four stages, coordinator's final report at 16:00 (`coordinator/final-report.md`)
 
 ### Time
 
-| Stage | First stage commit | Closed (fourth accept) | Wall clock | Reject verdicts | Revisions judged |
+| Stage | First stage commit | Closed (fourth accept) | Wall clock from first stage commit | Reject verdicts | Revisions judged |
 |---|---|---|---|---|---|
-| 1 | 10:57 | 12:17 (`999fda2`) | 1 h 23 min from dispatch | 6 | 5 |
+| 1 | 10:57 | 12:17 (`999fda2`) | 1 h 20 min (1 h 23 min from dispatch) | 6 | 5 |
 | 2 | 11:11 | 13:14 (`d78f1bd`) | 2 h 03 min | 4 | 5 |
 | 3 | 12:21 | 15:04 (`397a149`) | 2 h 43 min, of which 57 min paused | 4 | 5 |
 | 4 | 12:41 | 15:59 (`000d7ac`) | 3 h 18 min, of which 57 min paused | 13 | 11 |
 | **Run** | | | **5 h 06 min to the final report, of which 57 min paused: about 4 h 09 min working** | **27** | |
 
-Stages overlap because they are pipelined. The pause: every Claude seat hit the plan's session
-limit between 13:32 and 13:34 (`room.json` error messages); the window kicker restarted them at
-14:31, and the next verdict was committed at 14:34. Reject verdicts are counted from the verdict
+Stages overlap because they are pipelined. The pause: four of the five Claude seats logged the
+plan's session-limit error between 13:32 and 13:34 (coordinator, implementer, customer and
+spec-auditor; `room.json` error messages). The reviewer logged none; its last commit before the
+pause was at 13:32. The window kicker restarted all six seats at 14:31, and the next verdict was
+committed at 14:34. Reject verdicts are counted from the verdict
 files the seats committed (one file per seat per revision); "revisions judged" counts distinct
 revisions with at least one verdict file.
 
@@ -308,7 +347,8 @@ revisions with at least one verdict file.
 | cross-auditor | gpt-6-astra | 1,298,238 | 233,098 | – | 46,662,400 | ChatGPT plan, no list price applied |
 
 Source: the seats' Claude Code transcripts and the Codex seat's session logs, read by
-`tools/factory_numbers.py` for the window from dispatch to 16:02, priced with
+`tools/factory_numbers.py` for the window from dispatch to 16:02 (its output is
+`docs/evidence/factory-numbers.txt`; the transcripts themselves are not in this repository), priced with
 `tools/prices.json` (Anthropic API list prices, cache writes at the 1-hour rate). The seats ran on
 subscriptions, so this is the equivalent API cost, not an invoice. BAND's own estimate for the
 room, which also prices the Codex seat, was about 182 USD. Plan meters read before and after the
@@ -320,10 +360,10 @@ an upper bound.
 
 | Check | Result |
 |---|---|
-| Isolated harness, `--stage 4 --mode isolated`, on the final repository | stages 1–4 pass, including each upgrade from the previous stage; **claimed stage: 4** on the shipped checks |
-| Shipped checks unchanged during the run | `shasum -a 256 -c` on the 11 check files: 11 OK |
+| Isolated harness, `--stage 4 --mode isolated`, on the final repository | stages 1–4 pass, including each upgrade from the previous stage; **claimed stage: 4** on the shipped checks, 147/147, 35/35, 6/6 and 5/5 (`docs/evidence/isolated-stage-4/report.json`) |
+| Shipped checks unchanged during the run | `shasum -a 256 -c` on the 11 check files: 11 OK (`docs/evidence/checks.sha256`) |
 | Human messages in the room | 1, the dispatch |
-| Seat restarts | watchdog: none needed; window kicker: one, all six seats, at 14:31 |
+| Seat restarts | watchdog: none needed; window kicker: one, all six seats, at 14:31 (`docs/evidence/window-kicker.log`) |
 
 Fault seeding on the full set of each stage (one fault per throwaway copy; "caught" means a check
 that passes on the unmodified copy fails):
@@ -336,9 +376,13 @@ that passes on the unmodified copy fails):
 | 4 | `8bbd03a` | 15 | 0 | 14 | 1 |
 | **All** | | **81** | **8** | **75** | **6** |
 
-No seeded fault that changed behaviour survived the band's evidence. Results are in
-`audit/seed-results-stage-*.json` and `ledger/stage-*-faults.md`; later fix-scoped seedings on
-revisions after these are in the same folder.
+In these full-set seedings no fault that changed behaviour survived the band's evidence. Results
+are in `audit/seed-results-stage-*.json` and `ledger/stage-*-faults.md`; later fix-scoped seedings
+on revisions after these are in the same folder. In one of those, on stage 4, two faults (M01 and
+M03 in `ledger/stage-4-faults.md`) were caught at first only by a probe the spec-auditor added
+during the walk; the implementer then added tests that catch both. The auditor chooses the
+faults and writes some of the probes, so this table compares two bodies of evidence on the
+auditor's own sample; it is not a score of the shipped checks.
 
 ## 8. What we tried that failed
 
@@ -427,8 +471,9 @@ correct code because it counted only the implementer's tests as evidence.
 The submitted run (all four stages, six seats, 4 Oct 2026) closed without a human message after
 the dispatch. What went wrong around it, and every action the operator took outside the room:
 
-- **The plan's usage limit stopped the band.** All five Claude seats hit the session limit at
-  13:32–13:34, with stages 3 and 4 open; the Codex seat, on a separate plan, kept working. The
+- **The plan's usage limit stopped the band.** The Claude seats stopped at the session limit at
+  13:32–13:34, with stages 3 and 4 open (four of the five logged the error in the room; the
+  reviewer logged none); the Codex seat, on a separate plan, kept working. The
   window kicker had been started before the dispatch for this case.
 - **The kicker would not have fired.** It woke the seats only if nothing had been committed in the
   last 20 minutes, and the Codex seat could still commit. At 13:24, before the limit, the operator
@@ -439,6 +484,9 @@ the dispatch. What went wrong around it, and every action the operator took outs
   with it (it read the last commit as missing, which happened to give the right decision). The
   operator ran `sudo xcodebuild -license accept` at 14:32; the first commit after the pause came at
   14:34. Nothing was sent to the room.
+- **The Codex seat's safety filter ended three of its turns.** At 13:08, 13:31 and 14:44 a
+  cross-auditor turn stopped with "flagged for possible cybersecurity risk" (`room.json` error
+  messages). Nobody intervened; the seat posted its later verdicts in the turns that followed.
 - **The laptop was on battery** at 20 % around 13:00 and was plugged in; a sleeping host would
   have stopped every seat.
 - **The screen recording is in two files** (10:50–13:34 and 14:31–16:02); the room was idle
@@ -477,6 +525,9 @@ the dispatch. What went wrong around it, and every action the operator took outs
   report for the human to review (which earlier states an older-format statement may match on
   import, and judging a revision on its net diff). The verifiers then applied them; a different
   reading by the hidden checks would not be caught.
+- The coordinator's final report is thinner for stages 1 and 2 than its mandate asks: it took
+  their accepts from the commit log and did not read those verdict files again, and its table of
+  rejects and fixes covers stages 3 and 4 only. The verdict files themselves are complete.
 - The run depends on the plan's usage window. A limit stops the Claude seats mid-stage; the kicker
   resumes them, but the wall clock grows by the wait.
 - The kicker restarts every bound session, including seats that had nothing pending; BAND's

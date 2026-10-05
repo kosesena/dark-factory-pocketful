@@ -1,0 +1,15 @@
+{
+ "verdict": "REJECT",
+ "lone_surrogate_found": false,
+ "gaps_cited": 1,
+ "cost_usd": null,
+ "turns": 1,
+ "seconds": 1468,
+ "usage": {
+  "input_tokens": 1592214,
+  "cached_input_tokens": 1503488,
+  "cache_write_input_tokens": 0,
+  "output_tokens": 34601,
+  "reasoning_output_tokens": 3885
+ }
+}

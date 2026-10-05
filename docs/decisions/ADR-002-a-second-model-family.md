@@ -18,7 +18,7 @@ the customer both accepted revision `1a0af59`, which hid a defect only the audit
 
 Same mandate (`mandates/spec-auditor.md`), same task, same revision (`1a0af59`, practice run 3,
 stage 1), fault seeding switched off, run headless outside the room. Script:
-`band-work/experiments/verifier_arms.sh`, claims checked by `verify_codex_claims.py`.
+`docs/experiments/verifier_arms.sh`, claims checked by `verify_codex_claims.py`.
 
 | | Opus spec-auditor (practice run 3) | Codex (gpt-6-astra, effort high) |
 |---|---|---|

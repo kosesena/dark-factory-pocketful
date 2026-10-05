@@ -1,0 +1,93 @@
+### Model spend
+
+| Seat | Model | Input | Output | Cache write | Cache read | Cost (USD, list) |
+|---|---|---|---|---|---|---|
+| coordinator | <synthetic>, claude-sonnet-5-5 | 654 | 154,994 | 444,187 | 47,813,881 | 12.89 |
+| implementer | <synthetic>, claude-sonnet-5-5 | 836 | 511,375 | 1,056,390 | 142,757,336 | 37.89 |
+| reviewer | claude-opus-5-5 | 694 | 379,594 | 891,757 | 90,851,348 | 32.90 |
+| spec-auditor | <synthetic>, claude-opus-5-5 | 718 | 375,155 | 950,425 | 103,391,076 | 35.79 |
+| customer | <synthetic>, claude-sonnet-5-5 | 398 | 224,099 | 584,655 | 36,190,642 | 11.82 |
+| **Total (Claude seats)** | | 3,300 | 1,645,217 | 3,927,414 | 421,004,283 | 131.29 |
+| cross-auditor | gpt-6-astra | 1,298,238 | 233,098 | - | 46,662,400 | (ChatGPT plan, no list price) |
+
+### Time
+
+| Stage | First commit | Last commit | Span |
+|---|---|---|---|
+| 1 | 10:57 | 12:01 | 1:03:07 |
+| 2 | 11:11 | 12:14 | 1:02:35 |
+| 3 | 12:21 | 14:42 | 2:21:08 |
+| 4 | 12:41 | 15:42 | 3:00:55 |
+
+Commits by author since dispatch: implementer 56, reviewer 27, cross-auditor 23, customer 19, spec-auditor 17, coordinator 2, Sena 2
+
+Dispatch: 2026-10-04T07:53:48.151Z (human messages in the room: 1)
+
+| Seat | ACCEPT | REJECT |
+|---|---|---|
+| coordinator | 0 | 7 |
+| implementer | 0 | 0 |
+| reviewer | 14 | 4 |
+| spec-auditor | 0 | 0 |
+| customer | 12 | 2 |
+| cross-auditor | 5 | 11 |
+
+### Verdict log (cite these room.json message ids in FACTORY.md)
+
+| Time (UTC) | Seat | Verdict | Revision | room.json message id |
+|---|---|---|---|---|
+| 2026-10-04 08:05:51 | customer | ACCEPT | `69289b356a` | `2bb07019-0ffb-42bf-a038-c70ff77e9982` |
+| 2026-10-04 08:09:29 | reviewer | ACCEPT | `69289b356a` | `a347a36e-ce9a-441b-9306-27445c9b11be` |
+| 2026-10-04 08:21:55 | cross-auditor | REJECT | `69289b356a` | `8744646d-431f-4ca7-b706-cdac3b7f1d0f` |
+| 2026-10-04 08:31:21 | reviewer | REJECT | `41a37ee50c` | `650cff19-b8dc-44ca-bd4d-f8fcbca619fc` |
+| 2026-10-04 08:34:39 | customer | ACCEPT | `145b98e848` | `d614f994-65d3-4185-a662-64f1dfe7b6b9` |
+| 2026-10-04 08:35:24 | reviewer | REJECT | `145b98e848` | `8b65d73c-c7fb-424d-8121-1908b595b97a` |
+| 2026-10-04 08:38:19 | cross-auditor | REJECT | `145b98e848` | `f364c7a9-de93-4e22-bc91-7a34fcdaca9d` |
+| 2026-10-04 08:40:13 | reviewer | REJECT | `21cd85aa52` | `137b4be0-2ac3-48b7-bbb0-cfa93ded8d13` |
+| 2026-10-04 08:49:49 | customer | ACCEPT | `0e8dea4bc0` | `5ef8fd84-298a-424e-8d48-420ab87e4d65` |
+| 2026-10-04 08:50:06 | reviewer | ACCEPT | `0e8dea4bc0` | `1106c397-7a9c-46d9-80a0-3505b652c0d9` |
+| 2026-10-04 08:54:14 | cross-auditor | REJECT | `0e8dea4bc0` | `2fbfbb49-b533-4e0a-8e23-4c0449bb1d4b` |
+| 2026-10-04 08:54:41 | reviewer | ACCEPT | `9992acd32b` | `b03c73f7-13b1-4375-bb40-7e8504103591` |
+| 2026-10-04 08:58:37 | customer | REJECT | `9992acd32b` | `40dc654d-f227-44f6-b00e-c6e8c97f8917` |
+| 2026-10-04 09:10:05 | cross-auditor | ACCEPT | `999fda2515` | `94e8164a-6d58-49bf-8db7-aeb2a223ab8e` |
+| 2026-10-04 09:11:17 | reviewer | ACCEPT | `999fda2515` | `1ed17a14-d271-4c75-8e88-0a5bf7c8342d` |
+| 2026-10-04 09:11:18 | reviewer | ACCEPT | `94e856c73f` | `866479f4-0944-43b4-8330-0e455613940c` |
+| 2026-10-04 09:13:08 | customer | ACCEPT | `999fda2515` | `f1b29ea1-6657-4809-b23c-96f3467df82f` |
+| 2026-10-04 09:13:09 | customer | REJECT | `94e856c73f` | `960f2442-7040-4667-a305-d31e725590c9` |
+| 2026-10-04 09:18:42 | reviewer | ACCEPT | `d78f1bdaaf` | `604dfd82-7210-427e-b948-64ca83f7b5ad` |
+| 2026-10-04 09:19:50 | customer | ACCEPT | `d78f1bdaaf` | `a6403446-f34d-4894-b0ae-5a5110ba69c4` |
+| 2026-10-04 09:25:17 | cross-auditor | ACCEPT | `94e856c73f` | `d38303fb-1e9f-45f5-a08a-2ac03176c96f` |
+| 2026-10-04 09:32:48 | cross-auditor | ACCEPT | `d78f1bdaaf` | `033c5505-7ad0-47c4-a999-528a62efbbd7` |
+| 2026-10-04 09:36:31 | reviewer | ACCEPT | `57e724b30c` | `dac00cad-b089-4099-acaa-bcedebc9e910` |
+| 2026-10-04 09:39:47 | customer | ACCEPT | `57e724b30c` | `9a195d2f-354e-4ba7-9ac4-efee537701c4` |
+| 2026-10-04 09:48:12 | cross-auditor | REJECT | `57e724b30c` | `38eeeaa0-9147-44a7-9bcf-9dc306ef4883` |
+| 2026-10-04 10:00:46 | cross-auditor | REJECT | `495d5d65ce` | `6f6f3bf5-ab7b-4385-8213-5be5427cc89c` |
+| 2026-10-04 10:02:01 | reviewer | ACCEPT | `495d5d65ce` | `ae7c7774-489a-4215-8fd6-192fb03b68ac` |
+| 2026-10-04 10:02:02 | reviewer | REJECT | `ddc68958cf` | `ec7daee4-5a8b-4fb3-a57d-4f7c93adc4a9` |
+| 2026-10-04 10:07:37 | customer | ACCEPT | `495d5d65ce` | `a3635aab-b02e-4eed-8891-747704dd0b1f` |
+| 2026-10-04 10:07:38 | customer | ACCEPT | `ddc68958cf` | `c79b293f-39f0-4160-9e93-e84a6261a8b4` |
+| 2026-10-04 10:11:11 | cross-auditor | REJECT | `ddc68958cf` | `32cc35e9-e92c-460e-bdf7-c012a9e63d8e` |
+| 2026-10-04 10:15:03 | reviewer | ACCEPT | `65dd709494` | `42213a2e-2cf1-466e-89d0-53f21ce8fa8d` |
+| 2026-10-04 10:15:04 | reviewer | ACCEPT | `5d3739ab81` | `6845e9a4-9f44-4526-af61-a8c30c3383eb` |
+| 2026-10-04 10:15:05 | reviewer | ACCEPT | `c5eb4600e0` | `7242ede8-6023-4dc6-bdf6-a3f382c2f4f3` |
+| 2026-10-04 10:17:51 | reviewer | ACCEPT | `bb27997376` | `3175b5fc-ff38-43c5-bff7-677a79cfad85` |
+| 2026-10-04 10:18:16 | cross-auditor | REJECT | `65dd709494` | `b8688874-84ff-4725-9e5c-8180bfccb3d0` |
+| 2026-10-04 10:20:25 | customer | ACCEPT | `bb27997376` | `796584f2-36fe-4aa4-b316-04c3ec4dd582` |
+| 2026-10-04 10:20:26 | customer | ACCEPT | `65dd709494` | `6430c55f-fa77-4d3b-bb10-6df0c5cdc3f4` |
+| 2026-10-04 10:21:46 | cross-auditor | REJECT | `bb27997376` | `06f6a4bd-0787-4f78-8d8c-e18b6c430136` |
+| 2026-10-04 10:32:48 | reviewer | ACCEPT | `7c35a2aa13` | `d72582b5-60bc-4e46-8016-86e5da87f854` |
+| 2026-10-04 10:32:49 | reviewer | ACCEPT | `8bbd03a5d3` | `25d3109a-14a1-4a44-89f3-a6f5f9bf8560` |
+| 2026-10-04 11:35:30 | coordinator | REJECT | `8bbd03a5d3` | `df0bd89d-d71d-4aa7-a313-c45861641fe9` |
+| 2026-10-04 11:37:02 | customer | ACCEPT | `7c35a2aa13` | `539786b1-f48f-42c9-a89b-567df9406010` |
+| 2026-10-04 11:37:03 | customer | ACCEPT | `8bbd03a5d3` | `cc116f96-898c-4b4a-a1f4-56f989272f82` |
+| 2026-10-04 11:37:30 | cross-auditor | REJECT | `7c35a2aa13` | `c16d2adc-6420-46ea-a5fa-ec9fd1329e9b` |
+| 2026-10-04 11:50:14 | coordinator | REJECT | `b6afe751c3` | `f4bda5a4-2bf0-47cf-8bca-b5ace07d6c47` |
+| 2026-10-04 11:57:18 | coordinator | REJECT | `d9736e7ab7` | `0b04bba9-0b8e-4fba-9df2-16007d75afc2` |
+| 2026-10-04 12:02:25 | coordinator | REJECT | `2bd67ec91e` | `2d1062a9-71f1-4b42-a58c-3037b0381b05` |
+| 2026-10-04 12:05:48 | cross-auditor | ACCEPT | `397a14947d` | `a691ba10-36fd-437c-8ce5-052fab126728` |
+| 2026-10-04 12:15:11 | coordinator | REJECT | `6487f2a64f` | `ff3bb504-23d1-4e35-a0a8-8b45b99e2d8a` |
+| 2026-10-04 12:20:43 | cross-auditor | REJECT | `6487f2a64f` | `a511026d-31c7-4b81-9803-a5c553ede1dc` |
+| 2026-10-04 12:33:58 | coordinator | REJECT | `0f56cc2926` | `3f36a805-5982-4a91-85f5-33b42102039c` |
+| 2026-10-04 12:37:52 | coordinator | REJECT | `0f56cc2926` | `ad6626b7-35e7-42d4-ab76-35a6a0a06136` |
+| 2026-10-04 12:42:18 | cross-auditor | REJECT | `0f56cc2926` | `57bb89ba-a83a-4b8a-9a96-5a217882d93e` |
+| 2026-10-04 12:51:12 | cross-auditor | ACCEPT | `000d7acadb` | `3fa9e889-f0fe-4835-8c68-5e6e6011b6b0` |

@@ -47,7 +47,7 @@ the shipped checks, two of them found by the auditor after the reviewer had acce
 
 What the rest of the band catches without the auditor was measured afterwards, by running the
 reviewer's own scripts (model check, edge probes) against the same 37 broken copies
-(`band-work/experiments/reviewer_vs_faults.py`, no model calls):
+(`docs/experiments/reviewer_vs_faults.py`, no model calls):
 
 | Evidence against the 37 seeded faults | Caught |
 |---|---|
@@ -68,7 +68,7 @@ can still fail the hidden part. The auditor is the seat that looks at that hidde
 ## The options, measured
 
 Same task for each arm: verify revision `1a0af59` against the stage-1 specification, fault
-seeding off, run headless with the factory's own mandate text (`band-work/experiments/
+seeding off, run headless with the factory's own mandate text (`docs/experiments/
 verifier_arms.sh`). Costs at list price from each run's own usage.
 
 | Arm | Finds G-35 | Other findings | Time | Cost |
@@ -82,7 +82,7 @@ One run per arm, so these are signs, not rates.
 
 The evidence itself was then measured: each model, given the same mandate, wrote one probe suite
 from the specification for the accepted revision `ba26a06`, and each suite was run against the
-same 37 seeded faults (`band-work/experiments/seeding_arms.sh`, `score_probes.py`):
+same 37 seeded faults (`docs/experiments/seeding_arms.sh`, `score_probes.py`):
 
 | Probe suite written by | Faults caught (of 37) | Time | Cost |
 |---|---|---|---|

@@ -1,0 +1,3 @@
+opus-auditor {"verdict": "REJECT", "lone_surrogate_found": true, "gaps_cited": 0, "cost_usd": 1.3868934, "turns": 17, "seconds": 234}
+sonnet-auditor {"verdict": "REJECT", "lone_surrogate_found": true, "gaps_cited": 0, "cost_usd": 0.45680299999999996, "turns": 8, "seconds": 123}
+opus-combined {"verdict": "REJECT", "lone_surrogate_found": false, "gaps_cited": 0, "cost_usd": 2.3217950000000007, "turns": 24, "seconds": 556}
