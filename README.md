@@ -1,5 +1,5 @@
 <p align="center">
-  <img src="docs/crew/crew-with-outsider.png" width="860" alt="The Felt Five and a golden wool-plush outsider in their workshop">
+  <img src="docs/readme/crew-hero.jpg" width="860" alt="The Felt Five and a golden wool-plush outsider in their workshop">
 </p>
 
 <h1 align="center"><img src="docs/readme/title.svg" width="860" alt="The Felt Five: a very dark factory that tests its own tests"></h1>
@@ -69,7 +69,7 @@ verifiers accepted `999fda2` (FACTORY.md section 6 has the timeline with room me
 |---|---|---|---|---|---|---|---|
 | <img src="docs/crew/implementer.png" height="48" alt=""> | **implementer** | claude-sonnet-5-5 | 56 | 487 | 34 | (fixes) | 37.89 |
 | <img src="docs/crew/reviewer.png" height="48" alt=""> | **reviewer** | claude-opus-5-5 | 27 | 425 | 28 | 8 | 32.90 |
-| <img src="docs/crew/cross-auditor.png" height="48" alt=""> | **cross-auditor** | gpt-6-astra | 23 | 615 | 54 | 13 | 71.30 |
+| <img src="docs/readme/mascot-cross-auditor.png" height="48" alt=""> | **cross-auditor** | gpt-6-astra | 23 | 615 | 54 | 13 | 71.30 |
 | <img src="docs/crew/customer.png" height="48" alt=""> | **customer** | claude-sonnet-5-5 | 19 | 206 | 20 | 2 | 11.82 |
 | <img src="docs/crew/spec-auditor.png" height="48" alt=""> | **spec-auditor** | claude-opus-5-5 | 17 | 392 | 25 | 4 | 35.79 |
 | <img src="docs/crew/coordinator.png" height="48" alt=""> | **coordinator** | claude-sonnet-5-5 | 2 | 251 | 187 | (routing) | 12.89 |
@@ -166,7 +166,7 @@ and phone width is in `customer/screens-stage4-final/`.*
   <img src="docs/crew/reviewer.png" height="130" alt="reviewer: purple long-nosed detective with a magnifying glass">
   <img src="docs/crew/spec-auditor.png" height="130" alt="spec-auditor: green book with round glasses and a checklist">
   <img src="docs/crew/customer.png" height="130" alt="customer: pink floppy-eared character holding a phone">
-  <img src="docs/crew/cross-auditor.png" height="130" alt="cross-auditor: golden wool-plush pebble with a monocle">
+  <img src="docs/readme/mascot-cross-auditor.png" height="130" alt="cross-auditor: golden wool-plush pebble with a monocle">
 </p>
 
 The Felt Five now welcome **one outsider**: a cross-auditor from a different model family.
@@ -288,7 +288,7 @@ Runs on Claude Code with `claude-sonnet-5-5`. Uses the product through its real 
 <a name="and-one-outsider"></a>
 <p align="center"><img src="docs/readme/h-outsider.svg" width="860" alt="And one outsider"></p>
 
-<img src="docs/crew/cross-auditor.png" align="right" height="220" alt="Golden fuzzy pebble with tiny black eyes and a teal-tinted monocle">
+<img src="docs/readme/mascot-cross-auditor.png" align="right" height="220" alt="Golden fuzzy pebble with tiny black eyes and a teal-tinted monocle">
 
 ### cross-auditor
 
