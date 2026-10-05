@@ -75,7 +75,7 @@ check sources. A stage closes only on four accepts of the same revision.
   cross-auditor's); every verifier now commits its verdict as a file.
 - Two subscriptions and two harnesses to keep signed in and up to date.
 - Codex tokens are on a ChatGPT plan; `tools/factory_numbers.py` reports them as tokens, not
-  dollars, because we have no list price to apply.
+  dollars. `FACTORY.md` section 7 prices them by hand at OpenAI's list prices.
 
 ## Five axes
 
@@ -112,7 +112,8 @@ Four stages, one dispatch, 4 October 2026 (`FACTORY.md` sections 6 and 7).
   customer had rejected for a button label crowding the edge of its pill, and the reviewer reached the
   stage-2 currency-label and hold-expiry defects on a revision it never judged. Neither family covered the other, as in the experiment.
 - **Cost:** 1.30 M input, 233 k output and 46.7 M cached tokens on the ChatGPT plan, 22 points of
-  that plan's weekly allowance. Its reject rounds lengthened stage 1 (three rounds) and stage 4
+  that plan's weekly allowance; 71.30 USD at OpenAI's list prices, against 131.29 USD for the
+  five Claude seats. Its reject rounds lengthened stage 1 (three rounds) and stage 4
   (six) more than any other seat's.
 
 The condition for bringing option A back, that it raises nothing the Claude verifiers did not,

@@ -9,7 +9,7 @@
 </p>
 
 <p align="center">
-  <img src="docs/readme/headline.svg" width="860" alt="81 faults planted; the shipped checks caught 8; the band's own evidence caught 75. 4/4 stages, one dispatch, six seats on two model families, 5 h 06 min of wall clock with 57 min paused, 131 USD at list price.">
+  <img src="docs/readme/headline.svg" width="860" alt="81 faults planted; the shipped checks caught 8; the band's own evidence caught 75. 4/4 stages, one dispatch, six seats on two model families, 5 h 06 min of wall clock with 57 min paused, 203 USD at list prices.">
 </p>
 
 > **The spec-auditor seeded 81 faults across four stages, one at a time, in the requirements it
@@ -39,7 +39,7 @@
 | Mandates | no track term in the six files (the harness's vocabulary gate passes); the same files also ran the unscored `toy` track, with only the dispatch changed |
 | Isolated harness on the final repository | stages 1–4 pass, **claimed stage: 4** |
 | Shipped checks untouched | `shasum -c` on all 11 check files: OK |
-| Model spend | 131.29 USD at Anthropic list prices for the five Claude seats, plus the Codex seat on a ChatGPT plan |
+| Model spend | 202.59 USD at list prices: 131.29 for the five Claude seats (Anthropic) and 71.30 for the Codex seat (OpenAI). Both ran on subscriptions; this is the equivalent API cost |
 
 Every figure is derived, with its source, in [FACTORY.md](FACTORY.md) section 7.
 
@@ -69,7 +69,7 @@ verifiers accepted `999fda2` (FACTORY.md section 6 has the timeline with room me
 |---|---|---|---|---|---|---|---|
 | <img src="docs/crew/implementer.png" height="48" alt=""> | **implementer** | claude-sonnet-5-5 | 56 | 487 | 34 | (fixes) | 37.89 |
 | <img src="docs/crew/reviewer.png" height="48" alt=""> | **reviewer** | claude-opus-5-5 | 27 | 425 | 28 | 8 | 32.90 |
-| <img src="docs/crew/cross-auditor.png" height="48" alt=""> | **cross-auditor** | gpt-6-astra | 23 | 615 | 54 | 13 | ChatGPT plan |
+| <img src="docs/crew/cross-auditor.png" height="48" alt=""> | **cross-auditor** | gpt-6-astra | 23 | 615 | 54 | 13 | 71.30 |
 | <img src="docs/crew/customer.png" height="48" alt=""> | **customer** | claude-sonnet-5-5 | 19 | 206 | 20 | 2 | 11.82 |
 | <img src="docs/crew/spec-auditor.png" height="48" alt=""> | **spec-auditor** | claude-opus-5-5 | 17 | 392 | 25 | 4 | 35.79 |
 | <img src="docs/crew/coordinator.png" height="48" alt=""> | **coordinator** | claude-sonnet-5-5 | 2 | 251 | 187 | (routing) | 12.89 |
@@ -100,8 +100,7 @@ We do not claim:
 - a result on the hidden checks: only the shipped part of each stage's suite was run;
 - a run on the other scored track: the same mandates ran only the unscored `toy` track as a
   second problem (FACTORY.md section 11);
-- an invoice: spend is the list-price equivalent of subscription use, and the Codex seat is not
-  priced;
+- an invoice: spend is the list-price equivalent of subscription use on two plans;
 - that 8 of 81 is a fair score for the shipped checks: the auditor chose the faults, and the
   shipped set is a partial sample by design;
 - that stage 4 is free of defects: one limitation is open, an import of about 300 older-format
@@ -119,7 +118,7 @@ We do not claim:
 | 81 seeded, 8 caught by shipped checks, 75 by the band | `audit/seed-results-stage-*.json`, `ledger/stage-*-faults.md` | the `caught_by` list of each row in the five full-set files (stage-1-999fda2, stage-2-d78f1bd, stage-3-65dd709, stage-3-7c35a2a, stage-4-8bbd03a) |
 | The auditor did not grade its own homework | the same five files | of the 75 faults the band caught, the implementer's own tests caught 71; 1 was caught only by the auditor's probe |
 | The implementer never touched the shipped checks' folder | `room.json` | `python3 -c "import json,collections;print(collections.Counter(m['senderName'] for m in json.load(open('room.json'))['messages'] if m['messageType']=='tool_call' and 'pocketful/test' in (m['content'] or '')))"` prints spec-auditor 11, coordinator 2 (the path, quoted in handoffs) and customer 1 (a listing of file names); no implementer, reviewer or cross-auditor |
-| Each stage claimed on its own closing revision | `docs/evidence/isolated-stage-N/report.json`, N = 1..4 | `claimed_stage` is N in each |
+| Each stage folder claims its own stage | `docs/evidence/isolated-stage-N/report.json`, N = 1..4 (runs on each closing revision); `docs/evidence/all-isolated-summary.json` (`--all --mode isolated` on a fresh clone of this repository, 5 Oct) | `claimed_stage` is N in each; the summary lists stage-1/ to stage-4/ each claiming its own stage |
 | Five revisions only the Codex seat rejected | `cross-audit/` and `reviewer/` files for `69289b3`, `0e8dea4`, `7c35a2a`, `8bbd03a`, `2bd67ec` | FACTORY.md section 6 |
 | Claimed stage 4, isolated | `docs/evidence/isolated-stage-4/report.json` | or run the command under "Reproduce the checks" |
 | Shipped checks not edited | `docs/evidence/checks.sha256` | from this repository's root, with the kickoff clone beside it: `shasum -a 256 -c docs/evidence/checks.sha256` |
@@ -185,7 +184,9 @@ Claude's name as author. No seat of the band wrote any of the operator's files.
 The Git history shows the same split: each seat commits under its own name. Every commit after
 the coordinator's final report (`cd6e904`) is the operator's: one escapes a character in an audit
 record (FACTORY.md section 8), one adds `room.json`, and the rest edit documents, `.gitignore`, `docs/` and
-`tools/window-kicker.sh`. None touches a stage folder.
+`tools/window-kicker.sh`. None touches a stage folder. On 5 Oct the author e-mail on those operator
+commits was replaced with a GitHub no-reply address; the seats' history, `cd6e904` and everything
+before it, is exactly what the seats committed.
 
 <a name="reproduce-the-checks"></a>
 <p align="center"><img src="docs/readme/h-reproduce.svg" width="860" alt="Reproduce the checks"></p>

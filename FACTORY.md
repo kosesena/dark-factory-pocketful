@@ -195,7 +195,7 @@ What the main choices cost in the submitted run:
 | Choice | Cost |
 |---|---|
 | A separate spec-auditor on Opus | 35.79 USD, 27 % of the Claude seats' spend |
-| A cross-auditor on a second model family | a second subscription and harness; 22 points of the ChatGPT plan's weekly allowance; 13 of the run's 27 reject verdicts, each a further round |
+| A cross-auditor on a second model family | 71.30 USD at OpenAI list prices, 35 % of the run's 202.59; a second subscription and harness; 22 points of the ChatGPT plan's weekly allowance; 13 of the run's 27 reject verdicts, each a further round |
 | Four accepts on the same revision | stage 4 took 11 revisions and 13 rejects over 3 h 18 min |
 | The specification pasted into every handoff | the coordinator wrote 1.74 million characters of room text, against 35,000 to 79,000 for each other seat, and cost 12.89 USD |
 | Pipelined stages | a late finding in one stage is fixed in every later stage folder too |
@@ -346,14 +346,19 @@ revisions with at least one verdict file.
 | spec-auditor | claude-opus-5-5 | 718 | 375,155 | 950,425 | 103,391,076 | 35.79 |
 | customer | claude-sonnet-5-5 | 398 | 224,099 | 584,655 | 36,190,642 | 11.82 |
 | **Claude seats** | | 3,300 | 1,645,217 | 3,927,414 | 421,004,283 | **131.29** |
-| cross-auditor | gpt-6-astra | 1,298,238 | 233,098 | – | 46,662,400 | ChatGPT plan, no list price applied |
+| cross-auditor | gpt-6-astra | 1,298,238 | 233,098 | – | 46,662,400 | 71.30 |
+| **All six seats** | | | | | | **202.59** |
 
 Source: the seats' Claude Code transcripts and the Codex seat's session logs, read by
 `tools/factory_numbers.py` for the window from dispatch to 16:02 (its output is
 `docs/evidence/factory-numbers.txt`; the transcripts themselves are not in this repository), priced with
 `tools/prices.json` (Anthropic API list prices, cache writes at the 1-hour rate; cache reads are
 listed at 0.20 USD per million tokens for both Opus 5.5 and Sonnet 5.5). The seats ran on
-subscriptions, so this is the equivalent API cost, not an invoice. BAND's own estimate for the
+subscriptions, so this is the equivalent API cost, not an invoice. The Codex seat's row is priced
+by hand from its token counts at OpenAI's list prices for gpt-6-astra (10 USD per million input
+tokens, 1 cached, 50 output; none of its 346 requests passed the 272,000-token threshold of the
+long-context rate, the largest prompt being 233,942 tokens); the script itself prints that row
+without a cost. BAND's own estimate for the
 room, which also prices the Codex seat, was about 182 USD. Plan meters read before and after the
 run: Claude Max weekly 3 % to 14 % and one full five-hour window; ChatGPT Pro weekly 87 % to 65 %
 remaining. The Claude weekly figure also includes the operator's own monitoring session, so it is
