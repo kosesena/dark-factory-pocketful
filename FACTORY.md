@@ -577,9 +577,30 @@ What we have to show that the mandates are generic:
   specification, the run contract, and the visual brief. The run contract used to sit in the
   mandates; it was moved out for this reason.
 
-What we do not have: a run on the other scored track. `toy` is far smaller than a scored track,
-so what it supports is that the roles and handoffs carry over, not the timings or the cost in
-section 7.
+- **The same factory built the other scored track, 4 of 4.** On 5 Oct 2026, after the submitted
+  run, the same six seats with the same six mandate files (unchanged since `046f9e8`, 3 Oct) took
+  one dispatch for `tablekeeper`, a restaurant reservation service. The dispatch is the submitted
+  one with the track name and paths changed and the visual-brief line removed
+  (`docs/evidence/tablekeeper-run/dispatch.md`). Nothing else was changed.
+
+| | `tablekeeper` run, 5 Oct |
+|---|---|
+| Human input | one dispatch (`room.json`: 3,322 messages, 1 from a human) |
+| Duration | 20:16 → 22:55, 2 h 39 min, no pause |
+| Stages closed (commit of the fourth accept) | 1 at 21:45 · 2 at 22:15 · 3 at 22:34 · 4 at 22:54 |
+| Isolated harness, `--all`, on a fresh clone | each of stage-1/ to stage-4/ claims its own stage |
+| Reject rounds | 9, each citing a specification section; stage 3 closed on its first revision |
+| Fault seeding (spec-auditor) | 74 seeded on the closing revisions, all caught by the band's evidence |
+| Commits | implementer 31, cross-auditor 16, reviewer 13, spec-auditor 12, customer 12, coordinator 1 |
+| Spend at list prices | 118.71 USD: 78.70 for the five Claude seats, 40.01 for the Codex seat |
+
+  Its own report, room log, harness summary and logs are in `docs/evidence/tablekeeper-run/`.
+  The result repository of that run is not part of this submission; its code was not judged by
+  us beyond the shipped checks.
+
+What the second run does not show: the fault counts and shipped-check catches above are from the
+coordinator's report and were not recomputed by us, and the run had no visual brief. It is one run
+on each scored track, not a measured average.
 
 1. Copy `mandates/` and this file.
 2. Rename seats and edit the `Harness:` and `Model:` lines if yours differ.

@@ -36,7 +36,7 @@
 | Duration | 10:53 → 16:00 on 4 Oct 2026; 57 min of that was a plan usage-limit pause |
 | Stages closed (all four verifiers accepted the same revision) | 1 at 12:17 · 2 at 13:14 · 3 at 15:04 · 4 at 15:59. Stage 4's fourth accept is the reviewer's, given under a coordinator ruling one minute after the reviewer had rejected the same revision for the open limitation listed below |
 | Reject verdicts before those accepts | 27 standing (cross-auditor 13, reviewer 8, spec-auditor 4, customer 2); a 28th, the reviewer's reject of `000d7ac`, was superseded by that ruling |
-| Mandates | no track term in the six files (the harness's vocabulary gate passes); the same files also ran the unscored `toy` track, with only the dispatch changed |
+| Mandates | no track term in the six files (the harness's vocabulary gate passes). The same six files, with only the dispatch changed, also built the other scored track, `tablekeeper`: 4 of 4 stages in 2 h 39 min, one human message, every folder claiming its stage in isolation (FACTORY.md section 11) |
 | Isolated harness on the final repository | stages 1–4 pass, **claimed stage: 4** |
 | Shipped checks untouched | `shasum -c` on all 11 check files: OK |
 | Model spend | 202.59 USD at list prices: 131.29 for the five Claude seats (Anthropic) and 71.30 for the Codex seat (OpenAI). Both ran on subscriptions; this is the equivalent API cost |
@@ -98,8 +98,8 @@ None of the three wrote to the room or to the repository.
 We do not claim:
 
 - a result on the hidden checks: only the shipped part of each stage's suite was run;
-- a run on the other scored track: the same mandates ran only the unscored `toy` track as a
-  second problem (FACTORY.md section 11);
+- more than one run per track: the `tablekeeper` run (FACTORY.md section 11) is a single run, and
+  its fault counts are from its coordinator's report, not recomputed;
 - an invoice: spend is the list-price equivalent of subscription use on two plans;
 - that 8 of 81 is a fair score for the shipped checks: the auditor chose the faults, and the
   shipped set is a partial sample by design;
