@@ -2,7 +2,7 @@
 
 > **In the submitted run the spec-auditor seeded 81 faults, one at a time, across the four
 > stages, in the requirements it judged highest-risk. The shipped checks, a partial sample by
-> design, caught 8 of them; the band's own evidence caught 75.** The other 6 changed no observable
+> design, caught 8 of them; the band's own evidence caught 75, those 8 included.** The other 6 changed no observable
 > behaviour. On five revisions, three Claude verifiers accepted and only the Codex cross-auditor
 > rejected; twice the customer rejected a layout the reviewer had accepted (section 6). The
 > factory is built to measure whether its evidence works, not only whether the checks are green.

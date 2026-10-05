@@ -14,7 +14,7 @@
 
 > **The spec-auditor seeded 81 faults across four stages, one at a time, in the requirements it
 > judged highest-risk. The shipped checks, a partial sample by design, caught 8; our band's own
-> evidence caught 75** (the other 6 changed nothing observable). Six seats, two model families,
+> evidence caught 75, those 8 among them** (the other 6 changed nothing observable). Six seats, two model families,
 > one dispatch, no human message after it. On five revisions three Claude verifiers accepted and
 > only the Codex seat said no; twice the customer said no to a screen the reviewer had accepted.
 
