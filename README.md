@@ -78,6 +78,24 @@ All 56 commits under `stage-1/` to `stage-4/` are the implementer's; each verifi
 its own folder. The implementer once added a file to the reviewer's folder (`d9736e7`); the
 reviewer rejected the revision for it and the file was removed in `2bd67ec`.
 
+### Same mandates, second problem
+
+On 5 Oct the same six seats, with the same six mandate files and a dispatch that changed only the
+track name and paths, built the other scored track, `tablekeeper` (restaurant reservations):
+
+| | `pocketful` (submitted run, 4 Oct) | `tablekeeper` (5 Oct) |
+|---|---|---|
+| Stages | 4 of 4 | 4 of 4 |
+| Wall clock | 5 h 06 min, 57 min paused | 2 h 39 min, no pause |
+| Human messages in the room | 1 of 6,783 | 1 of 3,322 |
+| Each stage folder claims its stage, isolated, fresh clone | yes | yes |
+| Rejects that changed the work | 27 verdict files | 9 rounds (coordinator's report) |
+| Faults seeded / caught by the band | 81 / 75 (6 unobservable) | 74 / 74 (coordinator's report) |
+| Spend at list prices | 202.59 USD | 118.71 USD |
+
+The `tablekeeper` evidence (dispatch, room log, coordinator report, harness summary) is in
+`docs/evidence/tablekeeper-run/`; FACTORY.md section 11 has the details and the limits.
+
 <a name="autonomy-and-what-we-do-not-claim"></a>
 <p align="center"><img src="docs/readme/h-autonomy.svg" width="860" alt="Autonomy, and what we do not claim"></p>
 
@@ -124,6 +142,7 @@ We do not claim:
 | Shipped checks not edited | `docs/evidence/checks.sha256` | from this repository's root, with the kickoff clone beside it: `shasum -a 256 -c docs/evidence/checks.sha256` |
 | Restarts and operator tooling | `docs/evidence/window-kicker.log`, `docs/evidence/seat-watchdog.log` | FACTORY.md section 8 |
 | Mandates are generic | `mandates/` | `python -m harness check ../result --track pocketful` |
+| Second scored track, 4 of 4 | `docs/evidence/tablekeeper-run/all-isolated-summary.json`, `room.json` | `claimed: true` for folders 1 to 4; one `senderType` of `User` in the room log |
 | Spend | FACTORY.md section 7 | any row can be priced again from its token counts and `tools/prices.json` |
 
 
