@@ -9,14 +9,14 @@
 </p>
 
 <p align="center">
-  <img src="docs/readme/headline.svg" width="860" alt="81 faults planted; the shipped checks caught 8; the band's own evidence caught 75. 4/4 stages, one dispatch, six seats on two model families, 4 h 09 min, 131 USD at list price.">
+  <img src="docs/readme/headline.svg" width="860" alt="81 faults planted; the shipped checks caught 8; the band's own evidence caught 75. 4/4 stages, one dispatch, six seats on two model families, 5 h 06 min of wall clock with 57 min paused, 131 USD at list price.">
 </p>
 
 > **The spec-auditor seeded 81 faults across four stages, one at a time, in the requirements it
 > judged highest-risk. The shipped checks, a partial sample by design, caught 8; our band's own
 > evidence caught 75** (the other 6 changed nothing observable). Six seats, two model families,
 > one dispatch, no human message after it. On five revisions three Claude verifiers accepted and
-> only the Codex seat said no; twice the customer said no to a layout the reviewer had accepted.
+> only the Codex seat said no; twice the customer said no to a screen the reviewer had accepted.
 
 <p align="center">
   <a href="FACTORY.md"><img src="docs/readme/pill-factory.svg" height="30" alt="FACTORY.md"></a>
@@ -34,8 +34,9 @@
 |---|---|
 | Human input | one dispatch message for all four stages (`room.json`: 6,783 messages, 1 from a human) |
 | Duration | 10:53 → 16:00 on 4 Oct 2026; 57 min of that was a plan usage-limit pause |
-| Stages closed (all four verifiers accepted the same revision) | 1 at 12:17 · 2 at 13:14 · 3 at 15:04 · 4 at 15:59 |
-| Reject verdicts before those accepts | 27 (cross-auditor 13, reviewer 8, spec-auditor 4, customer 2) |
+| Stages closed (all four verifiers accepted the same revision) | 1 at 12:17 · 2 at 13:14 · 3 at 15:04 · 4 at 15:59. Stage 4's fourth accept is the reviewer's, given under a coordinator ruling one minute after the reviewer had rejected the same revision for the open limitation listed below |
+| Reject verdicts before those accepts | 27 standing (cross-auditor 13, reviewer 8, spec-auditor 4, customer 2); a 28th, the reviewer's reject of `000d7ac`, was superseded by that ruling |
+| Mandates | no track term in the six files (the harness's vocabulary gate passes); the same files also ran the unscored `toy` track, with only the dispatch changed |
 | Isolated harness on the final repository | stages 1–4 pass, **claimed stage: 4** |
 | Shipped checks untouched | `shasum -c` on all 11 check files: OK |
 | Model spend | 131.29 USD at Anthropic list prices for the five Claude seats, plus the Codex seat on a ChatGPT plan |
@@ -44,14 +45,23 @@ Every figure is derived, with its source, in [FACTORY.md](FACTORY.md) section 7.
 
 ### Stage by stage
 
-| Stage | Closed on | Closed at | Shipped checks | Reject verdicts before close | Revisions judged | Faults seeded / caught by shipped checks / caught by the band |
+| Stage | Closed on | Closed at | That stage's shipped checks, isolated run on the closing revision | Reject verdicts before close | Revisions judged | Faults seeded / caught by shipped checks / caught by the band |
 |---|---|---|---|---|---|---|
 | 1 | `999fda2` | 12:17 | 147/147 | 6 | 5 | 32 / 6 / 27 (5 equivalent) |
 | 2 | `d78f1bd` | 13:14 | 35/35 | 4 | 5 | 16 / 1 / 16 |
 | 3 | `397a149` | 15:04 | 6/6 | 4 | 5 | 18 / 1 / 18 |
 | 4 | `000d7ac` | 15:59 | 5/5 | 13 | 11 | 15 / 0 / 14 (1 equivalent) |
 
-Shipped-check counts are from the final isolated run, `docs/evidence/isolated-stage-4/report.json`.
+Each count is that stage's own suite in an isolated harness run on the revision that closed it,
+with every earlier stage's suite passing in the same run and the report claiming stage N
+(`docs/evidence/isolated-stage-N/report.json`; stages 1 to 3 are the reviewer's runs during the
+room, stage 4 is the run on the final repository).
+
+One defect, start to finish: revision `69289b3` passed the shipped stage-1 checks and three Claude
+verifiers accepted it. The Codex cross-auditor rejected it with its own reproductions, among them
+a fractional amount, `1.0000000000000001`, that was rounded to 1 and moved money. The implementer
+replaced its case-by-case fixes with one state checker shared by reset and import, and all four
+verifiers accepted `999fda2` (FACTORY.md section 6 has the timeline with room message ids).
 
 ### Seat by seat
 
@@ -65,7 +75,8 @@ Shipped-check counts are from the final isolated run, `docs/evidence/isolated-st
 | <img src="docs/crew/coordinator.png" height="48" alt=""> | **coordinator** | claude-sonnet-5-5 | 2 | 251 | 187 | (routing) | 12.89 |
 
 All 56 commits under `stage-1/` to `stage-4/` are the implementer's; each verifier commits only in
-its own folder.
+its own folder. The implementer once added a file to the reviewer's folder (`d9736e7`); the
+reviewer rejected the revision for it and the file was removed in `2bd67ec`.
 
 <a name="autonomy-and-what-we-do-not-claim"></a>
 <p align="center"><img src="docs/readme/h-autonomy.svg" width="860" alt="Autonomy, and what we do not claim"></p>
@@ -74,8 +85,10 @@ One human message entered the room: the dispatch. No seat asked the human anythi
 was approved, hinted or dispatched again. Three things did happen on the host, outside the room,
 during the run; FACTORY.md section 8 lists them in full:
 
-1. At 13:24 the operator replaced the running restart script (the "window kicker") with a version
-   that ignores the Codex seat's commits.
+1. At 13:24 the operator, seeing the Claude plan's usage meter at 97 %, replaced the running
+   restart script (the "window kicker") with a version that ignores the Codex seat's commits:
+   the first version would have stayed silent as long as that seat, on another plan, kept
+   committing. A strict reader may count this as a change to the factory's tooling during the run.
 2. At 14:31 that script restarted all six seats, after the plan's usage limit had paused the
    Claude seats for 57 minutes.
 3. At 14:32 the operator accepted an Xcode licence on the host so that `git` worked again.
@@ -103,10 +116,13 @@ We do not claim:
 | 1 human message in 6,783 | `room.json` | `python3 -c "import json,collections;print(collections.Counter(m['senderType'] for m in json.load(open('room.json'))['messages']))"` prints Agent 6782, User 1 |
 | No human commit under a stage folder | Git history | `git log --format=%an -- stage-1 stage-2 stage-3 stage-4 \| sort \| uniq -c` prints 56 implementer |
 | 27 reject verdicts (13, 8, 4, 2) | `cross-audit/<revision>.md`, `reviewer/<revision>.md`, `audit/verdict-*`, `customer/verdict-*` | the verdict line at the top of each file |
-| 81 seeded, 8 caught by shipped checks, 75 by the band | `audit/seed-results-stage-*.json`, `ledger/stage-*-faults.md` | the "caught by" column of each row; FACTORY.md section 7 names the five result files |
+| 81 seeded, 8 caught by shipped checks, 75 by the band | `audit/seed-results-stage-*.json`, `ledger/stage-*-faults.md` | the `caught_by` list of each row in the five full-set files (stage-1-999fda2, stage-2-d78f1bd, stage-3-65dd709, stage-3-7c35a2a, stage-4-8bbd03a) |
+| The auditor did not grade its own homework | the same five files | of the 75 faults the band caught, the implementer's own tests caught 71; 1 was caught only by the auditor's probe |
+| The implementer never touched the shipped checks' folder | `room.json` | `python3 -c "import json,collections;print(collections.Counter(m['senderName'] for m in json.load(open('room.json'))['messages'] if m['messageType']=='tool_call' and 'pocketful/test' in (m['content'] or '')))"` prints spec-auditor 11, coordinator 2 (the path, quoted in handoffs) and customer 1 (a listing of file names); no implementer, reviewer or cross-auditor |
+| Each stage claimed on its own closing revision | `docs/evidence/isolated-stage-N/report.json`, N = 1..4 | `claimed_stage` is N in each |
 | Five revisions only the Codex seat rejected | `cross-audit/` and `reviewer/` files for `69289b3`, `0e8dea4`, `7c35a2a`, `8bbd03a`, `2bd67ec` | FACTORY.md section 6 |
 | Claimed stage 4, isolated | `docs/evidence/isolated-stage-4/report.json` | or run the command under "Reproduce the checks" |
-| Shipped checks not edited | `docs/evidence/checks.sha256` | `shasum -a 256 -c` against the kickoff package |
+| Shipped checks not edited | `docs/evidence/checks.sha256` | from this repository's root, with the kickoff clone beside it: `shasum -a 256 -c docs/evidence/checks.sha256` |
 | Restarts and operator tooling | `docs/evidence/window-kicker.log`, `docs/evidence/seat-watchdog.log` | FACTORY.md section 8 |
 | Mandates are generic | `mandates/` | `python -m harness check ../result --track pocketful` |
 | Spend | FACTORY.md section 7 | any row can be priced again from its token counts and `tools/prices.json` |
@@ -168,14 +184,14 @@ Claude's name as author. No seat of the band wrote any of the operator's files.
 
 The Git history shows the same split: each seat commits under its own name. Every commit after
 the coordinator's final report (`cd6e904`) is the operator's: one escapes a character in an audit
-record (FACTORY.md section 8), one adds `room.json`, and the rest edit documents, `docs/` and
+record (FACTORY.md section 8), one adds `room.json`, and the rest edit documents, `.gitignore`, `docs/` and
 `tools/window-kicker.sh`. None touches a stage folder.
 
 <a name="reproduce-the-checks"></a>
 <p align="center"><img src="docs/readme/h-reproduce.svg" width="860" alt="Reproduce the checks"></p>
 
 ```sh
-git clone <this repository> result
+git clone https://github.com/kosesena/dark-factory-pocketful result
 git clone https://github.com/band-ai/dark-factory-wearedevs && cd dark-factory-wearedevs
 python3 -m venv .venv && . .venv/bin/activate && python -m pip install -r harness/requirements.txt
 python -m harness check ../result --track pocketful

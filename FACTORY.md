@@ -224,12 +224,12 @@ What the main choices cost in the submitted run:
 | The auditor reports a blocking gap the moment it finds one | The implementer can fix while fault seeding continues, instead of waiting for the full report |
 | The coordinator treats committed report files as verdicts | A report that reached the repository but not the room still moves the stage forward |
 | A watchdog restarts disconnected seats | A crashed runtime cannot report or wake; restarting it redelivers its pending message |
-| A sixth verifier, the cross-auditor, on a different model family, blind to the other verifiers until its own verdict | On one revision Codex found seven specification breaks the all-Claude band had accepted, and Opus found the one Codex missed: the blind spots do not overlap ([ADR-002](docs/decisions/ADR-002-a-second-model-family.md)) |
+| A sixth seat and fourth verifier, the cross-auditor, on a different model family, blind to the other verifiers until its own verdict | On one revision Codex found seven specification breaks the all-Claude band had accepted, and Opus found the one Codex missed: the blind spots do not overlap ([ADR-002](docs/decisions/ADR-002-a-second-model-family.md)) |
 | Every verifier commits its verdict as a file named after the revision, for every revision | In practice run 5 the reviewer's verdict went into a thread, the coordinator never saw it, and the run stopped one message short of closing |
 | The implementer does not commit while a revision is under review; findings are fixed together in one revision | In practice run 6 test-only commits made five revisions in 25 minutes, and every one voided the accepts already given |
 | "The evidence" in fault seeding means all of the band's committed checks; a fault only the auditor's own probe catches is a suggested test, not a blocking gap | In practice run 6 the auditor seeded against the implementer's tests alone and rejected correct code |
 | The customer judges each screen as a whole, not only rule by rule | In practice run 4 every measured rule passed while the desktop layout left a large empty column |
-| The dispatch stays under about 3,500 characters; a visual direction travels as a file path | BAND turns a longer paste into an attachment instead of a message |
+| The dispatch stays under about 3,600 characters (the submitted one is 3,579); a visual direction travels as a file path | BAND turns a longer paste into an attachment instead of a message |
 | Opus for reviewer and auditor, Sonnet for coordinator, implementer and customer | The auditor is the most expensive seat (48 % of practice run 3's spend) and the only one that caught what the reviewer accepted; the trade-off, the rejected options and what we do not know are in [ADR-001](docs/decisions/ADR-001-keep-the-spec-auditor.md). In the submitted run the auditor was 27 % of the Claude seats' spend (35.79 of 131.29 USD) and ran the fault seeding behind the headline numbers |
 | A kicker restarts the seats after the plan's usage window resets | In the submitted run the Claude seats stopped at the session limit at 13:32–13:34 with stages 3 and 4 open; the kicker woke them at 14:31 and the run closed without a human message |
 
@@ -314,7 +314,7 @@ four stages, coordinator's final report at 16:00 (`coordinator/final-report.md`)
 | 1 | 10:57 | 12:17 (`999fda2`) | 1 h 20 min (1 h 23 min from dispatch) | 6 | 5 |
 | 2 | 11:11 | 13:14 (`d78f1bd`) | 2 h 03 min | 4 | 5 |
 | 3 | 12:21 | 15:04 (`397a149`) | 2 h 43 min, of which 57 min paused | 4 | 5 |
-| 4 | 12:41 | 15:59 (`000d7ac`) | 3 h 18 min, of which 57 min paused | 13 | 11 |
+| 4 | 12:41 | 15:59 (`000d7ac`, the reviewer's accept under a coordinator ruling) | 3 h 18 min, of which 57 min paused | 13 | 11 |
 | **Run** | | | **5 h 06 min to the final report, of which 57 min paused: about 4 h 09 min working** | **27** | |
 
 Stages overlap because they are pipelined. The pause: four of the five Claude seats logged the
@@ -322,7 +322,9 @@ plan's session-limit error between 13:32 and 13:34 (coordinator, implementer, cu
 spec-auditor; `room.json` error messages). The reviewer logged none; its last commit before the
 pause was at 13:32. The window kicker restarted all six seats at 14:31, and the next verdict was
 committed at 14:34. Reject verdicts are counted from the verdict
-files the seats committed (one file per seat per revision); "revisions judged" counts distinct
+files the seats committed, as they stand at the end of the run (one file per seat per revision; the
+reviewer's reject of `000d7ac`, superseded a minute later by its accept under the coordinator's
+ruling, would be a 28th); "revisions judged" counts distinct
 revisions with at least one verdict file.
 
 | Seat | Reject verdicts | Commits |
@@ -349,7 +351,8 @@ revisions with at least one verdict file.
 Source: the seats' Claude Code transcripts and the Codex seat's session logs, read by
 `tools/factory_numbers.py` for the window from dispatch to 16:02 (its output is
 `docs/evidence/factory-numbers.txt`; the transcripts themselves are not in this repository), priced with
-`tools/prices.json` (Anthropic API list prices, cache writes at the 1-hour rate). The seats ran on
+`tools/prices.json` (Anthropic API list prices, cache writes at the 1-hour rate; cache reads are
+listed at 0.20 USD per million tokens for both Opus 5.5 and Sonnet 5.5). The seats ran on
 subscriptions, so this is the equivalent API cost, not an invoice. BAND's own estimate for the
 room, which also prices the Codex seat, was about 182 USD. Plan meters read before and after the
 run: Claude Max weekly 3 % to 14 % and one full five-hour window; ChatGPT Pro weekly 87 % to 65 %
@@ -378,7 +381,9 @@ that passes on the unmodified copy fails):
 | 4 | `8bbd03a` | 15 | 0 | 14 | 1 |
 | **All** | | **81** | **8** | **75** | **6** |
 
-In these full-set seedings no fault that changed behaviour survived the band's evidence. Results
+In these full-set seedings no fault that changed behaviour survived the band's evidence. The band's catches
+do not rest on the auditor: the implementer's own tests caught 71 of the 75, and only 1 was caught
+by the auditor's probe alone. Results
 are in `audit/seed-results-stage-*.json` and `ledger/stage-*-faults.md`; later fix-scoped seedings
 on revisions after these are in the same folder. In one of those, on stage 4, two faults (M01 and
 M03 in `ledger/stage-4-faults.md`) were caught at first only by a probe the spec-auditor added
@@ -478,7 +483,7 @@ the dispatch. What went wrong around it, and every action the operator took outs
   reviewer logged none); the Codex seat, on a separate plan, kept working. The
   window kicker had been started before the dispatch for this case.
 - **The kicker would not have fired.** It woke the seats only if nothing had been committed in the
-  last 20 minutes, and the Codex seat could still commit. At 13:24, before the limit, the operator
+  last 20 minutes, and the Codex seat could still commit. At 13:24, before the limit and with the Claude plan's usage meter at 97 %, the operator
   replaced the running kicker with a version that ignores the Codex seat's commits (the one now
   in `tools/`). It fired at 14:31 and restarted all six seats.
 - **Git stopped working on the host.** At 14:31 macOS had updated Xcode in the background, and
@@ -497,9 +502,12 @@ the dispatch. What went wrong around it, and every action the operator took outs
 - **Performance on adversarial imports took three rounds.** The implementer's first legacy import
   was quadratic; the second was near-linear except on two tampered inputs found by the
   spec-auditor and the cross-auditor; the third bounded those. The coordinator then recorded the
-  remaining linear cost as a limitation instead of asking for a fourth revision (section 9).
+  remaining linear cost as a limitation instead of asking for a fourth revision (section 9). The reviewer had rejected `000d7ac`
+  for exactly this at 15:59 (`512be73`) and issued its verdict again as an accept under the
+  ruling a minute later (`bdca469`, restated in `28d24f0`). The ruling was the coordinator's own;
+  no human message was involved.
 - **One post-run edit.** The offline check read `key=lambda` in one of the auditor's mutation
-  records as a credential. The operator rewrote `=` as `=` in that JSON file in a separate
+  records as a credential. The operator rewrote `=` as `\u003d` in that JSON file in a separate
   commit; the parsed data is identical.
 
 ## 9. Limits and known weaknesses

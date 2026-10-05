@@ -154,7 +154,7 @@ model change the day before the final run would be unrehearsed.
 ## What we do not know
 
 - **One run, two stages.** The cost split and the catch rates come from a single practice run.
-  The submitted run, with four stages, will replace them (`FACTORY.md` section 7).
+  The submitted run, with four stages, is in the results section below and in `FACTORY.md` section 7.
 - **Whether G-35 is in the hidden suite.** Catching it matters for the product. Whether it
   changes the score is not known.
 - **Whether the tie holds.** Opus and Sonnet tie at 30 of 37 on one suite each. More runs,

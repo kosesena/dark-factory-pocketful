@@ -109,7 +109,7 @@ Four stages, one dispatch, 4 October 2026 (`FACTORY.md` sections 6 and 7).
 - **It cast 13 of the run's 27 reject verdicts**, more than any other seat (reviewer 8,
   spec-auditor 4, customer 2).
 - **The overlap is still partial in the other direction.** It accepted `94e856c`, which the
-  customer rejected for a desktop layout with a large empty column, and the reviewer reached the
+  customer had rejected for a button label crowding the edge of its pill, and the reviewer reached the
   stage-2 currency-label and hold-expiry defects on a revision it never judged. Neither family covered the other, as in the experiment.
 - **Cost:** 1.30 M input, 233 k output and 46.7 M cached tokens on the ChatGPT plan, 22 points of
   that plan's weekly allowance. Its reject rounds lengthened stage 1 (three rounds) and stage 4
