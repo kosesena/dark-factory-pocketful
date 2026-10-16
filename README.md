@@ -87,8 +87,10 @@ reviewer rejected the revision for it and the file was removed in `2bd67ec`.
 
 ### Same mandates, second problem
 
-On 5 Oct the same six seats, with the same six mandate files and a dispatch that changed only the
-track name and paths, built the other scored track, `tablekeeper` (restaurant reservations):
+On 5 Oct the same six seats, with the same six mandate files, built the other scored track,
+`tablekeeper` (restaurant reservations). Compared with the submitted dispatch (FACTORY.md section 4),
+the track name and paths changed, the visual-brief line was removed, and the sentence
+"Do not change mandates/, tools/, docs/, README.md or FACTORY.md" was removed:
 
 | | `pocketful` (submitted run, 4 Oct) | `tablekeeper` (5 Oct) |
 |---|---|---|
@@ -97,11 +99,13 @@ track name and paths, built the other scored track, `tablekeeper` (restaurant re
 | Human messages in the room | 1 of 6,783 | 1 of 3,322 |
 | Each stage folder claims its stage, isolated, fresh clone | yes | yes |
 | Rejects that changed the work | 27 verdict files | 9 rounds (coordinator's report) |
-| Faults seeded / caught by the band | 81 / 75 (6 unobservable) | 74 / 74 (coordinator's report) |
+| Faults seeded / caught by the band | 81 / 75 (6 unobservable) | 74 / 74 (coordinator's report; Q03 caught only after the spec-auditor added probe V4b) |
 | Spend at list prices | 202.59 USD | 118.71 USD |
 
 The `tablekeeper` evidence (dispatch, room log, coordinator report, harness summary) is in
 `docs/evidence/tablekeeper-run/`; FACTORY.md section 11 has the details and the limits.
+In its `room.json`, every `=` is written as the JSON escape `\u003d` so the harness check does not
+mistake code for credentials; the parsed data is unchanged.
 
 <a name="autonomy-and-what-we-do-not-claim"></a>
 <p align="center"><img src="docs/readme/h-autonomy.svg" width="860" alt="Autonomy, and what we do not claim"></p>

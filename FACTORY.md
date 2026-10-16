@@ -579,9 +579,10 @@ What we have to show that the mandates are generic:
 
 - **The same factory built the other scored track, 4 of 4.** On 5 Oct 2026, after the submitted
   run, the same six seats with the same six mandate files (unchanged since `046f9e8`, 3 Oct) took
-  one dispatch for `tablekeeper`, a restaurant reservation service. The dispatch is the submitted
-  one with the track name and paths changed and the visual-brief line removed
-  (`docs/evidence/tablekeeper-run/dispatch.md`). Nothing else was changed.
+  one dispatch for `tablekeeper`, a restaurant reservation service. Compared with the submitted
+  dispatch (section 4), the track name and paths changed, the visual-brief line was removed, and
+  the sentence "Do not change mandates/, tools/, docs/, README.md or FACTORY.md" was removed
+  (`docs/evidence/tablekeeper-run/dispatch.md`).
 
 | | `tablekeeper` run, 5 Oct |
 |---|---|
@@ -589,18 +590,29 @@ What we have to show that the mandates are generic:
 | Duration | 20:16 → 22:55, 2 h 39 min, no pause |
 | Stages closed (commit of the fourth accept) | 1 at 21:45 · 2 at 22:15 · 3 at 22:34 · 4 at 22:54 |
 | Isolated harness, `--all`, on a fresh clone | each of stage-1/ to stage-4/ claims its own stage |
-| Reject rounds | 9, each citing a specification section; stage 3 closed on its first revision |
-| Fault seeding (spec-auditor) | 74 seeded on the closing revisions, all caught by the band's evidence |
+| Reject rounds | 9, listed in the coordinator's report; stage 3 closed on its first revision |
+| Fault seeding (spec-auditor) | 74 seeded on the closing revisions, all caught by the band's evidence; Q03 was caught only after the spec-auditor added probe V4b |
 | Commits | implementer 31, cross-auditor 16, reviewer 13, spec-auditor 12, customer 12, coordinator 1 |
 | Spend at list prices | 118.71 USD: 78.70 for the five Claude seats, 40.01 for the Codex seat |
+
+The closing times above are git commit times (UTC+3) and agree with `room.json`; the coordinator's
+own report times are approximate and differ (for example, 19:16Z for stage 1 rather than 18:45Z).
 
   Its own report, room log, harness summary and logs are in `docs/evidence/tablekeeper-run/`.
   The result repository of that run is not part of this submission; its code was not judged by
   us beyond the shipped checks.
 
+In `docs/evidence/tablekeeper-run/room.json`, every `=` is written as the JSON escape `\u003d`
+so the harness check does not mistake code for credentials; the parsed data is unchanged.
+
 What the second run does not show: the fault counts and shipped-check catches above are from the
 coordinator's report and were not recomputed by us, and the run had no visual brief. It is one run
-on each scored track, not a measured average.
+on each scored track, not a measured average. The process rules did not fully carry over:
+in stages 1–3 the implementer bundled several items per commit; the reviewer recorded this but
+did not reject it. Three `__pycache__` files were also committed. These are violations the mandates
+should have caused the band to reject, as disclosed in the coordinator's "Not verified / limits".
+
+### Reusing it
 
 1. Copy `mandates/` and this file.
 2. Rename seats and edit the `Harness:` and `Model:` lines if yours differ.
