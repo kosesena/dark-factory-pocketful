@@ -9,6 +9,13 @@
 </p>
 
 <p align="center">
+  <b>🥉 3rd place, pocketful track</b> · 167 submissions, six winners across two tracks (announced 15 Oct 2026)<br>
+  <a href="https://github.com/kosesena/dark-factory-pocketful/releases/download/submission-2026-10-06/the-felt-five-final-run.mp4">video of the run (3 min)</a> ·
+  <a href="https://github.com/kosesena/dark-factory-pocketful/releases/download/submission-2026-10-06/the-felt-five-slides.pdf">slides (PDF)</a> ·
+  <a href="https://github.com/kosesena/dark-factory-pocketful/releases/tag/submission-2026-10-06">submission release</a>
+</p>
+
+<p align="center">
   <img src="docs/readme/headline.svg" width="860" alt="81 faults planted; the shipped checks caught 8; the band's own evidence caught 75. 4/4 stages, one dispatch, six seats on two model families, 5 h 06 min of wall clock with 57 min paused, 203 USD at list prices.">
 </p>
 
@@ -219,7 +226,7 @@ python -m harness run --track pocketful --repo ../result --stage 4 --mode isolat
 python3 ../result/tools/factory_numbers.py --help   # spend and time tables; needs the seats' transcripts, which are not in this repository
 ```
 
-The video of the room working is attached to the lablab submission. Authoritative rules:
+The video of the room working and the slides are attached to the [submission release](https://github.com/kosesena/dark-factory-pocketful/releases/tag/submission-2026-10-06). Authoritative rules:
 https://github.com/band-ai/dark-factory-wearedevs/blob/main/docs/participant-guide.md
 
 <a name="meet-the-crew-seat-by-seat"></a>
